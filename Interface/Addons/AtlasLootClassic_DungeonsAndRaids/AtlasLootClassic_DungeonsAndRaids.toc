@@ -1,0 +1,23 @@
+﻿## Interface: 11303
+## Author: Lag
+## Version: v1.4.4
+## Dependencies: AtlasLootClassic
+## LoadOnDemand: 1
+
+## Title: AtlasLootClassic |cFF0099FF[Dungeons and Raids]|r
+## Notes: AtlasLoot loot tables from Dungeons and Raids
+## Title-zhCN: |CFFFF8000地图|R 掉落查询 |cFF0099FF[副本]|R
+## Notes-zhCN: 地下城&团队副本掉落列表
+## Title-zhTW: |CFFFF8000地圖|R 掉落查詢 |cFF0099FF[副本]|R
+## Notes-zhTW: 地下城&團隊副本掉落列表
+## X-Repple: 地图
+
+## X-Category: Map
+## X-License: GPL v2
+
+## X-AtlasLootClassic-LootModule: 1
+
+Locales\Locales.xml
+
+data.lua
+droprate.lua

@@ -1,0 +1,11 @@
+## Interface: 11303
+## Title: NugRunningOptions
+## Notes: Options for NugRunning
+## Title-zhCN: |CFFFF8000辅助|R 法术计时条 设置模块
+## Title-zhTW: |CFFFF8000輔助|R 法術計時條 設置模組
+## X-Repple: 辅助
+## Author: d87
+## RequiredDeps: NugRunning
+## LoadOnDemand: 1
+
+..\NugRunning\Options\includes.xml

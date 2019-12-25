@@ -1,0 +1,19 @@
+﻿## Interface: 11303
+## X-Compatible: 80205
+## Title: SimpleRaidTargetIcons
+## Author: MrFIXlT, Zimzarina
+## X-Credits: ghostduke, Brodrick (aka Kirov), Qzot
+## Version: 2.1.3-Classic
+## Notes: Displays a widget on modifier + left click or double click on a unit to let a player assign Raid Target Icons.
+## Title-zhCN: |CFFFF8000辅助|R 标记助手
+## Notes-zhCN: Shift、Ctrl（默认）或Alt+鼠标左键单击,或双击鼠标左键快速标记目标
+## Title-zhTW: |CFFFF8000輔助|R 標記助手
+## Notes-zhTW: Shift、Ctrl（預設）或Alt+滑鼠左鍵按一下,或按兩下滑鼠左鍵快速標記目標
+## X-Repple: 辅助
+## SavedVariablesPerCharacter: SRTISaved, SRTIExternalUF
+
+
+locales/localization-base.lua
+locales/localization-zhTW.lua
+locales/localization-zhCN.lua
+SimpleRaidTargetIcons.lua

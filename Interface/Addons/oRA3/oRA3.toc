@@ -1,0 +1,45 @@
+## Interface: 11303
+## Title: oRA3
+## Notes: Raid and Party Assist
+## Title-zhCN: |CFF80FF80团队|R 团队助手
+## Notes-zhCN: 队伍和团队助手。
+## Title-zhTW: |CFF80FF80團隊|R 團隊助手
+## Notes-zhTW: 隊伍和團隊助手。
+## X-Repple: 团队
+## DefaultState: Disabled
+## Version: v4-classic
+## Author: Funkydude, Nebula
+
+## X-Credits: Cladhaire, Ammo, Rabbit
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Website: https://github.com/BigWigsMods/oRA3
+## X-Curse-Project-ID: 15655
+# X-WoWI-ID: 14635
+
+## SavedVariables: oRA3DB
+## OptionalDeps: Ace3, LibCandyBar-3.0, LibSharedMedia-3.0, LibDDI-1.0, LibChatAnims, LibLatency, LibDurability, LibDialog-1.0, Masque
+
+libs.xml
+
+locales\enUS.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+oRA3.lua
+modulePrototype.lua
+
+# module order in options
+#modules\Alerts.lua
+#modules\BattleRes.lua
+#modules\Consumables.lua
+#modules\Cooldowns\module.xml
+modules\ReadyCheck.lua
+# modules with no settings
+modules\Durability.lua
+modules\Gear.lua
+modules\Invite.lua
+modules\Latency.lua
+modules\Promote.lua
+#modules\RoleIcons.lua
+modules\Tanks.lua
+modules\Zone.lua

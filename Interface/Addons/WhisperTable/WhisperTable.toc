@@ -1,0 +1,13 @@
+﻿## Interface: 11303
+## Title: WhisperTable
+## Notes: Whisper List
+## Title-zhCN: |CFFFF8000辅助|R 密语记录屏
+## Notes-zhCN: 密语记录屏|n命令/wt
+## Title-zhTW: |CFFFF8000輔助|R 密語記錄屏
+## Notes-zhTW: 密語記錄屏|n命令/wt
+## Author: 互补古蓝(沧海流星<E-mail:tjox@163.com>), Isler
+## SavedVariables: WhisperTableDB
+## SavedVariablesPerCharacter: WhisperTablePlayer
+## Version: 0.6
+## X-Repple: 辅助
+WhisperTable.xml

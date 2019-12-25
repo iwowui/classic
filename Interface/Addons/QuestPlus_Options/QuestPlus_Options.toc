@@ -1,0 +1,14 @@
+﻿## Interface: 11303
+## Title: QuestPlus Options
+## Title-zhCN: |CFFFF8000辅助|R 系统任务增强 设置
+## Title-zhTW: |CFFFF8000輔助|R 系統任務增強 設置
+## X-Repple: 辅助
+## RequiredDeps: QuestPlus
+## LoadOnDemand: 1
+## Version: 1.0
+## Author: Isler
+## E-mail: isler@live.com
+## X-Website: http://wow.isler.me
+
+Localization.lua
+Options.lua

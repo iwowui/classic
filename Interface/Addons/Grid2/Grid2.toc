@@ -1,0 +1,80 @@
+## Interface: 11303
+## X-WoW-Project: classic
+## Title: Grid2
+## Author: Pastamancer & Maia, Jerry, Toadkiller
+## Version: r943
+## Notes: A modular, lightweight and screen-estate saving grid of party/raid unit frames
+## Title-zhCN: |CFF80FF80团队|R 团队面板
+## Notes-zhCN: 小巧的轻量级模块化队伍框架
+## Title-zhTW: |CFF80FF80團隊|R 團隊面板
+## Notes-zhTW: 精簡的團隊框架功能
+## X-Repple: 团队
+## DefaultState: Disabled
+## X-Curse-Project-ID: 15226
+## LoadOnDemand: 0
+## SavedVariables: Grid2DB
+## OptionalDeps: Ace3, Clique
+
+# Ace Libraries
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
+Libs\LibHealComm-4.0\LibHealComm-4.0.xml
+Libs\LibClassicDurations\LibClassicDurations.xml
+
+#Locales
+locales.xml
+
+# Grid2
+GridCore.lua
+GridUtils.lua
+GridRoster.lua
+GridFrame.lua
+GridLayout.lua
+GridLayoutLayouts.lua
+GridIndicator.lua
+GridStatus.lua
+GridSetup.lua
+GridDefaults.lua
+GridDefaultsClassic.lua
+
+# Indicators
+modules\IndicatorAlpha.lua
+modules\IndicatorBorder.lua
+modules\IndicatorBar.lua
+modules\IndicatorMultiBar.lua
+modules\IndicatorText.lua
+modules\IndicatorIcon.lua
+modules\IndicatorIcons.lua
+modules\IndicatorSquare.lua
+modules\IndicatorTooltip.lua
+modules\IndicatorPortrait.lua
+
+# Statuses
+modules\StatusHealth.lua
+modules\StatusMana.lua
+modules\StatusColor.lua
+modules\StatusName.lua
+modules\StatusOffline.lua
+modules\StatusPvP.lua
+modules\StatusRange.lua
+modules\StatusReadyCheck.lua
+modules\StatusRole.lua
+modules\StatusTarget.lua
+modules\StatusVoiceComm.lua
+modules\StatusRaidIcon.lua
+modules\StatusAFK.lua
+modules\StatusBanzai.lua
+modules\StatusRes.lua
+modules\StatusHealsAoe.lua
+modules\StatusSelf.lua
+modules\StatusDirection.lua
+modules\StatusCombat.lua
+modules\StatusAuras.lua
+modules\StatusAurasBuffs.lua
+modules\StatusAurasDebuffs.lua

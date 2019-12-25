@@ -1,0 +1,20 @@
+## Interface: 11303
+## Title: ItemRack
+## Author: Gello - Updated for Classic by Rottenbeer
+## Title-zhCN: |CFFFF8000辅助|R 一键换装ItemRack
+## Title-zhTW: |CFFFF8000輔助|R 一鍵換裝ItemRack
+## Notes-zhCN: 快速装备,更换或脱掉你身上的装备
+## Notes-zhTW: 快速裝備,更換或脫掉你身上的裝備
+## X-Repple: 辅助
+## SavedVariables: ItemRackSettings, ItemRackItems, ItemRackEvents
+## SavedVariablesPerCharacter: ItemRackUser
+ItemRack.lua
+ItemRack.xml
+ItemRackButtons.lua
+ItemRackButtons.xml
+ItemRackEquip.lua
+ItemRackQueue.lua
+ItemRackEvents.lua
+
+
+

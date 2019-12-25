@@ -1,0 +1,6 @@
+<Ui>
+    <Script file="TownsfolkUtil.lua" />
+    <Script file="Townsfolk.lua" />
+    <Script file="Settings.lua" />
+    <Script file="TownsfolkTracker.lua" />
+</Ui>

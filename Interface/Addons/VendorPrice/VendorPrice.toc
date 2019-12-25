@@ -1,0 +1,15 @@
+## Interface: 11303
+## Version: 1.3.0
+## Title: Vendor Price
+## Notes: Displays the price of an item when not at a vendor
+## Title-zhCN: |CFFFF8000辅助|R 物品价格
+## Notes-zhCN: 在鼠标提示里显示物品价格
+## Title-zhTW: |CFFFF8000輔助|R 物品價格
+## Notes-zhTW: 在滑鼠提示裡顯示物品價格
+## X-Repple: 辅助
+## Author: Ketho, Icesythe7
+## X-Curse-Project-ID: 322091
+## X-WoWI-ID: 24922
+
+VendorPrice.lua
+Compat.lua

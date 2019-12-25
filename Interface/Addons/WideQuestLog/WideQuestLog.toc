@@ -1,0 +1,8 @@
+## Interface: 11303
+## Title: Wide Quest Log
+## Author: Bloodline
+## Notes: Doubles the Width of the Quest Log
+## Title-zhCN: |CFFFF8000辅助|R 双栏任务日志
+## Title-zhTW: |CFFFF8000輔助|R 雙欄任務日誌
+## X-Repple: 辅助
+WideQuestLog.lua

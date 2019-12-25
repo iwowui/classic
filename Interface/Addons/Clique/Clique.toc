@@ -1,0 +1,45 @@
+## Interface: 11303
+## Title: Clique
+## Author: Cladhaire
+## Version: v1.0.3-classic
+## Notes: Simply powerful click-casting interface
+## Title-zhCN: |CFF80FF80技能|R 点击施法
+## Notes-zhCN: 点击特定框体执行特定动作、施放法术或使用物品
+## Title-zhTW: |CFF80FF80技能|R 點擊施法
+## Notes-zhTW: 點擊特定框體執行特定動作、施放法術或使用物品
+## X-Repple: 技能
+## DefaultState: Disabled
+## SavedVariables: CliqueDB, CliqueDB3
+
+## X-Localizations: enUS, enGB, ruRU, zhCN, zhTW
+## X-CompatibleLocales: enUS, enGB, deDE, frFR, esES, esMX, zhCN, zhTW, koKR, ruRU
+
+AddonCore.lua
+Localization.enUS.lua
+Localization.zhCN.lua
+Localization.zhTW.lua
+
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+libs\AceDB-3.0\AceDB-3.0.xml
+libs\tekKonfigAboutPanel.lua
+
+DatabaseDefaults.lua
+
+ClickCastTemplate.xml
+
+Clique.xml
+
+Clique.lua
+Utils.lua
+
+BindConfig.lua
+
+OptionsPanel.lua
+FrameOptionsPanel.lua
+
+BlizzardFrames.lua
+
+# HeaderTest.xml
+# HeaderTest.lua
+# TestSuite.lua

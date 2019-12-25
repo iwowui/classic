@@ -1,0 +1,29 @@
+﻿## Interface: 11303
+## Title: AtlasQuest
+## Notes: Shows the Quests for dungeons and battlegrounds.
+## Title-zhCN: |CFFFF8000地图|R 副本地图浏览器 |cFFff69b4[副本任务]|r
+## Notes-zhCN: 显示副本和战场相关任务及副本背景。
+## Title-zhTW: |CFFFF8000地圖|R 副本地圖集 |cFFff69b4[副本任務]|r
+## Notes-zhTW: 顯示副本背景故事、相關任務及BOSS攻略提示
+## X-Repple: 地图
+## Author: Thandrenn
+## Version: 4.11.58
+## X-Author-Faction: Alliance
+## X-Author-Server: Atiesh US
+## X-eMail: mystery8@gmail.com
+## X-Website: https://github.com/thandrenn/AtlasQuest
+## X-Category: Quests
+## X-License: GPLv2
+## X-Credits: AtlasQuest Team
+## X-Localizations: enUS, zhCN
+## X-Date: December 10, 2019
+## X-Help: AtlasQuestHelp
+## RequiredDeps: Atlas
+## OptionalDeps: 
+## LoadOnDemand: 0
+## SavedVariablesPerCharacter:
+## SavedVariables: AtlasQuest_Options,
+## Dependencies:
+
+AtlasQuest_InsideFrame.xml
+AtlasQuest.xml

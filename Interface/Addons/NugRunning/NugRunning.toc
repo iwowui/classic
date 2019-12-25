@@ -1,0 +1,28 @@
+## Interface: 11303
+## Title: NugRunning
+## Notes: Spelltimers
+## Title-zhCN: |CFFFF8000辅助|R 法术计时条
+## Title-zhTW: |CFFFF8000輔助|R 法術計時條
+## Notes-zhCN: 以计时条显示法术的持续时间，支援多目标和姓名板。
+## Notes-zhTW: 以計時條顯示法術的持續時間，支援多目標和姓名板。
+## X-Repple: 辅助
+## Author: d87
+## SavedVariablesPerCharacter: NRunDB_Char
+## SavedVariables: NRunDB_Global, NugRunningConfigCustom
+## Version: 1.13.33
+
+## X-WoWI-ID: 10440
+## X-Curse-Project-ID: 27470
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibSharedMedia-3.0\lib.xml
+Libs\LibTotemInfo-1.0\embeds.xml
+
+helpers.lua
+classic.config.lua
+NugRunning.lua
+frame.lua
+special.lua
+totems.lua
+nameplates.lua

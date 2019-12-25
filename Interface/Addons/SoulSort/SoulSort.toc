@@ -1,0 +1,18 @@
+## Interface: 11303
+## Title: SoulSort
+## Notes: Easy Soul Shard Management
+## Title-zhCN: |CFF8000FF职业|R 术士 灵魂碎片整理
+## Notes-zhCN: 自动将灵魂碎片放到最后一个包里、自动填满最后一个包，使用时将灵魂袋放到最后一个背包的格子里。
+## Title-zhTW: |CFF8000FF職業|R 術士 靈魂碎片整理
+## Notes-zhTW: 自動將靈魂碎片放到最後一個包裡、自動填滿最後一個包，使用時將靈魂袋放到最後一個背包的格子裡。
+## X-Repple: 职业
+## LoadOnDemand: 1
+## Author: Anilusion
+## Version: 0.4
+## SavedVariablesPerCharacter: SoulSortOptions
+## OptionalDeps: LibDataBroker-1.1
+
+libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+
+SoulSort.lua
+SoulSort_Options.lua

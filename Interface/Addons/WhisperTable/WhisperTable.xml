@@ -1,0 +1,334 @@
+﻿<Ui>
+<Script file="WhisperTable.lua" />
+<Script file="ChatCopy.lua" />
+<!--模板-->
+<!--名字按钮-->
+<Button name="WhisperTable_TextBottonTemplate" hidden="true" virtual="true">
+	<Size>
+		<AbsDimension x="80" y="25"/>
+	</Size>
+	<HighlightTexture alphaMode="ADD" file="interface\Glues\CharacterSelect\Glues-CharacterSelect-Highlight.blp"/>
+	<Layers>
+		<Layer level="OVERLAY">
+			<FontString name="$parent_Text" inherits="GameFontNormal"/>
+		</Layer>
+	</Layers>
+	<Scripts>
+		<OnLoad>
+			self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+		</OnLoad>
+		<OnClick>
+			WhisperTable_OnClick(self, self:GetID(), button);
+		</OnClick>
+		<OnEnter>
+			WhisperTable_OnEnter(self, self:GetID());
+		</OnEnter>
+		<OnLeave>
+			WhisperTable_OnLeave(self);
+		</OnLeave>
+	</Scripts>
+</Button>
+<!--删除按钮-->
+<Button name="WhisperTable_DelButton_Template" virtual="true">
+	<Size>
+		<AbsDimension x="18" y="18"/>
+	</Size>
+	<Scripts>
+		<OnLoad>
+			self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+		</OnLoad>
+		<OnEnter>
+			GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+			GameTooltip:SetText(DEL_BTN, 1, 1, 1);
+			GameTooltip:Show();
+		</OnEnter>
+		<OnLeave>
+			GameTooltip:Hide();
+		</OnLeave>
+		<OnClick>
+			WhisperTable_Del(self, self:GetID(), button);
+		</OnClick>
+	</Scripts>
+	<NormalTexture file="Interface\ChatFrame\UI-ChatIcon-Battlenet"/>
+	<PushedTexture file="Interface\ChatFrame\UI-ChatIcon-Battlenet"/>
+	<!-- <NormalTexture file="Interface\Buttons\UI-MinusButton-Up"/> -->
+	<!-- <PushedTexture file="Interface\Buttons\UI-MinusButton-Down"/> -->
+	<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+	<Layers>
+		<Layer level="BACKGROUND">
+			<Texture name="$parent_Background" file="Interface\Buttons\CheckButtonHilight" alpha="0"/>
+		</Layer>
+	</Layers>
+</Button>
+<!--召唤按钮-->
+<Button name="WhisperTable_ShowBotton" parent="UIParent" hidden="false" movable="true" alpha="0.7">
+	<Size>
+		<AbsDimension x="24" y="24" />
+	</Size>
+	<NormalTexture file="Interface\Icons\INV_Misc_Food_28"/>
+	<HighlightTexture alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight"/>
+	<Anchors>
+		<Anchor point="BOTTOMLEFT" relativeTo="ChatFrameChannelButton" relativePoint="TOPLEFT">
+			<Offset>
+				<AbsDimension x="2" y="12"/>
+			</Offset>
+		</Anchor>
+	</Anchors>
+	<Scripts>
+		<OnLoad>
+			self:RegisterForDrag("LeftButton");
+			self:RegisterForClicks("LeftButtonUp");
+			self:SetUserPlaced(true);
+			self:SetClampedToScreen(true);
+		</OnLoad>
+		<OnEnter>
+			GameTooltip:SetOwner(self, "ANCHOR_LEFT");
+			GameTooltip:SetText("|cff0080FF"..CALL_BTN.."|r", 1, 1, 1);
+			GameTooltip:Show();
+		</OnEnter>
+		<OnLeave>
+			GameTooltip:Hide();
+		</OnLeave>
+		<OnDragStart>
+			if IsShiftKeyDown() then
+				if (not InCombatLockdown()) then
+					self:StartMoving();
+				end
+			end
+		</OnDragStart>
+		<OnDragStop>
+			self:StopMovingOrSizing();
+		</OnDragStop>
+		<OnClick>
+			if IsControlKeyDown() then
+				if (not InCombatLockdown()) then
+					self:ClearAllPoints();
+					self:SetPoint("BOTTOMLEFT", ChatFrameChannelButton, "TOPLEFT", 2, 12);
+				end
+			else
+				WhisperTable_Set(self);
+			end
+		</OnClick>
+	</Scripts>
+</Button>
+<!--显示屏-->
+<Frame name="WhisperTable_Main" parent="UIParent" hidden="true" movable="true">
+	<Size>
+		<AbsDimension x="140" y="230"/>
+	</Size>
+	<Anchors>
+		<Anchor point="BOTTOMRIGHT">
+			<Offset>
+				<AbsDimension x="-125" y="100"/>
+			</Offset>
+		</Anchor>
+	</Anchors>
+	<Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\DialogFrame\UI-DialogBox-Border">
+		<BackgroundInsets>
+			<AbsInset left="5" right="5" top="5" bottom="5"/>
+		</BackgroundInsets>
+	</Backdrop>
+	<Layers>
+		<Layer level="OVERLAY">
+			<FontString name="WhisperTable_PageText" inherits="GameFontNormal" text="1">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="75" y="20"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</FontString>
+		</Layer>
+	</Layers>
+	<Scripts>
+		<OnLoad>
+			WhisperTable_Onload(self)
+		</OnLoad>
+		<OnEvent>
+			WhisperTable_OnEvent(self, event, ...)
+		</OnEvent>
+		<OnDragStart>
+			self:StartMoving();
+		</OnDragStart>
+		<OnDragStop>
+			self:StopMovingOrSizing();
+		</OnDragStop>
+	</Scripts>
+	<Frames>
+<!--按钮-->
+	<Button name="WhisperTable_Tag1" parent="WhisperTable_Main" inherits="WhisperTable_TextBottonTemplate" id="1">
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="20" y="-20"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</Button>
+	<Button name="WhisperTable_Del1" parent="WhisperTable_Tag1" inherits="WhisperTable_DelButton_Template" id="1">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="WhisperTable_Tag1" relativePoint="RIGHT"/>
+		</Anchors>
+	</Button>
+	
+	<Button name="WhisperTable_Tag2" parent="WhisperTable_Main" inherits="WhisperTable_TextBottonTemplate" id="2">
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="20" y="-40"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</Button>
+	<Button name="WhisperTable_Del2" parent="WhisperTable_Tag2" inherits="WhisperTable_DelButton_Template" id="2">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="WhisperTable_Tag2" relativePoint="RIGHT"/>
+		</Anchors>
+	</Button>
+	
+	<Button name="WhisperTable_Tag3" parent="WhisperTable_Main" inherits="WhisperTable_TextBottonTemplate" id="3">
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="20" y="-60"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</Button>
+	<Button name="WhisperTable_Del3" parent="WhisperTable_Tag3" inherits="WhisperTable_DelButton_Template" id="3">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="WhisperTable_Tag3" relativePoint="RIGHT"/>
+		</Anchors>
+	</Button>
+	
+	<Button name="WhisperTable_Tag4" parent="WhisperTable_Main" inherits="WhisperTable_TextBottonTemplate" id="4">
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="20" y="-80"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</Button>
+	<Button name="WhisperTable_Del4" parent="WhisperTable_Tag4" inherits="WhisperTable_DelButton_Template" id="4">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="WhisperTable_Tag4" relativePoint="RIGHT"/>
+		</Anchors>
+	</Button>
+	
+	<Button name="WhisperTable_Tag5" parent="WhisperTable_Main" inherits="WhisperTable_TextBottonTemplate" id="5">
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="20" y="-100"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</Button>
+	<Button name="WhisperTable_Del5" parent="WhisperTable_Tag5" inherits="WhisperTable_DelButton_Template" id="5">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="WhisperTable_Tag5" relativePoint="RIGHT"/>
+		</Anchors>
+	</Button>
+	
+	<Button name="WhisperTable_Tag6" parent="WhisperTable_Main" inherits="WhisperTable_TextBottonTemplate" id="6">
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="20" y="-120"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</Button>
+	<Button name="WhisperTable_Del6" parent="WhisperTable_Tag6" inherits="WhisperTable_DelButton_Template" id="6">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="WhisperTable_Tag6" relativePoint="RIGHT"/>
+		</Anchors>
+	</Button>
+	
+	<Button name="WhisperTable_Tag7" parent="WhisperTable_Main" inherits="WhisperTable_TextBottonTemplate" id="7">
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="20" y="-140"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</Button>
+	<Button name="WhisperTable_Del7" parent="WhisperTable_Tag7" inherits="WhisperTable_DelButton_Template" id="7">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="WhisperTable_Tag7" relativePoint="RIGHT"/>
+		</Anchors>
+	</Button>
+	
+	<Button name="WhisperTable_Tag8" parent="WhisperTable_Main" inherits="WhisperTable_TextBottonTemplate" id="8">
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="20" y="-160"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</Button>
+	<Button name="WhisperTable_Del8" parent="WhisperTable_Tag8" inherits="WhisperTable_DelButton_Template" id="8">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="WhisperTable_Tag8" relativePoint="RIGHT"/>
+		</Anchors>
+	</Button>
+<!--翻页按钮-->
+		<Button name="WhisperTable_PrevPageButton">
+			<Size>
+				<AbsDimension x="32" y="32"/>
+			</Size>
+			<Anchors>
+				<Anchor point="BOTTOMLEFT">
+					<Offset>
+						<AbsDimension x="10" y="10"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>
+					WhisperTable_PrevNextPage(self, -1);
+				</OnClick>
+			</Scripts>
+			<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up"/>
+			<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down"/>
+			<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled"/>
+			<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+		</Button>
+		<Button name="WhisperTable_NextPageButton">
+			<Size>
+				<AbsDimension x="32" y="32"/>
+			</Size>
+			<Anchors>
+				<Anchor point="BOTTOMLEFT">
+					<Offset>
+						<AbsDimension x="43" y="10"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>
+					WhisperTable_PrevNextPage(self, 1);
+				</OnClick>
+			</Scripts>
+			<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up"/>
+			<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down"/>
+			<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
+			<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+		</Button>
+<!--关闭-->
+		<Button name="MyRoll_Close_Button" inherits="UIPanelCloseButton">
+			<Anchors>
+				<Anchor point="BOTTOMRIGHT">
+					<Offset>
+						<AbsDimension x="-10" y="10"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</Button>
+	</Frames>
+</Frame>
+</Ui>

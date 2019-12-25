@@ -1,0 +1,12 @@
+## Interface: 11303
+## Title: OmniCC Config
+## Notes: OmniCC's configuration menu
+## Title-zhCN: |CFFFF8000辅助|R 冷却计时 设置模块
+## Notes-zhCN: 显示物品和技能的冷却倒计时
+## Title-zhTW: |CFFFF8000輔助|R 冷卻計時 設置模組
+## Notes-zhTW: 顯示物品和技能的冷卻倒計時
+## X-Repple: 辅助
+## Author: Tuller
+## Dependencies: OmniCC
+## LoadOnDemand: 1
+..\OmniCC\config\config.xml

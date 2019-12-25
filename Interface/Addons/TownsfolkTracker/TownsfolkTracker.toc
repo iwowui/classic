@@ -1,0 +1,17 @@
+## Interface: 11303
+## Title: Townsfolk Tracker
+## Notes: Allows tracking of townsfolk NPCs on the map and minimap.
+## Title-zhCN: |CFFFF8000地图|R 镇民追踪
+## Notes-zhCN: 在大小地图上标记各种NPC位置
+## Title-zhTW: |CFFFF8000地圖|R 鎮民追蹤
+## Notes-zhTW: 在大小地圖上標記各種NPC位置
+## X-Repple: 地图
+## Author: Mokulu
+## Version: 1.0.6
+## SavedVariables: TownsfolkTrackerDB
+## SavedVariablesPerCharacter: tfTrackingList
+
+Libs\Load_Libraries.xml
+Locale\Load_Locales.xml
+Data\Load_Data.xml
+TownsfolkTracker.xml

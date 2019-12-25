@@ -1,0 +1,14 @@
+## Interface: 11303
+## Title: NeatPlates
+## Notes: Enjoys long walks on Darkshore
+## Title-zhCN: |CFFFF8000辅助|R 姓名版增强
+## Title-zhTW: |CFFFF8000輔助|R 姓名版增強
+## X-Repple: 辅助
+## Author: Luxocracy and friends
+## Version: 1.13.3.2
+## SavedVariables: NeatPlatesSettings, NeatPlatesSpellDB
+## SavedVariablesPerCharacter: NeatPlatesOptions
+
+embeds.xml
+locales.xml
+NeatPlates.xml

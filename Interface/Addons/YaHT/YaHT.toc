@@ -1,0 +1,34 @@
+## Interface: 11303
+## Title: YaHT
+## Notes: Yet another Hunter Timer.
+## Title-zhCN: |CFF8000FF职业|R 猎人 射击计时条
+## Notes-zhCN: 为猎人的自动射击、描准射击、乱射提供计时条，并提示宁神射击。
+## Title-zhTW: |CFF8000FF職業|R 獵人 射擊計時條
+## Notes-zhTW: 為獵人的自動射擊、描准射擊、亂射提供計時條，並提示寧神射擊。
+## X-Repple: 职业
+## LoadOnDemand: 1
+## Author: Avi
+##
+## Dependencies:
+## SavedVariables: YaHTdb
+## OptionalDeps: Ace3
+## X-Category: Hunter
+
+#@no-lib-strip@
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+libs\LibSharedMedia-3.0\lib.xml
+libs\AceDB-3.0\AceDB-3.0.xml
+libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+libs\AceGUI-3.0\AceGUI-3.0.xml
+libs\AceGUI-3.0-SharedMediaWidgets\widget.xml
+libs\AceConfig-3.0\AceConfig-3.0.xml
+#@end-no-lib-strip@
+
+locales\enUS.lua
+locales\zhTW.lua
+locales\zhCN.lua
+
+YaHT.lua
+defaults.lua
+options.lua

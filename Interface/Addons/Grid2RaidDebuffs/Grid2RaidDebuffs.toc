@@ -1,0 +1,14 @@
+## Interface: 11303
+## Title: Grid2 |cd1ff7d0aRaidDebuffs|r
+## Notes: Adds a Raid Boss debuff status.
+## Title-zhCN: |CFF80FF80团队|R 团队面板 RaidDebuff
+## Title-zhTW: |CFF80FF80團隊|R 團隊面板 RaidDebuff
+## X-Repple: 团队
+## DefaultState: Disabled
+
+## Dependencies: Grid2
+## Version:r943
+## X-Category: UnitFrame
+## X-Website: http://wowace.com/projects/grid2/
+
+Grid2RaidDebuffs.lua

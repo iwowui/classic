@@ -1,0 +1,15 @@
+## Interface: 11303
+## Title: ClassicSpellActivations
+## Notes: Shows you the shiny
+## Title-zhCN: |CFFFF8000战斗|R 动作条触发高亮
+## Notes-zhCN: 动作条法术触发高亮效果
+## Title-zhTW: |CFFFF8000戰鬥|R 動作條觸發高亮
+## Notes-zhTW: 動作條法術觸發高亮效果
+## X-Repple: 战斗
+## Author: d87
+## OptionalDeps: Bartender4, Dominos, Neuron
+
+## X-WoWI-ID: 25000
+## X-Curse-Project-ID: 323802
+
+ClassicSpellActivations.lua

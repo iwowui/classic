@@ -1,0 +1,12 @@
+## Interface: 11303
+## Title: FasterLooting
+## Author: cannon
+## Notes: Auto loots all items without the delay currently in Classic
+## Title-zhCN: |CFFFF8000辅助|R 自动拾取
+## Notes-zhCN: 自动拾取所有物品
+## Title-zhTW: |CFFFF8000輔助|R 自動拾取
+## Notes-zhTW: 自動拾取所有物品
+## X-Repple: 辅助
+## Version: 1.1.1
+## SavedVariables: FasterLootingDB
+FasterLooting.lua

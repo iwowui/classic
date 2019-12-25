@@ -1,0 +1,20 @@
+## Interface: 11303
+## Author: Peter Getov
+## Version: 2.8.1
+## Title: |cff00aeffCharacterStatsClassic|r
+## Notes: Advanced Character Stats
+## Title-zhCN: |CFFFF8000辅助|R 详细人物属性
+## Title-zhTW: |CFFFF8000輔助|R 詳細人物屬性
+## X-Repple: 辅助
+## DefaultState:  enabled
+## SavedVariables: CharacterStatsClassicDB
+## SavedVariablesPerCharacter: CharacterStatsClassicCharacterDB
+
+Localization\Localization_en.lua
+Localization\Localization_cn.lua
+Localization\Localization_tw.lua
+
+CharacterStatsClassicUI.lua
+CharacterStatsClassicCore.lua
+CharacterStatsClassicUtils.lua
+ClassUtils.lua

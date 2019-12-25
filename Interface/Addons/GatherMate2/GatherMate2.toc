@@ -1,0 +1,48 @@
+## Interface: 11303
+## Notes: Collects Herbs, Mines, Gas Clouds, Archaeology, Treasure and Fishing locations and adds them to the worldmap and minimap
+## Title: GatherMate2
+## Title-zhCN: |CFFFF8000地图|R 采集助手
+## Notes-zhCN: 收集草药、矿、气云和钓鱼的地点，并增加他们到世界地图和小地图。|N|CFF0099FF需要基础函数库|R
+## Title-zhTW: |CFFFF8000地圖|R 採集助手
+## Notes-zhTW: 收集草藥、礦、氣雲和釣魚的地點，並增加他們到世界地圖和小地圖。|N|CFF0099FF需要基礎函式庫|R
+## X-Repple: 地图
+## Author: kagaro, xinhuan, nevcairiel
+## X-Email: sal.scotto@gmail.com
+## X-Credits: OttoDeFe for the launher icon.
+## SavedVariables: GatherMate2DB, GatherMate2HerbDB, GatherMate2MineDB, GatherMate2FishDB, GatherMate2GasDB, GatherMate2TreasureDB, GatherMate2ArchaeologyDB, GatherMate2LoggingDB
+## X-Category: Map
+## Version: 1.45.5
+## X-License: ARR
+## OptionalDeps: Ace3, LibDataBroker-1.1, HereBeDragons
+## LoadManagers: AddonLoader
+## X-LoadOn-Always: delayed
+## X-Curse-Project-ID: 26120
+## X-WoWI-ID: 21293
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+
+Libs\HereBeDragons\HereBeDragons-2.0.lua
+Libs\HereBeDragons\HereBeDragons-Migrate.lua
+
+Locales\GatherMate2-enUS.lua
+Locales\GatherMate2-zhCN.lua
+Locales\GatherMate2-zhTW.lua
+
+## Order is important
+GatherMate2.lua
+Collector.lua
+Display.lua
+Constants.lua
+Config.lua
+
+## XML loads last because it only contains the pin template
+GatherMate2.xml

@@ -1,0 +1,12 @@
+## Interface: 11303
+## Title: PicoPoisons
+## Version: 1.00
+## Author: jsb
+## Notes: Displays remaining charges of poisons on the respective buff symbols
+## Title-zhCN: |CFF8000FF职业|R 盗贼 武器毒药剩余次数
+## Notes-zhCN: 将主副手毒药的剩余次数显示在右上Buff的图标上
+## Title-zhTW: |CFF8000FF職業|R 盜賊 武器毒藥剩餘次數
+## Notes-zhTW: 將主副手毒藥的剩餘次數顯示在右上Buff的圖示上
+## X-Repple: 职业
+## LoadOnDemand: 1
+PicoPoisons.lua

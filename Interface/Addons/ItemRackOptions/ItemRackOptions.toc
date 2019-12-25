@@ -1,0 +1,12 @@
+## Interface: 11303
+## Title: ItemRackOptions
+## Notes: Load-On-Demand modules for ItemRack
+## Title-zhCN: |CFFFF8000辅助|R 一键换装ItemRack 设置
+## Title-zhTW: |CFFFF8000輔助|R 一鍵換裝ItemRack 設置
+## Notes-zhCN: 快速装备,更换或脱掉你身上的装备
+## Notes-zhTW: 快速裝備,更換或脫掉你身上的裝備
+## X-Repple: 辅助
+## Dependencies: ItemRack, Blizzard_MacroUI
+## LoadOnDemand: 1
+ItemRackOptions.lua
+ItemRackOptions.xml

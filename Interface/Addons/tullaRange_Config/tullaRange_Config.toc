@@ -1,0 +1,14 @@
+## Interface: 11303
+## Title: tullaRange Config
+## Notes: GUI based configuration for tullaRange
+## Title-zhCN: |CFFFF8000辅助|R 距离染色 设置模块
+## Notes-zhCN: 当技能超出施放范围时对图标进行染色
+## Title-zhTW: |CFFFF8000輔助|R 距離染色 設置模組
+## Notes-zhTW: 當技能超出施放範圍時對圖示進行染色
+## X-Repple: 辅助
+## Author: Tuller
+## Dependencies: tullaRange
+## LoadOnDemand: 1
+localization\localization.xml
+widgets\widgets.xml
+colorOptions.lua

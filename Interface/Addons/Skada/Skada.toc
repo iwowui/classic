@@ -1,0 +1,34 @@
+## Interface: 11303
+## Title: Skada
+## Notes: Modular damage meter.
+## Title-zhCN: |CFF80FF80团队|R 伤害统计
+## Notes-zhCN: 模块化的伤害统计。|N|CFF0099FF需要基础函数库|R
+## Title-zhTW: |CFF80FF80團隊|R 傷害統計
+## Notes-zhTW: 模組化的傷害統計。|N|CFF0099FF需要基礎函式庫|R
+## X-Repple: 团队
+## DefaultState: Disabled
+## Author: Zarnivoop
+## Version: 1.7.6
+## SavedVariables: SkadaDB
+## SavedVariablesPerCharacter: SkadaPerCharDB
+
+## OptionalDeps: Ace3, LibSharedMedia-3.0, LibWindow-1.1, LibDBIcon-1.0, AceGUI-3.0-SharedMediaWidgets, LibBossIDs-1.0, LibDualSpec-1.0, LibNotify-1.0
+
+## X-License: MIT/X
+## X-Category: Combat
+
+embeds.xml
+
+locale\enUS.lua
+locale\zhCN.lua
+locale\zhTW.lua
+
+Skada.lua
+Menus.lua
+Options.lua
+BarDisplay.lua
+InlineDisplay.lua
+BrokerDisplay.lua
+Version.lua
+
+modules.xml

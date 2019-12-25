@@ -1,0 +1,21 @@
+<Ui>
+    <Script file="Constants.lua" />
+    <Script file="Ammunition.lua" />
+    <Script file="Auctioneers.lua" />
+    <Script file="Bankers.lua" />
+    <Script file="BattleMasters.lua" />
+    <Script file="ClassTrainers.lua" />
+    <Script file="FlightMasters.lua" />
+    <Script file="FoodDrink.lua" />
+    <Script file="Innkeepers.lua" />
+    <Script file="Mailboxes.lua" />
+    <Script file="Poisons.lua" />
+    <Script file="ProfessionTrainers.lua" />
+    <Script file="Reagents.lua" />
+    <Script file="Repair.lua" />
+    <Script file="StableMasters.lua" />
+    <Script file="TradeGoods.lua" />
+    <Script file="Transportation.lua" />
+    <Script file="Dungeons.lua" />
+    <Script file="Raids.lua" />
+</Ui>

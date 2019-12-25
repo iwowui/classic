@@ -1,0 +1,62 @@
+## Title: Quartz
+## Interface: 11303
+## Notes: Modular casting bar.
+## Author: Nevcairiel, Nymbia
+## Version: 3.5-classic-5
+## X-License: GPL v2
+## X-Credits: Ammo (some code based on PitBull_CastBar), kergoth (Tradeskill Merge module idea), Roartindon (Lag Embed mode for Latency module)
+## X-Curse-Project-ID: 4558
+## X-WoWI-ID: 7158
+
+## Title-zhCN: |CFFFF8000界面|R 模块化施法条
+## Notes-zhCN: 美化并模块化施法条|n命令/quartz|N|CFF0099FF需要基础函数库|R
+## Title-zhTW: |CFFFF8000介面|R 模組化施法條
+## Notes-zhTW: 美化並模組化施法條|n命令/quartz|N|CFF0099FF需要基礎函式庫|R
+## X-Repple: 界面
+
+## SavedVariables: Quartz3DB
+## OptionalDeps: Ace3, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, SharedMedia, LibClassicCasterino, LibClassicDurations
+
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+libs\AceAddon-3.0\AceAddon-3.0.xml
+libs\AceGUI-3.0\AceGUI-3.0.xml
+libs\AceConfig-3.0\AceConfig-3.0.xml
+libs\AceConsole-3.0\AceConsole-3.0.xml
+libs\AceDB-3.0\AceDB-3.0.xml
+libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+libs\AceEvent-3.0\AceEvent-3.0.xml
+libs\AceTimer-3.0\AceTimer-3.0.xml
+libs\AceBucket-3.0\AceBucket-3.0.xml
+libs\AceLocale-3.0\AceLocale-3.0.xml
+libs\AceHook-3.0\AceHook-3.0.xml
+
+libs\LibSharedMedia-3.0\lib.xml
+libs\AceGUI-3.0-SharedMediaWidgets\widget.xml
+
+libs\LibClassicCasterino\LibClassicCasterino.lua
+libs\LibClassicDurations\LibClassicDurations.xml
+
+locale\locale.xml
+
+Quartz.lua
+Config.lua
+
+QuartzStatusBar.lua
+
+CastBarTemplate.lua
+
+modules\Player.lua
+modules\Target.lua
+modules\Pet.lua
+modules\Latency.lua
+modules\Tradeskill.lua
+modules\GCD.lua
+modules\Buff.lua
+modules\Mirror.lua
+modules\Timer.lua
+modules\Swing.lua
+modules\Interrupt.lua
+modules\Range.lua
+modules\Flight.lua
+modules\EnemyCasts.lua

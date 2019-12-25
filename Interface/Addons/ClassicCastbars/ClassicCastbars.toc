@@ -1,0 +1,19 @@
+## Interface: 11303
+## Title: ClassicCastbars
+## Notes: Adds castbars to various unitframes.
+## Title-zhCN: |CFFFF8000战斗|R 目标施法条
+## Notes-zhCN: 在目标和目标姓名板显示施法条。
+## Title-zhTW: |CFFFF8000戰鬥|R 目標施法條
+## Notes-zhTW: 在目標和目標姓名板顯示施法條。
+## X-Repple: 战斗
+## SavedVariables: ClassicCastbarsDB
+## Author: Wardz
+## Version: v1.2.1
+## X-Curse-Project-ID: 322865
+## X-WoWI-ID: 24925
+
+core/PoolManager.lua
+core/AnchorManager.lua
+core/Data.lua
+ClassicCastbars.lua
+core/Frames.lua

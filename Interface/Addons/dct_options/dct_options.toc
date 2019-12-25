@@ -1,0 +1,36 @@
+﻿## Interface: 11303
+## Title: <DCT> Options
+## Notes: 为DCT (Dennis's Combat Text) 提供图形设置界面
+## Title-zhCN: |CFFFF8000战斗|R 战斗指示器 设置模块
+## Notes-zhCN: 为DCT (Dennis's Combat Text) 提供图形设置界面
+## Title-zhTW: |CFFFF8000戰鬥|R 戰鬥指示器 設置模組
+## Notes-zhTW: 為DCT (Dennis's Combat Text) 提供圖形設置介面
+## X-Repple: 战斗
+## Author: Dennie
+## Dependencies: dct
+## SavedVariables: DCTOP_SAVE
+
+pre_set.lua
+config_options.lua
+
+locals\cn_pre_set.lua
+locals\cn_loc_options.lua
+locals\tw_pre_set.lua
+locals\tw_loc_options.lua
+
+options.lua
+options.xml
+options_ex.lua
+options_ex.xml
+options_ani.lua
+options_ani.xml
+options_font.lua
+options_font.xml
+options_save.lua
+options_save.xml
+options_misc.lua
+options_misc.xml
+options_spec.lua
+options_spec.xml
+options_spec2.lua
+options_spec2.xml

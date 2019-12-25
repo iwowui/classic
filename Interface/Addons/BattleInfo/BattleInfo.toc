@@ -1,0 +1,18 @@
+## Interface: 11303
+## Title: Battle Info
+## Notes: Enrich your battleground information. Feedback: farmer1992@gmail.com
+## Title-zhCN: |CFFFF8000战斗|R 战场助手
+## Notes-zhCN: 战场信息增强. 反馈: farmer1992@gmail.com
+## Title-zhTW: |CFFFF8000戰鬥|R 戰場助手
+## Notes-zhTW: 戰場資訊增強. 回饋: farmer1992@gmail.com
+## X-Repple: 战斗
+## Author: Boshi Lian(farmer1992@gmail.com)
+## Version: @project-version
+
+locales.lua
+event.lua
+utils.lua
+quickjoin.lua
+newbattle.lua
+widgetbar.lua
+cli.lua

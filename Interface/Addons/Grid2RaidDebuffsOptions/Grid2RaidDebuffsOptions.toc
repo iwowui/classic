@@ -1,0 +1,20 @@
+## Interface: 11303
+## Title: Grid2 |cd2ff7d0aRaidDebuffs Options|r
+## Notes: Load on demand Options for Grid2RaidDebuffs.
+## Title-zhCN: |CFF80FF80团队|R 团队面板 RaidDebuff设置
+## Title-zhTW: |CFF80FF80團隊|R 團隊面板 RaidDebuff設置
+## X-Repple: 团队
+## DefaultState: Disabled
+## Author: Michael
+## Dependencies: Grid2, Grid2RaidDebuffs
+## LoadOnDemand: 1
+## Version: r943
+
+Grid2RaidDebuffsOptions.lua
+OptionsGeneral.lua
+OptionsAdvanced.lua
+OptionsLuaCode.lua
+
+
+RaidDebuffsClassic.lua
+

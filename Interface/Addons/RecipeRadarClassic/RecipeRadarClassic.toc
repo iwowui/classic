@@ -1,0 +1,29 @@
+## Interface: 11303
+## Version: 1.0.0.23
+## Title: Recipe Radar Classic
+## Author: Kernighan
+## X-Contributor: speedwaystar, SecureAgent, Kernighan, Yunohu, Jay Miller
+## Notes: Locates vendors who sell recipes in the current region or by profession.
+## Title-zhCN: |CFFFF8000辅助|R 配方雷达
+## Notes-zhCN: 位于售卖食谱在当前区域或者专业.
+## Title-zhTW: |CFFFF8000輔助|R 配方雷達
+## Notes-zhTW: 位於售賣食譜在當前區域或者專業.
+## X-Repple: 辅助
+## SavedVariables: RecipeRadar_SkillDB RecipeRadar_NameCache RecipeRadarDB
+## SavedVariablesPerCharacter: RecipeRadar_Options RecipeRadar_Filters
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@
+
+locales\enUS.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+Globals.lua
+MinimapButton.lua
+FontStyles.xml
+FrameTemplates.xml
+Maps.xml
+AvailabilityTooltip.xml
+RecipeRadarClassic.xml

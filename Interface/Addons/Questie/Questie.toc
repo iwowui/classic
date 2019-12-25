@@ -1,0 +1,125 @@
+## Interface: 11303
+## Title: |cFFFFFFFFQuestie|r|cFF00FF00 v5.4.0|r
+## Author: Aero/Logon/Muehe/TheCrux(BreakBB)/Dyaxler/Schaka/Zoey/Everyone else
+## Notes: A standalone Classic QuestHelper
+## Title-zhCN: |CFFFF8000辅助|R 任务助手Questie v5.4.0
+## Notes-zhCN: 全能型任务数据库
+## Title-zhTW: |CFFFF8000輔助|R 任務助手Questie v5.4.0
+## Notes-zhTW: 全能型任務資料庫
+## X-Repple: 辅助
+## Version: 5.4.0
+## RequiredDeps:
+## OptionalDeps: Ace3, LibDataBroker-1.1, LibCompress
+## SavedVariables: QuestieConfig
+## SavedVariablesPerCharacter: QuestieConfigCharacter
+
+embeds.xml
+Libs\HereBeDragons\HereBeDragons-2.0.lua
+Libs\HereBeDragons\HereBeDragons-Pins-2.0.lua
+Libs\HereBeDragons\HereBeDragons-Migrate.lua
+
+#Loader module
+Modules\Libs\QuestieLoader.lua
+
+#stream module (used by DB)
+Modules\QuestieStream.lua
+
+#Databases
+Database\QuestieDB.lua
+Database\TEMP_questie2events.lua
+Database\questDB.lua
+Database\objectDB.lua
+Database\spawnDB.lua
+Database\zoneDB.lua
+Database\specialspawns.lua
+Database\itemDB.lua
+
+#Corrections
+Database\Corrections\QuestieCorrections.lua
+Database\Corrections\QuestieItemBlacklist.lua
+Database\Corrections\QuestieItemFixes.lua
+Database\Corrections\QuestieNPCFixes.lua
+Database\Corrections\QuestieObjectFixes.lua
+Database\Corrections\QuestieQuestBlacklist.lua
+Database\Corrections\QuestieQuestFixes.lua
+Database\Corrections\QuestieEvent.lua
+
+#Localization
+Locale\QuestieLocale.lua
+Locale\enUS\locale.xml
+Locale\zhCN\locale.xml
+Locale\zhTW\locale.xml
+
+##Libs
+Modules\Libs\QuestieLib.lua
+#Modules\Libs\QuestieCompress.lua
+Modules\Libs\QuestiePlayer.lua
+Modules\Libs\QuestieSerializer.lua
+Modules\Libs\QuestieCombatQueue.lua
+Modules\Libs\QuestieHash.lua
+
+##Modules
+Modules\QuestieAuto.lua
+Modules\QuestieTooltips.lua
+Modules\QuestieEventHandler.lua
+
+#FramePool
+Modules\FramePool\QuestieFramePool.lua
+Modules\FramePool\QuestieFrame.lua
+
+#Map
+Modules\Map\QuestieMap.lua
+Modules\Map\QuestieMapUtils.lua
+
+#Quest
+Modules\Quest\QuestieQuest.lua
+Modules\Quest\QuestieQuestPrivates.lua
+
+Modules\QuestieNameplate.lua
+Modules\QuestieCoordinates.lua
+
+#Network
+Modules\Network\QuestieComms.lua
+Modules\Network\QuestieCommsData.lua
+
+#Journey
+Modules\Journey\QuestieJourney.lua
+Modules\Journey\QuestieJourneyPrivates.lua
+Modules\Journey\QuestieJourneyUtils.lua
+Modules\Journey\History.lua
+Modules\Journey\QuestDetailsFrame.lua
+Modules\Journey\tabs\MyJourney\MyJourney.lua
+Modules\Journey\tabs\MyJourney\MyJourneyTab.lua
+Modules\Journey\tabs\QuestsByZone\QuestsByZone.lua
+Modules\Journey\tabs\QuestsByZone\QuestsByZoneTab.lua
+#Modules\Journey\tabs\Search\Search.lua
+#Modules\Journey\tabs\Search\SearchTab.lua
+Modules\Journey\QuestieSearch.lua
+Modules\Journey\QuestieSearchResults.lua
+
+#Tracker
+Modules\Tracker\QuestieTracker.lua
+Modules\Tracker\QuestieTrackerUtils.lua
+Modules\Tracker\QuestieTrackerMenu.lua
+Modules\Tracker\QuestieTrackerPrivates.lua
+Modules\Tracker\QuestieQuestTimers.lua
+
+Modules\QuestieProfessions.lua
+Modules\QuestieReputation.lua
+Modules\QuestieDBMIntegration.lua
+
+#Options
+Modules\Options\QuestieOptions.lua
+Modules\Options\QuestieOptionsDefaults.lua
+Modules\Options\QuestieOptionsUtils.lua
+Modules\Options\QuestieOptionsMinimapIcon.lua
+Modules\Options\AdvancedTab\QuestieOptionsAdvanced.lua
+Modules\Options\DBMTab\QuestieOptionsDBM.lua
+Modules\Options\GeneralTab\QuestieOptionsGeneral.lua
+Modules\Options\MapTab\QuestieOptionsMap.lua
+Modules\Options\MinimapTab\QuestieOptionsMinimap.lua
+Modules\Options\NameplateTab\QuestieOptionsNameplate.lua
+Modules\Options\TrackerTab\QuestieOptionsTracker.lua
+
+#Main
+Questie.lua

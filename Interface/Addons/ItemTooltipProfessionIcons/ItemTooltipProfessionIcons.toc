@@ -1,0 +1,15 @@
+## Interface: 11303
+## Version: 1.1.5
+## Title: ItemTooltipProfessionIcons
+## Notes: Displays which professions and quests may use the item via the item's tooltip
+## Title-zhCN: |CFFFF8000辅助|R 物品用途提示
+## Notes-zhCN: 鼠标移动到物品图标上时显示该物品关联的专业、任务等
+## Title-zhTW: |CFFFF8000輔助|R 物品用途提示
+## Notes-zhTW: 滑鼠移動到物品圖示上時顯示該物品關聯的專業、任務等
+## X-Repple: 辅助
+## Author: Bytespire
+## SavedVariables: ItemTooltipIconsConfig
+
+ItemProfConstants.lua
+ItemTooltipProfessionIcons.lua
+ItemTooltipProfessionConfigFrame.lua

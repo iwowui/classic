@@ -1,0 +1,46 @@
+## Interface: 11303
+## X-Min-Interface: 11302
+## Title: Postal Classic
+## Version: v3.6.2
+## X-Build: 409
+## X-ReleaseDate: 2018-07-20T8:41:50Z
+## X-Revision: $Revision: 409 $
+## Author: Xinhuan
+## X-Credits: Ammo, Rabbit, Grennon, Mikk, oscarucb, Vanger
+## X-Category: Mail
+## Notes: Postal: Enhanced Mailbox support
+## Title-zhCN: |CFFFF8000辅助|R 邮件助手
+## Notes-zhCN: 允许你创建收件人列表，Alt点击物品添加到附件，Alt快速发送，自动填写邮件标题|N|CFF0099FF需要基础函数库|R
+## Title-zhTW: |CFFFF8000輔助|R 郵件助手
+## Notes-zhTW: 允許你創建收件人列表，Alt點擊物品添加到附件，Alt快速發送，自動填寫郵件標題|N|CFF0099FF需要基礎函式庫|R
+## X-Repple: 辅助
+## OptionalDeps: Ace3, !BlizzBugsSuck, !ClassColors
+## SavedVariables: Postal3ClassicDB
+
+## LoadManagers: AddonLoader
+## X-LoadOn-Mailbox: true
+## X-Email: xinhuan AT gmail DOT com
+
+#@no-lib-strip@
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceHook-3.0\AceHook-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+#@end-no-lib-strip@
+
+locales\locales.xml
+Postal.lua
+
+# Users can comment out any module (or delete the .lua) of any module they do not wish to load
+Modules\Express.lua
+Modules\OpenAll.lua
+Modules\Wire.lua
+Modules\Select.lua
+Modules\TradeBlock.lua
+Modules\Rake.lua
+Modules\BlackBook.lua
+Modules\DoNotWant.lua
+Modules\CarbonCopy.lua

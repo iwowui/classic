@@ -1,0 +1,11 @@
+﻿## Title: AuctionPlus
+## Interface: 11303
+## Version: 1.0
+## Notes: Shows Per Unit Pricing for Stacked Items on the Auction House
+## Title-zhCN: |CFFFF8000辅助|R 拍卖行增强
+## Notes-zhCN: 在拍卖行中的物品名称后显示单位一口价以及是否被已经被竞拍等信息
+## Title-zhTW: |CFFFF8000輔助|R 拍賣行增強
+## Notes-zhTW: 在拍賣行中的物品名稱後顯示單位一口價以及是否被已經被競拍等資訊
+## X-Repple: 辅助
+
+AuctionPlus.lua

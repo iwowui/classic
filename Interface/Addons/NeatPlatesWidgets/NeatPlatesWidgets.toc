@@ -1,0 +1,10 @@
+## Interface: 11303
+## Title: NeatPlates Widgets
+## Notes: Library of Widgets
+## Title-zhCN: |CFFFF8000辅助|R 姓名版增强 小部件库
+## Title-zhTW: |CFFFF8000輔助|R 姓名版增強 小部件庫
+## X-Repple: 辅助
+## Dependencies: NeatPlates
+## SavedVariables: NeatPlatesWidgetSettings
+
+Widgets.xml

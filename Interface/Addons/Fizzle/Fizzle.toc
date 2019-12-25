@@ -1,0 +1,22 @@
+## Interface: 11303
+## Title: Fizzle
+## Author: phyber
+## Notes: Show item durability and quality in the character frame.
+## Title-zhCN: |CFFFF8000辅助|R 装备耐久
+## Notes-zhCN: 在人物装备栏中显示物品品质与耐久度。|N|CFF0099FF需要基础函数库|R
+## Title-zhTW: |CFFFF8000輔助|R 裝備耐久
+## Notes-zhTW: 在人物裝備欄中顯示物品品質與耐久度。|N|CFF0099FF需要基礎函式庫|R
+## X-Repple: 辅助
+## Version: 80205-1
+## SavedVariablesPerCharacter: FizzleDB
+## OptionalDeps: Ace3, Voyeur
+## X-Category: Inventory
+## X-Embeds: Ace3
+## X-Curse-Project-ID: 6079
+
+embeds.xml
+
+Locales\locales.xml
+
+Core.lua
+Inspect.lua

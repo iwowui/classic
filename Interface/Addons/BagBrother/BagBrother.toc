@@ -1,0 +1,17 @@
+## Interface: 11303
+## Title: |cff20ff20BagBrother|r
+## Notes: Stores data about your characters inventory, bank, vault and guild bank, so that you may view them from anywhere.
+## Title-zhCN: |cff7fff7f界面|R |CFFFF0000背包整合|R 离线银行
+## Notes-zhCN: 让你可以随时浏览本ID所有服务器所有人物的装备以及背包、邮件、银行和公会银行中的物品
+## Title-zhTW: |cff7fff7f介面|R |CFFFF0000背包整合|R 離線銀行
+## Notes-zhTW: 讓你可以隨時流覽本ID所有伺服器所有人物的裝備以及背包、郵件、銀行和公會銀行中的物品
+## X-Repple: 界面
+## Author: Jaliborc (João Cardoso)
+## SavedVariables: BrotherBags
+## OptionalDeps: LibStub, WoWUnit
+
+LibStub.lua
+Startup.lua
+Events.lua
+API.lua
+Interface.lua

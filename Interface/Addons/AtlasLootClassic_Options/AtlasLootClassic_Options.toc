@@ -1,0 +1,27 @@
+﻿## Interface: 11303
+## Author: Lag
+## Version: v1.4.4
+## Dependencies: AtlasLootClassic
+## LoadOnDemand: 1
+
+## Title: AtlasLoot Classic |cFF22B14C[Options]|r
+## Notes: AtlasLoot options module
+## Title-zhCN: |CFFFF8000地图|R 掉落查询 |cFF0099FF[选项]|R
+## Notes-zhCN: AtlasLoo t选项模块
+## Title-zhTW: |CFFFF8000地圖|R 掉落查詢 |cFF0099FF[選項]|R
+## Notes-zhTW: 副本戰利品查詢的選項設定
+## X-Repple: 地图
+
+## X-Category: Map
+## X-License: GPL v2
+
+embeds.xml
+
+Locales\constants.cn.lua
+Locales\constants.tw.lua
+
+Core.lua
+Main.lua
+Windows.lua
+MiniMapButton.lua
+Addons.lua
