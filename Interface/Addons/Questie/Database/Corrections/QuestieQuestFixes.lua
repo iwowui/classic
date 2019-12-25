@@ -46,6 +46,9 @@ function QuestieQuestFixes:Load()
         [90] = {
             [QuestieDB.questKeys.requiredSkill] = {185, 50}
         },
+        [100] = {
+            [QuestieDB.questKeys.childQuests] = {1103}, -- #1658
+        },
         --[103] = { -- bad race data (actually this is correct)
         --    [QuestieDB.questKeys.requiredRaces] = 77,
         --},
@@ -266,6 +269,10 @@ function QuestieQuestFixes:Load()
         },
         [1100] = {
             [QuestieDB.questKeys.startedBy] = {nil,{19861},{5791},}, -- #1189
+        },
+        [1103] = {
+            [QuestieDB.questKeys.preQuestSingle] = {}, -- #1658
+            [QuestieDB.questKeys.parentQuest] = 100, -- #1658
         },
         [1106] = {
             [QuestieDB.questKeys.preQuestGroup] = {1104, 1105},
@@ -1158,9 +1165,11 @@ function QuestieQuestFixes:Load()
             [QuestieDB.questKeys.requiredRaces] = 178,
         },
         [8767] = {
+            [QuestieDB.questKeys.requiredRaces] = 178,
             [QuestieDB.questKeys.requiredClasses] = 0,
         },
         [8788] = {
+            [QuestieDB.questKeys.requiredRaces] = 77,
             [QuestieDB.questKeys.requiredClasses] = 0,
         },
         [8980] = { -- bad race data

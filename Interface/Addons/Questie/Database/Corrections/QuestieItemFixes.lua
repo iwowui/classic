@@ -491,8 +491,7 @@ function QuestieItemFixes:Load()
             [QuestieDB.itemKeys.objectDrops] = {},
         },
         [10575] = {
-            [QuestieDB.itemKeys.npcDrops] = {}, -- #1216
-            [QuestieDB.itemKeys.objectDrops] = {10569},
+            [QuestieDB.itemKeys.npcDrops] = {9461}, -- #1216
         },
         [9594] = { -- #1227
             [QuestieDB.itemKeys.name] = "Wildkin Muisek",
@@ -574,6 +573,9 @@ function QuestieItemFixes:Load()
             [QuestieDB.itemKeys.relatedQuests] = {2203,2501},
             [QuestieDB.itemKeys.npcDrops] = {2726},
             [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [17309] = {
+            [QuestieDB.itemKeys.npcDrops] = {8519,8520,8521,8522,},
         },
         [18956] = {
             [QuestieDB.itemKeys.npcDrops] = {5357,5358,5359,5360,5361,14603,14604,14638,14639,14640}, -- #1470
