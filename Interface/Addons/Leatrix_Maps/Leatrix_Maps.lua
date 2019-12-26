@@ -1,6 +1,6 @@
 
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.40 (19th December 2019)
+	-- 	Leatrix Maps 1.13.41 (26th December 2019)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.40"
+	LeaMapsLC["AddonVer"] = "1.13.41"
 	LeaMapsLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -746,7 +746,9 @@
 			end
 
 			-- Close map with Escape key
-			table.insert(UISpecialFrames, "WorldMapFrame")
+			if LeaMapsLC["StickyMapFrame"] == "Off" then
+				table.insert(UISpecialFrames, "WorldMapFrame")
+			end
 
 			-- Enable movement
 			WorldMapFrame:SetMovable(true)
@@ -1086,8 +1088,8 @@
 			local void, class = UnitClass("player")
 			if class == "DRUID" then
 				-- Moonglade flight points for druids only
-				tinsert(PinData[1450], {"FlightA", 44.1, 45.2, L["Nighthaven"] .. ", " .. L["Moonglade"], "Druid only flight point to Darnassus", tATex, nil, nil})
-				tinsert(PinData[1450], {"FlightH", 44.3, 45.9, L["Nighthaven"] .. ", " .. L["Moonglade"], "Druid only flight point to Thunder Bluff", tHTex, nil, nil})
+				tinsert(PinData[1450], {"FlightA", 44.1, 45.2, L["Nighthaven"] .. ", " .. L["Moonglade"], L["Druid only flight point to Darnassus"], tATex, nil, nil})
+				tinsert(PinData[1450], {"FlightH", 44.3, 45.9, L["Nighthaven"] .. ", " .. L["Moonglade"], L["Druid only flight point to Thunder Bluff"], tHTex, nil, nil})
 			end
 
 			----------------------------------------------------------------------
@@ -1580,6 +1582,7 @@
 			-- Lock some incompatible options
 			LeaMapsLC:LockItem(LeaMapsCB["NoMapBorder"], true)
 			LeaMapsLC:LockItem(LeaMapsCB["UnlockMapFrame"], true)
+			LeaMapsLC:LockItem(LeaMapsCB["StickyMapFrame"], true)
 			-- Lock reset map layout button
 			LeaMapsLC:LockItem(LeaMapsCB["resetMapPosBtn"], true)
 		end
@@ -1952,6 +1955,7 @@
 	function LeaMapsLC:ReloadCheck()
 		if	(LeaMapsLC["NoMapBorder"] ~= LeaMapsDB["NoMapBorder"])				-- Remove map border
 		or	(LeaMapsLC["UseClassIcons"] ~= LeaMapsDB["UseClassIcons"])			-- Use class colors
+		or	(LeaMapsLC["StickyMapFrame"] ~= LeaMapsDB["StickyMapFrame"])		-- Sticky map frame
 		or	(LeaMapsLC["UseDefaultMap"] ~= LeaMapsDB["UseDefaultMap"])			-- Use default map
 		or	(LeaMapsLC["HideTownCityIcons"] ~= LeaMapsDB["HideTownCityIcons"])	-- Hide town and city icons
 		then
@@ -2233,6 +2237,7 @@
 				LeaMapsDB["stationaryOpacity"] = 1.0
 				LeaMapsDB["movingOpacity"] = 0.5
 				LeaMapsDB["NoFadeCursor"] = "On"
+				LeaMapsDB["StickyMapFrame"] = "Off"
 				LeaMapsDB["UseDefaultMap"] = "Off"
 
 				-- Elements
@@ -2324,6 +2329,7 @@
 			LeaMapsLC:LoadVarNum("stationaryOpacity", 1, 0.1, 1)		-- Stationary opacity
 			LeaMapsLC:LoadVarNum("movingOpacity", 0.5, 0.1, 1)			-- Moving opacity
 			LeaMapsLC:LoadVarChk("NoFadeCursor", "On")					-- Use stationary opacity
+			LeaMapsLC:LoadVarChk("StickyMapFrame", "Off")				-- Sticky map frame
 			LeaMapsLC:LoadVarChk("UseDefaultMap", "Off")				-- Use default map
 
 			-- Elements
@@ -2381,6 +2387,7 @@
 			LeaMapsDB["stationaryOpacity"] = LeaMapsLC["stationaryOpacity"]
 			LeaMapsDB["movingOpacity"] = LeaMapsLC["movingOpacity"]
 			LeaMapsDB["NoFadeCursor"] = LeaMapsLC["NoFadeCursor"]
+			LeaMapsDB["StickyMapFrame"] = LeaMapsLC["StickyMapFrame"]
 			LeaMapsDB["UseDefaultMap"] = LeaMapsLC["UseDefaultMap"]
 
 			-- Elements
@@ -2507,7 +2514,8 @@
 	LeaMapsLC:MakeCB(PageF, "UseClassIcons", "Class colored icons", 16, -152, true, "If checked, group icons will use a modern, class-colored design.")
 	LeaMapsLC:MakeCB(PageF, "UnlockMapFrame", "Unlock map frame", 16, -172, false, "If checked, you will be able to scale and move the map.|n|nScale the map by dragging the scale handle in the bottom-right corner.|n|nMove the map by dragging the border and frame edges.  If you have removed the map border, a drag button will be shown in the top-left corner.")
 	LeaMapsLC:MakeCB(PageF, "SetMapOpacity", "Set map opacity", 16, -192, false, "If checked, you will be able to set the opacity of the map.")
-	LeaMapsLC:MakeCB(PageF, "UseDefaultMap", "Use default map", 16, -212, true, "If checked, the default fullscreen map will be used.|n|nNote that enabling this option will prevent you from unlocking the map or removing the map border.")
+	LeaMapsLC:MakeCB(PageF, "StickyMapFrame", "Sticky map frame", 16, -212, true, "If checked, the map frame will remain open until you close it.")
+	LeaMapsLC:MakeCB(PageF, "UseDefaultMap", "Use default map", 16, -232, true, "If checked, the default fullscreen map will be used.|n|nNote that enabling this option will lock out some of the other options.")
 
 	LeaMapsLC:MakeTx(PageF, "Elements", 225, -72)
 	LeaMapsLC:MakeCB(PageF, "RevealMap", "Show unexplored areas", 225, -92, false, "If checked, unexplored areas of the map will be shown.")
