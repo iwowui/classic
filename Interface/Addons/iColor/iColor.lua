@@ -128,7 +128,7 @@ hooksecurefunc("WhoList_Update", function()
 end)
 
 hooksecurefunc("WorldStateScoreFrame_Update", function()
-	local isArena = IsActiveBattlefieldArena()
+	-- local isArena = IsActiveBattlefieldArena()
 	local scrollOffset = FauxScrollFrame_GetOffset(WorldStateScoreScrollFrame)
 
 	for i = 1, MAX_WORLDSTATE_SCORE_BUTTONS do
@@ -141,11 +141,12 @@ hooksecurefunc("WorldStateScoreFrame_Update", function()
 				n = "> " .. n .. " <"
 			end
 			if s then
-				if isArena then
-					n = n.."|cffffffff - |r"..(faction==0 and "|cff20ff20" or "|cffffd200")..s.."|r"
-				else
-					n = n.."|cffffffff - |r"..(faction==0 and "|cffff2020" or "|cff00aef0")..s.."|r"
-				end
+				-- if isArena then
+				-- 	n = n.."|cffffffff - |r"..(faction==0 and "|cff20ff20" or "|cffffd200")..s.."|r"
+				-- else
+				-- 	n = n.."|cffffffff - |r"..(faction==0 and "|cffff2020" or "|cff00aef0")..s.."|r"
+				-- end
+				n = n.."|cffffffff - |r"..(faction==0 and "|cffff2020" or "|cff00aef0")..s.."|r"
 			end
 			scoreButton.name.text:SetText(n)
 		end

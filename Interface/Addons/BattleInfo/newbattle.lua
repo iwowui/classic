@@ -142,7 +142,7 @@ local function UpdateBattleListCache()
     local n = GetNumBattlefields()
     for i = 1, n  do
         local instanceID = GetBattlefieldInstanceInfo(i)
-        battleList[mapName][tonumber(instanceID)] = i .. "/" .. n
+        battleList[mapName][tonumber(instanceID)] = { i = i , n = n }
     end
 
     UpdateInstanceButtonText()
@@ -165,8 +165,30 @@ RegEvent("ADDON_LOADED", function()
         t:SetFrameStrata("TOOLTIP")
         t:SetText(L["CTRL+Hide=Leave"])
         t:SetAttribute("type", "macro") -- left click causes macro
-        t:SetAttribute("macrotext", "/click MiniMapBattlefieldFrame RightButton" .. "\r\n" .. "/click DropDownList1Button3") -- text for macro on left click
+        -- t:SetAttribute("macrotext", "/click MiniMapBattlefieldFrame RightButton" .. "\r\n" .. "/click DropDownList1Button3") -- text for macro on left click
         t:Hide()
+
+        t.updateMacro = function(showid)
+            local queued = 0
+
+            for i = 1, MAX_BATTLEFIELD_QUEUES do
+                local status, mapName, instanceID = GetBattlefieldStatus(i)
+                local current = i == showid 
+
+                if current then
+
+                    local loc = i * 4 - 1 - queued
+                    leavequeuebtn:SetAttribute("macrotext", "/click MiniMapBattlefieldFrame RightButton" .. "\r\n" .. "/click DropDownList1Button" .. (loc)) -- text for macro on left click
+                    break
+                end
+
+                if status == "queued" then
+                    queued = queued + 1
+                end
+            end
+        end
+
+
         leavequeuebtn = t
     end
 
@@ -177,13 +199,15 @@ RegEvent("ADDON_LOADED", function()
     StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].button2 = L["CTRL+Hide=Leave"]
 
     -- hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnShow", function(self)
-    StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnShow = function(self)
+    StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnShow = function(self, data)
         FlashClientIcon()
         local tx = self.text:GetText()
+        leavequeuebtn.updateMacro(data)
         
         if not self.button2.batteinfohooked then
             leavequeuebtn:SetAllPoints(self.button2)
             self.button2:SetScript("OnUpdate", function(self)
+
                 if IsControlKeyDown() then
                     leavequeuebtn:Show()
                 else
@@ -202,19 +226,27 @@ RegEvent("ADDON_LOADED", function()
             toJ = tonumber(toJ)
             if toJ then
                 if instanceIDs[toJ] then
-                    local text = L["List Position"] .. " " .. instanceIDs[toJ]
+
+                    -- first half 0 - rate -> red (0)
+                    -- second half rate - 100% -> red(0) -> yellow (1)
+                    local rate = 0.45
+                    local pos = instanceIDs[toJ].i
+                    local total = instanceIDs[toJ].n
+
+                    local pos0 = math.max(pos - total * rate - 1, 0)
+
+                    local color = CreateColor(1.0, math.min(pos0 / (total * (1 - rate)), 1) , 0)
+                    local text = color:WrapTextInColorCode(L["List Position"] .. " " .. string.format("%d/%d", pos, total))
 
                     local elp = GetElapseFromCache(mapName, toJ)
                     if elp then
-                        text = SecondsToTime(elp)
+                        text = RED_FONT_COLOR:WrapTextInColorCode(SecondsToTime(elp))
                     end
 
-                    text = RED_FONT_COLOR:WrapTextInColorCode(text)
-
-                    self.text:SetText(string.gsub(tx ,toJ , toJ .. "(" .. text .. ")"))
+                    self.text:SetText(string.gsub(tx ,toJ , YELLOW_FONT_COLOR:WrapTextInColorCode(toJ) .. "(" .. text .. ")"))
                 else
                     local text = GREEN_FONT_COLOR:WrapTextInColorCode(L["New"])
-                    self.text:SetText(string.gsub(tx ,toJ , toJ .. "(" .. text .. ")"))
+                    self.text:SetText(string.gsub(tx ,toJ , YELLOW_FONT_COLOR:WrapTextInColorCode(toJ) .. "(" .. text .. ")"))
 
                 end
                 break

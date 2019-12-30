@@ -1,0 +1,8 @@
+<Bindings>
+	<Binding name="ETARFLAG" header="SSPVP">
+	-- FooBar
+	</Binding>
+	<Binding name="FTARFLAG">
+	-- FooBar
+	</Binding>
+</Bindings>

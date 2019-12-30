@@ -8,7 +8,7 @@
 ## X-Repple: 战斗
 ## SavedVariables: ClassicCastbarsDB
 ## Author: Wardz
-## Version: v1.2.1
+## Version: v1.2.2
 ## X-Curse-Project-ID: 322865
 ## X-WoWI-ID: 24925
 
