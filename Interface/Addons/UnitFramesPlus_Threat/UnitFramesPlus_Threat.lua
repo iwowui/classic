@@ -68,7 +68,7 @@ ufpt:SetScript("OnEvent", function(self, event, ...)
         local name = ...;
         if name == ADDONNAME then
             if IsAddOnLoaded("UnitFramesPlus") then
-                UFPThreatLib = LibStub:GetLibrary("ThreatClassic-1.0");
+                UFPThreatLib = LibStub:GetLibrary("LibThreatClassic2");
             end
             ufpt:UnregisterEvent("ADDON_LOADED");
         end

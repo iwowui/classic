@@ -47,6 +47,7 @@ L["Leaving the Auction House"] = true
 L["Leaving the Bank"] = true
 L["Leaving the Mail Box"] = true
 L["Lock Frames"] = true
+L["No record"] = true
 L["Normal Color"] = true
 L["Opening the Character Info"] = true
 L["Opening Trade Skills"] = true
@@ -69,6 +70,8 @@ L["TOOLTIP_HIDE_BAG"] = "Hide bag"
 L["TOOLTIP_HIDE_BAG_FRAME"] = "Hide bags list"
 L["TOOLTIP_PURCHASE_BANK_SLOT"] = "Purchase bank slot"
 L["TOOLTIP_RETURN_TO_SELF"] = "Return to the current character."
+L["TOOLTIP_SEARCH_RECORDS"] = "Open saved search conditions"
+L["TOOLTIP_SEARCH_TOGGLE"] = "Search bags"
 L["TOOLTIP_SHOW_BAG"] = "Show bag"
 L["TOOLTIP_SHOW_BAG_FRAME"] = "Show bags list"
 L["TOOLTIP_TOGGLE_BAG"] = "Open inventory"
@@ -108,6 +111,8 @@ L.TOOLTIP_PURCHASE_BANK_SLOT = 'Purchase bank slot'
 L.TOOLTIP_WATCHED_TOKENS = 'Change watched tokens'
 L.TOOLTIP_SHOW_BAG = 'Show bag'
 L.TOOLTIP_HIDE_BAG = 'Hide bag'
+L.TOOLTIP_SEARCH_TOGGLE = 'Search bags'
+L.TOOLTIP_SEARCH_RECORDS = 'Open saved search conditions'
 
 ---- options
 
@@ -126,6 +131,8 @@ L['Columns'] = true
 
 L['Features'] = true
 L['Token Frame'] = true
+
+L['No record'] = true
 
 L['Lock Frames'] = true
 L['Show Junk Icon'] = true

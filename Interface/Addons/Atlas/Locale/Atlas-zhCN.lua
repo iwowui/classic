@@ -333,10 +333,5 @@ L["Wave 6"] = "第6波"
 L["West"] = "西"
 L["Yarley <Armorer>"] = "亚尔雷 <护甲商>"
 L["Zaladormu"] = "扎拉多姆"
---补充汉化
-L["Library"] = "图书馆"
-L["Walkway"] = "走道"
-L["Side"] = "旁门"
-L["Stairway"] = "楼梯"
-L["Mail Box"] = "信箱"
+
 end

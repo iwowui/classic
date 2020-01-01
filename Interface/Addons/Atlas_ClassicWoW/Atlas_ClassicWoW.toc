@@ -6,9 +6,9 @@
 ## Title-zhTW: |CFFFF8000地圖|R 副本地圖集 |cFF0099FF艾澤拉斯|r
 ## Notes-zhTW: 艾澤拉斯副本地圖模組
 ## X-Repple: 地图
-## Version: v1.45.00.11302.05
+## Version: v1.45.01.11303.03
 ## Author: arith, Dynaletik, dubcat
-## X-Date: 2019-09-04T7:42:05Z
+## X-Date: 2019-12-31
 ## X-Credits: Dan Gilbert, Lothaer
 ## X-Email: atlas.addon at gmail dot com
 ## X-Website: http://www.atlasmod.com

@@ -2,7 +2,7 @@ local _, ADDONSELF = ...
 local L = ADDONSELF.L
 local RegEvent = ADDONSELF.regevent
 local BattleZoneHelper = ADDONSELF.BattleZoneHelper
-
+local RegisterKeyChangedCallback = ADDONSELF.RegisterKeyChangedCallback 
 
 local f = CreateFrame("Frame", nil, UIWidgetTopCenterContainerFrame)
 f:SetAllPoints()
@@ -11,7 +11,12 @@ do
     local av = CreateFrame("Frame", nil, f)
     av:SetAllPoints()
     f.av = av
+    av.forcehide = false
     av.nums = {}
+
+    RegisterKeyChangedCallback("show_alterac", function(v)
+        av.forcehide = not v
+    end)
 end
 
 local spirittime
@@ -200,7 +205,7 @@ end
 local function ShowAll()
     f:Show()
 
-    if BattleZoneHelper:IsInAlterac() then
+    if BattleZoneHelper:IsInAlterac() and not f.av.forcehide then
         f.av:Show()
     else
         f.av:Hide()
@@ -306,7 +311,13 @@ RegEvent("ADDON_LOADED", function()
         local l = f:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
         l:SetPoint("TOPLEFT", f, -15, 12)
         f.spiritlabel = l
-
+        RegisterKeyChangedCallback("show_spirit_heal", function(v)
+            if v then
+                l:Show()
+            else
+                l:Hide()
+            end
+        end)
     end
 
 
@@ -437,12 +448,27 @@ RegEvent("ADDON_LOADED", function()
             f.num.horde = l
             -- l:SetText("20")
         end
+
+        RegisterKeyChangedCallback("show_number", function(v)
+            if v then
+                f.num:Show()
+            else
+                f.num:Hide()
+            end
+        end)
     end
 
     do
         local l = f:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
         l:SetPoint("TOPLEFT", f, -15, -50)
         f.elapselabel = l
+        RegisterKeyChangedCallback("show_time_elapsed", function(v)
+            if v then
+                l:Show()
+            else
+                l:Hide()
+            end
+        end)
     end
 
     UIWidgetTopCenterContainerFrame:HookScript("OnUpdate", OnUpdate)

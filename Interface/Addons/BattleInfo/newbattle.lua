@@ -2,6 +2,7 @@ local _, ADDONSELF = ...
 local L = ADDONSELF.L
 local RegEvent = ADDONSELF.regevent
 local BattleZoneHelper = ADDONSELF.BattleZoneHelper
+local RegisterKeyChangedCallback = ADDONSELF.RegisterKeyChangedCallback 
 
 local elapseCache = {}
 
@@ -158,6 +159,37 @@ RegEvent("ADDON_LOADED", function()
     hooksecurefunc("JoinBattlefield", UpdateBattleListCache)
     hooksecurefunc("BattlefieldFrame_Update", UpdateBattleListCache)
 
+    local joinqueuebtn
+    do
+        local t = CreateFrame("Button", nil, f, "UIPanelButtonTemplate, SecureActionButtonTemplate")
+        t:SetFrameStrata("TOOLTIP")
+        t:SetText(ENTER_BATTLE)
+        t:SetAttribute("type", "macro") -- left click causes macro
+        t:Hide()
+
+        t.updateMacro = function(showid)
+            local queued = 0
+
+            for i = 1, MAX_BATTLEFIELD_QUEUES do
+                local status, mapName, instanceID = GetBattlefieldStatus(i)
+                local current = i == showid 
+
+                if current then
+
+                    local loc = i * 4 - 2 - queued
+                    t:SetAttribute("macrotext", "/click MiniMapBattlefieldFrame RightButton" .. "\r\n" .. "/click DropDownList1Button" .. (loc)) -- text for macro on left click
+                    break
+                end
+
+                if status == "queued" then
+                    queued = queued + 1
+                end
+            end
+        end        
+
+        joinqueuebtn = t
+    end
+
     -- HAHAHAHAHA 
     local leavequeuebtn
     do
@@ -165,7 +197,6 @@ RegEvent("ADDON_LOADED", function()
         t:SetFrameStrata("TOOLTIP")
         t:SetText(L["CTRL+Hide=Leave"])
         t:SetAttribute("type", "macro") -- left click causes macro
-        -- t:SetAttribute("macrotext", "/click MiniMapBattlefieldFrame RightButton" .. "\r\n" .. "/click DropDownList1Button3") -- text for macro on left click
         t:Hide()
 
         t.updateMacro = function(showid)
@@ -178,7 +209,7 @@ RegEvent("ADDON_LOADED", function()
                 if current then
 
                     local loc = i * 4 - 1 - queued
-                    leavequeuebtn:SetAttribute("macrotext", "/click MiniMapBattlefieldFrame RightButton" .. "\r\n" .. "/click DropDownList1Button" .. (loc)) -- text for macro on left click
+                    t:SetAttribute("macrotext", "/click MiniMapBattlefieldFrame RightButton" .. "\r\n" .. "/click DropDownList1Button" .. (loc)) -- text for macro on left click
                     break
                 end
 
@@ -193,28 +224,76 @@ RegEvent("ADDON_LOADED", function()
     end
 
     StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnHide = function()
+        joinqueuebtn:Hide()
         leavequeuebtn:Hide()
     end
 
-    StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].button2 = L["CTRL+Hide=Leave"]
+
+    local replaceEnter = true
+    local replaceHide = true
+    local flashIcon = true
+
+    RegisterKeyChangedCallback("replace_enter_battle", function(v)
+        replaceEnter = v
+    end)
+    RegisterKeyChangedCallback("replace_hide_battle", function(v)
+        replaceHide = v
+        if v then
+            StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].button2 = L["CTRL+Hide=Leave"]
+        else
+            StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].button2 = HIDE
+        end
+    end)
+    RegisterKeyChangedCallback("flash_icon", function(v)
+        flashIcon = v
+    end)
+
 
     -- hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnShow", function(self)
     StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnShow = function(self, data)
-        FlashClientIcon()
-        local tx = self.text:GetText()
-        leavequeuebtn.updateMacro(data)
-        
-        if not self.button2.batteinfohooked then
-            leavequeuebtn:SetAllPoints(self.button2)
-            self.button2:SetScript("OnUpdate", function(self)
+        if flashIcon then
+            FlashClientIcon()
+        end
 
-                if IsControlKeyDown() then
-                    leavequeuebtn:Show()
-                else
-                    leavequeuebtn:Hide()
-                end
-            end)
-            self.button2.batteinfohooked = true
+        local tx = self.text:GetText()
+        if InCombatLockdown() then
+            ADDONSELF.Print(L["Button may not work properly during combat"])
+        end
+
+        if replaceEnter then
+            joinqueuebtn.updateMacro(data)
+            joinqueuebtn:Show()
+            if not self.button1.batteinfohooked then
+                joinqueuebtn:SetAllPoints(self.button1)
+                self.button1:SetScript("OnUpdate", function()
+                    for i = 1, MAX_BATTLEFIELD_QUEUES do
+                        local t = GetBattlefieldPortExpiration(i)
+                        if t > 0 then
+                            joinqueuebtn:SetText(ENTER_BATTLE .. "(" .. GREEN_FONT_COLOR:WrapTextInColorCode(t) .. ")")
+                        end
+                        return
+                    end
+                    joinqueuebtn:SetText(ENTER_BATTLE .. "(" .. GREEN_FONT_COLOR:WrapTextInColorCode("?") .. ")")
+
+                end)
+                self.button1.batteinfohooked = true
+            end
+        end
+
+        if replaceHide then
+            leavequeuebtn.updateMacro(data)
+            if not self.button2.batteinfohooked then
+                leavequeuebtn:SetAllPoints(self.button2)
+                self.button2:SetScript("OnUpdate", function()
+
+                    if IsControlKeyDown() then
+                        leavequeuebtn:Show()
+                    else
+                        leavequeuebtn:Hide()
+                    end
+                end)
+                self.button2.batteinfohooked = true
+            end
         end
 
         if string.find(tx, L["List Position"], 1, 1) or string.find(tx, L["New"], 1 , 1) then			

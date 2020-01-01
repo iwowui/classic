@@ -1,4 +1,4 @@
--- $Id: Atlas_ClassicWoW-enUS.lua 44 2019-09-16 17:05:13Z arith $
+﻿-- $Id: Atlas_ClassicWoW-enUS.lua 51 2019-12-31 12:56:10Z arith $
 --[[
 
 	Atlas, a World of Warcraft instance map browser
@@ -28,237 +28,6 @@ local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
 local L = AceLocale:NewLocale("Atlas_ClassicWoW", "enUS", true, true);
 
 if L then
-L["\"Ambassador\" Dagg'thol"] = "\"Ambassador\" Dagg'thol"
-L["3rd Box Opened: Postmaster Malown"] = "3rd Box Opened: Postmaster Malown"
-L["Abandonded Mole Machine"] = "Abandonded Mole Machine"
-L["Acride <Scarshield Legion>"] = "Acride <Scarshield Legion>"
-L["Alarm-a-bomb 2600"] = "Alarm-a-bomb 2600"
-L["Alchemy Lab"] = "Alchemy Lab"
-L["Altar of Blood"] = "Altar of Blood"
-L["Amnennar's Phylactery"] = "Amnennar's Phylactery"
-L["Ancient Equine Spirit"] = "Ancient Equine Spirit"
-L["Ancient Treasure"] = "Ancient Treasure"
-L["Andorgos <Brood of Malygos>"] = "Andorgos <Brood of Malygos>"
-L["Aoren Sunglow <The Reliquary>"] = "Aoren Sunglow <The Reliquary>"
-L["AQ"] = "AQ"
-L["AQ10"] = "AQ10"
-L["AQ40"] = "AQ40"
-L["Archmage Angela Dosantos <Brotherhood of the Light>"] = "Archmage Angela Dosantos <Brotherhood of the Light>"
-L["Argent Guard Thaelrid"] = "Argent Guard Thaelrid"
-L["Armory"] = "Armory"
-L["Arygos"] = "Arygos"
-L["Atal'alarion"] = "Atal'alarion"
-L["Auld Stonespire"] = "Auld Stonespire"
-L["Awbee"] = "Awbee"
-L["B.E Barechus <S.A.F.E.>"] = "B.E Barechus <S.A.F.E.>"
-L["Baelog's Chest"] = "Baelog's Chest"
-L["Belnistrasz"] = "Belnistrasz"
-L["BFD"] = "BFD"
-L["Bijou"] = "Bijou"
-L["Blastmaster Emi Shortfuse"] = "Blastmaster Emi Shortfuse"
-L["Blood of Innocents"] = "Blood of Innocents"
-L["Bodley"] = "Bodley"
-L["BRD"] = "BRD"
-L["BRM"] = "BRM"
-L["BWL"] = "BWL"
-L["Caelestrasz"] = "Caelestrasz"
-L["Captain Drenn"] = "Captain Drenn"
-L["Captain Qeez"] = "Captain Qeez"
-L["Captain Tuubid"] = "Captain Tuubid"
-L["Captain Wyrmak"] = "Captain Wyrmak"
-L["Captain Xurrem"] = "Captain Xurrem"
-L["Cathedral"] = "Cathedral"
-L["Celebras the Redeemed"] = "Celebras the Redeemed"
-L["Chase Begins"] = "Chase Begins"
-L["Chase Ends"] = "Chase Ends"
-L["Chief Engineer Bilgewhizzle <Gadgetzan Water Co.>"] = "Chief Engineer Bilgewhizzle <Gadgetzan Water Co.>"
-L["Chomper"] = "Chomper"
-L["Colonel Zerran"] = "Colonel Zerran"
-L["Commander Bagran"] = "Commander Bagran"
-L["Conspicuous Urn"] = "Conspicuous Urn"
-L["Cookie"] = "Cookie"
-L["Core Fragment"] = "Core Fragment"
-L["Crusade Commander Eligor Dawnbringer <Brotherhood of the Light>"] = "Crusade Commander Eligor Dawnbringer <Brotherhood of the Light>"
-L["Crusade Commander Korfax <Brotherhood of the Light>"] = "Crusade Commander Korfax <Brotherhood of the Light>"
-L["Crusaders' Square Postbox"] = "Crusaders' Square Postbox"
-L["Cursed Centaur"] = "Cursed Centaur"
-L["Dark Iron Ambassador"] = "Dark Iron Ambassador"
-L["Dire Maul Arena"] = "Dire Maul Arena"
-L["Dire Pool"] = "Dire Pool"
-L["Disciple of Naralex"] = "Disciple of Naralex"
-L["Divination Scryer"] = "Divination Scryer"
-L["DM"] = "DM"
-L["Doomrigger's Clasp"] = "Doomrigger's Clasp"
-L["Drakkisath's Brand"] = "Drakkisath's Brand"
-L["Druid of the Talon"] = "Druid of the Talon"
-L["Ebru <Disciple of Naralex>"] = "Ebru <Disciple of Naralex>"
-L["Edwin VanCleef"] = "Edwin VanCleef"
-L["Elder Farwhisper"] = "Elder Farwhisper"
-L["Elder Mistwalker"] = "Elder Mistwalker"
-L["Elder Morndeep"] = "Elder Morndeep"
-L["Elder Splitrock"] = "Elder Splitrock"
-L["Elder Starsong"] = "Elder Starsong"
-L["Elder Stonefort"] = "Elder Stonefort"
-L["Elder Wildmane"] = "Elder Wildmane"
-L["Elders' Square Postbox"] = "Elders' Square Postbox"
-L["Essence Font"] = "Essence Font"
-L["Estulan <The Highborne>"] = "Estulan <The Highborne>"
-L["Face <S.A.F.E.>"] = "Face <S.A.F.E.>"
-L["Falrin Treeshaper"] = "Falrin Treeshaper"
-L["Father Flame"] = "Father Flame"
-L["Fathom Core"] = "Fathom Core"
-L["Ferra"] = "Ferra"
-L["Festival Lane Postbox"] = "Festival Lane Postbox"
-L["Fifth Mosh'aru Tablet"] = "Fifth Mosh'aru Tablet"
-L["Finkle Einhorn"] = "Finkle Einhorn"
-L["Fire of Aku'mai"] = "Fire of Aku'mai"
-L["Four Kaldorei Elites"] = "Four Kaldorei Elites"
-L["Fras Siabi"] = "Fras Siabi"
-L["Fras Siabi's Postbox"] = "Fras Siabi's Postbox"
-L["Furgus Warpwood"] = "Furgus Warpwood"
-L["Galamav the Marksman <Kargath Expeditionary Force>"] = "Galamav the Marksman <Kargath Expeditionary Force>"
-L["Gnome"] = "Gnome"
-L["Gomora the Bloodletter"] = "Gomora the Bloodletter"
-L["Hann Ibal <S.A.F.E.>"] = "Hann Ibal <S.A.F.E.>"
-L["Heralath Fallowbrook"] = "Heralath Fallowbrook"
-L["Hierophant Theodora Mulvadania <Kargath Expeditionary Force>"] = "Hierophant Theodora Mulvadania <Kargath Expeditionary Force>"
-L["High Examiner Tae'thelan Bloodwatcher <The Reliquary>"] = "High Examiner Tae'thelan Bloodwatcher <The Reliquary>"
-L["Human Remains"] = "Human Remains"
-L["Invoker Xorenth"] = "Invoker Xorenth"
-L["Ironbark the Redeemed"] = "Ironbark the Redeemed"
-L["Jalinda Sprig <Morgan's Militia>"] = "Jalinda Sprig <Morgan's Militia>"
-L["J'eevee's Jar"] = "J'eevee's Jar"
-L["Je'neu Sancrea <The Earthen Ring>"] = "Je'neu Sancrea <The Earthen Ring>"
-L["Jordan's Hammer"] = "Jordan's Hammer"
-L["Kand Sandseeker <Explorer's League>"] = "Kand Sandseeker <Explorer's League>"
-L["Kandrostrasz <Brood of Alexstrasza>"] = "Kandrostrasz <Brood of Alexstrasza>"
-L["Kernobee"] = "Kernobee"
-L["Kevin Dawson <Morgan's Militia>"] = "Kevin Dawson <Morgan's Militia>"
-L["Kherrah"] = "Kherrah"
-L["King's Square Postbox"] = "King's Square Postbox"
-L["Knot Thimblejack"] = "Knot Thimblejack"
-L["Koristrasza"] = "Koristrasza"
-L["LBRS"] = "LBRS"
-L["Lead Prospector Durdin <Explorer's League>"] = "Lead Prospector Durdin <Explorer's League>"
-L["Lexlort <Kargath Expeditionary Force>"] = "Lexlort <Kargath Expeditionary Force>"
-L["Library"] = "Library"
-L["Lidia Sunglow <The Reliquary>"] = "Lidia Sunglow <The Reliquary>"
-L["Lokhtos Darkbargainer <The Thorium Brotherhood>"] = "Lokhtos Darkbargainer <The Thorium Brotherhood>"
-L["Lord Itharius"] = "Lord Itharius"
-L["Lorekeeper Javon"] = "Lorekeeper Javon"
-L["Lorekeeper Kildrath"] = "Lorekeeper Kildrath"
-L["Lorekeeper Lydros"] = "Lorekeeper Lydros"
-L["Lorekeeper Mykos"] = "Lorekeeper Mykos"
-L["Lorgalis Manuscript"] = "Lorgalis Manuscript"
-L["Lothos Riftwaker"] = "Lothos Riftwaker"
-L["Mail Box"] = "Mail Box"
-L["Major Pakkon"] = "Major Pakkon"
-L["Major Yeggeth"] = "Major Yeggeth"
-L["Mara"] = "Mara"
-L["Maraudos (The Fourth Khan)"] = "Maraudos (The Fourth Khan)"
-L["Market Row Postbox"] = "Market Row Postbox"
-L["Marshal Maxwell <Morgan's Militia>"] = "Marshal Maxwell <Morgan's Militia>"
-L["Master Craftsman Wilhelm <Brotherhood of the Light>"] = "Master Craftsman Wilhelm <Brotherhood of the Light>"
-L["Master Elemental Shaper Krixix"] = "Master Elemental Shaper Krixix"
-L["Matrix Punchograph 3005-B"] = "Matrix Punchograph 3005-B"
-L["Matrix Punchograph 3005-C"] = "Matrix Punchograph 3005-C"
-L["Matrix Punchograph 3005-D"] = "Matrix Punchograph 3005-D"
-L["Maxwort Uberglint"] = "Maxwort Uberglint"
-L["Mayara Brightwing <Morgan's Militia>"] = "Mayara Brightwing <Morgan's Militia>"
-L["Mazoga's Spirit"] = "Mazoga's Spirit"
-L["MC"] = "MC"
-L["Medallion of Faith"] = "Medallion of Faith"
-L["Merithra of the Dream"] = "Merithra of the Dream"
-L["Mistress Nagmara"] = "Mistress Nagmara"
-L["Mountaineer Orfus <Morgan's Militia>"] = "Mountaineer Orfus <Morgan's Militia>"
-L["Mr. Smite"] = "Mr. Smite"
-L["Murd Doc <S.A.F.E.>"] = "Murd Doc <S.A.F.E.>"
-L["Muyoh <Disciple of Naralex>"] = "Muyoh <Disciple of Naralex>"
-L["Nalpak <Disciple of Naralex>"] = "Nalpak <Disciple of Naralex>"
-L["Naralex"] = "Naralex"
-L["Nurse Lillian"] = "Nurse Lillian"
-L["Old Ironbark"] = "Old Ironbark"
-L["Olga Runesworn <Explorer's League>"] = "Olga Runesworn <Explorer's League>"
-L["Oralius <Morgan's Militia>"] = "Oralius <Morgan's Militia>"
-L["Orb of Command"] = "Orb of Command"
-L["Orb of Domination"] = "Orb of Domination"
-L["Packmaster Stonebruiser <Brotherhood of the Light>"] = "Packmaster Stonebruiser <Brotherhood of the Light>"
-L["Priestess Udum'bra"] = "Priestess Udum'bra"
-L["Private Rocknot"] = "Private Rocknot"
-L["Prospector Seymour <Morgan's Militia>"] = "Prospector Seymour <Morgan's Militia>"
-L["Pylons"] = "Pylons"
-L["Raven"] = "Raven"
-L["Razal'blade <Kargath Expeditionary Force>"] = "Razal'blade <Kargath Expeditionary Force>"
-L["Remains of a Paladin"] = "Remains of a Paladin"
-L["RFC"] = "RFC"
-L["RFD"] = "RFD"
-L["RFK"] = "RFK"
-L["Rifle Commander Coe"] = "Rifle Commander Coe"
-L["Roughshod Pike"] = "Roughshod Pike"
-L["Safe Room"] = "Safe Room"
-L["Scarshield Quartermaster <Scarshield Legion>"] = "Scarshield Quartermaster <Scarshield Legion>"
-L["Schematic: Field Repair Bot 74A"] = "Schematic: Field Repair Bot 74A"
-L["Scout Cage"] = "Scout Cage"
-L["Secret Chest"] = "Secret Chest"
-L["Sentinel Aluwyn"] = "Sentinel Aluwyn"
-L["Shadowforge Brazier"] = "Shadowforge Brazier"
-L["Shadowforge Cache"] = "Shadowforge Cache"
-L["Shen'dralar Ancient"] = "Shen'dralar Ancient"
-L["Shen'dralar Provisioner"] = "Shen'dralar Provisioner"
-L["Shen'dralar Watcher"] = "Shen'dralar Watcher"
-L["Sixth Mosh'aru Tablet"] = "Sixth Mosh'aru Tablet"
-L["Skeletal Remains of Kariel Winthalus"] = "Skeletal Remains of Kariel Winthalus"
-L["Sneed's Shredder"] = "Sneed's Shredder"
-L["Spirit of Agamaggan <Ancient>"] = "Spirit of Agamaggan <Ancient>"
-L["Spoils of Blackfathom"] = "Spoils of Blackfathom"
-L["ST"] = "ST"
-L["Statue Activation Order"] = "Statue Activation Order"
-L["Stocks"] = "Stocks"
-L["Stonemaul Ogre"] = "Stonemaul Ogre"
-L["Strat"] = "Strat"
-L["Stratholme Courier"] = "Stratholme Courier"
-L["Summoner's Tomb"] = "Summoner's Tomb"
-L["Tablet of Will"] = "Tablet of Will"
-L["Thal'trak Proudtusk <Kargath Expeditionary Force>"] = "Thal'trak Proudtusk <Kargath Expeditionary Force>"
-L["The Behemoth"] = "The Behemoth"
-L["The Black Anvil"] = "The Black Anvil"
-L["The Black Forge"] = "The Black Forge"
-L["The Deed to Brill"] = "The Deed to Brill"
-L["The Deed to Caer Darrow"] = "The Deed to Caer Darrow"
-L["The Deed to Southshore"] = "The Deed to Southshore"
-L["The Deed to Tarren Mill"] = "The Deed to Tarren Mill"
-L["The Discs of Norgannon"] = "The Discs of Norgannon"
-L["The Nameless Prophet"] = "The Nameless Prophet"
-L["The Shadowforge Lock"] = "The Shadowforge Lock"
-L["The Sparklematic 5200"] = "The Sparklematic 5200"
-L["The Vault"] = "The Vault"
-L["Thunderheart <Kargath Expeditionary Force>"] = "Thunderheart <Kargath Expeditionary Force>"
-L["Tink Sprocketwhistle <Engineering Supplies>"] = "Tink Sprocketwhistle <Engineering Supplies>"
-L["Tinkee Steamboil"] = "Tinkee Steamboil"
-L["Torben Zapblast <Teleportation Specialist>"] = "Torben Zapblast <Teleportation Specialist>"
-L["Torch Lever"] = "Torch Lever"
-L["Tran'rek"] = "Tran'rek"
-L["Troll Minibosses"] = "Troll Minibosses"
-L["Ulda"] = "Ulda"
-L["Unfired Plate Gauntlets"] = "Unfired Plate Gauntlets"
-L["Urok's Tribute Pile"] = "Urok's Tribute Pile"
-L["Various Postbox Keys"] = "Various Postbox Keys"
-L["Veng (The Fifth Khan)"] = "Veng (The Fifth Khan)"
-L["Vethsera <Brood of Ysera>"] = "Vethsera <Brood of Ysera>"
-L["Vorrel Sengutz"] = "Vorrel Sengutz"
-L["Warden Thelwater"] = "Warden Thelwater"
-L["Warlord Goretooth <Kargath Expeditionary Force>"] = "Warlord Goretooth <Kargath Expeditionary Force>"
-L["Watchman Doomgrip"] = "Watchman Doomgrip"
-L["WC"] = "WC"
-L["Weaver"] = "Weaver"
-L["Weegli Blastfuse"] = "Weegli Blastfuse"
-L["Willix the Importer"] = "Willix the Importer"
-L["Ysida Harmon"] = "Ysida Harmon"
-L["Yuka Screwspigot <Engineering Supplies>"] = "Yuka Screwspigot <Engineering Supplies>"
-L["Zeya"] = "Zeya"
-L["ZF"] = "ZF"
-L["Zul'Farrak Dead Hero"] = "Zul'Farrak Dead Hero"
-
 --************************************************
 -- Zone Names, Acronyms, and Common Strings
 --************************************************
@@ -316,6 +85,38 @@ L["Zul'Farrak Dead Hero"] = "Zul'Farrak Dead Hero"
 -- Kalimdor Instances (Classic)
 --************************************************
 	--Blackfathom Deeps
+	L["Ghamoo-ra"] = "Ghamoo-ra";
+	L["Lady Sarevess"] = "Lady Sarevess";
+	L["Gelihast"] = "Gelihast";
+	L["Lorgus Jett"] = "Lorgus Jett";
+	L["Baron Aquanis"] = "Baron Aquanis";
+	L["Twilight Lord Kelris"] = "Twilight Lord Kelris";
+	L["Old Serra'kis"] = "Old Serra'kis";
+	L["Aku'mai"] = "Aku'mai";
+
+	L["Lord Roccor"] = "Lord Roccor";
+	L["Bael'Gar"] = "Bael'Gar";
+	L["Houndmaster Grebmar"] = "Houndmaster Grebmar";
+	L["High Interrogator Gerstahn"] = "High Interrogator Gerstahn";
+	L["High Justice Grimstone"] = "High Justice Grimstone";
+	L["Pyromancer Loregrain"] = "Pyromancer Loregrain";
+	L["General Angerforge"] = "General Angerforge";
+	L["Golem Lord Argelmach"] = "Golem Lord Argelmach";
+	L["Ribbly Screwspigot"] = "Ribbly Screwspigot";
+	L["Hurley Blackbreath"] = "Hurley Blackbreath";
+	L["Plugger Spazzring"] = "Plugger Spazzring";
+	L["Phalanx"] = "Phalanx";
+	L["Lord Incendius"] = "Lord Incendius";
+	L["Fineous Darkvire"] = "Fineous Darkvire";
+	L["Warder Stilgiss"] = "Warder Stilgiss"
+	L["Verek"] = "Verek"
+	L["Dark Coffer"] = "Dark Coffer";
+	L["Ambassador Flamelash"] = "Ambassador Flamelash";
+	L["Chest of The Seven"] = "Chest of The Seven";
+	L["Magmus"] = "Magmus";
+	L["Princess Moira Bronzebeard"] = "Princess Moira Bronzebeard";
+	L["Emperor Dagran Thaurissan"] = "Emperor Dagran Thaurissan";
+	
 	L["Je'neu Sancrea <The Earthen Ring>"] = "Je'neu Sancrea <The Earthen Ring>";
 	L["Sentinel Aluwyn"] = "Sentinel Aluwyn";
 	L["Zeya"] = "Zeya";
@@ -324,6 +125,11 @@ L["Zul'Farrak Dead Hero"] = "Zul'Farrak Dead Hero"
 	L["Spoils of Blackfathom"] = "Spoils of Blackfathom";
 
 	--Dire Maul (East)
+	L["Pusillin"] = "Pusillin"
+	L["Lethtendris"] = "Lethtendris"
+	L["Hydrospawn"] = "Hydrospawn"
+	L["Zevrim Thornhoof"] = "Zevrim Thornhoof"
+	L["Alzzin the Wildshaper"] = "Alzzin the Wildshaper"
 	L["\"Ambassador\" Dagg'thol"] = "\"Ambassador\" Dagg'thol";
 	L["Furgus Warpwood"] = "Furgus Warpwood";
 	L["Old Ironbark"] = "Old Ironbark";
@@ -332,11 +138,25 @@ L["Zul'Farrak Dead Hero"] = "Zul'Farrak Dead Hero"
 	L["Chase Ends"] = "Chase Ends";
 
 	--Dire Maul (North)
+	L["Guard Mol'dar"] = "Guard Mol'dar"
+	L["Stomper Kreeg"] = "Stomper Kreeg"
+	L["Guard Fengus"] = "Guard Fengus"
+	L["Guard Slip'kik"] = "Guard Slip'kik"
+	L["Captain Kromcrush"] = "Captain Kromcrush"
+	L["Cho'Rush the Observer"] = "Cho'Rush the Observer"
+	L["King Gordok"] = "King Gordok"
 	L["Druid of the Talon"] = "Druid of the Talon";
 	L["Stonemaul Ogre"] = "Stonemaul Ogre";
 	L["Knot Thimblejack"] = "Knot Thimblejack";
 
 	--Dire Maul (West)
+	L["Tendris Warpwood"] = "Tendris Warpwood"
+	L["Magister Kalendris"] = "Magister Kalendris"
+	L["Tsu'zee"] = "Tsu'zee"
+	L["Illyanna Ravenoak"] = "Illyanna Ravenoak"
+	L["Immol'thar"] = "Immol'thar"
+	L["Prince Tortheldrin"] = "Prince Tortheldrin"
+	L["Lord Hel'nurath"] = "Lord Hel'nurath"
 	L["Ferra"] = "Ferra";
 	L["Estulan <The Highborne>"] = "Estulan <The Highborne>";
 	L["Shen'dralar Watcher"] = "Shen'dralar Watcher";
@@ -350,24 +170,62 @@ L["Zul'Farrak Dead Hero"] = "Zul'Farrak Dead Hero"
 	L["Lorekeeper Mykos"] = "Lorekeeper Mykos";
 	L["Shen'dralar Provisioner"] = "Shen'dralar Provisioner";
 
-	--Maraudon	
+	--Maraudon
+	L["Noxxion"] = "Noxxion"
+	L["Razorlash"] = "Razorlash"
+	L["Lord Vyletongue"] = "Lord Vyletongue"
+	L["Celebras the Cursed"] = "Celebras the Cursed"
+	L["Landslide"] = "Landslide"
+	L["Tinkerer Gizlock"] = "Tinkerer Gizlock"
+	L["Rotgrip"] = "Rotgrip"
+	L["Princess Theradras"] = "Princess Theradras"
+
 	L["Elder Splitrock"] = "Elder Splitrock";
 	L["Celebras the Redeemed"] = "Celebras the Redeemed";
 
+	--OnyxiasLair
+	L["Drakefire Amulet"] = "Drakefire Amulet"
+	L["Onyxian Warders"] = "Onyxian Warders"
+	L["Whelp Eggs"] = "Whelp Eggs"
+	L["Onyxia"] = "Onyxia"
+
 	--Ragefire Chasm
+	L["Taragaman the Hungerer"] = "Taragaman the Hungerer";
+	L["Oggleflint"] = "Oggleflint";
+	L["Jergosh the Invoker"] = "Jergosh the Invoker";
+	L["Bazzalan"] = "Bazzalan";
+	
 	L["Commander Bagran"] = "Commander Bagran";
 	L["Invoker Xorenth"] = "Invoker Xorenth";
 	L["Scout Cage"] = "Scout Cage";
 
 	--Razorfen Downs
+	L["Tuten'kash"] = "Tuten'kash"
+	L["Plaguemaw the Rotting"] = "Plaguemaw the Rotting"
+	L["Mordresh Fire Eye"] = "Mordresh Fire Eye"
+	L["Ragglesnout"] = "Ragglesnout"
+	L["Glutton"] = "Glutton"
+	L["Amnennar the Coldbringer"] = "Amnennar the Coldbringer"
 	L["Koristrasza"] = "Koristrasza";
 	L["Amnennar's Phylactery"] = "Amnennar's Phylactery";
 
 	--Razorfen Kraul
+	L["Roogug"] = "Roogug";
+	L["Aggem Thorncurse"] = "Aggem Thorncurse";
+	L["Death Speaker Jargba"] = "Death Speaker Jargba";
+	L["Overlord Ramtusk"] = "Overlord Ramtusk";
+	L["Agathelos the Raging"] = "Agathelos the Raging";
+	L["Charlga Razorflank"] = "Charlga Razorflank";
 	L["Auld Stonespire"] = "Auld Stonespire";
 	L["Spirit of Agamaggan <Ancient>"] = "Spirit of Agamaggan <Ancient>";
 
 	--Ruins of Ahn'Qiraj
+	L["Kurinnaxx"] = "Kurinnaxx"
+	L["General Rajaxx"] = "General Rajaxx"
+	L["Moam"] = "Moam"
+	L["Buru the Gorger"] = "Buru the Gorger"
+	L["Ayamiss the Hunter"] = "Ayamiss the Hunter"
+	L["Ossirian the Unscarred"] = "Ossirian the Unscarred"
 	L["Four Kaldorei Elites"] = "Four Kaldorei Elites";
 	L["Captain Qeez"] = "Captain Qeez";
 	L["Captain Tuubid"] = "Captain Tuubid";
@@ -377,8 +235,33 @@ L["Zul'Farrak Dead Hero"] = "Zul'Farrak Dead Hero"
 	L["Major Pakkon"] = "Major Pakkon";
 	L["Colonel Zerran"] = "Colonel Zerran";
 	L["Safe Room"] = "Safe Room";
+	
+	--Shadowfang Keep
+	L["Rethilgore"] = "Rethilgore";
+	L["Fel Steed"] = "Fel Steed";
+	L["Shadow Charger"] = "Shadow Charger";
+	L["Razorclaw the Butcher"] = "Razorclaw the Butcher";
+	L["Baron Silverlaine"] = "Baron Silverlaine";
+	L["Commander Springvale"] = "Commander Springvale";
+	L["Odo the Blindwatcher"] = "Odo the Blindwatcher";
+	L["Deathsworn Captain"] = "Deathsworn Captain";
+	L["Fenrus the Devourer"] = "Fenrus the Devourer";
+	L["Wolf Master Nandos"] = "Wolf Master Nandos";
+	L["Archmage Arugal"] = "Archmage Arugal";
 
 	--Temple of Ahn'Qiraj
+	L["The Prophet Skeram"] = "The Prophet Skeram"
+	L["Battleguard Sartura"] = "Battleguard Sartura"
+	L["Fankriss the Unyielding"] = "Fankriss the Unyielding"
+	L["Princess Huhuran"] = "Princess Huhuran"
+	L["Vek'lor"] = "Vek'lor"
+	L["Vek'nilash"] = "Vek'nilash"
+	L["C'Thun"] = "C'Thun"
+	L["Yauj"] = "Yauj"
+	L["Vem"] = "Vem"
+	L["Kri"] = "Kri"
+	L["Viscidus"] = "Viscidus"
+	L["Ouro"] = "Ouro"
 	L["Andorgos <Brood of Malygos>"] = "Andorgos <Brood of Malygos>";
 	L["Vethsera <Brood of Ysera>"] = "Vethsera <Brood of Ysera>";
 	L["Kandrostrasz <Brood of Alexstrasza>"] = "Kandrostrasz <Brood of Alexstrasza>";
@@ -387,12 +270,30 @@ L["Zul'Farrak Dead Hero"] = "Zul'Farrak Dead Hero"
 	L["Merithra of the Dream"] = "Merithra of the Dream";
 
 	--Wailing Caverns
-	L["Ebru <Disciple of Naralex>"] = "Ebru <Disciple of Naralex>"; -- 5768
-	L["Nalpak <Disciple of Naralex>"] = "Nalpak <Disciple of Naralex>"; -- 5767
-	L["Muyoh <Disciple of Naralex>"] = "Muyoh <Disciple of Naralex>";  -- 3678
-	L["Naralex"] = "Naralex"; -- 3679
+	L["Kresh"] = "Kresh";
+	L["Lady Anacondra"] = "Lady Anacondra";
+	L["Lord Cobrahn"] = "Lord Cobrahn";
+	L["Deviate Faerie Dragon"] = "Deviate Faerie Dragon";
+	L["Lord Pythas"] = "Lord Pythas";
+	L["Skum"] = "Skum";
+	L["Lord Serpentis"] = "Lord Serpentis";
+	L["Verdan the Everliving"] = "Verdan the Everliving";
+	L["Kresh"] = "Kresh";
+	L["Mutanus the Devourer"] = "Mutanus the Devourer";
 
 	--Zul'Farrak
+	L["Antu'sul"] = "Antu'sul"
+	L["Theka the Martyr"] = "Theka the Martyr"
+	L["Witch Doctor Zum'rah"] = "Witch Doctor Zum'rah"
+	L["Nekrum Gutchewer"] = "Nekrum Gutchewer"
+	L["Shadowpriest Sezz'ziz"] = "Shadowpriest Sezz'ziz"
+	L["Sergeant Bly"] = "Sergeant Bly"
+	L["Hydromancer Velratha"] = "Hydromancer Velratha"
+	L["Dustwraith"] = "Dustwraith"
+	L["Chief Ukorz Sandscalp"] = "Chief Ukorz Sandscalp"
+	L["Ruuzlu"] = "Ruuzlu"
+	L["Zerillis"] = "Zerillis"
+	L["Sandarr Dunereaver"] = "Sandarr Dunereaver"
 	L["Chief Engineer Bilgewhizzle <Gadgetzan Water Co.>"] = "Chief Engineer Bilgewhizzle <Gadgetzan Water Co.>";
 	L["Mazoga's Spirit"] = "Mazoga's Spirit";
 	L["Tran'rek"] = "Tran'rek";
@@ -437,16 +338,58 @@ L["Zul'Farrak Dead Hero"] = "Zul'Farrak Dead Hero"
 	L["Shadowforge Brazier"] = "Shadowforge Brazier";
 
 	--Blackrock Spire (Lower)
+	L["Highlord Omokk"] = "Highlord Omokk"
+	L["Shadow Hunter Vosh'gajin"] = "Shadow Hunter Vosh'gajin"
+	L["War Master Voone"] = "War Master Voone"
+	L["Mother Smolderweb"] = "Mother Smolderweb"
+	L["Urok Doomhowl"] = "Urok Doomhowl"
+	L["Quartermaster Zigris"] = "Quartermaster Zigris"
+	L["Gizrul the Slavener"] = "Gizrul the Slavener"
+	L["Halycon"] = "Halycon"
+	L["Overlord Wyrmthalak"] = "Overlord Wyrmthalak"
 	L["Urok's Tribute Pile"] = "Urok's Tribute Pile";
 	L["Acride <Scarshield Legion>"] = "Acride <Scarshield Legion>";
 	L["Elder Stonefort"] = "Elder Stonefort";
 	L["Roughshod Pike"] = "Roughshod Pike";
 
+	--Blackrock Spire (Upper)
+	L["Pyroguard Emberseer"] = "Pyroguard Emberseer"
+	L["Warchief Rend Blackhand"] = "Warchief Rend Blackhand"
+	L["Gyth"] = "Gyth"
+	L["The Beast"] = "The Beast"
+	L["General Drakkisath"] = "General Drakkisath"
+
 	--Blackwing Lair
+	L["Razorgore the Untamed"] = "Razorgore the Untamed"
+	L["Vaelastrasz the Corrupt"] = "Vaelastrasz the Corrupt"
+	L["Broodlord Lashlayer"] = "Broodlord Lashlayer"
+	L["Firemaw"] = "Firemaw"
+	L["Ebonroc"] = "Ebonroc"
+	L["Flamegor"] = "Flamegor"
+	L["Chromaggus"] = "Chromaggus"
+	L["Nefarian"] = "Nefarian"
 	L["Orb of Domination"] = "Orb of Domination";
 	L["Master Elemental Shaper Krixix"] = "Master Elemental Shaper Krixix";
 
+	--Deadmines
+	L["Rhahk'Zor"] = "Rhahk'Zor";
+	L["Miner Johnson"] = "Miner Johnson";
+	L["Sneed"] = "Sneed";
+	L["Sneed's Shredder"] = "Sneed's Shredder";
+	L["Gilnid"] = "Gilnid";
+	L["Mr. Smite"] = "Mr. Smite";
+	L["Captain Greenskin"] = "Captain Greenskin";
+	L["Edwin VanCleef"] = "Edwin VanCleef";
+	L["Cookie"] = "Cookie";
+	L["Defias Gunpowder"] = "Defias Gunpowder";
+
 	--Gnomeregan
+	L["Grubbis"] = "Grubbis";
+	L["Viscous Fallout"] = "Viscous Fallout";
+	L["Electrocutioner 6000"] = "Electrocutioner 6000";
+	L["Crowd Pummeler 9-60"] = "Crowd Pummeler 9-60";
+	L["Dark Iron Ambassador"] = "Dark Iron Ambassador";
+	L["Mekgineer Thermaplugg"] = "Mekgineer Thermaplugg";
 	L["Chomper"] = "Chomper";
 	L["Blastmaster Emi Shortfuse"] = "Blastmaster Emi Shortfuse";
 	L["Murd Doc <S.A.F.E.>"] = "Murd Doc <S.A.F.E.>";
@@ -458,8 +401,52 @@ L["Zul'Farrak Dead Hero"] = "Zul'Farrak Dead Hero"
 	L["Hann Ibal <S.A.F.E.>"] = "Hann Ibal <S.A.F.E.>";
 
 	--Molten Core
+	L["Lucifron"] = "Lucifron"
+	L["Magmadar"] = "Magmadar"
+	L["Gehennas"] = "Gehennas"
+	L["Garr"] = "Garr"
+	L["Shazzrah"] = "Shazzrah"
+	L["Baron Geddon"] = "Baron Geddon"
+	L["Golemagg the Incinerator"] = "Golemagg the Incinerator"
+	L["Sulfuron Harbinger"] = "Sulfuron Harbinger"
+	L["Majordomo Executus"] = "Majordomo Executus"
+	L["Ragnaros"] = "Ragnaros"
+	
+	--Scholomance
+	L["Kirtonos the Herald"] = "Kirtonos the Herald"
+	L["Jandice Barov"] = "Jandice Barov"
+	L["Rattlegore"] = "Rattlegore"
+	L["Marduk Blackpool"] = "Marduk Blackpool"
+	L["Vectus"] = "Vectus"
+	L["Ras Frostwhisper"] = "Ras Frostwhisper"
+	L["Instructor Malicia"] = "Instructor Malicia"
+	L["Doctor Theolen Krastinov"] = "Doctor Theolen Krastinov"
+	L["Lorekeeper Polkelt"] = "Lorekeeper Polkelt"
+	L["The Ravenian"] = "The Ravenian"
+	L["Lord Alexei Barov"] = "Lord Alexei Barov"
+	L["Lady Illucia Barov"] = "Lady Illucia Barov"
+	L["Darkmaster Gandling"] = "Darkmaster Gandling"
 
 	--Stratholme - Crusader's Square
+	L["Fras Siabi"] = "Fras Siabi"
+	L["Skul"] = "Skul"
+	L["Hearthsinger Forresten"] = "Hearthsinger Forresten"
+	L["The Unforgiven"] = "The Unforgiven"
+	L["Postmaster Malown"] = "Postmaster Malown"
+	L["Timmy the Cruel"] = "Timmy the Cruel"
+	L["Malor the Zealous"] = "Malor the Zealous"
+	L["Cannon Master Willey"] = "Cannon Master Willey"
+	L["Crimson Hammersmith"] = "Crimson Hammersmith"
+	L["Archivist Galford"] = "Archivist Galford"
+	L["Balnazzar"] = "Balnazzar"
+	L["Magistrate Barthilas"] = "Magistrate Barthilas"
+	L["Stonespine"] = "Stonespine"
+	L["Nerub'enkan"] = "Nerub'enkan"
+	L["Black Guard Swordsmith"] = "Black Guard Swordsmith"
+	L["Maleki the Pallid"] = "Maleki the Pallid"
+	L["Baroness Anastari"] = "Baroness Anastari"
+	L["Ramstein the Gorger"] = "Ramstein the Gorger"
+	L["Baron Rivendare"] = "Baron Rivendare"
 	L["Crusade Commander Eligor Dawnbringer <Brotherhood of the Light>"] = "Crusade Commander Eligor Dawnbringer <Brotherhood of the Light>";
 	L["Master Craftsman Wilhelm <Brotherhood of the Light>"] = "Master Craftsman Wilhelm <Brotherhood of the Light>";
 	L["Packmaster Stonebruiser <Brotherhood of the Light>"] = "Packmaster Stonebruiser <Brotherhood of the Light>";
@@ -476,20 +463,61 @@ L["Zul'Farrak Dead Hero"] = "Zul'Farrak Dead Hero"
 	L["Crusade Commander Korfax <Brotherhood of the Light>"] = "Crusade Commander Korfax <Brotherhood of the Light>";
 
 	--The Stockade
+	L["Targorr the Dread"] = "Targorr the Dread";
+	L["Kam Deepfury"] = "Kam Deepfury";
+	L["Hamhock"] = "Hamhock";
+	L["Dextren Ward"] = "Dextren Ward";
+	L["Bazil Thredd"] = "Bazil Thredd";
+	L["Bruegal Ironknuckle"] = "Bruegal Ironknuckle";
 	L["Rifle Commander Coe"] = "Rifle Commander Coe";
 	L["Warden Thelwater"] = "Warden Thelwater";
 	L["Nurse Lillian"] = "Nurse Lillian";
 
 	--The Sunken Temple
+	L["Atal'ai Defenders"] = "Atal'ai Defenders"
+	L["Atal'alarion"] = "Atal'alarion"
+	L["Dreamscythe"] = "Dreamscythe"
+	L["Weaver"] = "Weaver"
+	L["Jammal'an the Prophet"] = "Jammal'an the Prophet"
+	L["Ogom the Wretched"] = "Ogom the Wretched"
+	L["Morphaz"] = "Morphaz"
+	L["Hazzas"] = "Hazzas"
+	L["Avatar of Hakkar"] = "Avatar of Hakkar"
+	L["Shade of Eranikus"] = "Shade of Eranikus"
 	L["Lord Itharius"] = "Lord Itharius";
 	L["Elder Starsong"] = "Elder Starsong";
+	L["Jade"] = "Jade";
+	L["Kazkaz the Unholy"] = "Kazkaz the Unholy";
+	L["Zekkis"] = "Zekkis";
 	
 	-- Scarlet Monastery
+	L["Interrogator Vishas"] = "Interrogator Vishas";
+	L["Bloodmage Thalnos"] = "Bloodmage Thalnos";
+	L["Azshir the Sleepless"] = "Azshir the Sleepless";
+	L["Fallen Champion"] = "Fallen Champion";
+	L["Ironspine"] = "Ironspine";
+	L["Houndmaster Loksey"] = "Houndmaster Loksey";
+	L["Arcanist Doan"] = "Arcanist Doan";
+	L["Armory"] = "Armory";
+	L["Herod"] = "Herod";
+	L["Scarlet Commander Mograine"] = "Scarlet Commander Mograine";
+	L["High Inquisitor Whitemane"] = "High Inquisitor Whitemane";
+	L["High Inquisitor Fairbanks"] = "High Inquisitor Fairbanks";
+
 	L["Cathedral"] = "Cathedral"
 	L["Armory"] = "Armory"
 	L["Library"] = "Library"
 
 	--Uldaman
+	L["Revelosh"] = "Revelosh"
+	L["Baelog"] = "Baelog"
+	L["Ironaya"] = "Ironaya"
+	L["Obsidian Sentinel"] = "Obsidian Sentinel"
+	L["Ancient Stone Keeper"] = "Ancient Stone Keeper"
+	L["Galgann Firehammer"] = "Galgann Firehammer"
+	L["Grimlok"] = "Grimlok"
+	L["Archaedas"] = "Archaedas"
+
 	L["Baelog's Chest"] = "Baelog's Chest";
 	L["Kand Sandseeker <Explorer's League>"] = "Kand Sandseeker <Explorer's League>";
 	L["Lead Prospector Durdin <Explorer's League>"] = "Lead Prospector Durdin <Explorer's League>";
@@ -501,7 +529,7 @@ L["Zul'Farrak Dead Hero"] = "Zul'Farrak Dead Hero"
 	L["The Discs of Norgannon"] = "The Discs of Norgannon";
 	
 	-- Classic
-		L["Lothos Riftwaker"] = "Lothos Riftwaker"
+	L["Lothos Riftwaker"] = "Lothos Riftwaker"
 	L["Elder Morndeep"] = "Elder Morndeep"
 	L["The Vault"] = "The Vault"
 	L["Watchman Doomgrip"] = "Watchman Doomgrip"

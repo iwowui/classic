@@ -22,6 +22,7 @@ L["Enable chat message"] = true
 L["Enjoy!"] = true
 L["Global"] = true
 L["Help"] = true
+L["Keep bank items stack full"] = true
 L["KEYWORD_CLASS"] = "Classes"
 L["KEYWORD_MOUNT"] = "Summons and dismisses"
 L["Leave bank, pack cancel."] = true
@@ -100,6 +101,7 @@ L['Select an icon (Optional)'] = true
 L['Sorting rules'] = true
 L['Saving rules'] = true
 L['Save to bank when default packing'] = true
+L['Keep bank items stack full'] = true
 L['Global'] = true
 L['Add extension filter to LibItemSearch-1.2'] = true
 

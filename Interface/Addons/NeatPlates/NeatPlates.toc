@@ -5,7 +5,7 @@
 ## Title-zhTW: |CFFFF8000輔助|R 姓名版增強
 ## X-Repple: 辅助
 ## Author: Luxocracy and friends
-## Version: 1.13.3.2
+## Version: 1.13.3.3
 ## SavedVariables: NeatPlatesSettings, NeatPlatesSpellDB
 ## SavedVariablesPerCharacter: NeatPlatesOptions
 

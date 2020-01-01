@@ -71,6 +71,12 @@
                     <Anchor point="TOPLEFT" x="64" y="-29" />
                 </Anchors>
             </Frame>
+            <Frame parentKey="PluginParent">
+                <Size x="1" y="24" />
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="-15" y="-31" />
+                </Anchors>
+            </Frame>
             <Button parentKey="MoneyFrame">
                 <Size x="160" y="24" />
                 <Anchors>
@@ -191,10 +197,48 @@
             </OnLoad>
         </Scripts>
     </Button>
+    <Button name="tdBag2KeyringTemplate" virtual="true">
+        <Size x="12" y="26" />
+        <NormalTexture file="Interface\Buttons\UI-Button-KeyRing">
+            <Size x="14" y="29" />
+            <Anchors>
+                <Anchor point="CENTER" x="0" y="-1"/>
+            </Anchors>
+            <TexCoords left="0" right="0.5625" top="0" bottom="0.609375"/>
+        </NormalTexture>
+        <HighlightTexture file="Interface\Buttons\UI-Button-KeyRing-Highlight" alphaMode="ADD">
+            <Size x="14" y="29" />
+            <Anchors>
+                <Anchor point="CENTER" x="0" y="-1"/>
+            </Anchors>
+            <TexCoords left="0" right="0.5625" top="0" bottom="0.609375"/>
+        </HighlightTexture>
+        <PushedTexture file="Interface\Buttons\UI-Button-KeyRing-Down">
+            <Size x="14" y="29" />
+            <Anchors>
+                <Anchor point="CENTER" x="0" y="-1"/>
+            </Anchors>
+            <TexCoords left="0" right="0.5625" top="0" bottom="0.609375"/>
+        </PushedTexture>
+        <Scripts>
+            <OnLoad>
+                self:RegisterForDrag('LeftButton')
+            </OnLoad>
+        </Scripts>
+    </Button>
     <CheckButton name="tdBag2ToggleButtonTemplate" virtual="true">
         <Size x="24" y="24" />
         <Layers>
             <Layer level="BACKGROUND">
+                <Texture parentKey="bg">
+                    <Size x="22" y="22" />
+                    <Anchors>
+                        <Anchor point="CENTER" x="0" y="0"/>
+                    </Anchors>
+                    <Color r="0.1" g="0.1" b="0.1" />
+                </Texture>
+            </Layer>
+            <Layer level="BACKGROUND" textureSubLevel="1">
                 <Texture parentKey="texture">
                     <Size x="22" y="22" />
                     <Anchors>
@@ -208,6 +252,7 @@
                     </Anchors>
                     <MaskedTextures>
                         <MaskedTexture childKey="texture"/>
+                        <MaskedTexture childKey="bg"/>
                     </MaskedTextures>
                 </MaskTexture>
             </Layer>

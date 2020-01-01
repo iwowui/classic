@@ -9,14 +9,6 @@
 ## RequiredDeps: UnitFramesPlus
 
 #Library
-Libs\LibStub\LibStub.lua
-Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
-Libs\Ace3\AceAddon-3.0\AceAddon-3.0.xml
-Libs\Ace3\AceBucket-3.0\AceBucket-3.0.xml
-Libs\Ace3\AceComm-3.0\AceComm-3.0.xml
-Libs\Ace3\AceEvent-3.0\AceEvent-3.0.xml
-Libs\Ace3\AceTimer-3.0\AceTimer-3.0.xml
-Libs\Ace3\AceSerializer-3.0\AceSerializer-3.0.xml
-Libs\LibThreatClassic\lib.xml
+LibThreatClassic2\lib.xml
 
 UnitFramesPlus_Threat.lua

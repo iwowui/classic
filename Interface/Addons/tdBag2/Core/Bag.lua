@@ -24,13 +24,10 @@ local GameTooltip = GameTooltip
 local BankFrame = BankFrame
 
 ---- G
-local BACKPACK_CONTAINER = BACKPACK_CONTAINER
 local BACKPACK_TOOLTIP = BACKPACK_TOOLTIP
 local BANK = BANK
 local BANK_BAG = BANK_BAG
 local BANK_BAG_PURCHASE = BANK_BAG_PURCHASE
-local BANK_CONTAINER = BANK_CONTAINER
-local KEYRING_CONTAINER = KEYRING_CONTAINER
 local EQUIP_CONTAINER = EQUIP_CONTAINER
 local SOUNDKIT = SOUNDKIT
 
@@ -43,7 +40,7 @@ local Cache = ns.Cache
 ---@class tdBag2Bag: Button
 ---@field private meta tdBag2FrameMeta
 ---@field private bag number
-local Bag = ns.Addon:NewClass('UI.Bag', 'Button.tdBag2BagTemplate')
+local Bag = ns.Addon:NewClass('UI.Bag', 'Button')
 
 function Bag:Constructor(_, meta, bag)
     self.meta = meta
@@ -132,6 +129,9 @@ function Bag:BAG_LOCK_CHANGED(_, bag)
 end
 
 function Bag:SetIcon(icon)
+    if not self.Icon then
+        return
+    end
     local color = self.info.owned and 1 or .1
     SetItemButtonTexture(self, icon)
     SetItemButtonTextureVertexColor(self, 1, color, color)
@@ -151,17 +151,17 @@ function Bag:UpdateInfo()
 end
 
 function Bag:UpdateIcon()
-    if self:IsBaseBag() then
+    if self:IsKeyring() then
+        -- self:SetIcon([[Interface\ContainerFrame\Keyring-Bag-Icon]])
+    elseif self:IsBaseBag() then
         self:SetIcon(ns.BAG_ICONS[self.meta.bagId])
-    elseif self:IsKeyring() then
-        self:SetIcon([[Interface\ContainerFrame\Keyring-Bag-Icon]])
     else
         self:SetIcon(self.info.icon or [[Interface\PaperDoll\UI-PaperDoll-Slot-Bag]])
     end
 end
 
 function Bag:UpdateCount()
-    if self:IsKeyring() then
+    if not self.Count then
         return
     end
     local free = self:GetFreeCount()
@@ -185,10 +185,11 @@ function Bag:UpdateCursor()
 end
 
 function Bag:UpdateHidden()
+    local obj = self.Icon or self:GetNormalTexture()
     if self:IsHidden() then
-        self:SetAlpha(0.4)
+        obj:SetAlpha(0.4)
     else
-        self:SetAlpha(1)
+        obj:SetAlpha(1)
     end
 end
 
@@ -250,27 +251,27 @@ function Bag:IsPurchasable()
 end
 
 function Bag:IsBaseBag()
-    return self:IsBackpack() or self:IsBank()
+    return self:IsBackpack() or self:IsBank() or self:IsKeyring()
 end
 
 function Bag:IsBackpack()
-    return self.bag == BACKPACK_CONTAINER
+    return ns.IsBackpack(self.bag)
 end
 
 function Bag:IsBank()
-    return self.bag == BANK_CONTAINER
+    return ns.IsBank(self.bag)
 end
 
 function Bag:IsKeyring()
-    return self.bag == KEYRING_CONTAINER
+    return ns.IsKeyring(self.bag)
 end
 
 function Bag:IsBackpackBag()
-    return not self:IsBackpack() and ns.IsBag(self.bag)
+    return not self:IsBackpack() and not self:IsKeyring() and ns.IsInBag(self.bag)
 end
 
 function Bag:IsBankBag()
-    return not self:IsBank() and ns.IsBank(self.bag)
+    return not self:IsBank() and ns.IsInBank(self.bag)
 end
 
 function Bag:IsCustomBag()

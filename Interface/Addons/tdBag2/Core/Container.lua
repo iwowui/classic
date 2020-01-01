@@ -234,7 +234,7 @@ function Container:BuildOrderedBags()
     local atBottom = self.meta.profile.tradeBagOrder == TRADE_BAG_ORDER.BOTTOM
 
     for i, bag in ipairs(self.meta.bags) do
-        if bag == KEYRING_CONTAINER then
+        if ns.IsKeyring(bag) then
             hasKeyring = true
         else
             local info = Cache:GetBagInfo(self.meta.owner, bag)

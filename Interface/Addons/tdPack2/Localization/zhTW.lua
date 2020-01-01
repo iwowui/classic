@@ -39,6 +39,8 @@ if not L then return end
 --[[Translation missing --]]
 --[[ L["Help"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["Keep bank items stack full"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["KEYWORD_CLASS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["KEYWORD_MOUNT"] = ""--]] 

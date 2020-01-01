@@ -1,7 +1,7 @@
 ## Interface: 11303
 ## Author: Aznamir,Dyaxler
 ## Title: PallyPower Classic
-## Version: v1.1d-classic
+## Version: v1.1e-classic
 ## Notes: Raid/Party Paladin buffs.
 ## Title-zhCN: |CFF8000FF职业|R 圣骑士 祝福管理
 ## Notes-zhCN: 圣骑士祝福管理|N|CFF0099FF需要基础函数库|R

@@ -2601,6 +2601,7 @@ Inst15Quest6_HORDE_Folgequest = Inst15Quest6_Folgequest
 Inst15Quest6name1_HORDE = Inst15Quest6name1
 Inst15Quest6name2_HORDE = Inst15Quest6name2
 Inst15Quest6name3_HORDE = Inst15Quest6name3
+Inst15Quest6name4_HORDE = Inst15Quest6name4
 
 --Quest 7 Horde  (same as Quest 7 Alliance)
 Inst15Quest7_HORDE = Inst15Quest7

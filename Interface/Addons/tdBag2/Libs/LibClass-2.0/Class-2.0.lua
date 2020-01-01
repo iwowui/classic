@@ -1,5 +1,5 @@
 
-local MAJOR, MINOR = 'LibClass-2.0', 9
+local MAJOR, MINOR = 'LibClass-2.0', 10
 local Class = LibStub:NewLibrary(MAJOR, MINOR)
 if not Class then
     return
@@ -164,13 +164,19 @@ end
 --                      Class
 -----------------------------
 
+local function DefaultConstructor(object, parent)
+    if Class:IsWidget(parent) and object:GetParent() ~= parent then
+        object:SetParent(parent)
+    end
+end
+
 local _UIBaseClass = setmetatable(Class._UIBaseClass, {
     __index = function(t, k)
         local ok, class = pcall(CreateFrame, k)
         if ok then
             class._Meta = {__index = class, __type = class, __ui = k}
             class:Hide()
-            class.Constructor = class.SetParent
+            class.Constructor = DefaultConstructor
 
             for k, v in pairs(Object) do
                 class[k] = v
