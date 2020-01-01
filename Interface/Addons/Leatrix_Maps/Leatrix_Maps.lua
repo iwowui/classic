@@ -1,6 +1,6 @@
 
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.41 (26th December 2019)
+	-- 	Leatrix Maps 1.13.42 (1st January 2020)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.41"
+	LeaMapsLC["AddonVer"] = "1.13.42"
 	LeaMapsLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -1032,7 +1032,7 @@
 				--[[Feralas]] [1444] = {
 					{"FlightA", 30.2, 43.2, L["Feathermoon Stronghold"] .. ", " .. L["Feralas"], nil, tATex, nil, nil},
 					{"FlightH", 75.4, 44.4, L["Camp Mojache"] .. ", " .. L["Feralas"], nil, tHTex, nil, nil},
-					{"FlightA", 89.5, 45.9, L["Lower Wilds"] .. ", " .. L["Feralas"], nil, tATex, nil, nil},
+					{"FlightA", 89.5, 45.9, L["Thalanaar"] .. ", " .. L["Feralas"], nil, tATex, nil, nil},
 					{"Dungeon", 62.5, 24.9, L["Dire Maul (North)"], L["Dungeon"], dnTex, 56, 60},
 					{"Dungeon", 60.3, 30.2, L["Dire Maul (West)"], L["Dungeon"], dnTex, 56, 60},
 					{"Dungeon", 64.8, 30.2, L["Dire Maul (East)"], L["Dungeon"], dnTex, 56, 60},

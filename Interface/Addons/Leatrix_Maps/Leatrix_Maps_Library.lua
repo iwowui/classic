@@ -911,4 +911,4 @@ end
 -- HonorFrameLoadTaintEnd
 
 end
--- HonorFrameLoadTaint()
+HonorFrameLoadTaint()
