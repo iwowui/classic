@@ -1,4 +1,4 @@
-﻿-- $Id: Atlas_ClassicWoW-enUS.lua 51 2019-12-31 12:56:10Z arith $
+﻿-- $Id: Atlas_ClassicWoW-enUS.lua 53 2020-01-01 14:28:15Z arith $
 --[[
 
 	Atlas, a World of Warcraft instance map browser
@@ -33,7 +33,7 @@ if L then
 --************************************************
 	--Classic Acronyms
 	L["AQ"] = "AQ"; -- Ahn'Qiraj
-	L["AQ10"] = "AQ10"; -- Ruins of Ahn'Qiraj
+	L["AQ20"] = "AQ20"; -- Ruins of Ahn'Qiraj
 	L["AQ40"] = "AQ40"; -- Temple of Ahn'Qiraj
 	L["BFD"] = "BFD"; -- Blackfathom Deeps
 	L["BRD"] = "BRD"; -- Blackrock Depths
@@ -351,6 +351,23 @@ if L then
 	L["Acride <Scarshield Legion>"] = "Acride <Scarshield Legion>";
 	L["Elder Stonefort"] = "Elder Stonefort";
 	L["Roughshod Pike"] = "Roughshod Pike";
+	L["Vaelan"] = "Vaelan";
+	L["Warosh"] = "Warosh";
+	L["Spirestone Lord Magus"] = "Spirestone Lord Magus";
+	L["Mor Grayhoof"] = "Mor Grayhoof";
+	L["Bijou's Belongings"] = "Bijou's Belongings";
+	L["Bannok Grimaxe"] = "Bannok Grimaxe";
+	L["Crystal Fang"] = "Crystal Fang";
+	L["Urok's Tribute Pile"] = "Urok's Tribute Pile";
+	L["Ghok Bashguud"] = "Ghok Bashguud";
+	L["Burning Felguard"] = "Burning Felguard";
+	L["Bijou"] = "Bijou"
+	L["Roughshod Pike"] = "Roughshod Pike"
+	L["Fifth Mosh'aru Tablet"] = "Fifth Mosh'aru Tablet"
+	L["Sixth Mosh'aru Tablet"] = "Sixth Mosh'aru Tablet"
+	L["Human Remains"] = "Human Remains"
+	L["Unfired Plate Gauntlets"] = "Unfired Plate Gauntlets"
+
 
 	--Blackrock Spire (Upper)
 	L["Pyroguard Emberseer"] = "Pyroguard Emberseer"
@@ -358,6 +375,11 @@ if L then
 	L["Gyth"] = "Gyth"
 	L["The Beast"] = "The Beast"
 	L["General Drakkisath"] = "General Drakkisath"
+	L["Father Flame"] = "Father Flame"
+	L["Awbee"] = "Awbee"
+	L["Finkle Einhorn"] = "Finkle Einhorn"
+	L["Doomrigger's Clasp"] = "Doomrigger's Clasp"
+	L["Drakkisath's Brand"] = "Drakkisath's Brand"
 
 	--Blackwing Lair
 	L["Razorgore the Untamed"] = "Razorgore the Untamed"
@@ -541,18 +563,6 @@ if L then
 	L["Summoner's Tomb"] = "Summoner's Tomb"
 	L["The Black Forge"] = "The Black Forge"
 	L["Core Fragment"] = "Core Fragment"
-	L["Elder Stonefort"] = "Elder Stonefort"
-	L["Bijou"] = "Bijou"
-	L["Roughshod Pike"] = "Roughshod Pike"
-	L["Fifth Mosh'aru Tablet"] = "Fifth Mosh'aru Tablet"
-	L["Sixth Mosh'aru Tablet"] = "Sixth Mosh'aru Tablet"
-	L["Human Remains"] = "Human Remains"
-	L["Unfired Plate Gauntlets"] = "Unfired Plate Gauntlets"
-	L["Father Flame"] = "Father Flame"
-	L["Awbee"] = "Awbee"
-	L["Finkle Einhorn"] = "Finkle Einhorn"
-	L["Doomrigger's Clasp"] = "Doomrigger's Clasp"
-	L["Drakkisath's Brand"] = "Drakkisath's Brand"
 	L["Master Elemental Shaper Krixix"] = "Master Elemental Shaper Krixix"
 	L["Gnome"] = "Gnome"
 	L["Torben Zapblast <Teleportation Specialist>"] = "Torben Zapblast <Teleportation Specialist>"

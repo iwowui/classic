@@ -1,4 +1,5 @@
 ## Interface: 11303
+#@non-debug@
 ## Title: Atlas |r|cFF0099FF[Classic WoW]|r
 ## Notes: Classic WoW Instances' Maps
 ## Title-zhCN: |CFFFF8000地图|R 副本地图浏览器 |cFF0099FF[经典旧世]|r
@@ -6,9 +7,15 @@
 ## Title-zhTW: |CFFFF8000地圖|R 副本地圖集 |cFF0099FF艾澤拉斯|r
 ## Notes-zhTW: 艾澤拉斯副本地圖模組
 ## X-Repple: 地图
-## Version: v1.45.01.11303.03
+#@debug@
+# ## Title: Atlas |r|cFF0099FF[Classic WoW]|r
+# ## Title-zhTW: |r|cFF0099FF[地圖]|rAtlas 艾澤拉斯
+# ## Notes: Classic WoW Dungeon Maps
+# ## Notes-zhTW: 艾澤拉斯副本地圖模組
+#@end-debug@
+## Version: v1.45.01.11303.04
 ## Author: arith, Dynaletik, dubcat
-## X-Date: 2019-12-31
+## X-Date: 2020-01-01
 ## X-Credits: Dan Gilbert, Lothaer
 ## X-Email: atlas.addon at gmail dot com
 ## X-Website: http://www.atlasmod.com
