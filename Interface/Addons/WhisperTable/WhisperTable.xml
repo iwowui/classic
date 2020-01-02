@@ -67,6 +67,13 @@
 	</Size>
 	<NormalTexture file="Interface\Icons\INV_Misc_Food_28"/>
 	<HighlightTexture alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight"/>
+	<Layers>
+		<Layer>
+			<Texture name="$parent_Background" alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight" alpha="0">
+				<Color r="1.0" g="0.0" b="0.0"/>
+			</Texture>
+		</Layer>
+	</Layers>
 	<Anchors>
 		<Anchor point="BOTTOMLEFT" relativeTo="ChatFrameChannelButton" relativePoint="TOPLEFT">
 			<Offset>

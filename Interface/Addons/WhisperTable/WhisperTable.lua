@@ -61,6 +61,19 @@ function WhisperTable_Onload(self)
 	self:SetClampedToScreen(true);
 end
 
+local function WhisperTable_CheckUnread()
+	local unread = false;
+	for k, v in pairs(WhisperTableDB["unread"]) do
+		if v == true then
+			unread = true;
+			break;
+		end
+	end
+	if unread == false then
+		_G["WhisperTable_ShowBotton_Background"]:SetAlpha(0);
+	end
+end
+
 function WhisperTable_Set(self, msg)
 	if (msg == "point") then
 		WhisperTable_ShowBotton:ClearAllPoints();
@@ -111,6 +124,7 @@ function WhisperTable_OnEvent(self, event, ...)
 		end
 
 		WhisperTableDB["unread"][tag] = true;
+		_G["WhisperTable_ShowBotton_Background"]:SetAlpha(1);
 
 		if (not WhisperTableDB["name"][tag]) then
 			WhisperTableDB["name"][tag] = name;
@@ -165,6 +179,7 @@ function WhisperTable_OnEvent(self, event, ...)
 		end
 
 		WhisperTableDB["unread"][tag] = false;
+		WhisperTable_CheckUnread();
 
 		if (not WhisperTableDB["name"][tag]) then
 			WhisperTableDB["name"][tag] = name;
@@ -401,6 +416,7 @@ function WhisperTable_OnEnter(self, num)
 	if WhisperTableDB["unread"][tag] == true then
 		WhisperTableDB["unread"][tag] = false;
 		_G["WhisperTable_Del"..num.."_Background"]:SetAlpha(0);
+		WhisperTable_CheckUnread();
 	end
 	GameTooltip:SetOwner(self, "ANCHOR_LEFT");
 	if (not string.find(tag, "-")) then

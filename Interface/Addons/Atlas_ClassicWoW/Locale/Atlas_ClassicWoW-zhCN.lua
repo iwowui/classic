@@ -181,8 +181,7 @@ L["DM"] = "DM"
 --[[Translation missing --]]
 --[[ L["Doctor Theolen Krastinov"] = ""--]] 
 L["Doomrigger's Clasp"] = "末日扣环"
---[[Translation missing --]]
---[[ L["Drakefire Amulet"] = ""--]] 
+L["Drakefire Amulet"] = "龙火护符"
 L["Drakkisath's Brand"] = "达基萨斯的烙印"
 --[[Translation missing --]]
 --[[ L["Dreamscythe"] = ""--]] 
