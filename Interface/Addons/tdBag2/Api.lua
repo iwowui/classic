@@ -8,13 +8,13 @@ local pairs = pairs
 local select = select
 local format = string.format
 local tinsert = table.insert
+local tonumber = tonumber
 
 ---- WOW
-local ContainerIDToInventoryID = ContainerIDToInventoryID
-local UnitName = UnitName
-local GetScreenWidth = GetScreenWidth
-local GetScreenHeight = GetScreenHeight
 local C_Timer = C_Timer
+local ContainerIDToInventoryID = ContainerIDToInventoryID
+local GetScreenHeight = GetScreenHeight
+local GetScreenWidth = GetScreenWidth
 
 ---- UI
 local GameTooltip = GameTooltip
@@ -26,9 +26,17 @@ local BANK_CONTAINER = BANK_CONTAINER
 local KEYRING_CONTAINER = KEYRING_CONTAINER
 local NUM_BAG_SLOTS = NUM_BAG_SLOTS
 local NUM_BANKBAGSLOTS = NUM_BANKBAGSLOTS
+local EQUIP_CONTAINER = 'equip'
+local MAIL_CONTAINER = 'mail'
+
+local PLAYER = UnitName('player')
+local REALM = GetRealmName()
 
 ---@type ns
 local ns = select(2, ...)
+
+ns.EQUIP_CONTAINER = EQUIP_CONTAINER
+ns.MAIL_CONTAINER = MAIL_CONTAINER
 
 ns.ITEM_SIZE = 37
 ns.ITEM_SPACING = 2
@@ -71,12 +79,36 @@ ns.L = L
 local BAG_ID = { --
     BAG = 'bag',
     BANK = 'bank',
+    OTHER = 'other',
+}
+
+local BAG_ICONS = { --
+    [BAG_ID.BAG] = [[Interface\Buttons\Button-Backpack-Up]],
+    [BAG_ID.BANK] = [[Interface\ICONS\INV_Misc_Bag_13]],
+}
+
+local BAG_TITLES = { --
+    [BAG_ID.BAG] = L.TITLE_BAG,
+    [BAG_ID.BANK] = L.TITLE_BANK,
 }
 
 local BAGS = { --
     [BAG_ID.BAG] = {BACKPACK_CONTAINER},
     [BAG_ID.BANK] = {BANK_CONTAINER},
 }
+
+local BAG_CLASSES = { --
+    [BAG_ID.BAG] = 'Inventory',
+    [BAG_ID.BANK] = 'Bank',
+    [BAG_ID.OTHER] = 'Frame',
+}
+
+local BAG_TEMPLATES = { --
+    [BAG_ID.BAG] = 'tdBag2FrameTemplate',
+    [BAG_ID.BANK] = 'tdBag2FrameTemplate',
+    [BAG_ID.OTHER] = 'tdBag2BaseFrameTemplate',
+}
+
 local BAG_SETS = {}
 local INV_IDS = {}
 do
@@ -104,15 +136,12 @@ do
 end
 
 ns.BAG_ID = BAG_ID
-ns.BAG_ICONS = { --
-    [BAG_ID.BAG] = [[Interface\Buttons\Button-Backpack-Up]],
-    [BAG_ID.BANK] = [[Interface\ICONS\INV_Misc_Bag_13]],
-}
-
-ns.FRAME_TITLES = { --
-    [BAG_ID.BAG] = L.TITLE_BAG,
-    [BAG_ID.BANK] = L.TITLE_BANK,
-}
+ns.BAG_ICONS = BAG_ICONS
+ns.BAG_TITLES = BAG_TITLES
+ns.BAG_CLASSES = BAG_CLASSES
+ns.BAG_TEMPLATES = BAG_TEMPLATES
+ns.PLAYER = PLAYER
+ns.REALM = REALM
 
 ns.BAG_FAMILY = { --
     [1] = 'Quiver',
@@ -169,12 +198,36 @@ function ns.IsKeyring(bag)
     return bag == KEYRING_CONTAINER
 end
 
+function ns.IsEquip(bag)
+    return bag == EQUIP_CONTAINER
+end
+
+function ns.IsMail(bag)
+    return bag == MAIL_CONTAINER
+end
+
+function ns.IsBaseBag(bag)
+    return ns.IsBackpack(bag) or ns.IsBank(bag) or ns.IsKeyring(bag)
+end
+
+function ns.IsCustomBag(bag)
+    return ns.IsContainerBag(bag) and bag > BACKPACK_CONTAINER
+end
+
+function ns.IsContainerBag(bag)
+    return tonumber(bag)
+end
+
 function ns.InvToBag(inv)
     return INV_IDS[inv]
 end
 
 function ns.IsSelf(owner)
-    return not owner or owner == UnitName('player')
+    return not owner or owner == PLAYER
+end
+
+function ns.GetInvIds()
+    return INV_IDS
 end
 
 function ns.AnchorTooltip(frame)

@@ -22,9 +22,9 @@ local L = ns.L
 local Addon = ns.Addon
 local BAG_ID = ns.BAG_ID
 
----@class tdBag2BagToggle
+---@class tdBag2BagToggle: tdBag2MenuButton
 ---@field private meta tdBag2FrameMeta
-local BagToggle = ns.Addon:NewClass('UI.BagToggle', 'CheckButton')
+local BagToggle = ns.Addon:NewClass('UI.BagToggle', ns.UI.MenuButton)
 
 function BagToggle:Constructor(_, meta)
     self.meta = meta
@@ -32,14 +32,13 @@ function BagToggle:Constructor(_, meta)
     self:SetScript('OnClick', self.OnClick)
     self:SetScript('OnEnter', self.OnEnter)
     self:SetScript('OnLeave', self.OnLeave)
-    self:SetScript('OnShow', self.Update)
 end
 
 function BagToggle:OnClick(button)
     if button == 'LeftButton' then
-        PlaySound(self:GetChecked() and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or
+        PlaySound(self.meta.profile.bagFrame and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or
                       SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
-        self.meta.frame:ToggleBagFrame()
+        self.meta:ToggleBagFrame()
         self:OnEnter()
     else
         local bagId = self.meta:IsBag() and BAG_ID.BANK or BAG_ID.BAG
@@ -65,10 +64,6 @@ end
 
 function BagToggle:OnLeave()
     GameTooltip:Hide()
-end
-
-function BagToggle:Update()
-    self:SetChecked(self.meta.profile.bagFrame)
 end
 
 Addon:RegisterPluginButton({

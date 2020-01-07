@@ -1739,10 +1739,10 @@ end
 local enabled = GetAddOnEnableState(playerName, "ClassicThreatMeter");
 if enabled > 0 then
 	if GetLocale() == "zhCN" then
-		FF_NameClassicThreatMeter	= "仇恨统计";
+		FF_NameClassicThreatMeter	= "仇恨统计CTM";
 		FF_DescClassicThreatMeter	= "一个灵活的，多目标的，低资源占用的威胁值计量器";
 	elseif GetLocale() == "zhTW" then
-		FF_NameClassicThreatMeter	= "仇恨統計";
+		FF_NameClassicThreatMeter	= "仇恨統計CTM";
 		FF_DescClassicThreatMeter	= "一個輕量級、有彈性、可監視多個目標的仇恨統計插件。";
 	else
 		FF_NameClassicThreatMeter	= "ClassicThreatMeter";
@@ -1761,6 +1761,37 @@ if enabled > 0 then
 						LoadAddOn("ClassicThreatMeter");
 					end
 					ClassicThreatMeterVisibility();
+				end;
+			}
+		);
+	end
+end
+
+local enabled = GetAddOnEnableState(playerName, "ThreatClassic2");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameThreatClassic2	= "仇恨统计TC2";
+		FF_DescThreatClassic2	= "一个灵活的，多目标的，低资源占用的威胁值计量器";
+	elseif GetLocale() == "zhTW" then
+		FF_NameThreatClassic2	= "仇恨統計TC2";
+		FF_DescThreatClassic2	= "一個輕量級、有彈性、可監視多個目標的仇恨統計插件。";
+	else
+		FF_NameThreatClassic2	= "ThreatClassic2";
+		FF_DescThreatClassic2	= "Simple threat meter for WoW Classic.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "ThreatClassic2";
+				name= FF_NameThreatClassic2;
+				subtext= "ThreatClassic2";
+				tooltip = FF_DescThreatClassic2;
+				icon= "Interface\\Icons\\Ability_Cheapshot";
+				callback= function(button)
+					if not IsAddOnLoaded("ThreatClassic2") then
+						LoadAddOn("ThreatClassic2");
+					end
+					ThreatClassic2Visibility();
 				end;
 			}
 		);

@@ -1,24 +1,8 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-    <Frame name="tdBag2FrameTemplate" inherits="PortraitFrameTemplate" hidden="true" toplevel="true" movable="true" enableMouse="true" frameStrata="MEDIUM" clampedToScreen="true" virtual="true">
+    <Frame name="tdBag2BaseFrameTemplate" inherits="PortraitFrameTemplate" hidden="true" toplevel="true" movable="true" enableMouse="true" frameStrata="MEDIUM" clampedToScreen="true" virtual="true">
         <Layers>
             <Layer level="BORDER" textureSubLevel="1">
-                <Texture parentKey="BtnCornerLeft" inherits="UI-Frame-BtnCornerLeft">
-                    <Anchors>
-                        <Anchor point="BOTTOMLEFT" x="-2" y="-1"/>
-                    </Anchors>
-                </Texture>
-                <Texture parentKey="BtnCornerRight" inherits="UI-Frame-BtnCornerRight">
-                    <Anchors>
-                        <Anchor point="BOTTOMRIGHT" x="0" y="-1"/>
-                    </Anchors>
-                </Texture>
-                <Texture parentKey="ButtonBottomBorder" inherits="_UI-Frame-BtnBotTile">
-                    <Anchors>
-                        <Anchor point="BOTTOMLEFT" relativeKey="$parent.BtnCornerLeft" relativePoint="BOTTOMRIGHT" y="3"/>
-                        <Anchor point="BOTTOMRIGHT" relativeKey="$parent.BtnCornerRight" relativePoint="BOTTOMLEFT"/>
-                    </Anchors>
-                </Texture>
                 <MaskTexture parentKey="CircleMask" file="Interface\CharacterFrame\TempPortraitAlphaMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeKey="$parent.portrait"/>
@@ -60,18 +44,43 @@
                 </Anchors>
             </Frame>
             <EditBox parentKey="SearchBox" inherits="SearchBoxTemplate">
-                <Size x="100" y="28"/>
+                <Size y="28"/>
                 <Anchors>
                     <Anchor point="TOPLEFT" x="74" y="-28" />
+                    <Anchor point="TOPRIGHT" x="-15" y="-28" />
                 </Anchors>
             </EditBox>
+        </Frames>
+    </Frame>
+    <Frame name="tdBag2FrameTemplate" inherits="tdBag2BaseFrameTemplate" hidden="true" toplevel="true" movable="true" enableMouse="true" frameStrata="MEDIUM" clampedToScreen="true" virtual="true">
+        <Layers>
+            <Layer level="BORDER" textureSubLevel="1">
+                <Texture parentKey="BtnCornerLeft" inherits="UI-Frame-BtnCornerLeft">
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" x="-2" y="-1"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="BtnCornerRight" inherits="UI-Frame-BtnCornerRight">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" x="0" y="-1"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="ButtonBottomBorder" inherits="_UI-Frame-BtnBotTile">
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" relativeKey="$parent.BtnCornerLeft" relativePoint="BOTTOMRIGHT" y="3"/>
+                        <Anchor point="BOTTOMRIGHT" relativeKey="$parent.BtnCornerRight" relativePoint="BOTTOMLEFT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
             <Frame parentKey="BagFrame" hidden="true">
                 <Size x="1" y="26"/>
                 <Anchors>
                     <Anchor point="TOPLEFT" x="64" y="-29" />
                 </Anchors>
             </Frame>
-            <Frame parentKey="PluginParent">
+            <Frame parentKey="PluginFrame">
                 <Size x="1" y="24" />
                 <Anchors>
                     <Anchor point="TOPRIGHT" x="-15" y="-31" />

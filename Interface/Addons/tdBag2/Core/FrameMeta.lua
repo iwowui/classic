@@ -42,8 +42,7 @@ function FrameMeta:IsBag()
 end
 
 function FrameMeta:IsCached()
-    local realm, name, isguild = Cache:GetOwnerAddress(self.owner)
-    return Cache:IsBagCached(realm, name, isguild, self.bags[1])
+    return Cache:IsOwnerBagCached(self.owner, self.bags[1])
 end
 
 function FrameMeta:IsSelf()
@@ -52,6 +51,11 @@ end
 
 function FrameMeta:ToggleBagHidden(bag)
     self.profile.hiddenBags[bag] = not self.profile.hiddenBags[bag] or nil
+    ns.Events:Fire('UPDATE_ALL')
+end
+
+function FrameMeta:ToggleBagFrame()
+    self.profile.bagFrame = not self.profile.bagFrame
     ns.Events:Fire('UPDATE_ALL')
 end
 

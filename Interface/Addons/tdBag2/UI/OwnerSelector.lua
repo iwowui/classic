@@ -7,6 +7,7 @@
 local select = select
 local tinsert = table.insert
 local unpack = table.unpack or unpack
+local ipairs = ipairs
 
 ---- WOW
 local CreateFrame = CreateFrame
@@ -46,6 +47,7 @@ end
 
 function OwnerSelector:OnShow()
     self:RegisterFrameEvent('FRAME_OWNER_CHANGED', 'UpdateIcon')
+    self:RegisterEvent('OWNER_REMOVED', 'UpdateEnable')
     self:RegisterEvent('UPDATE_ALL', 'Update')
     self:Update()
 end
@@ -82,7 +84,7 @@ function OwnerSelector:Update()
 end
 
 function OwnerSelector:UpdateEnable()
-    self:SetEnabled(self:HasMultiOwners())
+    self:SetEnabled(Cache:HasMultiOwners())
 end
 
 function OwnerSelector:UpdateIcon()
@@ -111,26 +113,22 @@ function OwnerSelector:UpdateIcon()
     end
 end
 
-function OwnerSelector:HasMultiOwners()
-    local iter = Cache:IterateOwners()
-    return iter() and iter()
-end
-
 function OwnerSelector:CreateMenu()
-    local menuList = {self:CreateOwnerMenu()}
-    for name in Cache:IterateOwners() do
-        if not ns.IsSelf(name) then
-            tinsert(menuList, self:CreateOwnerMenu(name))
-        end
+    local menuList = {}
+    for _, owner in ipairs(Cache:GetOwners()) do
+        tinsert(menuList, self:CreateOwnerMenu(owner))
     end
     return menuList
 end
 
 function OwnerSelector:CreateOwnerMenu(name)
-    local info = Cache:GetOwnerInfo(name)
-    local isSelf = not name
+    local isSelf = ns.IsSelf(name)
+    if isSelf then
+        name = nil
+    end
     local isCurrent = name == self.meta.owner
     local hasArrow = not isSelf and not isCurrent
+    local info = Cache:GetOwnerInfo(name)
 
     return {
         text = ns.GetOwnerColoredName(info),

@@ -1255,3 +1255,11 @@ SlashCmdList["TC2_SLASHCMD"] = function(arg)
 		LibStub("AceConfigDialog-3.0"):Open("ThreatClassic2")
 	end	
 end
+
+function ThreatClassic2Visibility()
+	if TC2.frame:IsShown() then
+		TC2.frame:Hide()
+	else
+		TC2.frame:Show()
+	end
+end
