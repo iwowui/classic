@@ -1,4 +1,4 @@
-﻿## Interface: 70300
+﻿## Interface: 11303
 ## LoadOnDemand: 1
 ## Title: Lib: Window-1.1
 ## Version: 1.1.@project-revision@

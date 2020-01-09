@@ -8,11 +8,11 @@
 ## Notes-zhTW: 副本地圖集, 瀏覽各副本、戰場地圖以及飛行地圖
 ## X-Repple: 地图
 ## Author: arith, dubcat
-## Version: v1.45.02.11303.01
+## Version: v1.46.04.11303.01
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3, LibBabble-Boss-3.0, LibBabble-SubZone-3.0, LibBabble-Faction-3.0, LibDBIcon-1.0, LibDialog-1.0, LibUIDropDownMenu
 ## X-Category: Map
 ## X-Credits: Dan Gilbert, Lothaer, Dynaletik
-## X-Date: 2019-12-30T14:58:12Z
+## X-Date: 2020-01-09
 ## X-Donate: http://pledgie.com/campaigns/14729
 ## X-Email: atlas.addon at gmail dot com
 ## X-Feedback: http://www.atlasmod.com/phpBB3/

@@ -1,10 +1,10 @@
--- $Id: Atlas.lua 333 2019-09-04 11:03:14Z arith $
+-- $Id: Atlas.lua 340 2020-01-04 16:21:56Z arith $
 --[[
 
 	Atlas, a World of Warcraft instance map browser
 	Copyright 2005 ~ 2010 - Dan Gilbert <dan.b.gilbert at gmail dot com>
 	Copyright 2010 - Lothaer <lothayer at gmail dot com>, Atlas Team
-	Copyright 2011 ~ 2019 - Arith Hsu, Atlas Team <atlas.addon at gmail dot com>
+	Copyright 2011 ~ 2020 - Arith Hsu, Atlas Team <atlas.addon at gmail dot com>
 
 	This file is part of Atlas.
 
@@ -1226,53 +1226,55 @@ function Atlas_MapRefresh(mapID)
 	AtlasText_LevelRange_Text:SetText(tLR)
 
 	-- Map's Recommended Level Range
-	local tRLR = ""
-	if (minRecLevel or minRecLevelH or minRecLevelM) then
-		local tmp_RLR = L["ATLAS_STRING_RECLEVELRANGE"]..L["Colon"]
-		if (minRecLevel) then 
-			dungeon_difficulty = addon:GetDungeonDifficultyColor(minRecLevel)
-			colortag = addon:FormatColor(dungeon_difficulty)
-			if (minRecLevel ~= maxRecLevel) then
-				tmp_RLR = tmp_RLR..colortag..minRecLevel.."-"..maxRecLevel..icontext_instance
-			else
-				tmp_RLR = tmp_RLR..colortag..minRecLevel..icontext_instance
+	if (not WoWClassic) then
+		local tRLR = ""
+		if (minRecLevel or minRecLevelH or minRecLevelM) then
+			local tmp_RLR = L["ATLAS_STRING_RECLEVELRANGE"]..L["Colon"]
+			if (minRecLevel) then 
+				dungeon_difficulty = addon:GetDungeonDifficultyColor(minRecLevel)
+				colortag = addon:FormatColor(dungeon_difficulty)
+				if (minRecLevel ~= maxRecLevel) then
+					tmp_RLR = tmp_RLR..colortag..minRecLevel.."-"..maxRecLevel..icontext_instance
+				else
+					tmp_RLR = tmp_RLR..colortag..minRecLevel..icontext_instance
+				end
 			end
-		end
-		if (minRecLevelH) then
-			dungeon_difficulty = addon:GetDungeonDifficultyColor(minRecLevelH)
-			colortag = addon:FormatColor(dungeon_difficulty)
-			local slash
-			if (minRecLevel) then
-				slash = L["Slash"]
-			else
-				slash = ""
-			end
-			if (minRecLevelH ~= maxRecLevelH) then
-				tmp_RLR = tmp_RLR..slash..colortag..minRecLevelH.."-"..maxRecLevelH..icontext_heroic
-			else
-				tmp_RLR = tmp_RLR..slash..colortag..minRecLevelH..icontext_heroic
-			end
-		end
-		if (minRecLevelM) then
-			dungeon_difficulty = addon:GetDungeonDifficultyColor(minRecLevelM)
-			colortag = addon:FormatColor(dungeon_difficulty)
-			local slash
 			if (minRecLevelH) then
-				slash = L["Slash"]
-			else
-				slash = ""
+				dungeon_difficulty = addon:GetDungeonDifficultyColor(minRecLevelH)
+				colortag = addon:FormatColor(dungeon_difficulty)
+				local slash
+				if (minRecLevel) then
+					slash = L["Slash"]
+				else
+					slash = ""
+				end
+				if (minRecLevelH ~= maxRecLevelH) then
+					tmp_RLR = tmp_RLR..slash..colortag..minRecLevelH.."-"..maxRecLevelH..icontext_heroic
+				else
+					tmp_RLR = tmp_RLR..slash..colortag..minRecLevelH..icontext_heroic
+				end
 			end
-			if (minRecLevelM ~= maxRecLevelM) then
-				tmp_RLR = tmp_RLR..slash..colortag..minRecLevelM.."-"..maxRecLevelM..icontext_mythic
-			else
-				tmp_RLR = tmp_RLR..slash..colortag..minRecLevelM..icontext_mythic
+			if (minRecLevelM) then
+				dungeon_difficulty = addon:GetDungeonDifficultyColor(minRecLevelM)
+				colortag = addon:FormatColor(dungeon_difficulty)
+				local slash
+				if (minRecLevelH) then
+					slash = L["Slash"]
+				else
+					slash = ""
+				end
+				if (minRecLevelM ~= maxRecLevelM) then
+					tmp_RLR = tmp_RLR..slash..colortag..minRecLevelM.."-"..maxRecLevelM..icontext_mythic
+				else
+					tmp_RLR = tmp_RLR..slash..colortag..minRecLevelM..icontext_mythic
+				end
 			end
+			tRLR = tmp_RLR
+		elseif (base.LevelRange) then
+			tRLR = L["ATLAS_STRING_RECLEVELRANGE"]..L["Colon"]..WHIT..base.LevelRange
 		end
-		tRLR = tmp_RLR
-	elseif (base.LevelRange) then
-		tRLR = L["ATLAS_STRING_RECLEVELRANGE"]..L["Colon"]..WHIT..base.LevelRange
+		AtlasText_RecommendedRange_Text:SetText(tRLR)
 	end
-	AtlasText_RecommendedRange_Text:SetText(tRLR)
 
 	-- Map's Minimum Level
 	local tML = ""

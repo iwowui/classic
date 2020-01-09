@@ -62,19 +62,27 @@ function QuestieQuest:ToggleNotes(desiredValue)
     if desiredValue ~= nil and desiredValue == (not QuestieQuest.NotesHidden) then
         return -- we already have the desired state
     end
+    local questieGlobalDB = Questie.db.global
+    local questieCharDB = Questie.db.char
     if QuestieQuest.NotesHidden then
         -- change map button
         Questie_Toggle:SetText(QuestieLocale:GetUIString('QUESTIE_MAP_BUTTON_HIDE'));
         -- show quest notes
+        local trackerHiddenQuests = questieCharDB.TrackerHiddenQuests
         for questId, framelist in pairs(QuestieMap.questIdFrames) do
-            for index, frameName in ipairs(framelist) do -- this may seem a bit expensive, but its actually really fast due to the order things are checked
-                local icon = _G[frameName];
-                if icon ~= nil and icon.hidden and not ((((not Questie.db.global.enableObjectives) and (icon.data.Type == "monster" or icon.data.Type == "object" or icon.data.Type == "event" or icon.data.Type == "item"))
-                 or ((not Questie.db.global.enableTurnins) and icon.data.Type == "complete")
-                 or ((not Questie.db.global.enableAvailable) and icon.data.Type == "available"))
-                 or ((not Questie.db.global.enableMapIcons) and (not icon.miniMapIcon))
-                 or ((not Questie.db.global.enableMiniMapIcons) and (icon.miniMapIcon))) or (icon.data.ObjectiveData and icon.data.ObjectiveData.HideIcons) or (icon.data.QuestData and icon.data.QuestData.HideIcons and icon.data.Type ~= "complete") then
-                    icon:FakeUnhide()
+            if not trackerHiddenQuests[questId] then -- Skip quests which are completly hidden from the Tracker menu
+                for _, frameName in ipairs(framelist) do -- this may seem a bit expensive, but its actually really fast due to the order things are checked
+                    local icon = _G[frameName];
+                    local objectiveString = tostring(questId) .. " " .. tostring(icon.data.ObjectiveIndex)
+                    if not questieCharDB.TrackerHiddenObjectives[objectiveString] then
+                        if icon ~= nil and icon.hidden and not ((((not questieGlobalDB.enableObjectives) and (icon.data.Type == "monster" or icon.data.Type == "object" or icon.data.Type == "event" or icon.data.Type == "item"))
+                            or ((not questieGlobalDB.enableTurnins) and icon.data.Type == "complete")
+                            or ((not questieGlobalDB.enableAvailable) and icon.data.Type == "available"))
+                            or ((not questieGlobalDB.enableMapIcons) and (not icon.miniMapIcon))
+                            or ((not questieGlobalDB.enableMiniMapIcons) and (icon.miniMapIcon))) or (icon.data.ObjectiveData and icon.data.ObjectiveData.HideIcons) or (icon.data.QuestData and icon.data.QuestData.HideIcons and icon.data.Type ~= "complete") then
+                                icon:FakeUnhide()
+                        end
+                    end
                 end
             end
         end
@@ -301,7 +309,7 @@ function QuestieQuest:GetRawLeaderBoardDetails(QuestLogIndex)
     quest.isComplete = isComplete;
 
     quest.Objectives = {}
-    local objectiveList  = C_QuestLog.GetQuestObjectives(questId) or {};
+    local objectiveList  = C_QuestLog.GetQuestObjectives(questId) or {}
     for objectiveIndex, objective in pairs(objectiveList) do
         quest.Objectives[objectiveIndex] = {}
         quest.Objectives[objectiveIndex].description = objective.text;
@@ -358,7 +366,6 @@ function QuestieQuest:AcceptQuest(questId)
     else
         Questie:Debug(DEBUG_INFO, "[QuestieQuest]: ".. QuestieLocale:GetUIString('DEBUG_ACCEPT_QUEST', questId), " Warning: Quest already existed, not adding");
     end
-
 end
 
 function QuestieQuest:CompleteQuest(quest)
@@ -750,7 +757,7 @@ function QuestieQuest:PopulateObjective(Quest, ObjectiveIndex, Objective, BlockI
                                 drawIcon.AlreadySpawnedId = id;
                                 drawIcon.data = data;
                                 drawIcon.zone = zone;
-                                drawIcon.areaId = zone;
+                                drawIcon.AreaID = zone;
                                 drawIcon.UIMapId = ZoneDataAreaIDToUiMapID[zone];
                                 drawIcon.x = spawn[1];
                                 drawIcon.y = spawn[2];
@@ -913,6 +920,9 @@ function QuestieQuest:GetAllQuestObjectives(quest)
     end
 
     local questObjectives = QuestieQuest:GetAllLeaderBoardDetails(quest.Id);
+    if not questObjectives then
+        questObjectives = {}
+    end
     local logCount = Counthack(questObjectives);
     local dbCount = Counthack(quest.ObjectiveData);
 
@@ -1129,6 +1139,10 @@ local L_QUEST_ITEMS_NEEDED = QuestieLib:SanitizePattern(QUEST_ITEMS_NEEDED)
 local L_QUEST_OBJECTS_FOUND = QuestieLib:SanitizePattern(QUEST_OBJECTS_FOUND)
 function QuestieQuest:GetAllLeaderBoardDetails(questId)
     local questObjectives = QuestieLib:GetQuestObjectives(questId);
+    if not questObjectives then
+        -- Some quests just don't have a real objective e.g. 2744
+        return nil
+    end
 
     --Questie:Print(questId)
     for objectiveIndex, objective in pairs(questObjectives) do
@@ -1187,7 +1201,7 @@ function _QuestieQuest:DrawAvailableQuest(questObject) -- prevent recursion
 
     --TODO More logic here, currently only shows NPC quest givers.
     if questObject.Starts["GameObject"] ~= nil then
-        for index, ObjectID in ipairs(questObject.Starts["GameObject"]) do
+        for _, ObjectID in ipairs(questObject.Starts["GameObject"]) do
             local obj = QuestieDB:GetObject(ObjectID)
             if(obj ~= nil and obj.spawns ~= nil) then
                 for Zone, Spawns in pairs(obj.spawns) do
@@ -1205,7 +1219,7 @@ function _QuestieQuest:DrawAvailableQuest(questObject) -- prevent recursion
                             data.IsObjectiveNote = false
                             if(coords[1] == -1 or coords[2] == -1) then
                                 if(InstanceLocations[Zone] ~= nil) then
-                                    for index, value in ipairs(InstanceLocations[Zone]) do
+                                    for _, value in ipairs(InstanceLocations[Zone]) do
                                         QuestieMap:DrawWorldIcon(data, value[1], value[2], value[3])
                                     end
                                 end
@@ -1218,7 +1232,7 @@ function _QuestieQuest:DrawAvailableQuest(questObject) -- prevent recursion
             end
         end
     elseif(questObject.Starts["NPC"] ~= nil)then
-        for index, NPCID in ipairs(questObject.Starts["NPC"]) do
+        for _, NPCID in ipairs(questObject.Starts["NPC"]) do
             local NPC = QuestieDB:GetNPC(NPCID)
             if (NPC ~= nil and NPC.spawns ~= nil and NPC.friendly) then
                 --Questie:Debug(DEBUG_DEVELOP,"Adding Quest:", questObject.Id, "StarterNPC:", NPC.Id)

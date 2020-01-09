@@ -1,4 +1,4 @@
-﻿## Interface: 80100
+﻿## Interface: 11303
 ## LoadOnDemand: 1
 ## Title: Lib: PeriodicTable-3.1 [|cffeda55fTradeskillResultMats|r]
 ## Notes: PeriodicTable data module.

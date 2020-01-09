@@ -159,6 +159,9 @@ function QuestieQuestFixes:Load()
             [QuestieDB.questKeys.preQuestSingle] = {},
             [QuestieDB.questKeys.preQuestGroup] = {596,629,}
         },
+        [619] = {
+            [QuestieDB.questKeys.parentQuest] = 8554, -- #1691
+        },
         [621] = {
             [QuestieDB.questKeys.inGroupWith] = {}, -- #886
         },
@@ -211,6 +214,15 @@ function QuestieQuestFixes:Load()
         },
         [830] = {
             [QuestieDB.questKeys.startedBy] = {nil,{3239},{4881,},},
+        },
+        [832] = {
+            [QuestieDB.questKeys.startedBy] = {{3204},nil,{4903}},
+        },
+        [834] = {
+            [QuestieDB.questKeys.requiredRaces] = 255, -- #1665
+        },
+        [835] = {
+            [QuestieDB.questKeys.requiredRaces] = 255, -- #1665
         },
         [841] = {
             [QuestieDB.questKeys.specialFlags] = 1,
@@ -323,6 +335,9 @@ function QuestieQuestFixes:Load()
         },
         [1361] = {
             [QuestieDB.questKeys.exclusiveTo] = {1362},
+        },
+        [1364] = {
+            [QuestieDB.questKeys.preQuestSingle] = {1363}, -- #1674
         },
         [1392] = {
             [QuestieDB.questKeys.startedBy] = {{5477},nil,{6196}},
@@ -652,6 +667,9 @@ function QuestieQuestFixes:Load()
         [4486] = {
             [QuestieDB.questKeys.exclusiveTo] = {1661,4485},
         },
+        [4493] = {
+            [QuestieDB.questKeys.preQuestSingle] = {4267},
+        },
         [4494] = {
             [QuestieDB.questKeys.preQuestSingle] = {82,7732},
         },
@@ -721,7 +739,6 @@ function QuestieQuestFixes:Load()
         },
         [5211] = {
             [QuestieDB.questKeys.preQuestSingle] = {}, -- #983
-            [QuestieDB.questKeys.objectives] = {{{11064,"Darrowshire Spirits Freed"},{8530,"Darrowshire Spirits Freed"},{8531,"Darrowshire Spirits Freed"},{8532,"Darrowshire Spirits Freed"},},nil,nil,nil,},
         },
         [5234] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 178,
@@ -815,6 +832,12 @@ function QuestieQuestFixes:Load()
         [6073] = {
             [QuestieDB.questKeys.startedBy] = {{5515,},nil,nil,},
         },
+        [6074] = {
+            [QuestieDB.questKeys.startedBy] = {{5516,},nil,nil,},
+        },
+        [6075] = {
+            [QuestieDB.questKeys.startedBy] = {{11807,},nil,nil,},
+        },
         [6136] = {
             [QuestieDB.questKeys.preQuestSingle] = {6133}, -- #1572
         },
@@ -832,6 +855,12 @@ function QuestieQuestFixes:Load()
         },
         [6609] = {
             [QuestieDB.questKeys.exclusiveTo] = {6607}, -- #1154
+        },
+        [6721] = {
+            [QuestieDB.questKeys.startedBy] = {{5116},nil,nil},
+        },
+        [6722] = {
+            [QuestieDB.questKeys.startedBy] = {{1231},nil,nil},
         },
         [6861] = {
             [QuestieDB.questKeys.objectivesText] = {},
@@ -1165,12 +1194,14 @@ function QuestieQuestFixes:Load()
             [QuestieDB.questKeys.requiredRaces] = 178,
         },
         [8767] = {
-            [QuestieDB.questKeys.requiredRaces] = 178,
+            [QuestieDB.questKeys.requiredRaces] = 255,
             [QuestieDB.questKeys.requiredClasses] = 0,
+            [QuestieDB.questKeys.exclusiveTo] = {8788},
         },
         [8788] = {
-            [QuestieDB.questKeys.requiredRaces] = 77,
+            [QuestieDB.questKeys.requiredRaces] = 255,
             [QuestieDB.questKeys.requiredClasses] = 0,
+            [QuestieDB.questKeys.exclusiveTo] = {8767},
         },
         [8980] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 178,

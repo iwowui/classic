@@ -6,7 +6,7 @@
     <Include file="..\Libs\AceConfig-3.0\AceConfig-3.0.xml"/>
     <Include file="..\Libs\AceGUI-3.0-SharedMediaWidgets\widget.xml"/>
 
-    <Include file="..\Locales\zhTW.lua"/>
+    <Include file="..\Locales\ruRU.lua"/>
     <Include file="..\Locales\zhCN.lua"/>
 
     <Script file="NugRunningOptions.lua"/>

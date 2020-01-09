@@ -1,10 +1,10 @@
--- $Id: AtlasLootIntegration.lua 329 2019-09-04 08:14:03Z arith $
+-- $Id: AtlasLootIntegration.lua 346 2020-01-06 15:16:04Z arith $
 --[[
 
 	Atlas, a World of Warcraft instance map browser
 	Copyright 2005 ~ 2010 - Dan Gilbert <dan.b.gilbert at gmail dot com>
 	Copyright 2010 - Lothaer <lothayer at gmail dot com>, Atlas Team
-	Copyright 2011 ~ 2019 - Arith Hsu, Atlas Team <atlas.addon at gmail dot com>
+	Copyright 2011 ~ 2020 - Arith Hsu, Atlas Team <atlas.addon at gmail dot com>
 
 	This file is part of Atlas.
 
@@ -51,6 +51,7 @@ local modules = {
 	Atlas_MistsofPandaria		= "AtlasLoot_MistsofPandaria",
 	Atlas_WarlordsofDraenor		= "AtlasLoot_WarlordsofDraenor",
 	Atlas_Legion			= "AtlasLoot_Legion",
+	Atlas_BattleforAzeroth		= "AtlasLoot_BattleforAzeroth",
 };
 
 function addon:EnableAtlasLootButton(base, zoneID)

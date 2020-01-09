@@ -4,7 +4,7 @@
 ## Title-zhCN: |cff7fff7f界面|R |CFFFF0000背包整合|R 整理
 ## Title-zhTW: |cff7fff7f介面|R |CFFFF0000背包整合|R 整理
 ## X-Repple: 界面
-## Version: 1.3.1
+## Version: 1.4.0
 ## OptionalDeps: Bagnon, Combuctor, tdBag
 ## SavedVariables: TDDB_PACK2
 

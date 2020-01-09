@@ -1,13 +1,13 @@
 ## Interface: 11303
-## Title: |cFFFFFFFFQuestie|r|cFF00FF00 v5.4.1|r
+## Title: |cFFFFFFFFQuestie|r|cFF00FF00 v5.5.0|r
 ## Author: Aero/Logon/Muehe/TheCrux(BreakBB)/Dyaxler/Schaka/Zoey/Everyone else
 ## Notes: A standalone Classic QuestHelper
-## Title-zhCN: |CFFFF8000辅助|R 任务助手Questie v5.4.1
+## Title-zhCN: |CFFFF8000辅助|R 任务助手Questie v5.5.0
 ## Notes-zhCN: 全能型任务数据库
-## Title-zhTW: |CFFFF8000輔助|R 任務助手Questie v5.4.1
+## Title-zhTW: |CFFFF8000輔助|R 任務助手Questie v5.5.0
 ## Notes-zhTW: 全能型任務資料庫
 ## X-Repple: 辅助
-## Version: 5.4.1
+## Version: 5.5.0
 ## RequiredDeps:
 ## OptionalDeps: Ace3, LibDataBroker-1.1, LibCompress
 ## SavedVariables: QuestieConfig

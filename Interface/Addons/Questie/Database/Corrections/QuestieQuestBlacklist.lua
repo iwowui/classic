@@ -10,6 +10,7 @@ function QuestieQuestBlacklist:Load()
         [6606] = true, -- Quest is not in the game. See #1338
         [6072] = true, -- Ayanna Everstride doesn't start "Hunter's Path" (this quest is most likely simply not in the game) #700
         [618] = true, -- Duplicate of 8554
+        [9378] = true, -- Naxxramas quest which doesn't seem to be in the game
         --Stray quests
         [3861] = true, --CLUCK!
         --World event quests
@@ -335,20 +336,6 @@ function QuestieQuestBlacklist:Load()
         [8918] = true,
         [8919] = true,
         [8920] = true,
-
-        -- plaguelands quests that arent in phase 1
-        [5403] = true,
-        [5407] = true,
-        [5509] = true,
-        [5510] = true,
-        [5408] = true,
-        [5402] = true,
-        [5401] = true,
-        [5405] = true,
-        [5503] = true,
-        [5404] = true,
-        [5508] = true,
-        [5406] = true,
 
         --Brood of Nozdormu aq40 rep epic ring quest.
         [8747] = true,
@@ -839,6 +826,7 @@ function QuestieQuestBlacklist:Load()
         [8765] = true,
         [8766] = true,
       --Phase 6 - Naxxramas
+        [9165] = true,
         [9141] = true,
         [9033] = true,
         [9034] = true,

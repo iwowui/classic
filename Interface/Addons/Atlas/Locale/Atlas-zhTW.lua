@@ -1,10 +1,10 @@
--- $Id: Atlas-zhTW.lua 329 2019-09-04 08:14:03Z arith $
+-- $Id: Atlas-zhTW.lua 337 2020-01-01 14:49:58Z arith $
 --[[
 
 	Atlas, a World of Warcraft instance map browser
 	Copyright 2005 ~ 2010 - Dan Gilbert <dan.b.gilbert at gmail dot com>
 	Copyright 2010 - Lothaer <lothayer at gmail dot com>, Atlas Team
-	Copyright 2011 ~ 2019 - Arith Hsu, Atlas Team <atlas.addon at gmail dot com>
+	Copyright 2011 ~ 2020 - Arith Hsu, Atlas Team <atlas.addon at gmail dot com>
 
 	This file is part of Atlas.
 
@@ -73,6 +73,7 @@ L["ATLAS_DDL_CONTINENT_OUTLAND"] = "外域副本"
 L["ATLAS_DDL_CONTINENT_PANDARIA"] = "潘達利亞副本"
 L["ATLAS_DDL_EXPANSION"] = "依資料片分類"
 L["ATLAS_DDL_EXPANSION_BC"] = "燃燒的遠征副本"
+L["ATLAS_DDL_EXPANSION_BFA"] = "決戰艾澤拉斯副本"
 L["ATLAS_DDL_EXPANSION_CATA"] = "浩劫與重生副本"
 L["ATLAS_DDL_EXPANSION_LEGION"] = "軍臨天下副本"
 L["ATLAS_DDL_EXPANSION_LEGION1"] = "軍臨天下地城"
@@ -85,6 +86,10 @@ L["ATLAS_DDL_LEVEL"] = "依等級分類"
 L["ATLAS_DDL_LEVEL_100PLUS"] = "副本等級大於 100"
 L["ATLAS_DDL_LEVEL_100TO110"] = "副本等級介於 100-110"
 L["ATLAS_DDL_LEVEL_110PLUS"] = "副本等級大於 110"
+L["ATLAS_DDL_LEVEL_110TO120"] = "副本等級介於 110-120"
+L["ATLAS_DDL_LEVEL_120PLUS"] = "副本等級大於 120"
+L["ATLAS_DDL_LEVEL_120TO130"] = "副本等級介於 120-130"
+L["ATLAS_DDL_LEVEL_130PLUS"] = "副本等級大於 130"
 L["ATLAS_DDL_LEVEL_45TO60"] = "副本等級介於 45-60"
 L["ATLAS_DDL_LEVEL_60TO70"] = "副本等級介於 60-70"
 L["ATLAS_DDL_LEVEL_70TO80"] = "副本等級介於 70-80"
