@@ -1679,6 +1679,34 @@ if ( EarthFeature_AddButton ) then
 	);
 end
 
+local enabled = GetAddOnEnableState(playerName, "MeetingHorn");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameMH	= "集结号";
+		FF_DescMH	= "怀旧服快捷组队";
+	elseif GetLocale() == "zhTW" then
+		FF_NameMH	= "集結號";
+		FF_DescMH	= "懷舊服快捷組隊";
+	else
+		FF_NameMH	= "MeetingHorn";
+		FF_DescMH	= "Classic quick LFG.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "MH";
+				name= FF_NameMH;
+				subtext= "MeetingHorn";
+				tooltip = FF_DescMH;
+				icon= "Interface\\Addons\\MeetingHorn\\Media\\Logo2";
+				callback= function(button)
+					LibStub("AceAddon-3.0"):GetAddon("MeetingHorn"):Toggle();
+				end;
+			}
+		);
+	end
+end
+
 if GetLocale() == "zhCN" then
 	FF_NameLHPP	= "低血量魔法视觉警报";
 	FF_DescLHPP	= "低血量魔法视觉警报";

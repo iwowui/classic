@@ -18,5 +18,4 @@ quickjoin.lua
 newbattle.lua
 widgetbar.lua
 auto.lua
-map.lua
 cli.lua
