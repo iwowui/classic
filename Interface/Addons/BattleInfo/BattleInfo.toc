@@ -8,7 +8,7 @@
 ## X-Repple: 战斗
 ## Author: Boshi Lian(farmer1992@gmail.com)
 ## Version: @project-version
-## SavedVariablesPerCharacter: BatteInfoSettings
+## SavedVariablesPerCharacter: BatteInfoSettings, BatteInfoStat
 
 locales.lua
 event.lua
@@ -18,4 +18,6 @@ quickjoin.lua
 newbattle.lua
 widgetbar.lua
 auto.lua
+map.lua
+stat.lua
 cli.lua
