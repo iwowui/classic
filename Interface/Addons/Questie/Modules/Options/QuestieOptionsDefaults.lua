@@ -71,7 +71,7 @@ function QuestieOptionsDefaults:Load()
             trackerbindSetTomTom = 'ctrlleft',
             trackerbindUntrack = "shiftleft",
             iconFadeLevel = 0.3,
-            trackerLocked = true,
+            trackerLocked = false,
             hideUnexploredMapIcons = false,
             showRepeatableQuests = true,
             trackerBackgroundEnabled = false,
