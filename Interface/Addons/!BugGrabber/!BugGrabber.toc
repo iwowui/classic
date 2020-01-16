@@ -5,8 +5,8 @@
 ## Notes-zhTW: Grabs bugs for the bug sack.
 ## Title-zhCN: |CFFFF8000辅助|R 插件错误捕捉
 ## Notes-zhCN: 可以捕捉、保存插件报错并显示更详细的信息
-## Title-zhTW: |CFFFF8000輔助|R 外掛程式錯誤捕捉
-## Notes-zhTW: 可以捕捉、保存外掛程式報錯並顯示更詳細的資訊
+## Title-zhTW: |CFFFF8000輔助|R 插件錯誤捕捉
+## Notes-zhTW: 可以捕捉、保存插件報錯並顯示更詳細的資訊
 ## X-Repple: 辅助
 ## Author: Funkydude
 ## X-Credits: Rabbit, Rowne, Ramble, kergoth, ckknight, Fritti

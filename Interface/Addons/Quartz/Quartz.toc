@@ -9,9 +9,9 @@
 ## X-WoWI-ID: 7158
 
 ## Title-zhCN: |CFFFF8000界面|R 模块化施法条
-## Notes-zhCN: 美化并模块化施法条|n命令/quartz|N|CFF0099FF需要基础函数库|R
+## Notes-zhCN: 美化并模块化施法条|n命令/quartz
 ## Title-zhTW: |CFFFF8000介面|R 模組化施法條
-## Notes-zhTW: 美化並模組化施法條|n命令/quartz|N|CFF0099FF需要基礎函式庫|R
+## Notes-zhTW: 美化並模組化施法條|n命令/quartz
 ## X-Repple: 界面
 
 ## SavedVariables: Quartz3DB

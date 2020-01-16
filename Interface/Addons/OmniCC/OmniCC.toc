@@ -2,9 +2,9 @@
 ## Title: OmniCC
 ## Notes: Cooldown count for everything
 ## Title-zhCN: |CFFFF8000辅助|R 冷却计时
-## Notes-zhCN: 显示物品和技能的冷却倒计时|N|CFF0099FF需要基础函数库|R
+## Notes-zhCN: 显示物品和技能的冷却倒计时
 ## Title-zhTW: |CFFFF8000輔助|R 冷卻計時
-## Notes-zhTW: 顯示物品和技能的冷卻倒計時|N|CFF0099FF需要基礎函式庫|R
+## Notes-zhTW: 顯示物品和技能的冷卻倒計時
 ## X-Repple: 辅助
 ## Author: Tuller
 ## Version: 8.3.1

@@ -1,0 +1,12 @@
+## Interface: 11303
+## Title: bloodOfHeros
+## Title-zhCN: |CFFFF8000辅助|R 英雄之血
+## Title-zhTW: |CFFFF8000輔助|R 英雄之血
+## X-Repple: 辅助
+## Author: Demonass
+## Version: 1.2
+## DefaultState: Enabled
+## SavedVariables: bloodOfHerosDB
+Libs\main.xml
+
+bloodOfHeros.lua

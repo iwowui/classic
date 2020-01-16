@@ -2,9 +2,9 @@
 ## Notes: Collects Herbs, Mines, Gas Clouds, Archaeology, Treasure and Fishing locations and adds them to the worldmap and minimap
 ## Title: GatherMate2
 ## Title-zhCN: |CFFFF8000地图|R 采集助手
-## Notes-zhCN: 收集草药、矿、气云和钓鱼的地点，并增加他们到世界地图和小地图。|N|CFF0099FF需要基础函数库|R
+## Notes-zhCN: 收集草药、矿、气云和钓鱼的地点，并增加他们到世界地图和小地图。
 ## Title-zhTW: |CFFFF8000地圖|R 採集助手
-## Notes-zhTW: 收集草藥、礦、氣雲和釣魚的地點，並增加他們到世界地圖和小地圖。|N|CFF0099FF需要基礎函式庫|R
+## Notes-zhTW: 收集草藥、礦、氣雲和釣魚的地點，並增加他們到世界地圖和小地圖。
 ## X-Repple: 地图
 ## Author: kagaro, xinhuan, nevcairiel
 ## X-Email: sal.scotto@gmail.com

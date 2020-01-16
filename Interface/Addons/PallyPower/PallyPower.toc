@@ -4,9 +4,9 @@
 ## Version: v1.1g-classic
 ## Notes: Raid/Party Paladin buffs.
 ## Title-zhCN: |CFF8000FF职业|R 圣骑士 祝福管理
-## Notes-zhCN: 圣骑士祝福管理|N|CFF0099FF需要基础函数库|R
+## Notes-zhCN: 圣骑士祝福管理
 ## Title-zhTW: |CFF8000FF職業|R 聖騎士 祝福管理
-## Notes-zhTW: 聖騎士祝福管理|N|CFF0099FF需要基礎函式庫|R
+## Notes-zhTW: 聖騎士祝福管理
 ## X-Repple: 职业
 ## LoadOnDemand: 1
 ## DefaultState: enabled

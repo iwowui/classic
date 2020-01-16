@@ -10,9 +10,9 @@
 ## X-Category: Mail
 ## Notes: Postal: Enhanced Mailbox support
 ## Title-zhCN: |CFFFF8000辅助|R 邮件助手
-## Notes-zhCN: 允许你创建收件人列表，Alt点击物品添加到附件，Alt快速发送，自动填写邮件标题|N|CFF0099FF需要基础函数库|R
+## Notes-zhCN: 允许你创建收件人列表，Alt点击物品添加到附件，Alt快速发送，自动填写邮件标题
 ## Title-zhTW: |CFFFF8000輔助|R 郵件助手
-## Notes-zhTW: 允許你創建收件人列表，Alt點擊物品添加到附件，Alt快速發送，自動填寫郵件標題|N|CFF0099FF需要基礎函式庫|R
+## Notes-zhTW: 允許你創建收件人列表，Alt點擊物品添加到附件，Alt快速發送，自動填寫郵件標題
 ## X-Repple: 辅助
 ## OptionalDeps: Ace3, !BlizzBugsSuck, !ClassColors
 ## SavedVariables: Postal3ClassicDB

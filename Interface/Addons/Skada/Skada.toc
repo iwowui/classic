@@ -2,9 +2,9 @@
 ## Title: Skada
 ## Notes: Modular damage meter.
 ## Title-zhCN: |CFF80FF80团队|R 伤害统计
-## Notes-zhCN: 模块化的伤害统计。|N|CFF0099FF需要基础函数库|R
+## Notes-zhCN: 模块化的伤害统计。
 ## Title-zhTW: |CFF80FF80團隊|R 傷害統計
-## Notes-zhTW: 模組化的傷害統計。|N|CFF0099FF需要基礎函式庫|R
+## Notes-zhTW: 模組化的傷害統計。
 ## X-Repple: 团队
 ## DefaultState: Disabled
 ## Author: Zarnivoop
