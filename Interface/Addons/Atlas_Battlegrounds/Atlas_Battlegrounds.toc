@@ -4,9 +4,9 @@
 ## Title-zhCN: |CFFFF8000地图|R 副本地图浏览器 |cFF0099FF[战场]|r
 ## Title-zhTW: |CFFFF8000地圖|R 副本地圖集 |cFF0099FF戰場地圖|r
 ## X-Repple: 地图
-## Version: v1.45.00.11302.00
+## Version: v1.46.00.11303.00
 ## Author: arith, Dynaletik, dubcat
-## X-Date: 2019-09-04T7:36:03Z
+## X-Date: 2020-01-15T15:56:04Z
 ## X-Credits: Dan Gilbert, Lothaer
 ## X-Email: atlas.addon at gmail.com
 ## X-Website: http://www.atlasmod.com

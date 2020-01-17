@@ -5,7 +5,7 @@ else
 	mod	= DBM:NewMod("z2107", "DBM-PvP")
 end
 
-mod:SetRevision("20190908191948")
+mod:SetRevision("20200116160625")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -26,7 +26,7 @@ do
 			end
 			DBM:GetModByName("PvPGeneral"):SubscribeAssault(
 				assaultID,
-				{["Farm"] = {32, 34}, ["Gold Mine"] = {13,15}, ["Lumber Mill"] = {22,24}, ["Stables"] = {37,39}, ["Blacksmith"] = {27,29}},
+				{["Farm"] = {32,34}, ["Gold Mine"] = {13,15}, ["Lumber Mill"] = {22,24}, ["Stables"] = {37,39}, ["Blacksmith"] = {27,29}},
 				{1e-300, 10 / 12, 10 / 9, 10 / 6, 10 / 3, 30}
 			)
 		end

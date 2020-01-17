@@ -1,10 +1,10 @@
--- $Id: Atlas_Battlegrounds-zhTW.lua 1557 2019-09-04 07:36:03Z arith $
+-- $Id: Atlas_Battlegrounds-zhTW.lua 1564 2020-01-15 15:53:51Z arith $
 --[[
 
 	Atlas, a World of Warcraft instance map browser
 	Copyright 2005 ~ 2010 - Dan Gilbert <dan.b.gilbert at gmail dot com>
 	Copyright 2010 - Lothaer <lothayer at gmail dot com>, Atlas Team
-	Copyright 2011 ~ 2019 - Arith Hsu, Atlas Team <atlas.addon at gmail dot com>
+	Copyright 2011 ~ 2020 - Arith Hsu, Atlas Team <atlas.addon at gmail dot com>
 
 	This file is part of Atlas.
 
@@ -44,6 +44,8 @@ L["Attacking Team"] = "攻擊隊伍"
 L["AV"] = "AV/奧山"
 L["Battleground Demolisher"] = "戰場石毀車"
 L["Battleground Maps"] = "戰場地圖"
+--[[Translation missing --]]
+--[[ L["Bonfire"] = ""--]] 
 L["Brogus Thunderbrew <Food & Drink>"] = "布羅古斯·雷酒 <食物和飲料>"
 L["Broken Temple Graveyard"] = "破碎神殿墓地"
 L["Broken Temple Vihecal Workshop"] = "破碎神殿載具工坊"
@@ -58,6 +60,8 @@ L["Commander Stevens <Baradin's Wardens>"] = "指揮官史蒂文斯 <巴拉丁�
 L["Commander Zanoth <Hellscream's Reach>"] = "指揮官札諾斯 <地獄吼先鋒>"
 L["Contested Graveyards"] = "爭奪中的墓地"
 L["Coreiel <Blade Merchant>"] = "寇瑞歐 <劍刃武器商>"
+--[[Translation missing --]]
+--[[ L["Crash Site"] = ""--]] 
 L["Defending Team"] = "防禦隊伍"
 L["Dragonmaw Clan Compound"] = "龍喉氏族營地"
 L["Drek'Thar <Frostwolf General>"] = "德雷克塔爾 <霜狼將軍>"
@@ -105,7 +109,11 @@ L["Mine Cart Spawn Point"] = "礦坑推車產生點"
 L["Mulverick's Beacon"] = "穆維里克的信號燈"
 L["Murgot Deepforge"] = "莫高特·深爐"
 L["Orb of Power"] = "異能球"
+--[[Translation missing --]]
+--[[ L["Overlook"] = ""--]] 
 L["Overlord Agmar"] = "霸主阿格瑪"
+--[[Translation missing --]]
+--[[ L["Plunge"] = ""--]] 
 L["Primalist Thurloga"] = "原獵者瑟魯加"
 L["Private Garnoth <Hellscream's Reach>"] = "士兵卡爾諾斯 <地獄吼先鋒>"
 L["Prospector Stonehewer"] = "勘察員塔雷·石鎬"
@@ -113,7 +121,13 @@ L["Quartermaster Davian Vaclav"] = "軍需官戴夫恩·瓦克拉夫"
 L["Quartermaster Jaffrey Noreliqe"] = "軍需官傑夫利·諾利克"
 L["Rescued"] = "營救"
 L["Resurrection Point"] = "復活點"
+--[[Translation missing --]]
+--[[ L["Ridge"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Ruins"] = ""--]] 
 L["Sergeant Parker <Baradin's Wardens>"] = "派克中士 <巴拉丁鐵衛>"
+--[[Translation missing --]]
+--[[ L["Shipwreck"] = ""--]] 
 L["Slidore's Beacon"] = "斯里多爾的信號燈"
 L["Smith Regzar"] = "鐵匠雷格薩"
 L["SotA"] = "SotA/遠祖"
@@ -122,6 +136,8 @@ L["Southwest Graveyard"] = "西南墓地"
 L["Span of 5"] = "每五級一階"
 L["Spirit Towers"] = "精神哨塔"
 L["Staff Sergeant Lazgar <Hellscream's Reach>"] = "兵官中士拉茲加爾 <地獄吼先鋒>"
+--[[Translation missing --]]
+--[[ L["Steamsaw"] = ""--]] 
 L["Stormpike Aid Station"] = "雷矛急救站"
 L["Stormpike Banner"] = "雷矛軍旗"
 L["Stormpike Lumber Yard"] = "雷矛林場"
@@ -131,17 +147,27 @@ L["Stormpike Stable Master <Stable Master>"] = "雷矛獸欄管理員"
 L["Sunken Ring Graveyard"] = "沉沒之環墓地"
 L["Sunken Ring Vihecal Workshop"] = "沉沒之環載具工坊"
 L["Svalbrad Farmountain <Trade Goods>"] = "斯瓦爾布萊德·遠山 <商人>"
+--[[Translation missing --]]
+--[[ L["Tar Pits"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Temple"] = ""--]] 
 L["The Docks"] = "碼頭"
 L["The Hangar"] = "機棚"
 L["The Quarry"] = "礦場"
 L["The Refinery"] = "精煉廠"
 L["The Silithyst Must Flow"] = "收集希利塞斯"
 L["The Workshop"] = "工坊"
+--[[Translation missing --]]
+--[[ L["Tide Pools"] = ""--]] 
 L["Titan Relic"] = "泰坦聖物"
+--[[Translation missing --]]
+--[[ L["Tower"] = ""--]] 
 L["Tower Point"] = "哨塔高地"
 L["Twinspire Graveyard"] = "雙塔墓地"
 L["Vanndar Stormpike <Stormpike General>"] = "范達爾·雷矛 <雷矛將軍>"
 L["Vipore's Beacon"] = "維波里的信號燈"
+--[[Translation missing --]]
+--[[ L["Waterfall"] = ""--]] 
 L["West Beacon"] = "西部哨塔"
 L["West Frostwolf Tower"] = "西部霜狼哨塔"
 L["Western Crater"] = "西部凹地"
