@@ -1,24 +1,30 @@
 ﻿if GetLocale() == "zhCN" then
-	DEL_DES	= "删除对话？";
-	DEL_BTN	= "左键：删除对话\n右键：复制文本";
-	CALL_BTN= "密语屏";
-	OFFLINE = "已离线。";
-	NOTFIND = "未找到。";
-	DIFFSRV = "不属于当前服务器。";
+	DEL_DES  = "删除对话？";
+	DEL_BTN  = "左键：删除对话\n右键：复制文本";
+	CALL_BTN = "密语屏";
+	OFFLINE  = "已离线。";
+	NOTFIND  = "未找到。";
+	DIFFSRV  = "不属于当前服务器。";
+	CLEAR_ALL= "清空所有对话";
+	DEL_CFM  = "删除前确认";
 elseif GetLocale() == "zhTW" then
-	DEL_DES	= "刪除對話？";
-	DEL_BTN	= "左鍵：刪除對話\n右鍵：複製文本";
-	CALL_BTN= "密語屏";
-	OFFLINE = "已離線。";
-	NOTFIND = "未找到。";
-	DIFFSRV = "不屬於當前伺服器。";
+	DEL_DES  = "刪除對話？";
+	DEL_BTN  = "左鍵：刪除對話\n右鍵：複製文本";
+	CALL_BTN = "密語屏";
+	OFFLINE  = "已離線。";
+	NOTFIND  = "未找到。";
+	DIFFSRV  = "不屬於當前伺服器。";
+	CLEAR_ALL= "清空所有對話";
+	DEL_CFM  = "刪除前確認";
 else
-	DEL_DES	= "Delete Dialog?";
-	DEL_BTN	= "LEFT: Delete Dialog\nRight: Copy text";
-	CALL_BTN= "WhisperTable";
-	OFFLINE = " is offline.";
-	NOTFIND = " does not exist.";
-	DIFFSRV = " does not belong to the current server.";
+	DEL_DES  = "Delete Dialog?";
+	DEL_BTN  = "LEFT: Delete Dialog\nRight: Copy text";
+	CALL_BTN = "WhisperTable";
+	OFFLINE  = " is offline.";
+	NOTFIND  = " does not exist.";
+	DIFFSRV  = " does not belong to the current server.";
+	CLEAR_ALL= "Clear All";
+	DEL_CFM  = "Del confirm";
 end
 
 StaticPopupDialogs["WhisperTable_Delete"] = {
@@ -26,21 +32,29 @@ StaticPopupDialogs["WhisperTable_Delete"] = {
 	button1 = YES,
 	button2 = NO,
 	OnAccept = function(self, data)
-		local tagid = (WhisperTableDB["page"] - 1) * 8 + tonumber(data);
-		local tag = WhisperTableDB["tag"][tagid];
-		local i = 1;
-		while WhisperTableDB["tag"][i] do
-			if (WhisperTableDB["tag"][i] == tag) then
-				table.remove(WhisperTableDB["tag"], i);
-				WhisperTableDB["msg"][tag] = nil;
-				WhisperTableDB["date"][tag] = nil;
-				WhisperTableDB["name"][tag] = nil;
-				WhisperTableDB["unread"][tag] = nil;
-				WhisperTableDB["class"][tag] = nil;
-				break;
-			end
-			i = i + 1;
-		end
+		WhisperTable_DelONE(self, tonumber(data));
+	end,
+	timeout = 0,
+	hideOnEscape = 1,
+	exclusive = 1,
+	whileDead = 1,
+	preferredIndex = 3,
+}
+
+StaticPopupDialogs["WhisperTable_Clear"] = {
+	text = CLEAR_ALL,
+	button1 = YES,
+	button2 = NO,
+	OnAccept = function()
+		WhisperTableDB = {
+			["tag"] = {},
+			["unread"] = {},
+			["name"] = {},
+			["class"] = {},
+			["date"] = {},
+			["msg"] = {},
+			["page"] = 1,
+		}
 		WhisperTable_ListShow();
 	end,
 	timeout = 0,
@@ -49,6 +63,24 @@ StaticPopupDialogs["WhisperTable_Delete"] = {
 	whileDead = 1,
 	preferredIndex = 3,
 }
+
+local Callbutton_MenuList = {
+	{ text = "WhisperTable", isTitle = true },
+	{ text = CLEAR_ALL, func = function() StaticPopup_Show("WhisperTable_Clear"); end },
+	{ text = DEL_CFM, hasArrow = true, keepShownOnClick = false,
+		menuList = {
+			{ text = YES, func = function() WhisperTableDB["confirm"] = 1; CloseDropDownMenus(); end, checked = function() return WhisperTableDB["confirm"] == 1; end },
+			{ text = NO, func = function() WhisperTableDB["confirm"] = 0; CloseDropDownMenus(); end, checked = function() return WhisperTableDB["confirm"] == 0; end },
+		},
+	},
+	{ text = CANCEL },
+}
+
+local Callbutton_Menu = CreateFrame("Frame", nil, UIParent, "UIDropDownMenuTemplate")
+
+function WhisperTable_Clear()
+	EasyMenu(Callbutton_MenuList, Callbutton_Menu, "cursor", 0 , 0, "MENU");
+end
 
 function WhisperTable_Onload(self)
 	self:RegisterEvent("ADDON_LOADED");
@@ -71,6 +103,8 @@ local function WhisperTable_CheckUnread()
 	end
 	if unread == false then
 		_G["WhisperTable_ShowBotton_Background"]:SetAlpha(0);
+	else
+		_G["WhisperTable_ShowBotton_Background"]:SetAlpha(1);
 	end
 end
 
@@ -239,6 +273,9 @@ function WhisperTable_OnEvent(self, event, ...)
 			if (not WhisperTableDB["page"]) then
 				WhisperTableDB["page"] = 1;
 			end
+			if (not WhisperTableDB["confirm"]) then
+				WhisperTableDB["confirm"] = 1;
+			end
 			SlashCmdList["WhisperTable"] = WhisperTable_Set;
 			SLASH_WhisperTable1 = "/wt";
 		end
@@ -248,6 +285,7 @@ function WhisperTable_OnEvent(self, event, ...)
 		WhisperTablePlayer = name.."-"..realm;
 		--好友列表登陆后重新生成，隐私保护！
 		WhisperTable_UpdateFriends();
+		WhisperTable_CheckUnread();
 		WhisperTable_ListShow();
 	end
 end
@@ -364,7 +402,7 @@ function WhisperTable_OnClick(self, num, button)
 			FriendsFrame_ShowDropdown(name, 1)
 		end
 	else
-		if(IsControlKeyDown()) then
+		if (IsControlKeyDown()) then
 			ShowChatbox(num);
 		else
 			local tagid = (WhisperTableDB["page"] - 1) * 8 + num;
@@ -453,13 +491,36 @@ function WhisperTable_OnLeave(self)
 	GameTooltip:Hide();
 end
 
+function WhisperTable_DelONE(self, num)
+	local tagid = (WhisperTableDB["page"] - 1) * 8 + num;
+	local tag = WhisperTableDB["tag"][tagid];
+	local i = 1;
+	while WhisperTableDB["tag"][i] do
+		if (WhisperTableDB["tag"][i] == tag) then
+			table.remove(WhisperTableDB["tag"], i);
+			WhisperTableDB["msg"][tag] = nil;
+			WhisperTableDB["date"][tag] = nil;
+			WhisperTableDB["name"][tag] = nil;
+			WhisperTableDB["unread"][tag] = nil;
+			WhisperTableDB["class"][tag] = nil;
+			break;
+		end
+		i = i + 1;
+	end
+	WhisperTable_ListShow();
+end
+
 function WhisperTable_Del(self, num, button)
 	if (button == "RightButton") then
 		ShowChatbox(num);
 	else
-		local dialog = StaticPopup_Show("WhisperTable_Delete");
-		if (dialog) then
-			dialog.data = num;
+		if (WhisperTableDB["confirm"] == 1) then
+			local dialog = StaticPopup_Show("WhisperTable_Delete");
+			if (dialog) then
+				dialog.data = num;
+			end
+		else
+			WhisperTable_DelONE(self, num);
 		end
 	end
 end

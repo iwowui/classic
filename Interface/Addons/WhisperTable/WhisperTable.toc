@@ -8,6 +8,6 @@
 ## Author: 互补古蓝(沧海流星<E-mail:tjox@163.com>), Isler
 ## SavedVariables: WhisperTableDB
 ## SavedVariablesPerCharacter: WhisperTablePlayer
-## Version: 0.6
+## Version: 0.7
 ## X-Repple: 辅助
 WhisperTable.xml

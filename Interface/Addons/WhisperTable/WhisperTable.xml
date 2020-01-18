@@ -84,7 +84,7 @@
 	<Scripts>
 		<OnLoad>
 			self:RegisterForDrag("LeftButton");
-			self:RegisterForClicks("LeftButtonUp");
+			self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 			self:SetUserPlaced(true);
 			self:SetClampedToScreen(true);
 		</OnLoad>
@@ -107,11 +107,13 @@
 			self:StopMovingOrSizing();
 		</OnDragStop>
 		<OnClick>
-			if IsControlKeyDown() then
+			if IsControlKeyDown() and (button == "LeftButton") then
 				if (not InCombatLockdown()) then
 					self:ClearAllPoints();
 					self:SetPoint("BOTTOMLEFT", ChatFrameChannelButton, "TOPLEFT", 2, 12);
 				end
+			elseif (button == "RightButton") then
+				WhisperTable_Clear()
 			else
 				WhisperTable_Set(self);
 			end
