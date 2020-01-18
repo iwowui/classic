@@ -55,6 +55,7 @@ function Events:OnEnable()
     self:RegisterEvent('PLAYER_TRADE_MONEY', 'Fire')
     self:RegisterEvent('SEND_MAIL_COD_CHANGED', 'Fire')
     self:RegisterEvent('SEND_MAIL_MONEY_CHANGED', 'Fire')
+    self:RegisterEvent('PLAYERBANKBAGSLOTS_CHANGED', 'Fire')
 end
 
 local function RegisterFrameEvent(self, event, callback)
@@ -75,8 +76,8 @@ function Events:Fire(event, ...)
     return self.events:Fire(event, ...)
 end
 
-function Events:FireFrameEvent(event, bagId)
-    return self.events:Fire(event .. bagId)
+function Events:FireFrame(event, bagId, ...)
+    return self.events:Fire(event .. bagId, ...)
 end
 
 function Events:UpdateBagSize(bag)
@@ -114,7 +115,7 @@ function Events:BANK_OPENED()
     BankFrame:Show()
     self:Fire('BANK_OPENED')
     Addon:ShowFrame(BAG_ID.BANK)
-    Addon:SetOwner(BAG_ID.BANK)
+    Addon:SetFrameOwner(BAG_ID.BANK)
 end
 
 function Events:BANK_CLOSED()

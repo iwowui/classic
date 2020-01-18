@@ -25,6 +25,7 @@ local UIParent = UIParent
 ---@field Cache tdBag2Cache
 ---@field Current tdBag2Current
 ---@field Cacher tdBag2Cacher
+---@field Tooltip tdBag2Tooltip
 local ns = select(2, ...)
 local BAG_ID = ns.BAG_ID
 
@@ -35,6 +36,7 @@ local BAG_ID = ns.BAG_ID
 ---@field managed boolean
 ---@field bagFrame boolean
 ---@field tokenFrame boolean
+---@field pluginButtons boolean
 ---@field window table
 ---@field tradeBagOrder string
 ---@field hiddenBags table<number, boolean>
@@ -93,8 +95,9 @@ function Addon:OnInitialize()
                     reverseBag = false,
                     reverseSlot = false,
                     managed = false,
-                    bagFrame = false,
+                    bagFrame = true,
                     tokenFrame = true,
+                    pluginButtons = true,
                     scale = 1,
                     tradeBagOrder = ns.TRADE_BAG_ORDER.BOTTOM,
                     hiddenBags = {},
@@ -108,19 +111,7 @@ function Addon:OnInitialize()
                     managed = true,
                     bagFrame = true,
                     tokenFrame = true,
-                    scale = 1,
-                    tradeBagOrder = ns.TRADE_BAG_ORDER.NONE,
-                    hiddenBags = {},
-                },
-                [BAG_ID.OTHER] = { --
-                    window = {point = 'TOPLEFT', x = 50, y = -100},
-                    disableButtons = {},
-                    column = 12,
-                    reverseBag = false,
-                    reverseSlot = false,
-                    managed = true,
-                    bagFrame = true,
-                    tokenFrame = true,
+                    pluginButtons = true,
                     scale = 1,
                     tradeBagOrder = ns.TRADE_BAG_ORDER.NONE,
                     hiddenBags = {},
@@ -172,9 +163,12 @@ function Addon:OnInitialize()
         },
     }, true)
 
-    self.db:RegisterCallback('OnProfileChanged', function()
+    local function OnProfileChanged()
         self:OnProfileChanged()
-    end)
+    end
+
+    self.db:RegisterCallback('OnProfileChanged', OnProfileChanged)
+    self.db:RegisterCallback('OnProfileReset', OnProfileChanged)
 
     -- clear old options
     do
@@ -275,6 +269,13 @@ function Addon:GetFrame(bagId)
     return self.frames[bagId]
 end
 
+function Addon:GetFrameMeta(bagId)
+    local frame = self.frames[bagId]
+    if frame then
+        return frame.meta
+    end
+end
+
 function Addon:ShowFrame(bagId, manual)
     local frame = self:GetFrame(bagId) or self:CreateFrame(bagId)
     if frame and not frame:IsShown() then
@@ -299,11 +300,16 @@ function Addon:ToggleFrame(bagId, manual)
     end
 end
 
+function Addon:IsFrameShown(bagId)
+    local frame = self:GetFrame(bagId)
+    return frame and frame:IsShown()
+end
+
 function Addon:ToggleOwnerFrame(bagId, owner)
     local frame = self:GetFrame(bagId) or self:CreateFrame(bagId)
     if not frame:IsShown() or frame.meta.owner ~= owner then
         self:ShowFrame(bagId, true)
-        self:SetOwner(bagId, owner)
+        self:SetFrameOwner(bagId, owner)
     else
         self:HideFrame(bagId, true)
     end
@@ -335,15 +341,14 @@ end
 
 ---- owner
 
-function Addon:SetOwner(bagId, owner)
+function Addon:SetFrameOwner(bagId, owner)
     if not bagId then
-        self:SetOwner(BAG_ID.BAG, nil)
-        self:SetOwner(BAG_ID.BANK, nil)
+        self:SetFrameOwner(BAG_ID.BAG, nil)
+        self:SetFrameOwner(BAG_ID.BANK, nil)
     else
         local frame = self:GetFrame(bagId)
         if frame then
-            frame.meta.owner = owner
-            ns.Events:FireFrameEvent('FRAME_OWNER_CHANGED', bagId)
+            frame.meta:SetOwner(owner)
         end
     end
 end

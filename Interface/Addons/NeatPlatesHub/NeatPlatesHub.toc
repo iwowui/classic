@@ -1,9 +1,9 @@
 ## Interface: 11303
 ## Title: NeatPlates Hub
 ## Notes: Provides a common configuration panel for supported themes.
-## Title-zhCN: |CFFFF8000¸¨Öú|R ĞÕÃû°æÔöÇ¿ ÉèÖÃ
-## Title-zhTW: |CFFFF8000İoÖú|R ĞÕÃû°æÔöŠ ÔOÖÃ
-## X-Repple: ¸¨Öú
+## Title-zhCN: |CFFFF8000è¾…åŠ©|R å§“åç‰ˆå¢å¼º è®¾ç½®
+## Title-zhTW: |CFFFF8000è¼”åŠ©|R å§“åç‰ˆå¢å¼· è¨­ç½®
+## X-Repple: è¾…åŠ©
 ## Author: Luxocracy and friends
 ## Dependencies: NeatPlates, NeatPlatesWidgets
 ## OptionalDeps: NeatPlatesHubDE, NeatPlatesHubES, NeatPlatesHubMX, NeatPlatesHubFR, NeatPlatesHubKR, NeatPlatesHubRU, NeatPlatesHubCN, NeatPlatesHubTW

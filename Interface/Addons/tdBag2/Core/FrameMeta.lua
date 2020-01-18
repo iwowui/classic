@@ -49,14 +49,29 @@ function FrameMeta:IsSelf()
     return ns.IsSelf(self.owner)
 end
 
+function FrameMeta:SetOwner(owner)
+    self.owner = not ns.IsSelf(owner) and owner or nil
+    ns.Events:FireFrame('OWNER_CHANGED', self.bagId)
+end
+
 function FrameMeta:ToggleBagHidden(bag)
     self.profile.hiddenBags[bag] = not self.profile.hiddenBags[bag] or nil
     ns.Events:Fire('UPDATE_ALL')
 end
 
-function FrameMeta:ToggleBagFrame()
-    self.profile.bagFrame = not self.profile.bagFrame
-    ns.Events:Fire('UPDATE_ALL')
+function FrameMeta:SetOption(key, value)
+    self.profile[key] = value
+
+    local event = ns.FRAME_OPTION_EVENTS[key]
+    if event then
+        ns.Events:FireFrame(event, self.bagId)
+    else
+        ns.Addon:UpdateAll()
+    end
+end
+
+function FrameMeta:ToggleOption(key)
+    self:SetOption(key, not self.profile[key])
 end
 
 function FrameMeta:IsBagHidden(bag)

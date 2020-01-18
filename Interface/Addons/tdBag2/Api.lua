@@ -15,6 +15,7 @@ local C_Timer = C_Timer
 local ContainerIDToInventoryID = ContainerIDToInventoryID
 local GetScreenHeight = GetScreenHeight
 local GetScreenWidth = GetScreenWidth
+local PlaySound = PlaySound
 
 ---- UI
 local GameTooltip = GameTooltip
@@ -79,7 +80,6 @@ ns.L = L
 local BAG_ID = { --
     BAG = 'bag',
     BANK = 'bank',
-    OTHER = 'other',
 }
 
 local BAG_ICONS = { --
@@ -100,13 +100,11 @@ local BAGS = { --
 local BAG_CLASSES = { --
     [BAG_ID.BAG] = 'Inventory',
     [BAG_ID.BANK] = 'Bank',
-    [BAG_ID.OTHER] = 'Frame',
 }
 
 local BAG_TEMPLATES = { --
     [BAG_ID.BAG] = 'tdBag2FrameTemplate',
     [BAG_ID.BANK] = 'tdBag2FrameTemplate',
-    [BAG_ID.OTHER] = 'tdBag2BaseFrameTemplate',
 }
 
 local BAG_SETS = {}
@@ -157,6 +155,53 @@ ns.TRADE_BAG_ORDER = { --
     NONE = 'none',
     TOP = 'top',
     BOTTOM = 'bottom',
+}
+
+ns.FRAME_OPTION_EVENTS = { --
+    bagFrame = 'BAG_FRAME_TOGGLED',
+    managed = 'MANAGED_TOGGLED',
+    tokenFrame = 'TOKEN_FRAME_TOGGLED',
+    pluginButtons = 'PLUGIN_FRAME_TOGGLED',
+
+    scale = 'CONTAINER_LAYOUT',
+    column = 'CONTAINER_LAYOUT',
+    reverseSlot = 'CONTAINER_LAYOUT',
+
+    reverseBag = 'BAG_ORDER_CHANGED',
+    tradeBagOrder = 'BAG_ORDER_CHANGED',
+}
+
+local function EventGenerate(event)
+    return function()
+        return ns.Events.Fire(event)
+    end
+end
+
+ns.OPTION_EVENTS = { --
+    textOffline = 'TEXT_OFFLINE_TOGGLED',
+    iconChar = 'ICON_CHARACTER_TOGGLED',
+
+    iconJunk = 'ITEM_BORDER_UPDATE',
+    iconQuestStarter = 'ITEM_BORDER_UPDATE',
+    glowQuest = 'ITEM_BORDER_UPDATE',
+    glowUnusable = 'ITEM_BORDER_UPDATE',
+    glowQuality = 'ITEM_BORDER_UPDATE',
+    glowEquipSet = 'ITEM_BORDER_UPDATE',
+    glowNew = 'ITEM_BORDER_UPDATE',
+    glowAlpha = 'ITEM_BORDER_UPDATE',
+
+    colorSlots = 'ITEM_COLOR_UPDATE',
+    colorNormal = 'ITEM_COLOR_UPDATE',
+    colorQuiver = 'ITEM_COLOR_UPDATE',
+    colorSoul = 'ITEM_COLOR_UPDATE',
+    colorEnchant = 'ITEM_COLOR_UPDATE',
+    colorHerb = 'ITEM_COLOR_UPDATE',
+    colorKeyring = 'ITEM_COLOR_UPDATE',
+    emptyAlpha = 'ITEM_COLOR_UPDATE',
+
+    tipCount = function()
+        return ns.Tooltip:Update()
+    end,
 }
 
 local function riter(t, i)
@@ -245,6 +290,10 @@ function ns.AnchorTooltip2(frame, anchor, x, y)
     else
         GameTooltip:SetPoint('BOTTOM' .. anchor, frame, 'TOP' .. anchor, x, y)
     end
+end
+
+function ns.PlayToggleSound(flag)
+    return PlaySound(flag and 856 or 857)
 end
 
 function ns.GetOwnerColoredName(owner)

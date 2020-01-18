@@ -1,9 +1,9 @@
 ## Interface: 11303
 ## Title: NeatPlates Widgets
 ## Notes: Library of Widgets
-## Title-zhCN: |CFFFF8000¸¨Öú|R ĞÕÃû°æÔöÇ¿ Ğ¡²¿¼ş¿â
-## Title-zhTW: |CFFFF8000İoÖú|R ĞÕÃû°æÔöŠ Ğ¡²¿¼şì
-## X-Repple: ¸¨Öú
+## Title-zhCN: |CFFFF8000è¾…åŠ©|R å§“åç‰ˆå¢å¼º å°éƒ¨ä»¶åº“
+## Title-zhTW: |CFFFF8000è¼”åŠ©|R å§“åç‰ˆå¢å¼· å°éƒ¨ä»¶åº«
+## X-Repple: è¾…åŠ©
 ## Dependencies: NeatPlates
 ## SavedVariables: NeatPlatesWidgetSettings
 

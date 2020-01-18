@@ -47,11 +47,20 @@ function ContainerFrame:OnShow()
     Frame.OnShow(self)
     self:RegisterEvent('UPDATE_ALL', 'Update')
     self:RegisterEvent('SEARCH_CHANGED')
+    self:RegisterFrameEvent('TOKEN_FRAME_TOGGLED', 'PlaceTokenFrame')
+    self:RegisterFrameEvent('BAG_FRAME_TOGGLED', 'SEARCH_CHANGED')
+    self:RegisterFrameEvent('PLUGIN_FRAME_TOGGLED')
+    self:RegisterFrameEvent('PLUGIN_BUTTON_UPDATE')
     self:Update()
 end
 
 function ContainerFrame:SEARCH_CHANGED()
     self:PlaceBagFrame()
+    self:PlaceSearchBox()
+end
+
+function ContainerFrame:PLUGIN_FRAME_TOGGLED()
+    self:PlacePluginFrame()
     self:PlaceSearchBox()
 end
 
@@ -67,7 +76,7 @@ function ContainerFrame:Update()
 end
 
 function ContainerFrame:PlacePluginFrame()
-    return self.PluginFrame:Update()
+    self.PluginFrame:SetShown(self.meta.profile.pluginButtons)
 end
 
 function ContainerFrame:PlaceBagFrame()
@@ -83,25 +92,26 @@ end
 function ContainerFrame:PlaceSearchBox()
     if not self.meta.profile.bagFrame or self.SearchBox:HasFocus() or Addon:GetSearch() or self:IsSearchBoxSpaceEnough() then
         self.SearchBox:Show()
-        self.SearchBox:ClearAllPoints()
 
-        if self.PluginFrame then
-            self.SearchBox:SetPoint('RIGHT', self.PluginFrame, 'LEFT', -9, 0)
+        if self.PluginFrame:IsShown() then
+            self.SearchBox:SetPoint('RIGHT', self.PluginFrame, 'LEFT', -4, 0)
         else
-            self.SearchBox:SetPoint('TOPRIGHT', -20, -28)
+            self.SearchBox:SetPoint('RIGHT', self, 'TOPRIGHT', -25, -42)
         end
 
-        if self.BagFrame and self.BagFrame:IsShown() then
+        if self.BagFrame:IsShown() then
             self.SearchBox:SetPoint('LEFT', self.BagFrame, 'RIGHT', 15, 0)
         else
-            self.SearchBox:SetPoint('TOPLEFT', 74, -28)
+            self.SearchBox:SetPoint('LEFT', self, 'TOPLEFT', 74, -42)
         end
     else
         self.SearchBox:Hide()
     end
 end
 
+ContainerFrame.PLUGIN_BUTTON_UPDATE = ns.Spawned(ContainerFrame.PlaceSearchBox)
+
 function ContainerFrame:IsSearchBoxSpaceEnough()
-    return self:GetWidth() - (self.BagFrame and self.BagFrame:GetWidth() or 0) -
-               (self.PluginFrame and self.PluginFrame:GetWidth() or 0) > 140
+    return self:GetWidth() - self.BagFrame:GetWidth() -
+               (self.meta.profile.pluginButtons and self.PluginFrame:GetWidth() or 0) > 140
 end
