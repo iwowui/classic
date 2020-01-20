@@ -54,7 +54,7 @@ function Addon:OnInitialize()
                 minimap = {minimapPos = 192.68},
             },
             options = { --
-                databroker = true,
+                databroker = false,
                 chatfilter = true,
                 activityfilter = true,
             },

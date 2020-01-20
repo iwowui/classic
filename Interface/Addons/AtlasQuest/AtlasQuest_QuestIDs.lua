@@ -1983,6 +1983,10 @@ Inst27Quest6_Level = "60"
 Inst27Quest6_Attain = "60"
 Inst27Quest6PreQuest = "true"
 
+Inst27Quest7_QuestID = "7848"
+Inst27Quest7_Level = "60"
+Inst27Quest7_Attain = "55"
+
 
 Inst27Quest1_HORDE_QuestID = "6822"
 Inst27Quest1_HORDE_Level = Inst27Quest1_Level
@@ -2011,6 +2015,10 @@ Inst27Quest6_HORDE_QuestID = "8578"
 Inst27Quest6_HORDE_Level = Inst27Quest6_Level
 Inst27Quest6_HORDE_Attain = Inst27Quest6_Attain
 Inst27Quest6PreQuest_HORDE = Inst27Quest6PreQuest
+
+Inst27Quest7_HORDE_QuestID = "7848"
+Inst27Quest7_HORDE_Level = "60"
+Inst27Quest7_HORDE_Attain = "55"
 
 
 

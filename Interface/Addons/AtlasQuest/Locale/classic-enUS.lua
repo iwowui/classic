@@ -217,7 +217,7 @@ Inst1Quest11name2 = "Songstone of Ironforge"
 Inst1Quest12 = "12. Attunement to the Core"
 Inst1Quest12_Aim = "Venture to the Molten Core entry portal in Blackrock Depths and recover a Core Fragment. Return to Lothos Riftwaker in Blackrock Mountain when you have recovered the Core Fragment."
 Inst1Quest12_Location = "Lothos Riftwaker (Blackrock Mountain; "..YELLOW.."[E] on Entrance Map"..WHITE..")"
-Inst1Quest12_Note = "Molten Core attunement quest.  After completing this quest, you will be able to enter the Molten Core by talking to Lothos Riftwalker or jumping through the window next to him.\nYou find the Core Fragment near "..YELLOW.."[23]"..WHITE..", very close to the Molten Core portal."
+Inst1Quest12_Note = "This is the Molten Core attunement quest.  The Core Fragment is at "..YELLOW.."[23]"..WHITE..", very close to the Molten Core portal.  After completing this quest, you will be able to enter the Molten Core by talking to Lothos Riftwalker or jumping through the window next to him."
 Inst1Quest12_Prequest = "None"
 Inst1Quest12_Folgequest = "None"
 -- No Rewards for this quest
@@ -4420,8 +4420,8 @@ Inst26Quest7name1_HORDE = Inst26Quest7name1
 --------------- INST27 - Molten Core ---------------
 
 Inst27Caption = "Molten Core"
-Inst27QAA = "6 Quests"
-Inst27QAH = "6 Quests"
+Inst27QAA = "7 Quests"
+Inst27QAH = "7 Quests"
 
 --Quest 1 Alliance
 Inst27Quest1 = "1. The Molten Core"
@@ -4481,6 +4481,15 @@ Inst27Quest6_Folgequest = "None"
 --
 Inst27Quest6name1 = "Major Rejuvenation Potion"
 
+--Quest 7 Alliance   (same as BRD Quest 12)
+Inst27Quest7 = "7. Attunement to the Core"
+Inst27Quest7_Aim = Inst1Quest12_Aim
+Inst27Quest7_Location = Inst1Quest12_Location
+Inst27Quest7_Note = "This is the Molten Core attunement quest.  The Core Fragment is in "..YELLOW.."Blackrock Depths"..WHITE.." at "..YELLOW.."[23]"..WHITE..", very close to the Molten Core portal.  After completing this quest, you will be able to enter the Molten Core by talking to Lothos Riftwalker or jumping through the window next to him."
+Inst27Quest7_Prequest = Inst1Quest12_Prequest
+Inst27Quest7_Folgequest = Inst1Quest12_Folgequest
+-- No Rewards for this quest
+
 
 --Quest 1 Horde  (same as Quest 1 Alliance)
 Inst27Quest1_HORDE = Inst27Quest1
@@ -4539,6 +4548,14 @@ Inst27Quest6_HORDE_Prequest = Inst27Quest6_Prequest
 Inst27Quest6_HORDE_Folgequest = Inst27Quest6_Folgequest
 --
 Inst27Quest6name1_HORDE = Inst27Quest6name1
+
+--Quest 7 Horde  (same as Quest 7 Alliance)
+Inst27Quest7_HORDE = Inst27Quest7
+Inst27Quest7_HORDE_Aim = Inst27Quest7_Aim
+Inst27Quest7_HORDE_Location = Inst27Quest7_Location
+Inst27Quest7_HORDE_Note = Inst27Quest7_Note
+Inst27Quest7_HORDE_Prequest = Inst27Quest7_Prequest
+Inst27Quest7_HORDE_Folgequest = Inst27Quest7_Folgequest
 
 
 

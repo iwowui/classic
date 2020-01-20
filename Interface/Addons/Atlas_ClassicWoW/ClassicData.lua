@@ -1,4 +1,4 @@
--- $Id: ClassicData.lua 61 2020-01-15 14:21:17Z arith $
+-- $Id: ClassicData.lua 64 2020-01-19 16:36:32Z arith $
 --[[
 
 	Atlas, a World of Warcraft instance map browser
@@ -535,7 +535,7 @@ if (WoWClassic) then
 			{ BLUE.." A) "..ALC["Entrance"] },
 			{ BLUE.." B) "..ALC["Exit"] },
 			{ WHIT.." 1) "..Atlas:GetBossName("Rhahk'Zor") },
-			{ WHIT.." 2) "..Atlas:GetBossName("Miner Johnson")..ALC["L-Parenthesis"]..ALC["(Rare)"]..ALC["R-Parenthesis"] },
+			{ WHIT.." 2) "..Atlas:GetBossName("Miner Johnson")..ALC["L-Parenthesis"]..ALC["Rare"]..ALC["R-Parenthesis"] },
 			{ WHIT.." 3) "..Atlas:GetBossName("Sneed") },
 			{ WHIT..INDENT..L["Sneed's Shredder"] },
 			{ WHIT.." 4) "..Atlas:GetBossName("Gilnid") },
@@ -958,7 +958,7 @@ if (WoWClassic) then
 		},
 		CL_TheRuinsofAhnQiraj = {
 			ZoneName = { BZ["Ahn'Qiraj"]..ALC["Colon"]..BZ["Ruins of Ahn'Qiraj"] },
-			Location = { BZ["Ahn'Qiraj: The Fallen Kingdom"] },
+			Location = { BZ["Silithus"] },
 			DungeonID = 160,
 			Acronym = L["AQ20"],
 			LevelRange = "60",
@@ -987,7 +987,7 @@ if (WoWClassic) then
 		},
 		CL_TheTempleofAhnQiraj = {
 			ZoneName = { BZ["Ahn'Qiraj"]..ALC["Colon"]..BZ["Temple of Ahn'Qiraj"] },
-			Location = { BZ["Ahn'Qiraj: The Fallen Kingdom"] },
+			Location = { BZ["Silithus"] },
 			DungeonID = 161,
 			Acronym = L["AQ40"],
 			LevelRange = "60",
@@ -1060,7 +1060,7 @@ if (WoWClassic) then
 		},
 		CL_RazorfenKraul = {
 			ZoneName = { BZ["Razorfen Kraul"] },
-			Location = { BZ["Southern Barrens"] },
+			Location = { BZ["The Barrens"] },
 			DungeonID = 15,
 			LevelRange = "24-40",
 			PlayerLimit = { 5 },
@@ -1082,7 +1082,7 @@ if (WoWClassic) then
 		},
 		CL_WailingCavernsEnt = {
 			ZoneName = { BZ["Wailing Caverns"]..ALC["L-Parenthesis"]..ALC["Entrance"]..ALC["R-Parenthesis"] },
-			Location = { BZ["Northern Barrens"] },
+			Location = { BZ["The Barrens"] },
 			DungeonID = 1,
 			LevelRange = "15-28",
 			PlayerLimit = { 5 },
@@ -1099,7 +1099,7 @@ if (WoWClassic) then
 		},
 		CL_WailingCaverns = {
 			ZoneName = { BZ["Wailing Caverns"] },
-			Location = { BZ["Northern Barrens"] },
+			Location = { BZ["The Barrens"] },
 			DungeonID = 1,
 			LevelRange = "15-28",
 			PlayerLimit = { 5 },

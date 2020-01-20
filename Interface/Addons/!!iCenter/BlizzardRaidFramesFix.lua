@@ -59,7 +59,7 @@ do
 
         local prefix, suffix = unitPrefix[unit], unitSuffix[unit]
 
-        if not prefix or not UnitExists(prefix) then
+        if not UnitExists(prefix) then
             return nil, prefix, suffix
         end
 
@@ -70,8 +70,8 @@ end
 local frames = {}
 setmetatable(frames, {__mode = "k"})
 
-local sizeChanged = true
-local groupRosterUpdate = true
+local sizeChanged = false
+local groupRosterUpdate = false
 local applyProfile = nil
 
 do
@@ -97,11 +97,35 @@ do
 end
 
 do
-    local _CompactRaidGroup_UpdateUnits = CompactRaidGroup_UpdateUnits
-
-    function CompactRaidGroup_UpdateUnits(self)
+    function CompactRaidGroup_UpdateUnits(frame)
         if not InCombatLockdown() then
-            _CompactRaidGroup_UpdateUnits(self)
+            local groupIndex = frame:GetID()
+            local frameIndex = 1
+
+            if IsInRaid() then
+                for i = 1, MAX_RAID_MEMBERS do
+                    local unit = "raid" .. i
+                    local raidID = UnitInRaid(unit)
+
+                    if raidID then
+                        local name, rank, subgroup = GetRaidRosterInfo(raidID)
+
+                        if subgroup == groupIndex and frameIndex <= MEMBERS_PER_RAID_GROUP then
+                            local unitFrame = _G[frame:GetName() .. "Member" .. frameIndex]
+
+                            CompactUnitFrame_SetUnit(unitFrame, nil)
+                            CompactUnitFrame_SetUnit(unitFrame, unit)
+
+                            frameIndex = frameIndex + 1
+                        end
+                    end
+                end
+
+                for i = frameIndex, MEMBERS_PER_RAID_GROUP do
+                    local unitFrame = _G[frame:GetName() .. "Member" .. i]
+                    CompactUnitFrame_SetUnit(unitFrame, nil)
+                end
+            end
         end
     end
 end
@@ -125,12 +149,10 @@ hooksecurefunc(
     "CompactUnitFrame_UpdateAll",
     function(frame)
         if frames[frame] == nil then
-            if frame:IsForbidden() or not frame:GetName() or not frame:GetName():find("^Compact") then
-                return
-            end
+            return
         end
 
-        if resolveUnitID(frame.displayedUnit) and not UnitExists(frame.displayedUnit) then
+        if frame:IsShown() and not UnitExists(frame.displayedUnit) then
             CompactUnitFrame_UpdateMaxHealth(frame)
             CompactUnitFrame_UpdateHealth(frame)
             CompactUnitFrame_UpdateHealthColor(frame)
@@ -170,6 +192,10 @@ hooksecurefunc(
                 CompactUnitFrame_UpdateWidgetSet(frame)
             end
         end
+
+        if not frame.unitExists then
+            frame.background:SetAlpha(0)
+        end
     end
 )
 
@@ -187,12 +213,14 @@ local function CompactUnitFrame_UpdateAllSecure(frame)
             end
 
             frame.unitExists = true
+            frame.background:SetAlpha(1)
         else
             if CompactUnitFrame_ClearWidgetSet then
                 CompactUnitFrame_ClearWidgetSet(frame)
             end
 
             frame.unitExists = false
+            frame.background:SetAlpha(0)
         end
 
         for _, hookfunc in ipairs(hooks_CompactUnitFrame_UpdateVisible) do
@@ -200,7 +228,7 @@ local function CompactUnitFrame_UpdateAllSecure(frame)
         end
     end
 
-    if frame.displayedUnit then
+    if frame:IsShown() then
         CompactUnitFrame_UpdateMaxHealth(frame)
         CompactUnitFrame_UpdateHealth(frame)
         CompactUnitFrame_UpdateHealthColor(frame)
@@ -241,6 +269,10 @@ local function CompactUnitFrame_UpdateAllSecure(frame)
         end
     end
 
+    if not frame.unitExists then
+        frame.background:SetAlpha(0)
+    end
+
     for _, hookfunc in ipairs(hooks_CompactUnitFrame_UpdateAll) do
         hookfunc(frame)
     end
@@ -252,13 +284,11 @@ if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
             "CompactUnitFrame_UpdateInVehicle",
             function(frame)
                 if frames[frame] == nil then
-                    if frame:IsForbidden() or not frame:GetName() or not frame:GetName():find("^Compact") then
-                        return
-                    end
+                    return
                 end
 
                 local unit = frame:GetAttribute("unit")
-                local unitTarget = unit and resolveUnitID(unit)
+                local unitTarget = resolveUnitID(unit)
 
                 if unitTarget then
                     frame:SetAttribute("unit", unitTarget)
@@ -272,9 +302,13 @@ hooksecurefunc(
     "CompactUnitFrame_UpdateVisible",
     function(frame)
         if frames[frame] == nil then
-            if frame:IsForbidden() or not frame:GetName() or not frame:GetName():find("^Compact") then
-                return
-            end
+            return
+        end
+
+        if frame.unitExists then
+            frame.background:SetAlpha(1)
+        else
+            frame.background:SetAlpha(0)
         end
 
         if resolveUnitID(frame.unit) then
@@ -287,28 +321,11 @@ hooksecurefunc(
     "CompactUnitFrame_UpdateName",
     function(frame)
         if frames[frame] == nil then
-            if frame:IsForbidden() or not frame:GetName() or not frame:GetName():find("^Compact") then
-                return
-            end
+            return
         end
 
-        if frame.unit == "none" then
+        if not frame.unitExists then
             frame.name:Hide()
-        end
-    end
-)
-
-hooksecurefunc(
-    "CompactUnitFrame_UpdateInRange",
-    function(frame)
-        if frames[frame] == nil then
-            if frame:IsForbidden() or not frame:GetName() or not frame:GetName():find("^Compact") then
-                return
-            end
-        end
-
-        if frame.unit == "none" then
-            frame:SetAlpha(0.55)
         end
     end
 )
@@ -317,16 +334,14 @@ hooksecurefunc(
     "CompactUnitFrame_UpdateStatusText",
     function(frame)
         if frames[frame] == nil then
-            if frame:IsForbidden() or not frame:GetName() or not frame:GetName():find("^Compact") then
-                return
-            end
+            return
         end
 
         if not frame.statusText then
             return
         end
 
-        if not UnitExists(frame.unit) then
+        if not frame.unitExists then
             frame.statusText:Hide()
         end
     end
@@ -343,83 +358,123 @@ hooksecurefunc(
 
         assert(not InCombatLockdown())
 
+        local updateAll = false
+
         local unitTarget = resolveUnitID(unit)
 
         if unitTarget then
+            if frame:GetAttribute("unit") == unit then
+                if not frame.onUpdateFrame then
+                    frame.onUpdateFrame = CreateFrame("Frame")
+
+                    frame.onUpdateFrame.func = function(updateFrame, elapsed)
+                        if frame.displayedUnit then
+                            CompactUnitFrame_UpdateAllSecure(frame)
+                        end
+                    end
+
+                    frame.onUpdateFrame.func2 = function(updateFrame, event, arg1)
+                        if event == "PLAYER_ENTERING_WORLD" then
+                            CompactUnitFrame_UpdateAllSecure(frame)
+                        elseif event == "PLAYER_REGEN_ENABLED" then
+                            CompactUnitFrame_UpdateAllSecure(frame)
+                        else
+                            local unitMatches = arg1 == frame.unit or arg1 == frame.displayedUnit
+
+                            if unitMatches then
+                                if event == "UNIT_PET" then
+                                    CompactUnitFrame_UpdateAllSecure(frame)
+                                end
+                            end
+
+                            if unitMatches or arg1 == "player" then
+                                if event == "UNIT_ENTERED_VEHICLE" or event == "UNIT_EXITED_VEHICLE" then
+                                    CompactUnitFrame_UpdateAllSecure(frame)
+                                end
+                            end
+                        end
+                    end
+                end
+
+                if frame.onUpdateFrame.doUpdate then
+                    frame.onUpdateFrame:SetScript("OnUpdate", frame.onUpdateFrame.func)
+                end
+
+                frame.onUpdateFrame:SetScript("OnEvent", frame.onUpdateFrame.func2)
+
+                frame.onUpdateFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+
+                frame:UnregisterEvent("PLAYER_ENTERING_WORLD")
+                frame.onUpdateFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+                frame:UnregisterEvent("UNIT_PET")
+                frame.onUpdateFrame:RegisterEvent("UNIT_PET")
+
+                if UnitHasVehicleUI then
+                    frame:UnregisterEvent("UNIT_ENTERED_VEHICLE")
+                    frame:UnregisterEvent("UNIT_EXITED_VEHICLE")
+                    frame.onUpdateFrame:RegisterEvent("UNIT_ENTERED_VEHICLE")
+                    frame.onUpdateFrame:RegisterEvent("UNIT_EXITED_VEHICLE")
+                end
+
+                CompactUnitFrame_RegisterEvents(frame)
+            else
+                updateAll = true
+            end
+
             frame:SetAttribute("unit", unitTarget)
-            assert(frame:GetAttribute("unit") == unitTarget)
-            frames[frame] = unitTarget
-
-            if not frame.onUpdateFrame then
-                frame.onUpdateFrame = CreateFrame("Frame")
-
-                frame.onUpdateFrame.func = function(updateFrame, elapsed)
-                    if frame.displayedUnit then
-                        CompactUnitFrame_UpdateAllSecure(frame)
-                    end
-                end
-
-                frame.onUpdateFrame.func2 = function(updateFrame, event, arg1)
-                    if event == "PLAYER_ENTERING_WORLD" then
-                        CompactUnitFrame_UpdateAllSecure(frame)
-                    elseif event == "PLAYER_REGEN_ENABLED" then
-                        CompactUnitFrame_UpdateAllSecure(frame)
-                    else
-                        local unitMatches = arg1 == frame.unit or arg1 == frame.displayedUnit
-
-                        if unitMatches then
-                            if event == "UNIT_PET" then
-                                CompactUnitFrame_UpdateAllSecure(frame)
-                            end
-                        end
-
-                        if unitMatches or arg1 == "player" then
-                            if event == "UNIT_ENTERED_VEHICLE" or event == "UNIT_EXITED_VEHICLE" then
-                                CompactUnitFrame_UpdateAllSecure(frame)
-                            end
-                        end
-                    end
-                end
-            end
-
-            if frame.onUpdateFrame.doUpdate then
-                frame.onUpdateFrame:SetScript("OnUpdate", frame.onUpdateFrame.func)
-            end
-
-            frame.onUpdateFrame:SetScript("OnEvent", frame.onUpdateFrame.func2)
-
-            frame.onUpdateFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
-
-            frame:UnregisterEvent("PLAYER_ENTERING_WORLD")
-            frame.onUpdateFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-
-            frame:UnregisterEvent("UNIT_PET")
-            frame.onUpdateFrame:RegisterEvent("UNIT_PET")
-
-            if UnitHasVehicleUI then
-                frame:UnregisterEvent("UNIT_ENTERED_VEHICLE")
-                frame:UnregisterEvent("UNIT_EXITED_VEHICLE")
-                frame.onUpdateFrame:RegisterEvent("UNIT_ENTERED_VEHICLE")
-                frame.onUpdateFrame:RegisterEvent("UNIT_EXITED_VEHICLE")
-            end
-
-            CompactUnitFrame_RegisterEvents(frame)
-
-            if not frame.name:GetText() then
-                CompactUnitFrame_UpdateAll(frame)
-            end
         else
-            if frame.onUpdateFrame then
-                frame.onUpdateFrame.doUpdate = nil
-                frame.onUpdateFrame:UnregisterAllEvents()
-                frame.onUpdateFrame:SetScript("OnEvent", nil)
-                frame.onUpdateFrame:SetScript("OnUpdate", nil)
+            assert(not UnitExists(unit))
+
+            if unit then
+                frame.unit = nil
+                frame.displayedUnit = nil
+                frame.inVehicle = false
+                frame.readyCheckStatus = nil
+                frame.readyCheckDecay = nil
+                frame.isTanking = nil
+                frame.hideCastbar = frame.optionTable.hideCastbar
+                frame.healthBar.healthBackground = nil
+                frame.hasValidVehicleDisplay = false
+
+                frame:SetAttribute("unit", nil)
+
+                if frame.onUpdateFrame then
+                    frame.onUpdateFrame.doUpdate = nil
+                    frame.onUpdateFrame:UnregisterAllEvents()
+                    frame.onUpdateFrame:SetScript("OnEvent", nil)
+                    frame.onUpdateFrame:SetScript("OnUpdate", nil)
+                end
+
+                CompactUnitFrame_UnregisterEvents(frame)
+
+                if frame.castBar then
+                    CastingBarFrame_SetUnit(frame.castBar, nil, nil, nil)
+                end
+
+                updateAll = true
             end
-
-            CompactUnitFrame_UnregisterEvents(frame)
-
-            frames[frame] = false
         end
+
+        if frames[frame] == nil then
+            updateAll = true
+        end
+
+        frames[frame] = unitTarget or false
+
+        if updateAll then
+            CompactUnitFrame_UpdateAll(frame)
+        end
+    end
+)
+
+hooksecurefunc(
+    "CompactRaidGroup_GenerateForGroup",
+    function(groupIndex)
+        assert(not InCombatLockdown())
+
+        local frame = _G["CompactRaidGroup" .. groupIndex]
+        CompactRaidGroup_UpdateUnits(frame)
     end
 )
 
@@ -428,8 +483,24 @@ hooksecurefunc(
     function()
         assert(not InCombatLockdown())
 
-        CompactPartyFrame_OnLoad(CompactPartyFrame)
-        CompactRaidGroup_UpdateBorder(CompactPartyFrame)
+        local name = CompactPartyFrame:GetName()
+        local unitFrame = _G[name .. "Member1"]
+
+        CompactUnitFrame_SetUnit(unitFrame, nil)
+        CompactUnitFrame_SetUnit(unitFrame, "player")
+
+        for i = 1, MEMBERS_PER_RAID_GROUP do
+            if i > 1 then
+                local unit = "party" .. (i - 1)
+                local unitFrame = _G[name .. "Member" .. i]
+
+                CompactUnitFrame_SetUnit(unitFrame, nil)
+
+                if UnitExists(unit) then
+                    CompactUnitFrame_SetUnit(unitFrame, unit)
+                end
+            end
+        end
     end
 )
 
@@ -492,6 +563,7 @@ do
     local eventFrame = CreateFrame("Frame")
     eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
     eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
+    eventFrame:RegisterEvent("UNIT_PET")
     eventFrame:SetScript(
         "OnEvent",
         function(_, event)
@@ -507,7 +579,7 @@ do
                 applyProfile = nil
                 groupRosterUpdate = false
                 sizeChanged = false
-            elseif event == "GROUP_ROSTER_UPDATE" then
+            elseif event == "GROUP_ROSTER_UPDATE" or event == "UNIT_PET" then
                 if InCombatLockdown() then
                     local unitIDs = {}
                     local group

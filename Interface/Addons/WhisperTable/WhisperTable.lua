@@ -6,7 +6,8 @@
 	NOTFIND  = "未找到。";
 	DIFFSRV  = "不属于当前服务器。";
 	CLEAR_ALL= "清空所有对话";
-	DEL_CFM  = "删除前确认";
+	DEL_CFM  = "删除对话确认";
+	BTN_TIP  = "按钮鼠标提示";
 elseif GetLocale() == "zhTW" then
 	DEL_DES  = "刪除對話？";
 	DEL_BTN  = "左鍵：刪除對話\n右鍵：複製文本";
@@ -15,7 +16,8 @@ elseif GetLocale() == "zhTW" then
 	NOTFIND  = "未找到。";
 	DIFFSRV  = "不屬於當前伺服器。";
 	CLEAR_ALL= "清空所有對話";
-	DEL_CFM  = "刪除前確認";
+	DEL_CFM  = "刪除對話確認";
+	BTN_TIP  = "按鈕滑鼠提示";
 else
 	DEL_DES  = "Delete Dialog?";
 	DEL_BTN  = "LEFT: Delete Dialog\nRight: Copy text";
@@ -25,6 +27,7 @@ else
 	DIFFSRV  = " does not belong to the current server.";
 	CLEAR_ALL= "Clear All";
 	DEL_CFM  = "Del confirm";
+	BTN_TIP  = "Button tip";
 end
 
 StaticPopupDialogs["WhisperTable_Delete"] = {
@@ -67,10 +70,16 @@ StaticPopupDialogs["WhisperTable_Clear"] = {
 local Callbutton_MenuList = {
 	{ text = "WhisperTable", isTitle = true },
 	{ text = CLEAR_ALL, func = function() StaticPopup_Show("WhisperTable_Clear"); end },
-	{ text = DEL_CFM, hasArrow = true, keepShownOnClick = false,
+	{ text = DEL_CFM, hasArrow = true,
 		menuList = {
 			{ text = YES, func = function() WhisperTableDB["confirm"] = 1; CloseDropDownMenus(); end, checked = function() return WhisperTableDB["confirm"] == 1; end },
 			{ text = NO, func = function() WhisperTableDB["confirm"] = 0; CloseDropDownMenus(); end, checked = function() return WhisperTableDB["confirm"] == 0; end },
+		},
+	},
+	{ text = BTN_TIP, hasArrow = true,
+		menuList = {
+			{ text = YES, func = function() WhisperTableDB["tip"] = 1; CloseDropDownMenus(); end, checked = function() return WhisperTableDB["tip"] == 1; end },
+			{ text = NO, func = function() WhisperTableDB["tip"] = 0; CloseDropDownMenus(); end, checked = function() return WhisperTableDB["tip"] == 0; end },
 		},
 	},
 	{ text = CANCEL },
@@ -276,6 +285,9 @@ function WhisperTable_OnEvent(self, event, ...)
 			if (not WhisperTableDB["confirm"]) then
 				WhisperTableDB["confirm"] = 1;
 			end
+			if (not WhisperTableDB["tip"]) then
+				WhisperTableDB["tip"] = 1;
+			end
 			SlashCmdList["WhisperTable"] = WhisperTable_Set;
 			SLASH_WhisperTable1 = "/wt";
 		end
@@ -361,7 +373,7 @@ function WhisperTable_ListShow()
 			_G["WhisperTable_Del"..i]:Hide();
 		end
 	end
-	if (WhisperTableDB["tag"][num+1]) then
+	if (WhisperTableDB["tag"][num + 1]) then
 		WhisperTable_NextPageButton:Enable();
 	else
 		WhisperTable_NextPageButton:Disable();
@@ -378,6 +390,15 @@ function WhisperTable_PrevNextPage(self, num)
 	WhisperTableDB["page"] = WhisperTableDB["page"] + num;
 	WhisperTable_PageText:SetText(WhisperTableDB["page"]);
 	WhisperTable_ListShow();
+end
+
+function WhisperTable_OnScroll(self, delta)
+	num = (WhisperTableDB["page"] - delta - 1) * 8 + 1;
+	if (WhisperTableDB["tag"][num]) then
+		WhisperTable_PrevNextPage(self, -delta);
+		WhisperTable_ListShow();
+		WhisperTable_OnEnter(_G["WhisperTable_Tag" .. WhisperTableDB["num"]], WhisperTableDB["num"])
+	end
 end
 
 function WhisperTable_OnClick(self, num, button)
@@ -448,43 +469,48 @@ end
 
 function WhisperTable_OnEnter(self, num)
 	local tagid = (WhisperTableDB["page"] - 1) * 8 + num;
-	local tag = WhisperTableDB["tag"][tagid];
-	local name = WhisperTableDB["name"][tag];
-	local color;
-	if WhisperTableDB["unread"][tag] == true then
-		WhisperTableDB["unread"][tag] = false;
-		_G["WhisperTable_Del"..num.."_Background"]:SetAlpha(0);
-		WhisperTable_CheckUnread();
-	end
-	GameTooltip:SetOwner(self, "ANCHOR_LEFT");
-	if (not string.find(tag, "-")) then
-		--战网消息
-		color = CreateColor(0, 1, 1, 1);
-	else
-		--非战网消息
-		color = CreateColor(1, 0.75, 0, 1);
-		--与玩家不在同一个服务器时显示"角色名-服务器"
-		local whisperName, whisperRealm, informName, informRealm = strsplit("-", tag);
-		local playerName, playerRealm = strsplit("-", WhisperTablePlayer);
-		if (playerRealm ~= whisperRealm) then
-			name = whisperName.."-|cffFF0000"..whisperRealm.."|r".." |cff00FF00 & |r "..informName;
-		elseif (informName ~= playerName) then
-			name = whisperName.." |cff00FF00 & |r "..informName;
+	if (WhisperTableDB["tag"][tagid]) then
+		WhisperTableDB["num"] = num
+		local tag = WhisperTableDB["tag"][tagid];
+		local name = WhisperTableDB["name"][tag];
+		local color;
+		if WhisperTableDB["unread"][tag] == true then
+			WhisperTableDB["unread"][tag] = false;
+			_G["WhisperTable_Del"..num.."_Background"]:SetAlpha(0);
+			WhisperTable_CheckUnread();
 		end
-	end
-	local colorstring = ConvertRGBtoColorString(color);
-	GameTooltip:SetText(colorstring..name.."|r");
+		GameTooltip:SetOwner(self, "ANCHOR_LEFT");
+		if (not string.find(tag, "-")) then
+			--战网消息
+			color = CreateColor(0, 1, 1, 1);
+		else
+			--非战网消息
+			color = CreateColor(1, 0.75, 0, 1);
+			--与玩家不在同一个服务器时显示"角色名-服务器"
+			local whisperName, whisperRealm, informName, informRealm = strsplit("-", tag);
+			local playerName, playerRealm = strsplit("-", WhisperTablePlayer);
+			if (playerRealm ~= whisperRealm) then
+				name = whisperName.."-|cffFF0000"..whisperRealm.."|r".." |cff00FF00 & |r "..informName;
+			elseif (informName ~= playerName) then
+				name = whisperName.." |cff00FF00 & |r "..informName;
+			end
+		end
+		local colorstring = ConvertRGBtoColorString(color);
+		GameTooltip:SetText(colorstring..name.."|r");
 
-	local num = table.getn(WhisperTableDB["msg"][tag]);
-	local i = 1;
-	if (num > 25) then
-		i = num - 24;
+		local num = table.getn(WhisperTableDB["msg"][tag]);
+		local i = 1;
+		if (num > 25) then
+			i = num - 24;
+		end
+		while WhisperTableDB["msg"][tag][i] do
+			GameTooltip:AddLine(WhisperTableDB["msg"][tag][i]);
+			i = i + 1;
+		end
+		GameTooltip:Show();
+	else
+		GameTooltip:Hide();
 	end
-	while WhisperTableDB["msg"][tag][i] do
-		GameTooltip:AddLine(WhisperTableDB["msg"][tag][i]);
-		i = i + 1;
-	end
-	GameTooltip:Show();
 end
 
 function WhisperTable_OnLeave(self)

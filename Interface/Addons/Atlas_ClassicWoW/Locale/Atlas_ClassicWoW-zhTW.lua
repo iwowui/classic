@@ -69,8 +69,7 @@ L["Andorgos <Brood of Malygos>"] = "安多葛斯 <瑪里苟斯的後裔>"
 L["Aoren Sunglow <The Reliquary>"] = "安歐連·日耀"
 L["AQ"] = "AQ"
 L["AQ10"] = "AQ10"
---[[Translation missing --]]
---[[ L["AQ20"] = ""--]] 
+L["AQ20"] = "AQ20"
 L["AQ40"] = "AQ40"
 --[[Translation missing --]]
 --[[ L["Arcanist Doan"] = ""--]] 
@@ -85,10 +84,8 @@ L["Archmage Angela Dosantos <Brotherhood of the Light>"] = "大法師安琪拉·
 --[[ L["Archmage Tarsis Kir-Moldir"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Argent Guard Thaelrid"] = ""--]] 
---[[Translation missing --]]
---[[ L["Arm"] = ""--]] 
---[[Translation missing --]]
---[[ L["Armory"] = ""--]] 
+L["Arm"] = "軍械室"
+L["Armory"] = "軍械室"
 L["Arygos"] = "亞雷戈斯"
 --[[Translation missing --]]
 --[[ L["Atal'ai Defenders"] = ""--]] 

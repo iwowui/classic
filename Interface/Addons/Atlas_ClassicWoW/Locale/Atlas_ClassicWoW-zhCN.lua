@@ -54,15 +54,12 @@ L["Ancient Treasure"] = "古代宝藏"
 L["Andorgos <Brood of Malygos>"] = "安多葛斯 <玛里苟斯的后裔>"
 L["Annora (Master Enchanter)"] = "安诺拉（大师级附魔师）"
 L["Antu'sul"] = "安图苏尔"
---[[Translation missing --]]
---[[ L["Anub'Rekhan"] = ""--]] 
---[[Translation missing --]]
---[[ L["Anub'shiah"] = ""--]] 
+L["Anub'Rekhan"] = "阿努布雷坎"
+L["Anub'shiah"] = "阿努希尔"
 L["Aoren Sunglow <The Reliquary>"] = "奥伦·日冕 <神圣遗物学会>"
 L["AQ"] = "安其拉"
 L["AQ10"] = "安其拉废墟（10人团队）"
---[[Translation missing --]]
---[[ L["AQ20"] = ""--]] 
+L["AQ20"] = "安其拉神殿（20人团队）"
 L["AQ40"] = "安其拉神殿（40人团队）"
 L["Arcanist Doan"] = "奥法师杜安"
 L["Archaedas"] = "阿扎达斯"

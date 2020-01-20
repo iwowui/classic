@@ -1,4 +1,4 @@
--- $Id: Atlas_GlobalStrings.lua 338 2020-01-01 14:53:13Z arith $
+-- $Id: Atlas_GlobalStrings.lua 348 2020-01-19 16:18:50Z arith $
 --[[
 
 	Atlas, a World of Warcraft instance map browser
@@ -27,7 +27,6 @@
 local _G = getfenv(0)
 local LibStub = _G.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale("Atlas")
-local BZ = Atlas_GetLocaleLibBabble("LibBabble-SubZone-3.0")
 local format = string.format
 
 local WoWClassic = select(4, GetBuildInfo()) < 20000

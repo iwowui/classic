@@ -36,7 +36,7 @@
 -- 任務說明和書信、石碑的正文字體
 	local CLEAR_FONT_QUEST = CLEAR_FONT_BASE .. "ARKai_T.TTF";--"bLEI00D.TTF";
 -- 戰鬥傷害數值提示
-	local CLEAR_FONT_DAMAGE = CLEAR_FONT_BASE .. "ARKai_T.TTF";--"bKAI00M.TTF";
+	local CLEAR_FONT_DAMAGE = CLEAR_FONT_BASE .. "ARKai_C.TTF";--"bKAI00M.TTF";
 -- 遊戲介面中的主要字體
 	local CLEAR_FONT = CLEAR_FONT_BASE .. "ARKai_T.TTF";--"bLEI00D.TTF";
 -- 物品、技能的說明字體

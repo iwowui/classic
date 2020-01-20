@@ -38,9 +38,11 @@
 			self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 		</OnLoad>
 		<OnEnter>
-			GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-			GameTooltip:SetText(DEL_BTN, 1, 1, 1);
-			GameTooltip:Show();
+			if WhisperTableDB["tip"] == 1 then
+				GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+				GameTooltip:SetText(DEL_BTN, 1, 1, 1);
+				GameTooltip:Show();
+			end
 		</OnEnter>
 		<OnLeave>
 			GameTooltip:Hide();
@@ -153,6 +155,7 @@
 	<Scripts>
 		<OnLoad>
 			WhisperTable_Onload(self)
+			self:EnableMouseWheel(1)
 		</OnLoad>
 		<OnEvent>
 			WhisperTable_OnEvent(self, event, ...)
@@ -163,6 +166,9 @@
 		<OnDragStop>
 			self:StopMovingOrSizing();
 		</OnDragStop>
+		<OnMouseWheel>
+			WhisperTable_OnScroll(self, delta);
+		</OnMouseWheel>
 	</Scripts>
 	<Frames>
 <!--按钮-->
