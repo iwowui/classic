@@ -29,16 +29,10 @@ function SearchToggle:Constructor(_, meta)
     self:SetScript('OnEnter', self.OnEnter)
     self:SetScript('OnLeave', GameTooltip_Hide)
     self:SetScript('OnShow', self.OnShow)
-    self:SetScript('OnHide', self.OnHide)
 end
 
 function SearchToggle:OnShow()
     self:RegisterEvent('SEARCH_CHANGED', 'CloseMenu')
-end
-
-function SearchToggle:OnHide()
-    self:UnregisterAllEvents()
-    self:CloseMenu()
 end
 
 function SearchToggle:OnClick(button)
@@ -130,13 +124,3 @@ function SearchToggle:CreateMenu()
     end
     return result
 end
-
-ns.Addon:RegisterPluginButton({
-    key = 'SearchToggle',
-    text = SEARCH,
-    icon = [[Interface\Minimap\Tracking\None]],
-    order = 10001,
-    init = function(button, frame)
-        SearchToggle:Bind(button, frame.meta)
-    end,
-})

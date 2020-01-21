@@ -8,10 +8,10 @@ local select, pairs, ipairs = select, pairs, ipairs
 local tinsert = table.insert
 local tonumber = tonumber
 local strsplit = strsplit
+local time = time
 local tDeleteItem = tDeleteItem
 
 ---- WOW
-local ContainerIDToInventoryID = ContainerIDToInventoryID
 local GetContainerItemInfo = GetContainerItemInfo
 local GetContainerNumFreeSlots = GetContainerNumFreeSlots
 local GetContainerNumSlots = GetContainerNumSlots
@@ -26,16 +26,25 @@ local UnitFactionGroup = UnitFactionGroup
 local UnitFullName = UnitFullName
 local UnitRace = UnitRace
 local UnitSex = UnitSex
+local GetInboxNumItems = GetInboxNumItems
+local GetInboxHeaderInfo = GetInboxHeaderInfo
+local GetInboxItemLink = GetInboxItemLink
+local GetInboxItem = GetInboxItem
 
 ---- G
 local NUM_BAG_SLOTS = NUM_BAG_SLOTS
 local INVSLOT_LAST_EQUIPPED = INVSLOT_LAST_EQUIPPED
+local ATTACHMENTS_MAX_RECEIVE = ATTACHMENTS_MAX_RECEIVE
 
 ---@type ns
 local ns = select(2, ...)
 
 local BAGS = ns.GetBags(ns.BAG_ID.BAG)
 local BANKS = ns.GetBags(ns.BAG_ID.BANK)
+local MAIL_CONTAINER = ns.MAIL_CONTAINER
+local EQUIP_CONTAINER = ns.EQUIP_CONTAINER
+local COD_CONTAINER = ns.COD_CONTAINER
+
 local NO_RESULT = {cached = true}
 
 ---@class tdBag2ForeverCharacter
@@ -58,18 +67,12 @@ local Forever = ns.Addon:NewModule('Forever', 'AceEvent-3.0')
 function Forever:OnInitialize()
     self.Cacher = ns.Cacher:New()
     self.Cacher:Patch(self, 'GetBagInfo', 'GetOwnerInfo', 'GetItemInfo')
-
-    if IsLoggedIn() then
-        self:PLAYER_LOGIN()
-    else
-        self:RegisterEvent('PLAYER_LOGIN')
-    end
 end
 
-function Forever:PLAYER_LOGIN()
+function Forever:OnEnable()
     self:SetupCache()
     self:SetupEvents()
-    self:Update()
+    self:UpdateData()
 end
 
 function Forever:SetupCache()
@@ -80,8 +83,8 @@ function Forever:SetupCache()
     self.realm = self.db[realm]
     self.realm[player] = self.realm[player] or {}
     self.player = self.realm[player]
-    self.player[ns.EQUIP_CONTAINER] = self.player[ns.EQUIP_CONTAINER] or {}
-    self.player[ns.MAIL_CONTAINER] = self.player[ns.MAIL_CONTAINER] or {}
+
+    self.player[EQUIP_CONTAINER] = self.player[EQUIP_CONTAINER] or {}
 
     self.player.faction = UnitFactionGroup('player')
     self.player.class = UnitClassBase('player')
@@ -109,7 +112,7 @@ function Forever:SetupEvents()
     self:RegisterEvent('PLAYER_EQUIPMENT_CHANGED')
 end
 
-function Forever:Update()
+function Forever:UpdateData()
     for _, bag in ipairs(BAGS) do
         self:SaveBag(bag)
     end
@@ -134,6 +137,7 @@ function Forever:BANKFRAME_CLOSED()
         for _, bag in ipairs(ns.GetBags(ns.BAG_ID.BANK)) do
             self:SaveBag(bag)
         end
+        self.Cacher:RemoveCache(ns.REALM, ns.PLAYER)
         self.atBank = nil
     end
     self:SendMessage('BANK_CLOSED')
@@ -145,29 +149,36 @@ function Forever:MAIL_SHOW()
 end
 
 function Forever:MAIL_CLOSED()
-    if not self.atMail then
-        return
-    end
+    if self.atMail then
+        local mails = {}
+        local cods = {}
+        local now = time()
 
-    local db = wipe(self.player[ns.MAIL_CONTAINER])
-    local now = time()
+        local num, total = GetInboxNumItems()
+        for i = 1, num do
+            local codAmount, daysLeft = select(6, GetInboxHeaderInfo(i))
+            local timeout = now + daysLeft * 86400
+            local isCod = codAmount > 0
 
-    local num, total = GetInboxNumItems()
-    for i = 1, num do
-        local daysLeft = select(7, GetInboxHeaderInfo(i))
-        local timeout = now + daysLeft * 86400
-        for j = 1, ATTACHMENTS_MAX_RECEIVE do
-            local link = GetInboxItemLink(i, j)
-            if link then
-                local count = select(4, GetInboxItem(i, j))
+            for j = 1, ATTACHMENTS_MAX_RECEIVE do
+                local link = GetInboxItemLink(i, j)
+                if link then
+                    local count = select(4, GetInboxItem(i, j))
 
-                tinsert(db, self:ParseItem(link, count, timeout))
+                    tinsert(isCod and cods or mails, self:ParseItem(link, count, timeout))
+                end
             end
         end
-    end
 
-    db.size = #db
-    self.Cacher:RemoveCache(ns.REALM, ns.PLAYER)
+        mails.size = #mails
+        cods.size = #cods
+
+        self.player[MAIL_CONTAINER] = mails
+        self.player[COD_CONTAINER] = cods
+
+        self.Cacher:RemoveCache(ns.REALM, ns.PLAYER)
+    end
+    self.atMail = nil
 end
 
 function Forever:BAG_UPDATE(_, bag)
@@ -184,6 +195,7 @@ end
 
 function Forever:PLAYER_EQUIPMENT_CHANGED(_, slot)
     self:SaveEquip(slot)
+    self.Cacher:RemoveCache(ns.REALM, ns.PLAYER, EQUIP_CONTAINER, slot)
 end
 
 function Forever:ParseItem(link, count, timeout)
@@ -217,19 +229,20 @@ function Forever:SaveBag(bag)
             local _, count, _, _, _, _, link = GetContainerItemInfo(bag, slot)
             items[slot] = self:ParseItem(link, count)
         end
-
-        if not ns.IsBaseBag(bag) then
-            self:SaveEquip(ContainerIDToInventoryID(bag))
-        end
     end
     self.player[bag] = items
+
+    if not ns.IsBaseBag(bag) then
+        local slot = ns.BagToSlot(bag)
+        self:SaveEquip(slot)
+    end
 end
 
 function Forever:SaveEquip(slot)
     local link = GetInventoryItemLink('player', slot)
     local count = GetInventoryItemCount('player', slot)
 
-    self.player[ns.EQUIP_CONTAINER][slot] = self:ParseItem(link, count)
+    self.player[EQUIP_CONTAINER][slot] = self:ParseItem(link, count)
 end
 
 function Forever:FindData(...)
@@ -296,10 +309,10 @@ function Forever:GetBagInfo(realm, name, bag)
         data.family = bagData.family or data.family or 0
         data.owned = true
         data.free = free
-        data.slot = ns.IsCustomBag(bag) and ContainerIDToInventoryID(bag) or nil
+        data.slot = ns.BagToSlot(bag)
 
         if data.slot then
-            local info = self:GetItemInfo(realm, name, ns.EQUIP_CONTAINER, data.slot)
+            local info = self:GetItemInfo(realm, name, EQUIP_CONTAINER, data.slot)
             data.icon = info.icon
             data.link = info.link
             data.id = info.id

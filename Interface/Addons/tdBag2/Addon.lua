@@ -10,6 +10,7 @@ local ipairs, pairs, nop, tinsert, sort = ipairs, pairs, nop, tinsert, sort
 local ShowUIPanel = ShowUIPanel
 local HideUIPanel = HideUIPanel
 local CreateFrame = CreateFrame
+local GetItemClassInfo = GetItemClassInfo
 
 ---- UI
 local BankFrame = BankFrame
@@ -27,6 +28,7 @@ local UIParent = UIParent
 ---@field Cacher tdBag2Cacher
 ---@field Tooltip tdBag2Tooltip
 local ns = select(2, ...)
+local L = ns.L
 local BAG_ID = ns.BAG_ID
 
 ---@class tdBag2FrameProfile
@@ -59,7 +61,7 @@ local BAG_ID = ns.BAG_ID
 
 ---@class UI
 ---@field FrameBase tdBag2Frame
----@field Frame tdBag2ContainerFrame
+---@field Frame tdBag2Frame
 ---@field Item tdBag2Item
 ---@field Bag tdBag2Bag
 ---@field Bank tdBag2Bank
@@ -175,41 +177,14 @@ function Addon:OnInitialize()
         self.db.global.quickfix = nil
     end
 
-    -- init search records
-    do
-        local searches = self.db.profile.searches
-        if searches.first then
-            searches.first = false
-
-            local types = { --
-                LE_ITEM_CLASS_WEAPON, --
-                LE_ITEM_CLASS_ARMOR, --
-                LE_ITEM_CLASS_CONSUMABLE, --
-                LE_ITEM_CLASS_TRADEGOODS, --
-                LE_ITEM_CLASS_REAGENT, --
-            }
-
-            for _, item in ipairs(types) do
-                tinsert(searches, (GetItemClassInfo(item)))
-            end
-        end
-    end
-
+    self:SetupDefaultSearchRecords()
     self:SetupBankHider()
-    self:SetupOptionFrame()
 end
 
 function Addon:OnEnable()
-    if IsAddOnLoaded('tdPack2') then
-        local tdPack2 = LibStub('AceAddon-3.0'):GetAddon('tdPack2')
-        self:RegisterPluginButton({
-            key = 'tdPack2',
-            icon = [[Interface\AddOns\tdPack2\Resource\INV_Pet_Broom]],
-            init = function(button, frame)
-                tdPack2:SetupButton(button, frame.meta.bagId == BAG_ID.BANK)
-            end,
-        })
-    end
+    ns.PLAYER, ns.REALM = UnitFullName('player')
+    self:SetupOptionFrame()
+    self:SetupPluginButtons()
 end
 
 function Addon:OnModuleCreated(module)
@@ -227,10 +202,30 @@ function Addon:OnClassCreated(class, name)
 end
 
 function Addon:OnProfileChanged()
+    self:SetupDefaultSearchRecords()
     self:UpdateAllFrameMeta()
     self:UpdateAllManaged()
     self:UpdateAllPosition()
     self:UpdateAll()
+end
+
+function Addon:SetupDefaultSearchRecords()
+    local searches = self.db.profile.searches
+    if searches.first then
+        searches.first = false
+
+        local types = { --
+            LE_ITEM_CLASS_WEAPON, --
+            LE_ITEM_CLASS_ARMOR, --
+            LE_ITEM_CLASS_CONSUMABLE, --
+            LE_ITEM_CLASS_TRADEGOODS, --
+            LE_ITEM_CLASS_REAGENT, --
+        }
+
+        for _, item in ipairs(types) do
+            tinsert(searches, (GetItemClassInfo(item)))
+        end
+    end
 end
 
 function Addon:SetupBankHider()
@@ -243,6 +238,41 @@ function Addon:SetupBankHider()
     BankFrame:ClearAllPoints()
     BankFrame:SetPoint('TOPLEFT', UIParent, 'TOPLEFT', 0, 0)
     BankFrame:SetSize(1, 1)
+end
+
+function Addon:SetupPluginButtons()
+    if IsAddOnLoaded('tdPack2') then
+        local tdPack2 = LibStub('AceAddon-3.0'):GetAddon('tdPack2', true)
+        if tdPack2 then
+            self:RegisterPluginButton({
+                key = 'tdPack2',
+                icon = [[Interface\AddOns\tdPack2\Resource\INV_Pet_Broom]],
+                init = function(button, frame)
+                    return tdPack2:SetupButton(button, frame.meta.bagId == BAG_ID.BANK)
+                end,
+            })
+        end
+    end
+
+    self:RegisterPluginButton({
+        key = 'BagToggle',
+        text = L['Bag Toggle'],
+        icon = ns.BAG_ICONS[ns.BAG_ID.BAG],
+        order = 10000,
+        init = function(button, frame)
+            return ns.UI.BagToggle:Bind(button, frame.meta)
+        end,
+    })
+
+    self:RegisterPluginButton({
+        key = 'SearchToggle',
+        text = SEARCH,
+        icon = [[Interface\Minimap\Tracking\None]],
+        order = 10001,
+        init = function(button, frame)
+            return ns.UI.SearchToggle:Bind(button, frame.meta)
+        end,
+    })
 end
 
 function Addon:GetFrameProfile(bagId)

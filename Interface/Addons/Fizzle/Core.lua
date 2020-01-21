@@ -141,16 +141,25 @@ end
 -- Detect if we're running in the Classic client
 local IsClassic
 do
-    -- List of TOC versions that are valid in the Classic client
-    local classic_versions = {
-        [11302] = true,
-    }
+    local NUM_EXPANSIONS = 7
+    local RECENT_RETAIL_TOC = 80205
+    local GetNumExpansions = _G.GetNumExpansions
+    local version = select(4, GetBuildInfo())
+
+    local function IsRetailExpansionCount()
+       return GetNumExpansions() >= NUM_EXPANSIONS
+    end
+
+    local function IsRetailExpansionToc()
+       return version >= RECENT_RETAIL_TOC
+    end
+
+    local is_retail = IsRetailExpansionCount() and IsRetailExpansionToc()
+    local is_classic = not is_retail
 
     -- Returns true on a Classic client or nil at other times.
     IsClassic = function()
-        local _, _, _, version = GetBuildInfo()
-
-        return classic_versions[version]
+        return is_classic
     end
 end
 

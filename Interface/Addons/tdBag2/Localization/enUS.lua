@@ -17,6 +17,7 @@ L["Bottom"] = true
 L["Character Specific Settings"] = true
 L["Closing the Character Info"] = true
 L["Closing Trade Skills"] = true
+L["COD"] = true
 L["Color Empty Slots by Bag Type"] = true
 L["Color Settings"] = true
 L["Columns"] = true
@@ -105,6 +106,7 @@ L['Equipped'] = true
 L['Inventory'] = true
 L['Bank'] = true
 L['Mail'] = true
+L['COD'] = true
 
 L.TOOLTIP_CHANGE_PLAYER = 'View another character\'s items.'
 L.TOOLTIP_RETURN_TO_SELF = 'Return to the current character.'

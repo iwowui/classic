@@ -76,6 +76,7 @@ end
 
 function Container:BAG_SIZE_CHANGED(_, bag)
     if self:HasBag(bag) then
+        self.bagOrdered = nil
         self:RequestLayout()
     end
 end
@@ -95,8 +96,9 @@ local Updaters = {
         item:UpdateLocked()
     end,
 
-    Free = function(item, container)
-        container.itemButtons[item.bag][item.slot] = nil
+    Free = function(item)
+        local container = item:GetParent():GetParent()
+        container:FreeItem(item.bag, item.slot)
         item:Free()
     end,
 }
@@ -152,7 +154,7 @@ function Container:ForAll(method, force)
     for bag, buttons in pairs(self.itemButtons) do
         for slot, itemButton in pairs(buttons) do
             if itemButton:IsShown() then
-                method(itemButton, self)
+                method(itemButton)
             end
         end
     end
@@ -164,7 +166,7 @@ function Container:ForBag(bag, method)
     end
     for _, itemButton in pairs(self.itemButtons[bag]) do
         if itemButton:IsShown() then
-            method(itemButton, self)
+            method(itemButton)
         end
     end
 end
@@ -175,7 +177,7 @@ function Container:ForSlot(bag, slot, method)
     end
     local itemButton = self.itemButtons[bag][slot]
     if itemButton and itemButton:IsShown() then
-        method(itemButton, self)
+        method(itemButton)
     end
 end
 
@@ -186,10 +188,14 @@ function Container:ForItem(itemId, method)
     for bag, buttons in pairs(self.itemButtons) do
         for slot, itemButton in pairs(buttons) do
             if itemButton:IsShown() and itemButton.info.id == itemId then
-                method(itemButton, self)
+                method(itemButton)
             end
         end
     end
+end
+
+function Container:FreeItem(bag, slot)
+    self.itemButtons[bag][slot] = nil
 end
 
 function Container:HasBag(bag)
@@ -211,7 +217,7 @@ function Container:CreateBagFrame(bag)
     return frame
 end
 
-function Container:CreateItemButton(bag, slot)
+function Container:AllocItemButton(bag, slot)
     local itemButton = ns.UI.Item:Alloc()
     itemButton:Init(self:GetBagFrame(bag), self.meta, bag, slot)
     self.itemButtons[bag][slot] = itemButton
@@ -219,7 +225,7 @@ function Container:CreateItemButton(bag, slot)
 end
 
 function Container:GetItemButton(bag, slot)
-    return self.itemButtons[bag][slot] or self:CreateItemButton(bag, slot)
+    return self.itemButtons[bag][slot] or self:AllocItemButton(bag, slot)
 end
 
 function Container:RequestLayout()

@@ -7,7 +7,7 @@
 ## Notes-zhTW: 擴展預設製作介面，使之顯示更多的資訊，並提供過濾功能等
 ## X-Repple: 专业
 ## Author: bsmorgan
-## Version: 1.09
+## Version: 1.10
 ## X-Category: Tradeskill
 ## X-License GPL v3 or later
 ## X-RelSite-WoWI: 25287

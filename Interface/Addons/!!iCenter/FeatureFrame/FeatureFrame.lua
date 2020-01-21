@@ -210,6 +210,14 @@ function FeatureFrame_PrevPage(self)
 	FeatureFrame_UpdateButtons();
 end
 
+function FeatureFrame_OnScroll(self, delta)
+	if delta > 0 then
+		FeatureFrame_PrevPage(self)
+	else
+		FeatureFrame_NextPage(self)
+	end
+end
+
 function FeatureFrame_UpdateButtons()
 	local root = "FeatureFrame";
 	for i = 1, FeatureFrame_MAX, 1 do

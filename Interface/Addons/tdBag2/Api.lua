@@ -29,15 +29,14 @@ local NUM_BAG_SLOTS = NUM_BAG_SLOTS
 local NUM_BANKBAGSLOTS = NUM_BANKBAGSLOTS
 local EQUIP_CONTAINER = 'equip'
 local MAIL_CONTAINER = 'mail'
-
-local PLAYER = UnitName('player')
-local REALM = GetRealmName()
+local COD_CONTAINER = 'cod'
 
 ---@type ns
 local ns = select(2, ...)
 
 ns.EQUIP_CONTAINER = EQUIP_CONTAINER
 ns.MAIL_CONTAINER = MAIL_CONTAINER
+ns.COD_CONTAINER = COD_CONTAINER
 
 ns.ITEM_SIZE = 37
 ns.ITEM_SPACING = 2
@@ -109,19 +108,21 @@ local BAG_TEMPLATES = { --
 
 local BAG_SETS = {}
 local INV_IDS = {}
+local BAG_IDS = {}
 do
-    for i = 1, NUM_BAG_SLOTS do
-        local id = i
-        tinsert(BAGS[BAG_ID.BAG], id)
+    local function touch(bag, bagId)
+        local slot = ContainerIDToInventoryID(bag)
+        INV_IDS[slot] = bag
+        BAG_IDS[bag] = slot
 
-        INV_IDS[ContainerIDToInventoryID(id)] = id
+        tinsert(BAGS[bagId], bag)
     end
 
+    for i = 1, NUM_BAG_SLOTS do
+        touch(i, BAG_ID.BAG)
+    end
     for i = 1, NUM_BANKBAGSLOTS do
-        local id = i + NUM_BAG_SLOTS
-        tinsert(BAGS[BAG_ID.BANK], id)
-
-        INV_IDS[ContainerIDToInventoryID(id)] = id
+        touch(i + NUM_BAG_SLOTS, BAG_ID.BANK)
     end
 
     tinsert(BAGS[BAG_ID.BAG], KEYRING_CONTAINER)
@@ -138,8 +139,9 @@ ns.BAG_ICONS = BAG_ICONS
 ns.BAG_TITLES = BAG_TITLES
 ns.BAG_CLASSES = BAG_CLASSES
 ns.BAG_TEMPLATES = BAG_TEMPLATES
-ns.PLAYER = PLAYER
-ns.REALM = REALM
+
+ns.PLAYER = nil
+ns.REALM = nil
 
 ns.BAG_FAMILY = { --
     [1] = 'Quiver',
@@ -170,12 +172,6 @@ ns.FRAME_OPTION_EVENTS = { --
     reverseBag = 'BAG_ORDER_CHANGED',
     tradeBagOrder = 'BAG_ORDER_CHANGED',
 }
-
-local function EventGenerate(event)
-    return function()
-        return ns.Events.Fire(event)
-    end
-end
 
 ns.OPTION_EVENTS = { --
     textOffline = 'TEXT_OFFLINE_TOGGLED',
@@ -263,16 +259,16 @@ function ns.IsContainerBag(bag)
     return tonumber(bag)
 end
 
-function ns.InvToBag(inv)
+function ns.SlotToBag(inv)
     return INV_IDS[inv]
 end
 
-function ns.IsSelf(owner)
-    return not owner or owner == PLAYER
+function ns.BagToSlot(bag)
+    return BAG_IDS[bag]
 end
 
-function ns.GetInvIds()
-    return INV_IDS
+function ns.IsSelf(owner)
+    return not owner or owner == ns.PLAYER
 end
 
 function ns.AnchorTooltip(frame)

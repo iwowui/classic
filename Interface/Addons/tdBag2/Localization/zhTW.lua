@@ -29,6 +29,8 @@ if not L then return end
 --[[Translation missing --]]
 --[[ L["Closing Trade Skills"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["COD"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Color Empty Slots by Bag Type"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Color Settings"] = ""--]] 

@@ -355,6 +355,14 @@
 				</Anchors>
 			</CheckButton>
 		</Frames>
+		<Scripts>
+			<OnLoad>
+				self:EnableMouseWheel(1)
+			</OnLoad>
+			<OnMouseWheel>
+				FeatureFrame_OnScroll(self, delta);
+			</OnMouseWheel>
+		</Scripts>
 	</Frame>
 	<Frame name="FeatureFrameScriptedTemplate" inherits="FeatureFrameGraphicTemplate" virtual="true">
 		<Scripts>
