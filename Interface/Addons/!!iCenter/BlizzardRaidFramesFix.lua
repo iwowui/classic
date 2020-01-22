@@ -144,6 +144,112 @@ end
 
 local hooks_CompactUnitFrame_UpdateAll = {}
 local hooks_CompactUnitFrame_UpdateVisible = {}
+local hooks_CompactUnitFrame_SetUnit = {}
+local hooks_CastingBarFrame_SetUnit = {}
+
+local function CompactUnitFrame_Hide(frame)
+    frame.background:SetAlpha(0)
+
+    frame.healthBar:SetValue(0)
+
+    if frame.powerBar then
+        frame.powerBar:SetValue(0)
+    end
+
+    frame.name:Hide()
+
+    frame.selectionHighlight:Hide()
+
+    if frame.aggroHighlight then
+        frame.aggroHighlight:Hide()
+    end
+
+    if frame.LoseAggroAnim then
+        frame.LoseAggroAnim:Stop()
+    end
+
+    if frame.statusText then
+        frame.statusText:Hide()
+    end
+
+    if frame.myHealPrediction then
+        frame.myHealPrediction:Hide()
+    end
+
+    if frame.otherHealPrediction then
+        frame.otherHealPrediction:Hide()
+    end
+
+    if frame.totalAbsorb then
+        frame.totalAbsorb:Hide()
+    end
+
+    if frame.totalAbsorbOverlay then
+        frame.totalAbsorbOverlay:Hide()
+    end
+
+    if frame.overAbsorbGlow then
+        frame.overAbsorbGlow:Hide()
+    end
+
+    if frame.myHealAbsorb then
+        frame.myHealAbsorb:Hide()
+    end
+
+    if frame.myHealAbsorbLeftShadow then
+        frame.myHealAbsorbLeftShadow:Hide()
+    end
+
+    if frame.myHealAbsorbRightShadow then
+        frame.myHealAbsorbRightShadow:Hide()
+    end
+
+    if frame.overHealAbsorbGlow then
+        frame.overHealAbsorbGlow:Hide()
+    end
+
+    if frame.roleIcon then
+        frame.roleIcon:Hide()
+    end
+
+    if frame.roleIcon then
+        frame.roleIcon:Hide()
+    end
+
+    if frame.readyCheckIcon then
+        frame.readyCheckIcon:Hide()
+    end
+
+    CompactUnitFrame_HideAllBuffs(frame)
+    CompactUnitFrame_HideAllDebuffs(frame)
+    CompactUnitFrame_HideAllDispelDebuffs(frame)
+
+    if frame.centerStatusIcon then
+        frame.centerStatusIcon:Hide()
+    end
+
+    if frame.classificationIndicator then
+        frame.classificationIndicator:Hide()
+    end
+
+    if frame.LevelFrame then
+        if frame.LevelFrame.levelText then
+            frame.LevelFrame.levelText:Hide()
+        end
+
+        if frame.LevelFrame.highLevelTexture then
+            frame.LevelFrame.highLevelTexture:Hide()
+        end
+    end
+
+    if frame.WidgetContainer then
+        frame.WidgetContainer:UnregisterForWidgetSet()
+    end
+
+    if frame.castBar then
+        frame.castBar:Hide()
+    end
+end
 
 hooksecurefunc(
     "CompactUnitFrame_UpdateAll",
@@ -152,49 +258,8 @@ hooksecurefunc(
             return
         end
 
-        if frame:IsShown() and not UnitExists(frame.displayedUnit) then
-            CompactUnitFrame_UpdateMaxHealth(frame)
-            CompactUnitFrame_UpdateHealth(frame)
-            CompactUnitFrame_UpdateHealthColor(frame)
-            CompactUnitFrame_UpdateMaxPower(frame)
-            CompactUnitFrame_UpdatePower(frame)
-            CompactUnitFrame_UpdatePowerColor(frame)
-            CompactUnitFrame_UpdateName(frame)
-            CompactUnitFrame_UpdateSelectionHighlight(frame)
-
-            if CompactUnitFrame_UpdateAggroHighlight then
-                CompactUnitFrame_UpdateAggroHighlight(frame)
-            end
-
-            if CompactUnitFrame_UpdateAggroFlash then
-                CompactUnitFrame_UpdateAggroFlash(frame)
-            end
-
-            CompactUnitFrame_UpdateHealthBorder(frame)
-            CompactUnitFrame_UpdateInRange(frame)
-            CompactUnitFrame_UpdateStatusText(frame)
-
-            if CompactUnitFrame_UpdateHealPrediction then
-                CompactUnitFrame_UpdateHealPrediction(frame)
-            end
-
-            CompactUnitFrame_UpdateRoleIcon(frame)
-            CompactUnitFrame_UpdateReadyCheck(frame)
-            CompactUnitFrame_UpdateAuras(frame)
-            CompactUnitFrame_UpdateCenterStatusIcon(frame)
-            CompactUnitFrame_UpdateClassificationIndicator(frame)
-
-            if CompactUnitFrame_UpdateLevel then
-                CompactUnitFrame_UpdateLevel(frame)
-            end
-
-            if CompactUnitFrame_UpdateWidgetSet then
-                CompactUnitFrame_UpdateWidgetSet(frame)
-            end
-        end
-
-        if not frame.unitExists then
-            frame.background:SetAlpha(0)
+        if not UnitExists(frame.displayedUnit) then
+            CompactUnitFrame_Hide(frame)
         end
     end
 )
@@ -228,7 +293,7 @@ local function CompactUnitFrame_UpdateAllSecure(frame)
         end
     end
 
-    if frame:IsShown() then
+    if UnitExists(frame.displayedUnit) then
         CompactUnitFrame_UpdateMaxHealth(frame)
         CompactUnitFrame_UpdateHealth(frame)
         CompactUnitFrame_UpdateHealthColor(frame)
@@ -267,10 +332,8 @@ local function CompactUnitFrame_UpdateAllSecure(frame)
         if CompactUnitFrame_UpdateWidgetSet then
             CompactUnitFrame_UpdateWidgetSet(frame)
         end
-    end
-
-    if not frame.unitExists then
-        frame.background:SetAlpha(0)
+    else
+        CompactUnitFrame_Hide(frame)
     end
 
     for _, hookfunc in ipairs(hooks_CompactUnitFrame_UpdateAll) do
@@ -317,35 +380,28 @@ hooksecurefunc(
     end
 )
 
-hooksecurefunc(
-    "CompactUnitFrame_UpdateName",
-    function(frame)
-        if frames[frame] == nil then
-            return
-        end
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    hooksecurefunc(
+        "CompactUnitFrame_UpdateRoleIcon",
+        function(frame)
+            if frames[frame] == nil then
+                return
+            end
 
-        if not frame.unitExists then
-            frame.name:Hide()
-        end
-    end
-)
+            if not frame.roleIcon then
+                return
+            end
 
-hooksecurefunc(
-    "CompactUnitFrame_UpdateStatusText",
-    function(frame)
-        if frames[frame] == nil then
-            return
-        end
+            local raidID = UnitInRaid(frame.unit)
 
-        if not frame.statusText then
-            return
+            if not (frame.optionTable.displayRaidRoleIcon and raidID and select(10, GetRaidRosterInfo(raidID))) then
+                local size = frame.roleIcon:GetHeight()
+                frame.roleIcon:Hide()
+                frame.roleIcon:SetSize(1, size)
+            end
         end
-
-        if not frame.unitExists then
-            frame.statusText:Hide()
-        end
-    end
-)
+    )
+end
 
 hooksecurefunc(
     "CompactUnitFrame_SetUnit",
@@ -418,6 +474,8 @@ hooksecurefunc(
                 end
 
                 CompactUnitFrame_RegisterEvents(frame)
+
+                frame:SetScript("OnEnter", UnitFrame_OnEnter)
             else
                 updateAll = true
             end
@@ -454,6 +512,8 @@ hooksecurefunc(
 
                 updateAll = true
             end
+
+            frame:SetScript("OnEnter", nil)
         end
 
         if frames[frame] == nil then
@@ -609,24 +669,17 @@ do
                             local unit = unitIDs[unitTarget]
                             local currentUnit = frame.unit
 
-                            if currentUnit ~= (unit or "none") then
+                            if currentUnit ~= unit then
                                 local displayedUnit = frame.displayedUnit
 
                                 if not unit or currentUnit == displayedUnit then
-                                    displayedUnit = unit or "none"
+                                    displayedUnit = unit
                                 end
 
-                                do
-                                    frame.unit = nil
-                                    frame.displayedUnit = nil
-
-                                    CompactUnitFrame_UpdateUnitEvents(frame)
-                                end
-
-                                frame.unit = unit or "none"
+                                frame.unit = unit
                                 frame.displayedUnit = displayedUnit
 
-                                if not unit or currentUnit == "none" then
+                                if not unit or not currentUnit then
                                     frame.inVehicle = false
                                     frame.readyCheckStatus = nil
                                     frame.readyCheckDecay = nil
@@ -642,8 +695,6 @@ do
 
                                 frame.hasValidVehicleDisplay = frame.unit ~= frame.displayedUnit
 
-                                assert(frame.unit and frame.displayedUnit)
-
                                 if unit then
                                     CompactUnitFrame_RegisterEvents(frame)
                                 else
@@ -656,7 +707,7 @@ do
                                         frame.onUpdateFrame:SetScript("OnEvent", nil)
                                         frame.onUpdateFrame:SetScript("OnUpdate", nil)
                                     end
-                                elseif currentUnit == "none" then
+                                elseif not currentUnit then
                                     if frame.onUpdateFrame then
                                         if frame.onUpdateFrame.doUpdate then
                                             frame.onUpdateFrame:SetScript("OnUpdate", frame.onUpdateFrame.func)
@@ -686,19 +737,20 @@ do
                                 end
 
                                 if unit and not frame.hideCastbar then
-                                    if currentUnit == "none" then
+                                    if not currentUnit then
                                         if frame.castBar then
                                             CastingBarFrame_SetUnit(frame.castBar, unit, false, true)
                                         end
                                     else
                                         if frame.castBar then
                                             frame.castBar.unit = unit
-                                            frame.castBar:UnregisterEvent("UNIT_SPELLCAST_START")
-                                            frame.castBar:UnregisterEvent("UNIT_SPELLCAST_STOP")
-                                            frame.castBar:UnregisterEvent("UNIT_SPELLCAST_FAILED")
                                             frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_START", unit)
                                             frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
                                             frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
+
+                                            for _, hookfunc in ipairs(hooks_CastingBarFrame_SetUnit) do
+                                                hookfunc(frame, unit, frame.castBar.showTradeSkills, frame.castBar.showShield)
+                                            end
                                         end
                                     end
                                 else
@@ -707,7 +759,17 @@ do
                                     end
                                 end
 
+                                if unit then
+                                    frame:SetScript("OnEnter", UnitFrame_OnEnter)
+                                else
+                                    frame:SetScript("OnEnter", nil)
+                                end
+
                                 CompactUnitFrame_UpdateAllSecure(frame)
+
+                                for _, hookfunc in ipairs(hooks_CompactUnitFrame_SetUnit) do
+                                    hookfunc(frame, unit)
+                                end
                             end
                         end
                     end
@@ -733,6 +795,10 @@ hooksecurefunc(
                 tinsert(hooks_CompactUnitFrame_UpdateAll, hookfunc)
             elseif functionName == "CompactUnitFrame_UpdateVisible" then
                 tinsert(hooks_CompactUnitFrame_UpdateVisible, hookfunc)
+            elseif functionName == "CompactUnitFrame_SetUnit" then
+                tinsert(hooks_CompactUnitFrame_SetUnit, hookfunc)
+            elseif functionName == "CastingBarFrame_SetUnit" then
+                tinsert(hooks_CastingBarFrame_SetUnit, hookfunc)
             end
         end
     end

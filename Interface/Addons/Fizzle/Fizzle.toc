@@ -7,12 +7,13 @@
 ## Title-zhTW: |CFFFF8000輔助|R 裝備耐久
 ## Notes-zhTW: 在人物裝備欄中顯示物品品質與耐久度。
 ## X-Repple: 辅助
-## Version: 80205-2
+## Version: 80300-1
 ## SavedVariablesPerCharacter: FizzleDB
 ## OptionalDeps: Ace3, Voyeur
 ## X-Category: Inventory
 ## X-Embeds: Ace3
 ## X-Curse-Project-ID: 6079
+## X-WoWI-ID: 5018
 
 embeds.xml
 

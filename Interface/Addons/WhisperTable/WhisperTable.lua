@@ -8,6 +8,7 @@
 	CLEAR_ALL= "清空所有对话";
 	DEL_CFM  = "删除对话确认";
 	BTN_TIP  = "按钮鼠标提示";
+	MSG_ANC  = "新消息提示音";
 elseif GetLocale() == "zhTW" then
 	DEL_DES  = "刪除對話？";
 	DEL_BTN  = "左鍵：刪除對話\n右鍵：複製文本";
@@ -18,6 +19,7 @@ elseif GetLocale() == "zhTW" then
 	CLEAR_ALL= "清空所有對話";
 	DEL_CFM  = "刪除對話確認";
 	BTN_TIP  = "按鈕滑鼠提示";
+	MSG_ANC  = "新消息提示音";
 else
 	DEL_DES  = "Delete Dialog?";
 	DEL_BTN  = "LEFT: Delete Dialog\nRight: Copy text";
@@ -28,6 +30,7 @@ else
 	CLEAR_ALL= "Clear All";
 	DEL_CFM  = "Del confirm";
 	BTN_TIP  = "Button tip";
+	MSG_ANC  = "Announce";
 end
 
 StaticPopupDialogs["WhisperTable_Delete"] = {
@@ -82,6 +85,12 @@ local Callbutton_MenuList = {
 			{ text = NO, func = function() WhisperTableDB["tip"] = 0; CloseDropDownMenus(); end, checked = function() return WhisperTableDB["tip"] == 0; end },
 		},
 	},
+	{ text = MSG_ANC, hasArrow = true,
+		menuList = {
+			{ text = YES, func = function() WhisperTableDB["announce"] = 1; CloseDropDownMenus(); end, checked = function() return WhisperTableDB["announce"] == 1; end },
+			{ text = NO, func = function() WhisperTableDB["announce"] = 0; CloseDropDownMenus(); end, checked = function() return WhisperTableDB["announce"] == 0; end },
+		},
+	},
 	{ text = CANCEL },
 }
 
@@ -103,14 +112,14 @@ function WhisperTable_Onload(self)
 end
 
 local function WhisperTable_CheckUnread()
-	local unread = false;
+	local unread = 0;
 	for k, v in pairs(WhisperTableDB["unread"]) do
-		if v == true then
-			unread = true;
+		if v == 1 then
+			unread = 1;
 			break;
 		end
 	end
-	if unread == false then
+	if unread == 0 then
 		_G["WhisperTable_ShowBotton_Background"]:SetAlpha(0);
 	else
 		_G["WhisperTable_ShowBotton_Background"]:SetAlpha(1);
@@ -166,8 +175,12 @@ function WhisperTable_OnEvent(self, event, ...)
 			class = "BN";
 		end
 
-		WhisperTableDB["unread"][tag] = true;
+		WhisperTableDB["unread"][tag] = 1;
 		_G["WhisperTable_ShowBotton_Background"]:SetAlpha(1);
+
+		if WhisperTableDB["announce"] == 1 then
+			PlaySoundFile("Interface\\AddOns\\WhisperTable\\Sounds\\Notify.ogg");
+		end
 
 		if (not WhisperTableDB["name"][tag]) then
 			WhisperTableDB["name"][tag] = name;
@@ -221,7 +234,7 @@ function WhisperTable_OnEvent(self, event, ...)
 			class = "BN";
 		end
 
-		WhisperTableDB["unread"][tag] = false;
+		WhisperTableDB["unread"][tag] = 0;
 		WhisperTable_CheckUnread();
 
 		if (not WhisperTableDB["name"][tag]) then
@@ -287,6 +300,9 @@ function WhisperTable_OnEvent(self, event, ...)
 			end
 			if (not WhisperTableDB["tip"]) then
 				WhisperTableDB["tip"] = 1;
+			end
+			if (not WhisperTableDB["announce"]) then
+				WhisperTableDB["announce"] = 0;
 			end
 			SlashCmdList["WhisperTable"] = WhisperTable_Set;
 			SLASH_WhisperTable1 = "/wt";
@@ -363,7 +379,7 @@ function WhisperTable_ListShow()
 
 			_G["WhisperTable_Del"..i]:Show();
 
-			if WhisperTableDB["unread"][tag] == true then
+			if WhisperTableDB["unread"][tag] == 1 then
 				_G["WhisperTable_Del"..i.."_Background"]:SetAlpha(1);
 			else
 				_G["WhisperTable_Del"..i.."_Background"]:SetAlpha(0);
@@ -474,8 +490,8 @@ function WhisperTable_OnEnter(self, num)
 		local tag = WhisperTableDB["tag"][tagid];
 		local name = WhisperTableDB["name"][tag];
 		local color;
-		if WhisperTableDB["unread"][tag] == true then
-			WhisperTableDB["unread"][tag] = false;
+		if WhisperTableDB["unread"][tag] == 1 then
+			WhisperTableDB["unread"][tag] = 0;
 			_G["WhisperTable_Del"..num.."_Background"]:SetAlpha(0);
 			WhisperTable_CheckUnread();
 		end
