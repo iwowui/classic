@@ -1,0 +1,9 @@
+## Interface: 11303
+## Title: GoodLeader
+## Title-zhCN: 好团长
+## Title-zhTW: 好團長
+## X-Repple: 辅助
+## Author: NetEase
+## Version: 0.0.6
+
+Load.xml

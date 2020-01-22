@@ -309,7 +309,14 @@ if enabled > 0 then
 				tooltip = FF_DescAtlas;
 				icon = "Interface\\AddOns\\!!iCenter\\ico\\AtlasIcon";
 				callback= function(button)
-					Atlas_Toggle();
+					if not IsAddOnLoaded("Atlas") then
+						LoadAddOn("Atlas");
+					end
+					if button == "LeftButton" then
+						Atlas_Toggle();
+					elseif button == "RightButton" then
+						LibStub("AceAddon-3.0"):GetAddon("Atlas"):OpenOptions();
+					end
 				end;
 			}
 		);
@@ -340,7 +347,11 @@ if enabled > 0 then
 					if not IsAddOnLoaded("AtlasLootClassic") then
 						LoadAddOn("AtlasLootClassic");
 					end
-					AtlasLoot.SlashCommands:Run("");
+					if button == "LeftButton" then
+						AtlasLoot.SlashCommands:Run("");
+					elseif button == "RightButton" then
+						AtlasLoot.SlashCommands:Run("options");
+					end
 				end;
 			}
 		);
@@ -1488,7 +1499,12 @@ if enabled > 0 then
 					if not IsAddOnLoaded("RecipeRadarClassic") then
 						LoadAddOn("RecipeRadarClassic");
 					end
-					RecipeRadar_Toggle();
+					if button == "LeftButton" then
+						RecipeRadar_Toggle();
+					elseif button == "RightButton" then
+						InterfaceOptionsFrame_OpenToCategory("RecipeRadar");
+						InterfaceOptionsFrame_OpenToCategory("RecipeRadar");
+					end
 				end;
 			}
 		);
@@ -1700,7 +1716,41 @@ if enabled > 0 then
 				tooltip = FF_DescMH;
 				icon= "Interface\\Addons\\MeetingHorn\\Media\\Logo2";
 				callback= function(button)
+					if not IsAddOnLoaded("MeetingHorn") then
+						LoadAddOn("MeetingHorn");
+					end
 					LibStub("AceAddon-3.0"):GetAddon("MeetingHorn"):Toggle();
+				end;
+			}
+		);
+	end
+end
+
+local enabled = GetAddOnEnableState(playerName, "GoodLeader");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameGL	= "好团长";
+		FF_DescGL	= "查看当前团长过往开团次数";
+	elseif GetLocale() == "zhTW" then
+		FF_NameGL	= "好團長";
+		FF_DescGL	= "查看當前團長過往開團次數";
+	else
+		FF_NameGL	= "GoodLeader";
+		FF_DescGL	= "Good Leader.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "GoodLeader";
+				name= FF_NameGL;
+				subtext= "GoodLeader";
+				tooltip = FF_DescGL;
+				icon= "Interface\\Addons\\GoodLeader\\Media\\Logo";
+				callback= function(button)
+					if not IsAddOnLoaded("GoodLeader") then
+						LoadAddOn("GoodLeader");
+					end
+					LibStub("AceAddon-3.0"):GetAddon("GoodLeader"):Toggle();
 				end;
 			}
 		);
@@ -1726,6 +1776,9 @@ if ( EarthFeature_AddButton ) then
 			tooltip = FF_DescLHPP;
 			icon= "Interface\\Icons\\Spell_Holy_DivineSpirit";
 			callback= function(button)
+					if not IsAddOnLoaded("LowHPPulser") then
+						LoadAddOn("LowHPPulser");
+					end
 				InterfaceOptionsFrame_OpenToCategory("LowHPPulser");
 				InterfaceOptionsFrame_OpenToCategory("LowHPPulser");
 			end;
@@ -1819,7 +1872,11 @@ if enabled > 0 then
 					if not IsAddOnLoaded("ThreatClassic2") then
 						LoadAddOn("ThreatClassic2");
 					end
-					ThreatClassic2Visibility();
+					if button == "LeftButton" then
+						SlashCmdList["TC2_SLASHCMD"]("toggle");
+					elseif button == "RightButton" then
+						SlashCmdList["TC2_SLASHCMD"]("");
+					end
 				end;
 			}
 		);
@@ -1881,7 +1938,11 @@ if enabled > 0 then
 					if not IsAddOnLoaded("Skada") then
 						LoadAddOn("Skada");
 					end
-					Skada:ToggleWindow();
+					if button == "LeftButton" then
+						SlashCmdList["SKADA"]("toggle");
+					elseif button == "RightButton" then
+						SlashCmdList["SKADA"]("config");
+					end
 				end;
 			}
 		);
