@@ -124,6 +124,16 @@ hooksecurefunc(GameTooltip, "SetUnitAura", function(self, unit, index, filter)
     end
 end)
 
+local function SetMaxCameraDistance()
+    SetCVar("cameraDistanceMaxZoomFactor", 3.5)
+end
+
+local cd = CreateFrame("Frame")
+cd:RegisterEvent("PLAYER_ENTERING_WORLD")
+cd:SetScript("OnEvent", function(self, event, ...)
+    SetMaxCameraDistance()
+end)
+
 -- --自动回收内存
 -- local eventcount = 0
 -- local recovery = CreateFrame("Frame")
