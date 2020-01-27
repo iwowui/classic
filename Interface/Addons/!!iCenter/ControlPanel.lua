@@ -307,7 +307,7 @@ if enabled > 0 then
 				name= FF_NameAtlas;
 				subtext= "Atlas";
 				tooltip = FF_DescAtlas;
-				icon = "Interface\\AddOns\\!!iCenter\\ico\\AtlasIcon";
+				icon = "Interface\\AddOns\\!!iCenter\\Icon\\AtlasIcon";
 				callback= function(button)
 					if not IsAddOnLoaded("Atlas") then
 						LoadAddOn("Atlas");
@@ -1625,7 +1625,7 @@ if enabled > 0 then
 				name= FF_NameEUF;
 				subtext= "Enigma Unit Frames";
 				tooltip = FF_DescEUF;
-				icon= "Interface\\AddOns\\!!iCenter\\ico\\UFP";
+				icon= "Interface\\AddOns\\!!iCenter\\Icon\\UFP";
 				callback= function(button)
 					if not IsAddOnLoaded("EN_UnitFrames") then
 						LoadAddOn("EN_UnitFrames");
@@ -1657,7 +1657,7 @@ if enabled > 0 then
 				name= FF_NameUFP;
 				subtext= "UnitFramesPlus";
 				tooltip = FF_DescUFP;
-				icon= "Interface\\AddOns\\!!iCenter\\ico\\UFP";
+				icon= "Interface\\AddOns\\!!iCenter\\Icon\\UFP";
 				callback= function(button)
 					if not IsAddOnLoaded("UnitFramesPlus_Options") then
 						LoadAddOn("UnitFramesPlus_Options");
@@ -1968,7 +1968,7 @@ if enabled > 0 then
 				name= FF_NameoRA;
 				subtext= "oRA3";
 				tooltip = FF_DescoRA;
-				icon= "Interface\\AddOns\\!!iCenter\\ico\\oRA3";
+				icon= "Interface\\AddOns\\!!iCenter\\Icon\\oRA3";
 				callback= function(button)
 					if not IsAddOnLoaded("oRA3") then
 						LoadAddOn("oRA3");

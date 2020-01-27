@@ -7,7 +7,7 @@
 ## Notes-zhTW: 採集記錄資料庫，載入即用
 ## X-Repple: 地图
 ## Author: kagaro, Xinhuan, Spinx, Marrtin
-## Version: v2020-01-07
+## Version: v2020-01-27
 ## LoadOnDemand: 1
 ## Dependencies: GatherMate2
 

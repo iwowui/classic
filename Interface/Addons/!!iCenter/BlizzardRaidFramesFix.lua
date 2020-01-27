@@ -67,6 +67,16 @@ do
     end
 end
 
+local petIDs = {["player"] = "pet"}
+
+for i = 1, MAX_PARTY_MEMBERS do
+    petIDs["party" .. i] = "partypet" .. i
+end
+
+for i = 1, MAX_RAID_MEMBERS do
+    petIDs["raid" .. i] = "raidpet" .. i
+end
+
 local frames = {}
 setmetatable(frames, {__mode = "k"})
 
@@ -426,26 +436,22 @@ hooksecurefunc(
                     end
                 end
 
-                frame.onUpdateFrame.func2 = function(updateFrame, event, arg1)
+                frame.onUpdateFrame.func2 = function(updateFrame, event, unit)
                     if event == "GROUP_ROSTER_UPDATE" then
                         CompactUnitFrame_UpdateAllSecure(frame)
                     elseif event == "PLAYER_ENTERING_WORLD" then
                         CompactUnitFrame_UpdateAllSecure(frame)
                     elseif event == "PLAYER_REGEN_ENABLED" then
                         CompactUnitFrame_UpdateAllSecure(frame)
-                    else
-                        local unitMatches = arg1 == frame.unit or arg1 == frame.displayedUnit
+                    elseif event == "UNIT_PET" then
+                        local pet = petIDs[unit]
 
-                        if unitMatches then
-                            if event == "UNIT_PET" then
-                                CompactUnitFrame_UpdateAllSecure(frame)
-                            end
+                        if unit == frame.unit or unit == frame.displayedUnit or pet == frame.unit or pet == frame.displayedUnit then
+                            CompactUnitFrame_UpdateAllSecure(frame)
                         end
-
-                        if unitMatches or arg1 == "player" then
-                            if event == "UNIT_ENTERED_VEHICLE" or event == "UNIT_EXITED_VEHICLE" then
-                                CompactUnitFrame_UpdateAllSecure(frame)
-                            end
+                    elseif event == "UNIT_ENTERED_VEHICLE" or event == "UNIT_EXITED_VEHICLE" then
+                        if unit == frame.unit or unit == frame.displayedUnit or unit == "player" then
+                            CompactUnitFrame_UpdateAllSecure(frame)
                         end
                     end
                 end
@@ -607,16 +613,6 @@ hooksecurefunc(
 )
 
 do
-    local petIDs = {["player"] = "pet"}
-
-    for i = 1, MAX_PARTY_MEMBERS do
-        petIDs["party" .. i] = "partypet" .. i
-    end
-
-    for i = 1, MAX_RAID_MEMBERS do
-        petIDs["raid" .. i] = "raidpet" .. i
-    end
-
     local groupNone = {"player"}
     local groupParty = {"player"}
     local groupRaid = {}
