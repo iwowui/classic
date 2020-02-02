@@ -66,7 +66,9 @@ function GetLink_Command(msg)
 				local num = 0
 				for id, name in pairs(GLTable) do
 					if string.find(name:lower(), msg, 2) then
-						-- print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+						if not _G["GetLinkGui"]:IsShown() then
+							print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+						end
 						_G["GetLinkGui"].msg:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
 						num = num + 1
 					end

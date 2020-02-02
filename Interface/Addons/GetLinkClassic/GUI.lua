@@ -8,6 +8,7 @@ else
 	GLG_KEYWORD	= "Key: ";
 	GLG_SEARCH	= "Search";
 end
+
 local glg = CreateFrame("Frame", "GetLinkGui", UIParent);
 glg:SetSize(396, 212);
 glg:ClearAllPoints();
@@ -65,7 +66,7 @@ glg.keywordtext:SetScript("OnShow", function(self)
     self:SetText(keywords);
 end)
 
-glg.btn = CreateFrame("Button", "Announce", glg, "OptionsButtonTemplate");
+glg.btn = CreateFrame("Button", nil, glg, "OptionsButtonTemplate");
 glg.btn:ClearAllPoints();
 glg.btn:SetPoint("LEFT", glg.keywordtext, "RIGHT", 5, 0);
 glg.btn:SetWidth(55);
@@ -79,7 +80,7 @@ glg.btn:SetScript("OnClick", function(self)
     glg.scrollBar:SetValue(glg.msg.listLen);
 end)
 
-glg.msg = CreateFrame("ScrollingMessageFrame", "GetLinkGuiMSG", glg);
+glg.msg = CreateFrame("ScrollingMessageFrame", nil, glg);
 glg.msg.listLen = 0;
 glg.msg:SetFrameLevel(glg:GetFrameLevel()+1);
 glg.msg:ClearAllPoints();
