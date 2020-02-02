@@ -1,0 +1,16 @@
+## Interface: 11303
+## Title: Details!: Storage
+## Notes: Stores information for Details! Damage Meter
+## DefaultState: Enabled
+## LoadOnDemand: 1
+## Dependencies: Details
+## SavedVariables: DetailsDataStorage
+
+## Title-zhCN: |CFF80FF80团队|R 伤害统计 信息存储
+## Notes-zhCN: 模块化的伤害统计。
+## Title-zhTW: |CFF80FF80團隊|R 傷害統計 資訊存儲
+## Notes-zhTW: 模組化的傷害統計。
+## X-Repple: 团队
+## DefaultState: Disabled
+
+Details_DataStorage.lua

@@ -1,0 +1,11 @@
+## Interface: 11302
+## Title: Get Link Classic
+## Title-zhCN: |CFFFF8000辅助|R 物品搜索
+## Title-zhTW: |CFFFF8000輔助|R 物品搜索
+
+## Version: 3
+## Author: https://www.curseforge.com/members/vxjt/projects / Magoo#11812
+## SavedVariables: GLTable, GLOptions
+
+GetLinkClassic.lua
+GUI.lua

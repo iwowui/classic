@@ -134,6 +134,7 @@ tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8883}) -- Valadar Starsong
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8713}) -- Starsong the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8867}) -- Lunar Fireworks
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8865}) -- Festive Lunar Pant Suits
+tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8868}) -- Elune's Blessing
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8642}) -- Silvervein the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8866}) -- Bronzebeard the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8643}) -- Highpeak the Elder
@@ -146,7 +147,7 @@ tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8879}) -- Large Rockets
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8716}) -- Starglade the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8650}) -- Snowcrown the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8876}) -- Small Rockets
-tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8874}) -- The Lunar Festival
+-- tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8874}) -- The Lunar Festival
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8880}) -- Cluster Rockets
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8722}) -- Meadowrun the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8652}) -- Graveborn the Elder
@@ -154,7 +155,7 @@ tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8878}) -- Festive Recipes
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8873}) -- The Lunar Festival
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8720}) -- Skygleam the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8673}) -- Bloodhoof the Elder
-tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8875}) -- The Lunar Festival
+-- tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8875}) -- The Lunar Festival
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8862}) -- Elune's Candle
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8723}) -- Nightwind the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8681}) -- Thunderhorn the Elder
@@ -162,9 +163,10 @@ tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8676}) -- Wildmane the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8651}) -- Ironband the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8863}) -- Festival Dumplings
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8672}) -- Stonespire the Elder
+-- tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8870}) -- The Lunar Festival
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8871}) -- The Lunar Festival
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8649}) -- Stormbrow the Elder
-tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8872}) -- The Lunar Festival
+-- tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8872}) -- The Lunar Festival
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8726}) -- Brightspear the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8877}) -- Firework Launcher
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8718}) -- Bladeswift the Elder
@@ -196,6 +198,8 @@ tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8636}) -- Rumblerock the Eld
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8644}) -- Stonefort the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8675}) -- Skychaser the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8719}) -- Bladesing the Elder
+
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 9029}) -- A Bubbling Cauldron
 
 tinsert(QuestieEvent.eventQuests, {"MidsummerFireFestival", 9388}) -- Flickering Flames in Kalimdor
 tinsert(QuestieEvent.eventQuests, {"MidsummerFireFestival", 9389}) -- Flickering Flames in the Eastern Kingdoms

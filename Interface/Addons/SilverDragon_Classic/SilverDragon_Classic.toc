@@ -1,0 +1,16 @@
+## Interface: 11303
+## Title: SilverDragon (Classic)
+## Notes: Mobs for Classic
+## Title-zhCN: |CFFFF8000地图|R 稀有怪追踪提醒 怀旧服
+## Title-zhTW: |CFFFF8000地圖|R 稀有怪追蹤提醒 懷舊服
+## X-Repple: 地图
+## Version: v11302.0
+## Author: Kemayo
+## eMail: kemayo at gmail dot com
+## X-Category: Interface Enhancements
+## X-Donate: PayPal:kemayo AT gmail DOT com
+## Dependencies: SilverDragon
+## LoadManagers: AddonLoader
+## X-LoadOn-Always: delayed
+
+module.lua

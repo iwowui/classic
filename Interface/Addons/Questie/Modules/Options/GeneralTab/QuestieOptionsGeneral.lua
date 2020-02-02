@@ -19,23 +19,24 @@ local QuestiePlayer = QuestieLoader:ImportModule("QuestiePlayer");
 QuestieOptions.tabs.general = {...}
 local optionsDefaults = QuestieOptionsDefaults:Load()
 
+local _GetShortcuts
 
 function QuestieOptions.tabs.general:Initialize()
     return {
-        name = function() return QuestieLocale:GetUIString('OPTIONS_TAB'); end,
+        name = function() return QuestieLocale:GetUIString('GENERAL_TAB'); end,
         type = "group",
         order = 10,
         args = {
             questie_header = {
                 type = "header",
                 order = 1,
-                name = function() return QuestieLocale:GetUIString('QUESTIE_HEADER'); end,
+                name = function() return QuestieLocale:GetUIString('GENERAL_OPTIONS_HEADER'); end,
             },
             enabled = {
                 type = "toggle",
-                order = 3,
-                name = function() return QuestieLocale:GetUIString('ENABLE_QUESTIE'); end,
-                desc = function() return QuestieLocale:GetUIString('ENABLE_QUESTIE_DESC'); end,
+                order = 1.1,
+                name = function() return QuestieLocale:GetUIString('ENABLE_ICONS'); end,
+                desc = function() return QuestieLocale:GetUIString('ENABLE_ICONS_DESC'); end,
                 width = "full",
                 get = function () return Questie.db.char.enabled; end,
                 set = function (info, value)
@@ -45,7 +46,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             iconTypes = {
                 type = "group",
-                order = 4,
+                order = 1.2,
                 inline = true,
                 name = function() return QuestieLocale:GetUIString('ICON_TYPE_HEADER'); end,
                 args = {
@@ -152,6 +153,7 @@ function QuestieOptions.tabs.general:Initialize()
                         name = function() return QuestieLocale:GetUIString('ENABLE_REPEATABLE_QUEST_ICONS'); end,
                         desc = function() return QuestieLocale:GetUIString('ENABLE_REPEATABLE_QUEST_ICONS_DESC'); end,
                         width = 1.5,
+                        disabled = function() return (not Questie.db.char.enabled); end,
                         get = function(info) return QuestieOptions:GetGlobalOptionValue(info); end,
                         set = function (info, value)
                             QuestieOptions:SetGlobalOptionValue(info, value)
@@ -160,11 +162,12 @@ function QuestieOptions.tabs.general:Initialize()
                     },
                 },
             },
-            iconEnabled = {
+            Spacer_A = QuestieOptionsUtils:Spacer(1.22),
+            minimapButtonEnabled = {
                 type = "toggle",
-                order = 5,
-                name = function() return QuestieLocale:GetUIString('ENABLE_ICON'); end,
-                desc = function() return QuestieLocale:GetUIString('ENABLE_ICON_DESC'); end,
+                order = 1.3,
+                name = function() return QuestieLocale:GetUIString('ENABLE_MINIMAP_BUTTON'); end,
+                desc = function() return QuestieLocale:GetUIString('ENABLE_MINIMAP_BUTTON_DESC'); end,
                 width = 1.5,
                 get = function () return not Questie.db.profile.minimap.hide; end,
                 set = function (info, value)
@@ -179,7 +182,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             instantQuest = {
                 type = "toggle",
-                order = 6,
+                order = 1.4,
                 name = function() return QuestieLocale:GetUIString('ENABLE_INSTANT'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_INSTANT_DESC'); end,
                 width = 1.5,
@@ -194,7 +197,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             enableTooltipsToggle = {
                 type = "toggle",
-                order = 7,
+                order = 1.5,
                 name = function() return QuestieLocale:GetUIString('ENABLE_TOOLTIPS'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_TOOLTIPS_DESC'); end,
                 width = 1.5,
@@ -205,7 +208,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             showQuestLevels = {
                 type = "toggle",
-                order = 8,
+                order = 1.6,
                 name = function() return QuestieLocale:GetUIString('ENABLE_TOOLTIPS_QUEST_LEVEL'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_TOOLTIPS_QUEST_LEVEL_DESC'); end,
                 width = 1.5,
@@ -221,7 +224,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             autoaccept = {
                 type = "toggle",
-                order = 8.1,
+                order = 1.7,
                 name = function() return QuestieLocale:GetUIString('ENABLE_AUTO_ACCEPT_QUESTS'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_AUTO_ACCEPT_QUESTS_DESC'); end,
                 width = 1.5,
@@ -233,7 +236,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             autocomplete = {
                 type = "toggle",
-                order = 8.1,
+                order = 1.8,
                 name = function() return QuestieLocale:GetUIString('ENABLE_AUTO_COMPLETE'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_AUTO_COMPLETE_DESC'); end,
                 width = 1.5,
@@ -243,16 +246,41 @@ function QuestieOptions.tabs.general:Initialize()
                     Questie:debug(DEBUG_DEVELOP, "Auto Complete toggled to:", value)
                 end,
             },
-            --Spacer_A = _QuestieOptions:Spacer(9),
+            autoModifier = {
+                type = "select",
+                order = 1.9,
+                values = _GetShortcuts(),
+                style = 'dropdown',
+                name = function() return QuestieLocale:GetUIString('AUTO_MODIFIER') end,
+                desc = function() return QuestieLocale:GetUIString('AUTO_MODIFIER_DESC'); end,
+                disabled = function() return (not Questie.db.char.autocomplete) and (not Questie.db.char.autoaccept) end,
+                get = function() return Questie.db.char.autoModifier; end,
+                set = function(input, key)
+                    Questie.db.char.autoModifier = key
+                end,
+            },
+            Spacer_H = QuestieOptionsUtils:HorizontalSpacer(1.91, 0.5),
+            acceptTrivial = {
+                type = "toggle",
+                order = 1.92,
+                name = function() return QuestieLocale:GetUIString('ENABLE_ACCEPT_TRIVIAL'); end,
+                desc = function() return QuestieLocale:GetUIString('ENABLE_ACCEPT_TRIVIAL_DESC'); end,
+                disabled = function() return (not Questie.db.char.autoaccept) end,
+                width = 1.5,
+                get = function () return Questie.db.char.acceptTrivial; end,
+                set = function (info, value)
+                    Questie.db.char.acceptTrivial = value
+                end,
+            },
+            Spacer_B = QuestieOptionsUtils:Spacer(1.99),
             quest_options = {
                 type = "header",
-                order = 9,
+                order = 2,
                 name = function() return QuestieLocale:GetUIString('LEVEL_HEADER'); end,
             },
-            Spacer_B = QuestieOptionsUtils:Spacer(9),
             gray = {
                 type = "toggle",
-                order = 10,
+                order = 2.2,
                 name = function() return QuestieLocale:GetUIString('ENABLE_LOWLEVEL'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_LOWLEVEL_DESC'); end,
                 width = 200,
@@ -265,7 +293,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             manualMinLevelOffset = {
                 type = "toggle",
-                order = 10.9,
+                order = 2.3,
                 name = function() return QuestieLocale:GetUIString('ENABLE_MANUAL_OFFSET'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_MANUAL_OFFSET_DESC'); end,
                 width = 200,
@@ -279,7 +307,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             minLevelFilter = {
                 type = "range",
-                order = 11,
+                order = 2.4,
                 name = function() return QuestieLocale:GetUIString('LOWLEVEL_BELOW'); end,
                 desc = function() return QuestieLocale:GetUIString('LOWLEVEL_BELOW_DESC', optionsDefaults.global.minLevelFilter); end,
                 width = "normal",
@@ -301,7 +329,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             maxLevelFilter = {
                 type = "range",
-                order = 12,
+                order = 2.5,
                 name = function() return QuestieLocale:GetUIString('LOWLEVEL_ABOVE'); end,
                 desc = function() return QuestieLocale:GetUIString('LOWLEVEL_ABOVE_DESC', optionsDefaults.global.maxLevelFilter); end,
                 width = "normal",
@@ -317,7 +345,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             clusterLevelHotzone = {
                 type = "range",
-                order = 13,
+                order = 2.6,
                 name = function() return QuestieLocale:GetUIString('CLUSTER'); end,
                 desc = function() return QuestieLocale:GetUIString('CLUSTER_DESC'); end,
                 width = "double",
@@ -332,5 +360,14 @@ function QuestieOptions.tabs.general:Initialize()
                 end,
             },
         },
+    }
+end
+
+_GetShortcuts = function()
+    return {
+        ['shift'] = QuestieLocale:GetUIString('SHIFT_MODIFIER'),
+        ['ctrl'] = QuestieLocale:GetUIString('CTRL_MODIFIER'),
+        ['alt'] = QuestieLocale:GetUIString('ALT_MODIFIER'),
+        ['disabled'] = QuestieLocale:GetUIString('DISABLED'),
     }
 end

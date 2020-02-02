@@ -61,6 +61,7 @@ function QuestieOptionsDefaults:Load()
             trackerFontSizeLine = 11,
             hookTracking = true,
             trackerEnabled = true,
+            trackerShowCompleteQuests = true,
             trackerShowQuestLevel = true,
             showBlizzardQuestTimer = false,
             stickyDurabilityFrame = true,
@@ -87,6 +88,8 @@ function QuestieOptionsDefaults:Load()
             searchType = 1,
             autoaccept = false,
             autocomplete = false,
+            autoModifier = "shift",
+            acceptTrivial = false,
             isTrackerExpanded = true,
         },
         profile = {minimap = {hide = false}}

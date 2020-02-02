@@ -13,11 +13,7 @@ do
         unitSuffix[unit .. "target"] = "-target"
         unitSuffix[unit .. "targettarget"] = "-target-target"
         unitPrefix[pet] = unit
-        unitPrefix[pet .. "target"] = unit
-        unitPrefix[pet .. "targettarget"] = unit
         unitSuffix[pet] = "-pet"
-        unitSuffix[pet .. "target"] = "-pet-target"
-        unitSuffix[pet .. "targettarget"] = "-pet-target-target"
     end
 
     for i = 1, MAX_PARTY_MEMBERS do
@@ -29,11 +25,7 @@ do
         unitSuffix[unit .. "target"] = "-target"
         unitSuffix[unit .. "targettarget"] = "-target-target"
         unitPrefix[pet] = unit
-        unitPrefix[pet .. "target"] = unit
-        unitPrefix[pet .. "targettarget"] = unit
         unitSuffix[pet] = "-pet"
-        unitSuffix[pet .. "target"] = "-pet-target"
-        unitSuffix[pet .. "targettarget"] = "-pet-target-target"
     end
 
     for i = 1, MAX_RAID_MEMBERS do
@@ -45,11 +37,7 @@ do
         unitSuffix[unit .. "target"] = "-target"
         unitSuffix[unit .. "targettarget"] = "-target-target"
         unitPrefix[pet] = unit
-        unitPrefix[pet .. "target"] = unit
-        unitPrefix[pet .. "targettarget"] = unit
         unitSuffix[pet] = "-pet"
-        unitSuffix[pet .. "target"] = "-pet-target"
-        unitSuffix[pet .. "targettarget"] = "-pet-target-target"
     end
 
     function resolveUnitID(unit)
@@ -160,9 +148,11 @@ local hooks_CastingBarFrame_SetUnit = {}
 local function CompactUnitFrame_Hide(frame)
     frame.background:Hide()
 
+    frame.healthBar:SetMinMaxValues(0, 0)
     frame.healthBar:SetValue(0)
 
     if frame.powerBar then
+        frame.powerBar:SetMinMaxValues(0, 0)
         frame.powerBar:SetValue(0)
         frame.powerBar.background:Hide()
     end
@@ -382,6 +372,12 @@ hooksecurefunc(
 
                 CompactUnitFrame_Hide(frame)
             end
+        else
+            frame.background:Show()
+
+            if frame.powerBar then
+                frame.powerBar.background:Show()
+            end
         end
     end
 )
@@ -420,9 +416,10 @@ hooksecurefunc(
 
         assert(not InCombatLockdown())
 
-        local updateAll = false
+        local unitTarget, ok = resolveUnitID(unit)
+        assert(not unit or ok)
 
-        local unitTarget = resolveUnitID(unit)
+        local updateAll = frames[frame] ~= unitTarget
 
         if unitTarget then
             if frame:GetAttribute("unit") == unit then
@@ -443,6 +440,12 @@ hooksecurefunc(
                         CompactUnitFrame_UpdateAllSecure(frame)
                     elseif event == "PLAYER_REGEN_ENABLED" then
                         CompactUnitFrame_UpdateAllSecure(frame)
+                    elseif event == "UNIT_CONNECTION" then
+                        local pet = petIDs[unit]
+
+                        if unit == frame.unit or unit == frame.displayedUnit or pet == frame.unit or pet == frame.displayedUnit then
+                            CompactUnitFrame_UpdateAllSecure(frame)
+                        end
                     elseif event == "UNIT_PET" then
                         local pet = petIDs[unit]
 
@@ -467,11 +470,13 @@ hooksecurefunc(
                 frame.onUpdateFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
                 frame.onUpdateFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
                 frame.onUpdateFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+                frame.onUpdateFrame:RegisterEvent("UNIT_CONNECTION")
                 frame.onUpdateFrame:RegisterEvent("UNIT_PET")
 
                 frame:UnregisterEvent("GROUP_ROSTER_UPDATE")
                 frame:UnregisterEvent("PLAYER_ENTERING_WORLD")
                 frame:UnregisterEvent("PLAYER_REGEN_ENABLED")
+                frame:UnregisterEvent("UNIT_CONNECTION")
                 frame:UnregisterEvent("UNIT_PET")
 
                 if UnitHasVehicleUI then
@@ -484,9 +489,7 @@ hooksecurefunc(
 
                 CompactUnitFrame_RegisterEvents(frame)
 
-                frame:SetScript("OnEnter", UnitFrame_OnEnter)
-            else
-                updateAll = true
+                updateAll = frames[frame] == nil
             end
 
             frame:SetAttribute("unit", unitTarget)
@@ -527,15 +530,11 @@ hooksecurefunc(
             if frame.powerBar then
                 frame.powerBar.background:Show()
             end
-
-            frame:SetScript("OnEnter", nil)
         end
 
-        if frames[frame] == nil then
-            updateAll = true
-        end
+        frame:SetScript("OnEnter", UnitFrame_OnEnter)
 
-        frames[frame] = unitTarget or false
+        frames[frame] = unitTarget
 
         if updateAll then
             CompactUnitFrame_UpdateAll(frame)
@@ -613,6 +612,17 @@ hooksecurefunc(
 )
 
 do
+    local displayPets = CompactRaidFrameContainer.displayPets
+
+    hooksecurefunc(
+        "CompactRaidFrameContainer_SetDisplayPets",
+        function(self)
+            if not InCombatLockdown() then
+                displayPets = self.displayPets
+            end
+        end
+    )
+
     local groupNone = {"player"}
     local groupParty = {"player"}
     local groupRaid = {}
@@ -627,7 +637,9 @@ do
 
     local eventFrame = CreateFrame("Frame")
     eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+    eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
     eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
+    eventFrame:RegisterEvent("UNIT_CONNECTION")
     eventFrame:RegisterEvent("UNIT_PET")
     eventFrame:SetScript(
         "OnEvent",
@@ -644,7 +656,15 @@ do
                 applyProfile = nil
                 groupRosterUpdate = false
                 sizeChanged = false
-            elseif event == "GROUP_ROSTER_UPDATE" or event == "UNIT_PET" and CompactRaidFrameContainer.displayPets and (arg1 == "player" or strsub(arg1, 1, 4) == "raid" or strsub(arg1, 1, 5) == "party") then
+
+                displayPets = CompactRaidFrameContainer.displayPets
+            elseif event == "PLAYER_ENTERING_WORLD" then
+                CompactRaidFrameContainer_TryUpdate(CompactRaidFrameContainer)
+            elseif event == "UNIT_CONNECTION" then
+                if displayPets then
+                    CompactRaidFrameContainer_TryUpdate(CompactRaidFrameContainer)
+                end
+            elseif event == "GROUP_ROSTER_UPDATE" or event == "UNIT_PET" and displayPets and (arg1 == "player" or strsub(arg1, 1, 4) == "raid" or strsub(arg1, 1, 5) == "party") then
                 if InCombatLockdown() then
                     local unitIDs = {}
                     local group
@@ -658,111 +678,108 @@ do
                     end
 
                     for _, unit in ipairs(group) do
-                        if UnitExists(unit) then
-                            local unitName = GetUnitName(unit, true)
+                        local unitName = GetUnitName(unit, true)
+
+                        if unitName then
                             unitIDs[unitName] = unit
                             unitIDs[unitName .. "-target"] = unit .. "target"
                             unitIDs[unitName .. "-target-target"] = unit .. "targettarget"
                             unitIDs[unitName .. "-pet"] = petIDs[unit]
-                            unitIDs[unitName .. "-pet-target"] = petIDs[unit] .. "target"
-                            unitIDs[unitName .. "-pet-target-target"] = petIDs[unit] .. "targettarget"
                         end
                     end
 
                     for frame, unitTarget in pairs(frames) do
-                        if unitTarget then
-                            local unit = unitIDs[unitTarget]
-                            local currentUnit = frame.unit
+                        local unit = unitIDs[unitTarget]
+                        local currentUnit = frame.unit
 
-                            if currentUnit ~= unit then
-                                local displayedUnit = frame.displayedUnit
+                        if currentUnit ~= unit then
+                            local displayedUnit = frame.displayedUnit
 
-                                if not unit or currentUnit == displayedUnit then
-                                    displayedUnit = unit
+                            if not unit or currentUnit == displayedUnit then
+                                displayedUnit = unit
+                            end
+
+                            frame.unit = unit
+                            frame.displayedUnit = displayedUnit
+
+                            if not unit or not currentUnit then
+                                frame.inVehicle = false
+                                frame.readyCheckStatus = nil
+                                frame.readyCheckDecay = nil
+                                frame.isTanking = nil
+                                frame.hideCastbar = frame.optionTable.hideCastbar
+                                frame.healthBar.healthBackground = nil
+                            end
+
+                            if unit then
+                                local displayUnitTarget = frame:GetAttribute("unit")
+                                frame.displayedUnit = unitTarget == displayUnitTarget and unit or unitIDs[displayUnitTarget]
+                            end
+
+                            frame.hasValidVehicleDisplay = frame.unit ~= frame.displayedUnit
+
+                            if unit then
+                                CompactUnitFrame_RegisterEvents(frame)
+                            else
+                                CompactUnitFrame_UnregisterEvents(frame)
+                            end
+
+                            if not unit then
+                                if frame.onUpdateFrame then
+                                    frame.onUpdateFrame:SetScript("OnEvent", nil)
+                                    frame.onUpdateFrame:SetScript("OnUpdate", nil)
                                 end
-
-                                frame.unit = unit
-                                frame.displayedUnit = displayedUnit
-
-                                if not unit or not currentUnit then
-                                    frame.inVehicle = false
-                                    frame.readyCheckStatus = nil
-                                    frame.readyCheckDecay = nil
-                                    frame.isTanking = nil
-                                    frame.hideCastbar = frame.optionTable.hideCastbar
-                                    frame.healthBar.healthBackground = nil
-                                end
-
-                                if unit then
-                                    local displayUnitTarget = frame:GetAttribute("unit")
-                                    frame.displayedUnit = unitTarget == displayUnitTarget and unit or unitIDs[displayUnitTarget]
-                                end
-
-                                frame.hasValidVehicleDisplay = frame.unit ~= frame.displayedUnit
-
-                                if unit then
-                                    CompactUnitFrame_RegisterEvents(frame)
-                                else
-                                    CompactUnitFrame_UnregisterEvents(frame)
-                                end
-
-                                if not unit then
-                                    if frame.onUpdateFrame then
-                                        frame.onUpdateFrame:SetScript("OnEvent", nil)
+                            elseif not currentUnit then
+                                if frame.onUpdateFrame then
+                                    if frame.onUpdateFrame.doUpdate then
+                                        frame.onUpdateFrame:SetScript("OnUpdate", frame.onUpdateFrame.func)
+                                    else
                                         frame.onUpdateFrame:SetScript("OnUpdate", nil)
                                     end
-                                elseif not currentUnit then
-                                    if frame.onUpdateFrame then
-                                        if frame.onUpdateFrame.doUpdate then
-                                            frame.onUpdateFrame:SetScript("OnUpdate", frame.onUpdateFrame.func)
-                                        else
-                                            frame.onUpdateFrame:SetScript("OnUpdate", nil)
-                                        end
 
-                                        frame.onUpdateFrame:SetScript("OnEvent", frame.onUpdateFrame.func2)
-                                    end
+                                    frame.onUpdateFrame:SetScript("OnEvent", frame.onUpdateFrame.func2)
                                 end
+                            end
 
-                                if unit and not frame.hideCastbar then
-                                    if not currentUnit then
-                                        if frame.castBar then
-                                            CastingBarFrame_SetUnit(frame.castBar, unit, false, true)
-                                        end
-                                    else
-                                        if frame.castBar then
-                                            frame.castBar.unit = unit
-                                            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_START", unit)
-                                            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
-                                            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
-
-                                            for _, hookfunc in ipairs(hooks_CastingBarFrame_SetUnit) do
-                                                hookfunc(frame, unit, frame.castBar.showTradeSkills, frame.castBar.showShield)
-                                            end
-                                        end
+                            if unit and not frame.hideCastbar then
+                                if not currentUnit then
+                                    if frame.castBar then
+                                        CastingBarFrame_SetUnit(frame.castBar, unit, false, true)
                                     end
                                 else
                                     if frame.castBar then
-                                        CastingBarFrame_SetUnit(frame.castBar, nil, nil, nil)
+                                        frame.castBar.unit = unit
+                                        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_START", unit)
+                                        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
+                                        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
+
+                                        for _, hookfunc in ipairs(hooks_CastingBarFrame_SetUnit) do
+                                            hookfunc(frame, unit, frame.castBar.showTradeSkills, frame.castBar.showShield)
+                                        end
                                     end
                                 end
-
-                                if unit then
-                                    frame:SetScript("OnEnter", UnitFrame_OnEnter)
-                                else
-                                    frame:SetScript("OnEnter", nil)
+                            else
+                                if frame.castBar then
+                                    CastingBarFrame_SetUnit(frame.castBar, nil, nil, nil)
                                 end
+                            end
 
-                                CompactUnitFrame_UpdateAllSecure(frame)
+                            if unit then
+                                frame:SetScript("OnEnter", UnitFrame_OnEnter)
+                            else
+                                frame:SetScript("OnEnter", nil)
+                            end
 
-                                for _, hookfunc in ipairs(hooks_CompactUnitFrame_SetUnit) do
-                                    hookfunc(frame, unit)
-                                end
+                            CompactUnitFrame_UpdateAllSecure(frame)
+
+                            for _, hookfunc in ipairs(hooks_CompactUnitFrame_SetUnit) do
+                                hookfunc(frame, unit)
                             end
                         end
                     end
-
-                    groupRosterUpdate = true
                 end
+
+                groupRosterUpdate = true
             end
         end
     )

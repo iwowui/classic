@@ -332,7 +332,7 @@ function QuestieDB:GetQuest(questID) -- /dump QuestieDB:GetQuest(867)
     local hidden = rawdata[21]
 
     if hidden ~= nil then --required source items
-        for _,Id in pairs(hidden) do
+        for _, Id in pairs(hidden) do
             if Id ~= nil then
 
                 local obj = {};
@@ -439,8 +439,12 @@ end
 function QuestieDB:GetCreatureLevels(quest)
     local creatureLevels = {}
 
-    local function _CollectCreateLevels(npcList)
-        for _, npcId in pairs(npcList) do
+    local function _CollectCreatureLevels(npcList)
+        for index, npcId in pairs(npcList) do
+            -- Some objectives are {id, name} others are just {id}
+            if npcId == nil or type(npcId) == "string" then
+                npcId = index
+            end
             local npc = QuestieDB:GetNPC(npcId)
             if npc and not creatureLevels[npc.name] then
                 creatureLevels[npc.name] = {npc.minLevel, npc.maxLevel, npc.rank}
@@ -451,14 +455,14 @@ function QuestieDB:GetCreatureLevels(quest)
     if quest.objectives then
         if quest.objectives[1] then -- Killing creatures
             for _, mobObjective in pairs(quest.objectives[1]) do
-                _CollectCreateLevels(mobObjective)
+                _CollectCreatureLevels(mobObjective)
             end
         end
         if quest.objectives[3] then -- Looting items from creatures
             for _, itemObjective in pairs(quest.objectives[3]) do
                 local item = QuestieDB:GetItem(itemObjective[1])
                 if item and item.npcDrops then
-                    _CollectCreateLevels(item.npcDrops)
+                    _CollectCreatureLevels(item.npcDrops)
                 end
             end
         end
@@ -512,7 +516,7 @@ function QuestieDB:GetNPC(npcID)
         return QuestieDB._NPCCache[npcID]
     end
 
-    local rawdata = QuestieDB.npcData[npcID]    
+    local rawdata = QuestieDB.npcData[npcID]
     if not rawdata then
         Questie:Debug(DEBUG_CRITICAL, "[QuestieDB:GetNPC] rawdata is nil for npcID:", npcID)
         return QuestieDB:_GetSpecialNPC(npcID)

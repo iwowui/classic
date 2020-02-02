@@ -375,7 +375,6 @@ function QuestieMap:DrawManualIcon(data, areaID, x, y)
     -- set the icon
     local texture = "Interface\\WorldMap\\WorldMapPartyIcon"
     -- Save new zone ID format, used in QuestieFramePool
-    data.UiMapID = ZoneDataAreaIDToUiMapID[areaID]
     -- create a list for all frames belonging to a NPC (id > 0) or an object (id < 0)
     if(QuestieMap.manualFrames[data.id] == nil) then
         QuestieMap.manualFrames[data.id] = {}
@@ -387,13 +386,14 @@ function QuestieMap:DrawManualIcon(data, areaID, x, y)
     icon.x = x
     icon.y = y
     icon.AreaID = areaID -- used by QuestieFramePool
+    icon.UiMapID = ZoneDataAreaIDToUiMapID[areaID]
     icon.miniMapIcon = false;
     icon.texture:SetTexture(texture)
     icon:SetWidth(16 * (data:GetIconScale() or 0.7))
     icon:SetHeight(16 * (data:GetIconScale() or 0.7))
 
     -- add the map icon
-    QuestieMap:QueueDraw(QuestieMap.ICON_MAP_TYPE, Questie, icon, data.UiMapID, x/100, y/100, 3) -- showFlag)
+    QuestieMap:QueueDraw(QuestieMap.ICON_MAP_TYPE, Questie, icon, icon.UiMapID, x/100, y/100, 3) -- showFlag)
     tinsert(QuestieMap.manualFrames[data.id], icon:GetName())
 
     -- create the minimap icon
@@ -408,12 +408,13 @@ function QuestieMap:DrawManualIcon(data, areaID, x, y)
     iconMinimap.x = x
     iconMinimap.y = y
     iconMinimap.AreaID = areaID -- used by QuestieFramePool
+    iconMinimap.UiMapID = ZoneDataAreaIDToUiMapID[areaID]
     iconMinimap.texture:SetTexture(texture)
     iconMinimap.texture:SetVertexColor(colorsMinimap[1], colorsMinimap[2], colorsMinimap[3], 1);
     iconMinimap.miniMapIcon = true;
 
     -- add the minimap icon
-    QuestieMap:QueueDraw(QuestieMap.ICON_MINIMAP_TYPE, Questie, iconMinimap, data.UiMapID, x / 100, y / 100, true, true);
+    QuestieMap:QueueDraw(QuestieMap.ICON_MINIMAP_TYPE, Questie, iconMinimap, iconMinimap.UiMapID, x / 100, y / 100, true, true);
     tinsert(QuestieMap.manualFrames[data.id], iconMinimap:GetName())
 
     -- make sure notes are only shown when they are supposed to
@@ -448,22 +449,23 @@ function QuestieMap:DrawWorldIcon(data, areaID, x, y, showFlag)
         error("Questie".."Data.Id must be set to the quests ID!")
     end
     if ZoneDataAreaIDToUiMapID[areaID] == nil then
-        --Questie:Error("No UiMapID for ("..tostring(zoneDataClassic[AreaID])..") :".. AreaID .. tostring(data.Name))
+        error("No UiMapID for ("..tostring(ZoneDataAreaIDToUiMapID[areaID])..") :".. areaID .. tostring(data.Name))
         return nil, nil
     end
-    if(showFlag == nil) then showFlag = HBD_PINS_WORLDMAP_SHOW_WORLD; end
+
+    if(showFlag == nil) then
+        showFlag = HBD_PINS_WORLDMAP_SHOW_WORLD
+    end
+
     -- if(floatOnEdge == nil) then floatOnEdge = true; end
     local floatOnEdge = true
-
-    if areaID then
-        data.UiMapID = ZoneDataAreaIDToUiMapID[areaID];
-    end
 
     local iconMap = QuestieFramePool:GetFrame()
     iconMap.data = data
     iconMap.x = x
     iconMap.y = y
     iconMap.AreaID = areaID
+    iconMap.UiMapID = ZoneDataAreaIDToUiMapID[areaID]
     iconMap.miniMapIcon = false;
     iconMap:UpdateTexture(data.Icon);
 
@@ -472,6 +474,7 @@ function QuestieMap:DrawWorldIcon(data, areaID, x, y, showFlag)
     iconMinimap.x = x
     iconMinimap.y = y
     iconMinimap.AreaID = areaID
+    iconMinimap.UiMapID = ZoneDataAreaIDToUiMapID[areaID]
     --data.refMiniMap = iconMinimap -- used for removing
     --Are we a minimap note?
     iconMinimap.miniMapIcon = true;
@@ -481,11 +484,11 @@ function QuestieMap:DrawWorldIcon(data, areaID, x, y, showFlag)
 
     if(not iconMinimap.FadeLogic) then
         function iconMinimap:FadeLogic()
-            if self.miniMapIcon and self.x and self.y and self.texture and self.data.UiMapID and self.texture.SetVertexColor and Questie and Questie.db and Questie.db.global and Questie.db.global.fadeLevel and HBD and HBD.GetPlayerZonePosition and QuestieLib and QuestieLib.Euclid then
+            if self.miniMapIcon and self.x and self.y and self.texture and self.UiMapID and self.texture.SetVertexColor and Questie and Questie.db and Questie.db.global and Questie.db.global.fadeLevel and HBD and HBD.GetPlayerZonePosition and QuestieLib and QuestieLib.Euclid then
                 local playerX, playerY, playerInstanceID = HBD:GetPlayerWorldPosition()
 
                 if(playerX and playerY) then
-                    local x, y, instance = HBD:GetWorldCoordinatesFromZone(self.x/100, self.y/100, self.data.UiMapID)
+                    local x, y, instance = HBD:GetWorldCoordinatesFromZone(self.x/100, self.y/100, self.UiMapID)
                     if(x and y) then
                         local distance = QuestieLib:Euclid(playerX, playerY, x, y);
 
@@ -495,7 +498,7 @@ function QuestieMap:DrawWorldIcon(data, areaID, x, y, showFlag)
                         local normalizedValue = 1 / fadeOverDistance; --Opacity / Distance to fade over
 
                         if(distance > questieGlobalDB.fadeLevel) then
-                            local fade = 1 - (math.min(10, (distance-questieGlobalDB.fadeLevel)) * normalizedValue);
+                            local fade = 1 - (math.min(10, (distance - questieGlobalDB.fadeLevel)) * normalizedValue);
 
                             self.texture:SetVertexColor(self.texture.r, self.texture.g, self.texture.b, fade)
                             if self.glowTexture and self.glowTexture.GetVertexColor then
@@ -564,7 +567,7 @@ function QuestieMap:DrawWorldIcon(data, areaID, x, y, showFlag)
 
 
     --Hide unexplored logic
-    if(not QuestieMap.utils:IsExplored(iconMap.data.UiMapID, x, y) and questieGlobalDB.hideUnexploredMapIcons) then
+    if(not QuestieMap.utils:IsExplored(iconMap.UiMapID, x, y) and questieGlobalDB.hideUnexploredMapIcons) then
         iconMap:FakeHide()
         iconMinimap:FakeHide()
     end
@@ -808,5 +811,4 @@ function QuestieMap:DrawWaypoints(icon, waypoints, zone, x, y)
     for _, lineFrame in ipairs(lineFrames) do
         QuestieMap:DrawLineIcon(lineFrame, zone, x, y)
     end
-
 end

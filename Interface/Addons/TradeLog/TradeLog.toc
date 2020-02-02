@@ -1,0 +1,22 @@
+﻿## Interface: 11303
+## Title: The Burning Trade
+## Notes: |cffbc8f8ftrade log, mage warlock trade assistant.|r
+## Title-zhCN: |CFFFF8000辅助|R 交易助手
+## Notes-zhCN: |cffbc8f8f交易记录及交易界面增强。|r
+## Title-zhTW: |CFFFF8000輔助|R 交易助手
+## Notes-zhTW: |cffbc8f8f交易記錄及交易介面增強。|r
+## X-Repple: 辅助
+## OptionalDeps: Skinner
+## SavedVariablesPerCharacter: TradeLog_TradesHistory, TRADE_LOG_BUTTON_POS, TradeLog_Announce_Checked, TradeLog_AnnounceChannel, TBT_CurrentPortal
+## Author: Warbaby, Mod By Terry@BF
+## LoadOnDemand: 0
+
+Libs\LibDBIcon-1.0.xml
+
+localization-enUS.lua
+localization-zhCN.lua
+localization-zhTW.lua
+
+TheBurningTrade.xml
+TradeLogFrame.xml
+## Q-CAT-Version: 1

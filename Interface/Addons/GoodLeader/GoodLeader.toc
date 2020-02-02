@@ -1,7 +1,7 @@
 ## Interface: 11303
 ## Title: GoodLeader
-## Title-zhCN: 好团长
-## Title-zhTW: 好團長
+## Title-zhCN: |CFFFF8000辅助|R 好团长
+## Title-zhTW: |CFFFF8000輔助|R 好團長
 ## X-Repple: 辅助
 ## Author: NetEase
 ## Version: 0.0.6

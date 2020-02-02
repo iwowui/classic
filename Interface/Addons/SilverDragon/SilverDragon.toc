@@ -1,0 +1,46 @@
+## Interface: 11303
+## Title: SilverDragon
+## Notes: Remember where rares were
+## Title-zhCN: |CFFFF8000地图|R 稀有怪追踪提醒
+## Notes-zhCN: 记录稀有怪物位置。
+## Title-zhTW: |CFFFF8000地圖|R 稀有怪追蹤提醒
+## Notes-zhTW: 協助記錄稀有怪位置,以及MouseOver時提示你.
+## X-Repple: 地图
+## Version: v11302.0
+## Author: Kemayo
+## eMail: kemayo at gmail dot com
+## X-Category: Interface Enhancements
+## X-Donate: PayPal:kemayo AT gmail DOT com
+## X-Curse-Project-ID: 14647
+## X-WoWI-ID: 25259
+## OptionalDependencies: Ace3, LibSharedMedia-3.0, HandyNotes, _NPCScan.Overlay, LibSink-2.0, LibQTip-1.0, LibDBIcon-1.0, ChatThrottleLib, AceGUI-3.0-SharedMediaWidgets, HereBeDragons, LibTextDump-1.0
+## SavedVariables: SilverDragon3DB,SilverDragon2DB
+## LoadOnDemand: 0
+
+## X-Embeds: Ace3, LibSink-2.0, LibSharedMedia-3.0, ChatThrottleLib, AceGUI-3.0-SharedMediaWidgets, HereBeDragons-2.0, LibTextDump-1.0
+
+embeds.xml
+
+# the core
+core.lua
+config.lua
+
+scan\targets.lua
+scan\macro.lua
+
+# optional bits
+outputs\tooltip.lua
+outputs\ldb.lua
+outputs\announce.lua
+outputs\sync.lua
+outputs\marker.lua
+
+targets\module.lua
+targets\popup.lua
+targets\looks\looks.xml
+
+mobs.lua
+
+# map plugins
+integration\handynotes.lua
+

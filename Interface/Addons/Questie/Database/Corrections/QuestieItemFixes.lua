@@ -562,6 +562,9 @@ function QuestieItemFixes:Load()
             [QuestieDB.itemKeys.npcDrops] = {10321}, -- #1175
             [QuestieDB.itemKeys.objectDrops] = {},
         },
+        [12334] = {
+            [QuestieDB.itemKeys.objectDrops] = {175324},
+        },
         [12347] = {
             [QuestieDB.itemKeys.name] = "Filled Cleansing Bowl",
             [QuestieDB.itemKeys.relatedQuests] = {},
@@ -766,6 +769,48 @@ function QuestieItemFixes:Load()
         [18956] = {
             [QuestieDB.itemKeys.npcDrops] = {5357,5358,5359,5360,5361,14603,14604,14638,14639,14640}, -- #1470
         },
+        [19061]= {
+            [QuestieDB.itemKeys.name] = "Vessel of Rebirth",
+            [QuestieDB.itemKeys.relatedQuests] = {7785,},
+            [QuestieDB.itemKeys.npcDrops] = {14347},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [21557] = {
+            [QuestieDB.itemKeys.name] = "Small Red Rocket",
+            [QuestieDB.itemKeys.relatedQuests] = {8867,},
+            [QuestieDB.itemKeys.npcDrops] = {15898},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [21558] = {
+            [QuestieDB.itemKeys.name] = "Small Blue Rocket",
+            [QuestieDB.itemKeys.relatedQuests] = {8867,},
+            [QuestieDB.itemKeys.npcDrops] = {15898},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [21559] = {
+            [QuestieDB.itemKeys.name] = "Small Green Rocket",
+            [QuestieDB.itemKeys.relatedQuests] = {8867,},
+            [QuestieDB.itemKeys.npcDrops] = {15898},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [21571] = {
+            [QuestieDB.itemKeys.name] = "Blue Rocket Cluster",
+            [QuestieDB.itemKeys.relatedQuests] = {8867,},
+            [QuestieDB.itemKeys.npcDrops] = {15898},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [21574] = {
+            [QuestieDB.itemKeys.name] = "Green Rocket Cluster",
+            [QuestieDB.itemKeys.relatedQuests] = {8867,},
+            [QuestieDB.itemKeys.npcDrops] = {15898},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [21576] = {
+            [QuestieDB.itemKeys.name] = "Red Rocket Cluster",
+            [QuestieDB.itemKeys.relatedQuests] = {8867,},
+            [QuestieDB.itemKeys.npcDrops] = {15898},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
     }
 end
 
@@ -810,6 +855,16 @@ end
 
 _AddMissingItemIDs = function()
     local missingItemIDs = {
+        -- Small Rockets
+        21557,
+        21558,
+        21559,
+        -- Rocket Cluster
+        21571,
+        21574,
+        21576,
+        --
+        19061,
         9254,
         5475,
         11040,

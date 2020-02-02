@@ -1,4 +1,4 @@
-﻿-- Template --
+-- Template --
 --[[
 local playerName = UnitName("player");
 local enabled = GetAddOnEnableState(playerName, "DCT");
@@ -221,6 +221,37 @@ if ( EarthFeature_AddButton ) then
 			callback= function(button) ACP.SlashHandler() end;
 		}
 	);
+end
+
+local enabled = GetAddOnEnableState(playerName, "GetLinkClassic");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameGLC	= "物品搜索";
+		FF_DescGLC	= "搜索并创建物品链接。";
+	elseif GetLocale() == "zhTW" then
+		FF_NameGLC	= "物品搜索";
+		FF_DescGLC	= "搜索并创建物品链接。";
+	else
+		FF_NameGLC	= "GetLinkClassic";
+		FF_DescGLC	= "Search and generate item links.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "GetLinkClassic";
+				name= FF_NameGLC;
+				subtext= "GetLinkClassic";
+				tooltip = FF_DescGLC;
+				icon= "Interface\\ICONS\\INV_Crate_01";
+				callback= function(button)
+					if not IsAddOnLoaded("GetLinkClassic") then
+						LoadAddOn("GetLinkClassic");
+					end
+					GLG_SlashHandler();
+				end;
+			}
+		);
+	end
 end
 
 local enabled = GetAddOnEnableState(playerName, "Archy");
@@ -1942,6 +1973,45 @@ if enabled > 0 then
 						SlashCmdList["SKADA"]("toggle");
 					elseif button == "RightButton" then
 						SlashCmdList["SKADA"]("config");
+					end
+				end;
+			}
+		);
+	end
+end
+
+local enabled = GetAddOnEnableState(playerName, "Details");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameDetails	= "全能伤害统计";
+		FF_DescDetails	= "全能伤害统计。";
+	elseif GetLocale() == "zhTW" then
+		FF_NameDetails	= "全能傷害統計";
+		FF_DescDetails	= "全能傷害統計。";
+	else
+		FF_NameDetails	= "Details";
+		FF_DescDetails	= "Essential tool to impress that chick in your raid.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "Details";
+				name= FF_NameDetails;
+				subtext= "Details";
+				tooltip = FF_DescDetails;
+				icon= "Interface\\AddOns\\Details\\images\\minimap";
+				callback= function(button)
+					if not IsAddOnLoaded("Details") then
+						LoadAddOn("Details");
+					end
+					if button == "LeftButton" then
+						_detalhes:ToggleWindows();
+					elseif button == "RightButton" then
+						if _G.DetailsOptionsWindow:IsShown() then
+							_G.DetailsOptionsWindow:Hide();
+						else
+							_detalhes:OpenOptionsWindow(Details:GetInstance(1));
+						end
 					end
 				end;
 			}

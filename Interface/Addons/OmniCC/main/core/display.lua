@@ -31,38 +31,36 @@ function Display:Create(owner)
     local display = setmetatable(Addon:CreateHiddenFrame("Frame", nil, owner), Display)
 
     display.text = display:CreateFontString(nil, "OVERLAY")
-    -- display:UpdateCooldownTextFont()
-    -- display:UpdateCooldownTextPosition()
-
-    display:SetScript("OnSizeChanged", self.OnSizeChanged)
-    display._onScaleUpdated = function() display:OnScaleChanged() end
     display.cooldowns = {}
 
+    display.updateSize = function()
+        local oldSize = display.sizeRatio
+        local newSize = display:CalculateSizeRatio()
+
+        local oldScale = display.scaleRatio
+        local newScale = display:CalculateScaleRatio()
+
+        if not (oldSize == newSize and oldScale == newScale) then
+            display:UpdateCooldownTextPositionSizeAndColor()
+        end
+
+        display.updatingSize = nil
+    end
+
+    display:UpdateSize()
+    display:SetScript("OnSizeChanged", self.UpdateSize)
 
     displays[owner] = display
     return display
 end
 
--- adjust font size whenever the timer's size changes
--- and hide if it gets too tiny
-function Display:OnSizeChanged()
-    local oldSize = self.sizeRatio
+-- defer updating size until the next frame
+-- this is to work around SUF scaling auras after setting timers
+function Display:UpdateSize()
+    if self.updatingSize then return end
 
-    if oldSize ~= self:CalculateSizeRatio() then
-        self:UpdateCooldownTextSizeAndColor()
-        -- self:UpdateCooldownTextFont()
-        -- self:UpdateCooldownTextPosition()
-    end
-end
-
--- adjust font size whenever the timer's size changes
--- and hide if it gets too tiny
-function Display:OnScaleChanged()
-    local oldScale = self.scaleRatio
-
-    if oldScale ~= self:CalculateScaleRatio() then
-        self:UpdateCooldownTextSizeAndColor()
-    end
+    self.updatingSize = true
+    After(GetTickTime(), self.updateSize)
 end
 
 -- update text when the timer notifies us of a change
@@ -77,9 +75,9 @@ function Display:OnTimerStateUpdated(timer, state)
 
     state = state or DEFAULT_STATE
 
-    if self.state ~= state then
+    if (self.state ~= state) then
         self.state = state
-        self:UpdateCooldownTextSizeAndColor()
+        self:UpdateCooldownTextPositionSizeAndColor()
     end
 end
 
@@ -153,7 +151,7 @@ function Display:UpdatePrimaryCooldown()
             self:SetAllPoints(cooldown)
             self:SetFrameLevel(cooldown:GetFrameLevel() + 7)
             self:UpdateCooldownTextFont()
-            self:UpdateCooldownTextPosition()
+            self:UpdateCooldownTextPositionSizeAndColor()
         end
     end
 end
@@ -185,8 +183,7 @@ function Display:UpdateTimer()
             self:Show()
         end
 
-        -- SUF hack to update scale of frames after cooldowns are set
-        After(GetTickTime(), self._onScaleUpdated)
+        self:UpdateSize()
     else
         self:Hide()
     end
@@ -241,8 +238,7 @@ end
 
 function Display:UpdateCooldownText()
     self:UpdateCooldownTextFont()
-    self:UpdateCooldownTextPosition()
-    self:UpdateCooldownTextSizeAndColor()
+    self:UpdateCooldownTextPositionSizeAndColor()
 end
 
 
@@ -263,37 +259,37 @@ function Display:UpdateCooldownTextFont()
     end
 end
 
--- props:{x, y}
-function Display:UpdateCooldownTextPosition()
-    local sets = self:GetSettings()
-
-    if sets then
-        self.text:ClearAllPoints()
-        self.text:SetPoint(sets.anchor, sets.xOff, sets.yOff)
-    else
-        self.text:ClearAllPoints()
-        self.text:SetPoint("CENTER")
-    end
-end
-
--- props:{size, scale, state}
-function Display:UpdateCooldownTextSizeAndColor()
+-- props:{size, scale, state, anchor, xOff, yOff}
+function Display:UpdateCooldownTextPositionSizeAndColor()
     local sets = self:GetSettings()
     if not sets then return end
 
+    local text = self.text
     local sizeRatio = self.sizeRatio or self:CalculateSizeRatio()
     local scaleRatio = self.scaleRatio or self:CalculateScaleRatio()
+
+    -- hide text if the display size is below our min ratio
+    if (sizeRatio * scaleRatio) <= (sets.minSize or 0) then
+        text:Hide()
+        return
+    end
 
     local style = sets.textStyles[self.state or DEFAULT_STATE]
     local styleRatio = style and style.scale or 1
 
-    if (sizeRatio * scaleRatio * styleRatio) >= (sets.minSize or 0) then
-        self.text:Show()
-        self.text:SetScale(sizeRatio * styleRatio)
-        self.text:SetTextColor(style.r, style.g, style.b, style.a)
-    else
-        self.text:Hide()
+    -- hide text if the scale ratio is zero or below
+    if styleRatio <= 0 then
+        text:Hide()
+        return
     end
+
+    local textScale = sizeRatio * styleRatio
+    text:Show()
+    text:SetScale(textScale)
+    text:SetTextColor(style.r, style.g, style.b, style.a)
+
+    text:ClearAllPoints()
+    text:SetPoint(sets.anchor, sets.xOff / textScale, sets.yOff / textScale)
 end
 
 function Display:GetSettings()
