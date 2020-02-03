@@ -55,17 +55,51 @@ Then it turns it and the results into lower case and generates the saved link if
 a match.  If there's a - then we need to replace that to %%- to work around the search
 filters built into LUA strings.  May need to add other filters in the future.]]
 
+function GetLink_Str2Table(str)
+	local tb = {}
+	local lenInByte = #str
+	local i = 1
+	while i < (lenInByte + 1) do
+		local curByte = string.byte(str, i)
+		local byteCount = 1
+		if curByte > 0 and curByte <= 127 then
+			byteCount = 1
+		elseif curByte >= 192 and curByte < 223 then
+			byteCount = 2
+		elseif curByte >= 224 and curByte < 239 then
+			byteCount = 3
+		elseif curByte >= 240 and curByte <= 247 then
+			byteCount = 4
+		end
+
+		local char = string.sub(str, i, i+byteCount-1)
+		i = i + byteCount
+
+		table.insert(tb, char:lower())
+	end
+
+	return tb
+end
+
 function GetLink_Command(msg)
 	if not bBuilding then
 		local tmptime = GetTime()
 		if tmptime - lasttime > 1 then
 			lasttime = tmptime
 			if msg:len() > 0 then
+				local tb = GetLink_Str2Table(msg)
 				_G["GetLinkGui"].msg:Clear()
 				msg = string.lower(msg:gsub("-", "%%-"))
 				local num = 0
 				for id, name in pairs(GLTable) do
-					if string.find(name:lower(), msg, 2) then
+					local found = 1
+					for k, v in pairs(tb) do
+						if not string.find(name:lower(), v, 2) then
+							found = 0
+							break
+						end
+					end
+					if found == 1 then
 						if not _G["GetLinkGui"]:IsShown() then
 							print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
 						end
