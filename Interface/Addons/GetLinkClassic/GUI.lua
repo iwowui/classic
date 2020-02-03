@@ -1,12 +1,15 @@
 if GetLocale() == "zhCN" then
 	GLG_KEYWORD	= "关键词：";
 	GLG_SEARCH	= "搜索";
+	GLG_MODE	= "精确匹配";
 elseif GetLocale() == "zhTW" then
 	GLG_KEYWORD	= "關鍵字：";
 	GLG_SEARCH	= "搜索";
+	GLG_MODE	= "精確匹配";
 else
 	GLG_KEYWORD	= "Key: ";
 	GLG_SEARCH	= "Search";
+	GLG_MODE	= "Exact match";
 end
 
 local glg = CreateFrame("Frame", "GetLinkGui", UIParent);
@@ -46,38 +49,57 @@ glg.keywordtext:SetHeight(25);
 glg.keywordtext:SetAutoFocus(false);
 glg.keywordtext:ClearFocus();
 glg.keywordtext:SetScript("OnEnterPressed", function(self)
-    keywords = self:GetText();
-    self:SetText(keywords);
-    self:ClearFocus();
-    GetLink_Command(keywords);
-    glg.scrollBar:SetValue(glg.msg.listLen);
+	keywords = self:GetText();
+	self:SetText(keywords);
+	self:ClearFocus();
+	GetLink_Command(keywords);
+	glg.scrollBar:SetValue(glg.msg.listLen);
 end)
 glg.keywordtext:SetScript("OnEscapePressed", function(self)
-    keywords = self:GetText();
-    self:SetText(keywords);
-    self:ClearFocus();
+	keywords = self:GetText();
+	self:SetText(keywords);
+	self:ClearFocus();
 end)
 glg.keywordtext:SetScript("OnEditFocusLost", function(self)
-    keywords = self:GetText();
-    self:SetText(keywords);
-    self:ClearFocus();
+	keywords = self:GetText();
+	self:SetText(keywords);
+	self:ClearFocus();
 end)
 glg.keywordtext:SetScript("OnShow", function(self)
-    self:SetText(keywords);
+	self:SetText(keywords);
 end)
 
+local GetLinkGuiMode_MenuList = {
+	{ text = "GetLink", isTitle = true },
+	{ text = GLG_MODE, hasArrow = true,
+		menuList = {
+			{ text = YES, func = function() GLOptions["extra"] = 1; CloseDropDownMenus(); end, checked = function() return GLOptions["extra"] == 1; end },
+			{ text = NO, func = function() GLOptions["extra"] = 0; CloseDropDownMenus(); end, checked = function() return GLOptions["extra"] == 0; end },
+		},
+	},
+	{ text = CANCEL },
+}
+local GetLinkGuiMode_Menu = CreateFrame("Frame", nil, UIParent, "UIDropDownMenuTemplate");
+local function GetLinkGui_Mode()
+	EasyMenu(GetLinkGuiMode_MenuList, GetLinkGuiMode_Menu, "cursor", 0 , 0, "MENU");
+end
 glg.btn = CreateFrame("Button", nil, glg, "OptionsButtonTemplate");
+glg.btn:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 glg.btn:ClearAllPoints();
 glg.btn:SetPoint("LEFT", glg.keywordtext, "RIGHT", 5, 0);
 glg.btn:SetWidth(55);
 glg.btn:SetHeight(25);
 glg.btn:SetText(GLG_SEARCH);
-glg.btn:SetScript("OnClick", function(self)
-    keywords = glg.keywordtext:GetText();
-    glg.keywordtext:SetText(keywords);
-    glg.keywordtext:ClearFocus();
-    GetLink_Command(keywords);
-    glg.scrollBar:SetValue(glg.msg.listLen);
+glg.btn:SetScript("OnClick", function(self, button)
+	if button == "LeftButton" then
+		keywords = glg.keywordtext:GetText();
+		glg.keywordtext:SetText(keywords);
+		glg.keywordtext:ClearFocus();
+		GetLink_Command(keywords);
+		glg.scrollBar:SetValue(glg.msg.listLen);
+	elseif button == "RightButton" then
+		GetLinkGui_Mode();
+	end
 end)
 
 glg.msg = CreateFrame("ScrollingMessageFrame", nil, glg);
@@ -95,16 +117,16 @@ glg.msg:SetMaxLines(99999);
 glg.msg:SetHyperlinksEnabled(true);
 glg.msg:SetScript("OnHyperlinkClick", ChatFrame_OnHyperlinkShow);
 glg.msg:SetScript("OnMouseWheel", function(self, delta)
-    local cur_val = math.floor(glg.scrollBar:GetValue());
-    local min_val, max_val = 0, glg.msg.listLen;
+	local cur_val = math.floor(glg.scrollBar:GetValue());
+	local min_val, max_val = 0, glg.msg.listLen;
 
-    if delta < 0 and cur_val < max_val then
-        cur_val = math.min(max_val, cur_val + 1);
-        glg.scrollBar:SetValue(cur_val);
-    elseif delta > 0 and cur_val > min_val then
-        cur_val = math.max(min_val, cur_val - 1);
-        glg.scrollBar:SetValue(cur_val);
-    end
+	if delta < 0 and cur_val < max_val then
+		cur_val = math.min(max_val, cur_val + 1);
+		glg.scrollBar:SetValue(cur_val);
+	elseif delta > 0 and cur_val > min_val then
+		cur_val = math.max(min_val, cur_val - 1);
+		glg.scrollBar:SetValue(cur_val);
+	end
 end)
 
 -- glg.msg.bg = glg:CreateTexture();
@@ -120,16 +142,16 @@ glg.scrollBar:SetMinMaxValues(0, 999);
 glg.scrollBar:SetValueStep(1);
 glg.scrollBar.scrollStep = 3;
 glg.scrollBar:SetScript("OnValueChanged", function(self, value)
-    glg.msg:SetScrollOffset(glg.msg.listLen - math.floor(value));
+	glg.msg:SetScrollOffset(glg.msg.listLen - math.floor(value));
 end)
 glg.scrollBar:SetValue(0);
 
 function GLG_SlashHandler()
-    if not glg:IsShown() then
-        glg:Show();
-    else
-        glg:Hide();
-    end
+	if not glg:IsShown() then
+		glg:Show();
+	else
+		glg:Hide();
+	end
 end
 
 SlashCmdList["GLG"] = GLG_SlashHandler;

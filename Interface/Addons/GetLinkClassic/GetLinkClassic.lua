@@ -87,25 +87,48 @@ function GetLink_Command(msg)
 		if tmptime - lasttime > 1 then
 			lasttime = tmptime
 			if msg:len() > 0 then
-				local tb = GetLink_Str2Table(msg)
 				_G["GetLinkGui"].msg:Clear()
 				msg = string.lower(msg:gsub("-", "%%-"))
 				local num = 0
+				local tb
+				if GLOptions["extra"] == 0 then
+					tb = GetLink_Str2Table(msg)
+				end
+				_G["GetLinkGui"].msg.listLen = 99999
+				_G["GetLinkGui"].msg:SetMaxLines(99999)
+				_G["GetLinkGui"].scrollBar:SetMinMaxValues(0, 99999)
 				for id, name in pairs(GLTable) do
-					local found = 1
-					for k, v in pairs(tb) do
-						if not string.find(name:lower(), v, 2) then
-							found = 0
-							break
+					if GLOptions["extra"] == 1 then
+						if string.find(name:lower(), msg, 2) then
+							if not _G["GetLinkGui"]:IsShown() then
+								print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+							end
+							_G["GetLinkGui"].msg:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+							num = num + 1
+						end
+					else
+						local found = 1
+						for k, v in pairs(tb) do
+							if not string.find(name:lower(), v, 2) then
+								found = 0
+								break
+							end
+						end
+						if found == 1 then
+							if not _G["GetLinkGui"]:IsShown() then
+								print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+							end
+							_G["GetLinkGui"].msg:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+							num = num + 1
 						end
 					end
-					if found == 1 then
-						if not _G["GetLinkGui"]:IsShown() then
-							print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
-						end
-						_G["GetLinkGui"].msg:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
-						num = num + 1
+				end
+				if num == 0 then
+					if not _G["GetLinkGui"]:IsShown() then
+						print("No items found.")
 					end
+					_G["GetLinkGui"].msg:AddMessage("No items found.")
+					num = 1
 				end
 				_G["GetLinkGui"].msg.listLen = num
 				_G["GetLinkGui"].msg:SetMaxLines(num)
@@ -158,6 +181,7 @@ function EventHandler(self, event, arg1, arg2)
 			GLTable = {}
 			GLOptions = {}
 			GLOptions["Version"] = nVersion
+			GLOptions["extra"] = 0
 			for i, id in pairs(tclassic) do AddItem(id) end
 			bBuilding = true
 			nCurrentID = nTopID

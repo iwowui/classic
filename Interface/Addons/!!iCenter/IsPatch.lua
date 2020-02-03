@@ -25,9 +25,16 @@ local function BlueShaman()
     end
 end
 
+local function MaxCameraDistance()
+    if ExtraConfiguration["maxcamera"] == 1 then
+        SetCVar("cameraDistanceMaxZoomFactor", 3.5);
+    end
+end
+
 local switch = CreateFrame('Frame')
 switch:RegisterEvent("ADDON_LOADED");
 switch:RegisterEvent("VARIABLES_LOADED")
+switch:RegisterEvent("PLAYER_ENTERING_WORLD")
 switch:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local name = ...;
@@ -35,6 +42,7 @@ switch:SetScript("OnEvent", function(self, event, ...)
             if not ExtraConfiguration then ExtraConfiguration = {}; end
             if not ExtraConfiguration["anticrab"] then ExtraConfiguration["anticrab"] = 1; end
             if not ExtraConfiguration["blueshaman"] then ExtraConfiguration["blueshaman"] = 0; end
+            if not ExtraConfiguration["maxcamera"] then ExtraConfiguration["maxcamera"] = 1; end
             Switch_OptionPanel_OnShow();
             switch:UnregisterEvent("ADDON_LOADED");
         end
@@ -49,6 +57,8 @@ switch:SetScript("OnEvent", function(self, event, ...)
         AntiCrab();
         BlueShaman();
         switch:UnregisterEvent("VARIABLES_LOADED");
+    elseif event == "PLAYER_ENTERING_WORLD" then
+        MaxCameraDistance()
     end
 end)
 
@@ -58,14 +68,17 @@ if GetLocale() == "zhCN" then
     SWITCH_INFO            = "杂项设置";
     SWITCH_ANTICRAB        = "原汁原味（重启游戏后生效）";
     SWITCH_BLUESHAMAN      = "蓝色萨满";
+    SWITCH_MAXCAMERA       = "自动拉远镜头";
 elseif GetLocale() == "zhTW" then
     SWITCH_INFO            = "雜項設置";
     SWITCH_ANTICRAB        = "原汁原味（重啟遊戲後生效）";
     SWITCH_BLUESHAMAN      = "藍色薩滿";
+    SWITCH_MAXCAMERA       = "自動拉遠鏡頭";
 else
     SWITCH_INFO            = "options";
     SWITCH_ANTICRAB        = "original taste (Effective after game restarted)";
     SWITCH_BLUESHAMAN      = "blue shaman";
+    SWITCH_MAXCAMERA       = "auto maximize camera distance";
 end
 
 Switch_OptionsFrame = CreateFrame("Frame", "Switch_OptionsFrame", UIParent);
@@ -102,11 +115,23 @@ do
         BlueShaman();
         self:SetChecked(ExtraConfiguration["blueshaman"]==1);
     end)
+
+    local Switch_MaxCmareaEnable = CreateFrame("CheckButton", "Switch_MaxCmareaEnable", Switch_OptionsFrame, "InterfaceOptionsCheckButtonTemplate");
+    Switch_MaxCmareaEnable:ClearAllPoints();
+    Switch_MaxCmareaEnable:SetPoint("TOPLEFT", Switch_BlueshamanEnable, "TOPLEFT", 0, -30);
+    Switch_MaxCmareaEnable:SetHitRectInsets(0, -100, 0, 0);
+    Switch_MaxCmareaEnableText:SetText(SWITCH_MAXCAMERA);
+    Switch_MaxCmareaEnable:SetScript("OnClick", function(self)
+        ExtraConfiguration["maxcamera"] = 1 - ExtraConfiguration["maxcamera"];
+        MaxCameraDistance();
+        self:SetChecked(ExtraConfiguration["maxcamera"]==1);
+    end)
 end
 
 function Switch_OptionPanel_OnShow()
     Switch_AnticrabEnable:SetChecked(ExtraConfiguration["anticrab"]==1);
     Switch_BlueshamanEnable:SetChecked(ExtraConfiguration["blueshaman"]==1);
+    Switch_MaxCmareaEnable:SetChecked(ExtraConfiguration["maxcamera"]==1);
 end
 
 --buff来源
@@ -122,16 +147,6 @@ hooksecurefunc(GameTooltip, "SetUnitAura", function(self, unit, index, filter)
         GameTooltip:AddLine(CastFrom..UnitName(caster), .65, .85, 1, 1);
         GameTooltip:Show();
     end
-end)
-
-local function SetMaxCameraDistance()
-    SetCVar("cameraDistanceMaxZoomFactor", 3.5)
-end
-
-local cd = CreateFrame("Frame")
-cd:RegisterEvent("PLAYER_ENTERING_WORLD")
-cd:SetScript("OnEvent", function(self, event, ...)
-    SetMaxCameraDistance()
 end)
 
 -- --自动回收内存
