@@ -10,9 +10,9 @@
 Libs\libs.xml
 #@end-no-lib-strip@
 
-## Title-zhCN: |CFF80FF80团队|R 伤害统计Details
+## Title-zhCN: |CFF80FF80团队|R 全能伤害统计Details
 ## Notes-zhCN: 模块化的伤害统计。
-## Title-zhTW: |CFF80FF80團隊|R 傷害統計Details
+## Title-zhTW: |CFF80FF80團隊|R 全能傷害統計Details
 ## Notes-zhTW: 模組化的傷害統計。
 ## X-Repple: 团队
 ## DefaultState: Disabled

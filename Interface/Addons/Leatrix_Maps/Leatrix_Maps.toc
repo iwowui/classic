@@ -1,0 +1,19 @@
+## Interface: 11303
+
+## Title: Leatrix Maps
+## Notes: Enhancements for your maps.
+## Title-zhCN: |CFFFF8000地图|R 地图增强
+## Notes-zhCN: 简单实用的地图模块。
+## Title-zhTW: |CFFFF8000地圖|R 地圖增強
+## Notes-zhTW: 簡單實用的地圖模組。
+## X-Repple: 地图
+
+## Version: 1.13.46
+## Author: Leatrix
+## SavedVariables: LeaMapsDB
+
+Leatrix_Maps_Library.lua
+Leatrix_Maps_Locale.lua
+Leatrix_Maps.xml
+Leatrix_Maps_Reveal.lua
+Leatrix_Maps.lua
