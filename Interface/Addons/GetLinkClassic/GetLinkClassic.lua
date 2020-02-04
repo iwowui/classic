@@ -30,6 +30,8 @@ local rtc = {
 	["8"] = "e6cc80"
 }
 
+local qualityfix = {5, 4, 3, 2, 1, 6, 8}
+
 local lasttime = GetTime()
 
 SLASH_GetLink1 = "/gl"
@@ -86,7 +88,7 @@ function GetLink_Command(msg)
 		local tmptime = GetTime()
 		if tmptime - lasttime > 1 then
 			lasttime = tmptime
-			if msg:len() > 0 then
+			if msg:len() >= 0 then
 				_G["GetLinkGui"].msg:Clear()
 				msg = string.lower(msg:gsub("-", "%%-"))
 				local num = 0
@@ -94,32 +96,34 @@ function GetLink_Command(msg)
 				if GLOptions["extra"] == 0 then
 					tb = GetLink_Str2Table(msg)
 				end
-				_G["GetLinkGui"].msg.listLen = 99999
 				_G["GetLinkGui"].msg:SetMaxLines(99999)
-				_G["GetLinkGui"].scrollBar:SetMinMaxValues(0, 99999)
 				for id, name in pairs(GLTable) do
-					if GLOptions["extra"] == 1 then
-						if string.find(name:lower(), msg, 2) then
-							if not _G["GetLinkGui"]:IsShown() then
-								print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+					if (tonumber(name:sub(1,1)) < 6 and GLOptions["quality"] < 6 and tonumber(name:sub(1,1)) <= qualityfix[GLOptions["quality"]]) or (tonumber(name:sub(1,1)) > 5 and tonumber(name:sub(1,1)) >= qualityfix[GLOptions["quality"]]) then
+						if GLOptions["extra"] == 1 then
+							if msg:len() == 0 or string.find(name:lower(), msg, 2) then
+								if not _G["GetLinkGui"]:IsShown() then
+									print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+								end
+								_G["GetLinkGui"].msg:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+								num = num + 1
 							end
-							_G["GetLinkGui"].msg:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
-							num = num + 1
-						end
-					else
-						local found = 1
-						for k, v in pairs(tb) do
-							if not string.find(name:lower(), v, 2) then
-								found = 0
-								break
+						else
+							local found = 1
+							if msg:len() ~= 0 then
+								for k, v in pairs(tb) do
+									if not string.find(name:lower(), v, 2) then
+										found = 0
+										break
+									end
+								end
 							end
-						end
-						if found == 1 then
-							if not _G["GetLinkGui"]:IsShown() then
-								print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+							if found == 1 then
+								if not _G["GetLinkGui"]:IsShown() then
+									print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+								end
+								_G["GetLinkGui"].msg:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+								num = num + 1
 							end
-							_G["GetLinkGui"].msg:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
-							num = num + 1
 						end
 					end
 				end
@@ -167,7 +171,7 @@ end
 
 function AddItem(idnum)
 	if not idnum or idnum == "" or idnum == 0 then return end
-	name, link = GetItemInfo(idnum)
+	local name, link = GetItemInfo(idnum)
 	if name then GLTable[tostring(idnum)] = string.format("%s%s", tc[link:sub(5, 10)], name) end
 end
 
@@ -181,13 +185,14 @@ function EventHandler(self, event, arg1, arg2)
 			GLTable = {}
 			GLOptions = {}
 			GLOptions["Version"] = nVersion
-			GLOptions["extra"] = 0
 			for i, id in pairs(tclassic) do AddItem(id) end
 			bBuilding = true
 			nCurrentID = nTopID
 			SearchFrame:SetScript("OnUpdate", GetSearch)
 			print("Get Link: Updating the database.")
 		end
+		if not GLOptions["extra"] then GLOptions["extra"] = 0 end
+		if not GLOptions["quality"] then GLOptions["quality"] = 1 end
 	elseif event == "GET_ITEM_INFO_RECEIVED" then AddItem(arg1) end
 end
 

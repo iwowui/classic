@@ -2,14 +2,17 @@ if GetLocale() == "zhCN" then
 	GLG_KEYWORD	= "关键词：";
 	GLG_SEARCH	= "搜索";
 	GLG_MODE	= "精确匹配";
+	GLG_QUALITY	= "稀有程度";
 elseif GetLocale() == "zhTW" then
 	GLG_KEYWORD	= "關鍵字：";
 	GLG_SEARCH	= "搜索";
 	GLG_MODE	= "精確匹配";
+	GLG_QUALITY	= "稀有程度";
 else
 	GLG_KEYWORD	= "Key: ";
 	GLG_SEARCH	= "Search";
 	GLG_MODE	= "Exact match";
+	GLG_QUALITY	= "Rarity";
 end
 
 local glg = CreateFrame("Frame", "GetLinkGui", UIParent);
@@ -77,9 +80,20 @@ local GetLinkGuiMode_MenuList = {
 			{ text = NO, func = function() GLOptions["extra"] = 0; CloseDropDownMenus(); end, checked = function() return GLOptions["extra"] == 0; end },
 		},
 	},
+	{ text = GLG_QUALITY, hasArrow = true,
+		menuList = {
+			{ text = ITEM_QUALITY0_DESC, func = function() GLOptions["quality"] = 1; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 1; end },
+			{ text = ITEM_QUALITY1_DESC, func = function() GLOptions["quality"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 2; end },
+			{ text = ITEM_QUALITY2_DESC, func = function() GLOptions["quality"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 3; end },
+			{ text = ITEM_QUALITY3_DESC, func = function() GLOptions["quality"] = 4; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 4; end },
+			{ text = ITEM_QUALITY4_DESC, func = function() GLOptions["quality"] = 5; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 5; end },
+			{ text = ITEM_QUALITY5_DESC, func = function() GLOptions["quality"] = 6; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 6; end },
+			{ text = ITEM_QUALITY6_DESC, func = function() GLOptions["quality"] = 7; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 7; end },
+		},
+	},
 	{ text = CANCEL },
 }
-local GetLinkGuiMode_Menu = CreateFrame("Frame", nil, UIParent, "UIDropDownMenuTemplate");
+local GetLinkGuiMode_Menu = CreateFrame("Frame", nil, glg, "UIDropDownMenuTemplate");
 local function GetLinkGui_Mode()
 	EasyMenu(GetLinkGuiMode_MenuList, GetLinkGuiMode_Menu, "cursor", 0 , 0, "MENU");
 end

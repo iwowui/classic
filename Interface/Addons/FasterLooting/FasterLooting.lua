@@ -10,13 +10,15 @@ local DEBOUNCE_INTERVAL = 0.3
 
 -- Fast loot function
 function FastLoot()
-    if GetTime() - delay >= DEBOUNCE_INTERVAL then
-        delay = GetTime()
-        if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
-            for i = GetNumLootItems(), 1, -1 do
-                LootSlot(i)
-            end
+    if FasterLootingDB["enable"] == 1 then
+        if GetTime() - delay >= DEBOUNCE_INTERVAL then
             delay = GetTime()
+            if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
+                for i = GetNumLootItems(), 1, -1 do
+                    LootSlot(i)
+                end
+                delay = GetTime()
+            end
         end
     end
 end
@@ -34,7 +36,7 @@ fl:SetScript("OnEvent", function(self, event, ...)
         local name = ...;
         if name == "FastLoot" then
             if not FasterLootingDB then FasterLootingDB = {}; end
-            if not FasterLootingDB["enable"] then LowHPPulserDB["enable"] = 1; end
+            if not FasterLootingDB["enable"] then FasterLootingDB["enable"] = 0; end
             FasterLooting_OptionPanel_OnShow();
             fl:UnregisterEvent("ADDON_LOADED");
         end

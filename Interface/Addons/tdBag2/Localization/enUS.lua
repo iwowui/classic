@@ -5,6 +5,7 @@ if not L then
 end
 
 L["|cffff2020(Offline)|r"] = true
+L["Always show"] = true
 L["Appearance"] = true
 L["Are you sure you want to restore the current Settings?"] = true
 L["Auto Close"] = true
@@ -43,6 +44,8 @@ L["Highlight Items by Quality"] = true
 L["Highlight New Items"] = true
 L["Highlight Quest Items"] = true
 L["Highlight Unusable Items"] = true
+L["HOTKEY_ALT_RIGHT"] = "Alt-RightClick"
+L["HOTKEY_CTRL_RIGHT"] = "Ctrl-RightClick"
 L["Inventory"] = true
 L["Item Scale"] = true
 L["Keyring Color"] = true
@@ -50,8 +53,11 @@ L["Leaving a Vendor"] = true
 L["Leaving the Auction House"] = true
 L["Leaving the Bank"] = true
 L["Leaving the Mail Box"] = true
+L["Less than %s days"] = true
+L["Less than one day"] = true
 L["Lock Frames"] = true
 L["Mail"] = true
+L["Never show"] = true
 L["No record"] = true
 L["Normal Color"] = true
 L["Opening the Character Info"] = true
@@ -68,8 +74,10 @@ L["Show Offline Text in Bag's Title"] = true
 L["Show Quest Starter Icon"] = true
 L["Slot Colors"] = true
 L["Soul Color"] = true
+L["Time Remaining"] = true
 L["TITLE_BAG"] = "%s's Inventory"
 L["TITLE_BANK"] = "%s's Bank"
+L["TITLE_MAIL"] = "%s's Mail"
 L["Token Frame"] = true
 L["TOOLTIP_CHANGE_PLAYER"] = "View another character's items."
 L["TOOLTIP_HIDE_BAG"] = "Hide bag"
@@ -82,6 +90,8 @@ L["TOOLTIP_SHOW_BAG"] = "Show bag"
 L["TOOLTIP_SHOW_BAG_FRAME"] = "Show bags list"
 L["TOOLTIP_TOGGLE_BAG"] = "Open inventory"
 L["TOOLTIP_TOGGLE_BANK"] = "Open bank"
+L["TOOLTIP_TOGGLE_MAIL"] = "Open mailbox"
+L["TOOLTIP_TOGGLE_OTHER_FRAME"] = "Open other bags"
 L["TOOLTIP_WATCHED_TOKENS"] = "Change watched tokens"
 L["Top"] = true
 L["Total"] = true
@@ -98,6 +108,7 @@ L["Visiting the Mail Box"] = true
 
 L.TITLE_BAG = '%s\'s Inventory'
 L.TITLE_BANK = '%s\'s Bank'
+L.TITLE_MAIL = '%s\'s Mail'
 
 L['Total'] = true
 L['|cffff2020(Offline)|r'] = true
@@ -114,12 +125,17 @@ L.TOOLTIP_HIDE_BAG_FRAME = 'Hide bags list'
 L.TOOLTIP_SHOW_BAG_FRAME = 'Show bags list'
 L.TOOLTIP_TOGGLE_BAG = 'Open inventory'
 L.TOOLTIP_TOGGLE_BANK = 'Open bank'
+L.TOOLTIP_TOGGLE_MAIL = 'Open mailbox'
+L.TOOLTIP_TOGGLE_OTHER_FRAME = 'Open other bags'
 L.TOOLTIP_PURCHASE_BANK_SLOT = 'Purchase bank slot'
 L.TOOLTIP_WATCHED_TOKENS = 'Change watched tokens'
 L.TOOLTIP_SHOW_BAG = 'Show bag'
 L.TOOLTIP_HIDE_BAG = 'Hide bag'
 L.TOOLTIP_SEARCH_TOGGLE = 'Search bags'
 L.TOOLTIP_SEARCH_RECORDS = 'Open saved search conditions'
+
+L.HOTKEY_CTRL_RIGHT = 'Ctrl-RightClick'
+L.HOTKEY_ALT_RIGHT = 'Alt-RightClick'
 
 ---- options
 
@@ -136,6 +152,12 @@ L['Reverse Bag Order'] = true
 L['Reverse Slot Order'] = true
 L['Columns'] = true
 L['Item Scale'] = true
+
+L['Time Remaining'] = true
+L['Always show'] = true
+L['Never show'] = true
+L['Less than one day'] = true
+L['Less than %s days'] = true
 
 L['Features'] = true
 L['Token Frame'] = true

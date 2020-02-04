@@ -5,6 +5,7 @@ local green = GREEN_FONT_COLOR
 local white = HIGHLIGHT_FONT_COLOR
 local defColor = FRIENDS_WOW_NAME_COLOR_CODE
 local _G = _G
+local MAX_SCORE_BUTTONS = MAX_SCORE_BUTTONS or 22
 
 local BC = {}
 for k, v in pairs(LOCALIZED_CLASS_NAMES_MALE) do BC[v] = k end
