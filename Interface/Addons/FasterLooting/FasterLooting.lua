@@ -34,7 +34,7 @@ fl:RegisterEvent("ADDON_LOADED");
 fl:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local name = ...;
-        if name == "FastLoot" then
+        if name == "FasterLooting" then
             if not FasterLootingDB then FasterLootingDB = {}; end
             if not FasterLootingDB["enable"] then FasterLootingDB["enable"] = 0; end
             FasterLooting_OptionPanel_OnShow();
@@ -75,3 +75,7 @@ FasterLooting_OptionsFrame_Enable:SetScript("OnClick", function(self)
     FasterLootingDB["enable"] = 1 - FasterLootingDB["enable"];
     self:SetChecked(FasterLootingDB["enable"]==1);
 end)
+
+function FasterLooting_OptionPanel_OnShow()
+    FasterLooting_OptionsFrame_Enable:SetChecked(FasterLootingDB["enable"]==1);
+end
