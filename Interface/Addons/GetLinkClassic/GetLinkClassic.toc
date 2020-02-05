@@ -2,6 +2,7 @@
 ## Title: Get Link Classic
 ## Title-zhCN: |CFFFF8000辅助|R 物品搜索
 ## Title-zhTW: |CFFFF8000輔助|R 物品搜索
+## X-Repple: 辅助
 
 ## Version: 3
 ## Author: https://www.curseforge.com/members/vxjt/projects / Magoo#11812

@@ -1485,8 +1485,15 @@ end
 function ACP:DisableAllAddons()
     DisableAllAddOns(UnitName("player"))
     --EnableAddOn(ACP_ADDON_NAME, UnitName("player"))
-    EnableAddOn(Repple_ADDON_NAME, UnitName("player"))
-    EnableAddOn(Repple_Lib_ADDON_NAME, UnitName("player"))
+    local enabled = GetAddOnEnableState(playerName, Repple_ADDON_NAME);
+    if enabled > 0 then
+        EnableAddOn(Repple_ADDON_NAME, UnitName("player"))
+    end
+
+    local enabled = GetAddOnEnableState(playerName, Repple_Lib_ADDON_NAME);
+    if enabled > 0 then
+        EnableAddOn(Repple_Lib_ADDON_NAME, UnitName("player"))
+    end
 
     for k in pairs(savedVar.ProtectedAddons) do
         EnableAddOn(k, UnitName("player"))

@@ -89,14 +89,14 @@ function GetLink_Command(msg)
 		if tmptime - lasttime > 1 then
 			lasttime = tmptime
 			if msg:len() >= 0 then
-				_G["GetLinkGui"].msg:Clear()
+				_G["GetLinkGui"].message:Clear()
 				msg = string.lower(msg:gsub("-", "%%-"))
 				local num = 0
 				local tb
 				if GLOptions["extra"] == 0 then
 					tb = GetLink_Str2Table(msg)
 				end
-				_G["GetLinkGui"].msg:SetMaxLines(99999)
+				_G["GetLinkGui"].message:SetMaxLines(99999)
 				for id, name in pairs(GLTable) do
 					if (tonumber(name:sub(1,1)) < 6 and GLOptions["quality"] < 6 and tonumber(name:sub(1,1)) <= qualityfix[GLOptions["quality"]]) or (tonumber(name:sub(1,1)) > 5 and tonumber(name:sub(1,1)) >= qualityfix[GLOptions["quality"]]) then
 						if GLOptions["extra"] == 1 then
@@ -104,7 +104,7 @@ function GetLink_Command(msg)
 								if not _G["GetLinkGui"]:IsShown() then
 									print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
 								end
-								_G["GetLinkGui"].msg:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+								_G["GetLinkGui"].message:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
 								num = num + 1
 							end
 						else
@@ -121,7 +121,7 @@ function GetLink_Command(msg)
 								if not _G["GetLinkGui"]:IsShown() then
 									print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
 								end
-								_G["GetLinkGui"].msg:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+								_G["GetLinkGui"].message:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
 								num = num + 1
 							end
 						end
@@ -131,12 +131,12 @@ function GetLink_Command(msg)
 					if not _G["GetLinkGui"]:IsShown() then
 						print("No items found.")
 					end
-					_G["GetLinkGui"].msg:AddMessage("No items found.")
+					_G["GetLinkGui"].message:AddMessage("No items found.")
 					num = 1
 				end
-				_G["GetLinkGui"].msg.listLen = num
-				_G["GetLinkGui"].msg:SetMaxLines(num)
-				_G["GetLinkGui"].scrollBar:SetMinMaxValues(0, num)
+				_G["GetLinkGui"].message.listLen = num
+				_G["GetLinkGui"].message:SetMaxLines(num)
+				_G["GetLinkGui"].scrollbar:SetMinMaxValues(0, num)
 				-- print("End of results.")
 			else
 				print("The query is too short.")
