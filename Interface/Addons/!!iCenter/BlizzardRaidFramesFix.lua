@@ -91,7 +91,9 @@ do
         end
     end
 
-    CompactRaidFrameContainer:SetScript("OnSizeChanged", CompactRaidFrameContainer_OnSizeChanged)
+    if CompactRaidFrameContainer then
+        CompactRaidFrameContainer:SetScript("OnSizeChanged", CompactRaidFrameContainer_OnSizeChanged)
+    end
 end
 
 do

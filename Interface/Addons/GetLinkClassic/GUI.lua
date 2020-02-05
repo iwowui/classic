@@ -168,7 +168,6 @@ glg.scrollbar:SetPoint("LEFT", glg.message, "RIGHT", 4, 1);
 glg.scrollbar:SetSize(16, 117);
 glg.scrollbar:SetMinMaxValues(0, 999);
 glg.scrollbar:SetValueStep(1);
-glg.scrollbar.scrollStep = 3;
 glg.scrollbar:SetScript("OnValueChanged", function(self, value)
 	glg.message:SetScrollOffset(glg.message.listLen - math.floor(value));
 end)

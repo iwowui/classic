@@ -6,6 +6,7 @@
 
 ## Version: 3
 ## Author: https://www.curseforge.com/members/vxjt/projects / Magoo#11812
+## Author-GUI: https://www.curseforge.com/members/islerwow/projects / Isler
 ## SavedVariables: GLTable, GLOptions
 
 GetLinkClassic.lua
