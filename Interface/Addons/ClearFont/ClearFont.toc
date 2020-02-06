@@ -1,9 +1,9 @@
 ﻿## Interface: 11303
 ## Title: ClearFont
 ## Notes: Modify Game Fonts and Size, Color, Shadow Of Them.
-## Title-zhCN: |CFFFF8000界面|R 游戏字体
+## Title-zhCN: |CFF7FFF7F界面|R 游戏字体
 ## Notes-zhCN: 更改游戏字体及其大小、颜色、阴影等特效
-## Title-zhTW: |CFFFF8000介面|R 遊戲字體
+## Title-zhTW: |CFF7FFF7F介面|R 遊戲字體
 ## Notes-zhTW: 修改遊戲字體以及大小、顏色、陰影等特效
 ## X-Repple: 界面
 ## Version: v4.01a

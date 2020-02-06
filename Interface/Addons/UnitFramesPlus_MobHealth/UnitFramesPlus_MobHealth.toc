@@ -1,7 +1,7 @@
 ## Interface: 11303
 ## Title: UnitFramesPlus MobHealth
-## Title-zhCN: |cff7fff7f界面|R 系统头像增强 目标血量
-## Title-zhTW: |cff7fff7f介面|R 系統頭像增強 目標血量
+## Title-zhCN: |CFF7FFF7F界面|R 系统头像增强 目标血量
+## Title-zhTW: |CFF7FFF7F介面|R 系統頭像增強 目標血量
 ## X-Repple: 界面
 ## Version: 1.32
 ## Author: Isler
