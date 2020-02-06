@@ -29,18 +29,24 @@ function UnitFramesPlus_PartyOriginSet()
     if UnitFramesPlusDB["party"]["origin"] == 1 then
         if tonumber(GetCVar("useCompactPartyFrames")) == 1 then
             SetCVar("useCompactPartyFrames", "0");
-            _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate2Players:Disable();
-            _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate3Players:Disable();
-            _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate5Players:Disable();
-            CompactUnitFrameProfilesRaidStylePartyFrames:SetChecked(false);
+            local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
+            if state == true then
+                _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate2Players:Disable();
+                _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate3Players:Disable();
+                _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate5Players:Disable();
+                CompactUnitFrameProfilesRaidStylePartyFrames:SetChecked(false);
+            end
         end
     else
         if tonumber(GetCVar("useCompactPartyFrames")) ~= 1 then
             SetCVar("useCompactPartyFrames", "1");
-            _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate2Players:Disable();
-            _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate3Players:Disable();
-            _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate5Players:Disable();
-            CompactUnitFrameProfilesRaidStylePartyFrames:SetChecked(false);
+            local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
+            if state == true then
+                _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate2Players:Disable();
+                _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate3Players:Disable();
+                _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate5Players:Disable();
+                CompactUnitFrameProfilesRaidStylePartyFrames:SetChecked(false);
+            end
         end
     end
 end
@@ -1194,6 +1200,10 @@ function UnitFramesPlus_PartyPositionSet()
     if UnitFramesPlusVar["party"]["moved"] ~= 0 then
         PartyMemberFrame1:ClearAllPoints();
         PartyMemberFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", UnitFramesPlusVar["party"]["x"], UnitFramesPlusVar["party"]["y"]);
+    else
+        if not PartyMemberFrame1:GetPoint() then
+            PartyMemberFrame1:SetPoint("TOPLEFT", 10, -160)
+        end
     end
 end
 
@@ -1328,54 +1338,42 @@ function UnitFramesPlus_PartyBarTextMouseShow()
     end
 end
 
-local ht = CreateFrame("Frame");
-ht:RegisterEvent("PLAYER_LOGIN");
-ht:RegisterEvent("GROUP_ROSTER_UPDATE");
-ht:SetScript("OnEvent", function(self, event, ...)
-    UnitFramesPlus_PartyToolsHide();
-end)
+local sf;
 
---隐藏工具
-function UnitFramesPlus_PartyToolsHideSet()
-    if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["hidetools"] == 1 and (not UnitInRaid("player")) then
-        if CompactRaidFrameManager then
-            if CompactRaidFrameManager:IsEventRegistered("PLAYER_ENTERING_WORLD") then
-                CompactRaidFrameManager:UnregisterAllEvents();
-            end
-            if CompactRaidFrameManager:IsShown() then
-                CompactRaidFrameManager:Hide();
-            end
+StaticPopupDialogs["UFP_HIDERAIDFRAME"] = {
+    text = UFPLocal_HideRaid,
+    button1 = RELOADUI,
+    OnAccept = function()
+        sf("Blizzard_CompactRaidFrames");
+        sf("Blizzard_CUFProfiles");
+        ReloadUI();
+    end,
+    whileDead = 1, hideOnEscape = 1, showAlert = 1
+}
+
+function UnitFramesPlus_HideRaidFrameSet()
+    local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
+    if UnitFramesPlusDB["party"]["hideraid"] == 1 then
+        sf = DisableAddOn;
+        if state == true then
+            StaticPopup_Show("UFP_HIDERAIDFRAME");
         end
     else
-        if CompactRaidFrameManager then
-            if UnitInParty("player") or UnitInRaid("player") then
-                RaidOptionsFrame_UpdatePartyFrames();
-                CompactRaidFrameManager_UpdateShown(CompactRaidFrameManager);
-            end
-            if not CompactRaidFrameManager:IsEventRegistered("PLAYER_ENTERING_WORLD") then
-                CompactRaidFrameManager:RegisterEvent("DISPLAY_SIZE_CHANGED");
-                CompactRaidFrameManager:RegisterEvent("UI_SCALE_CHANGED");
-                CompactRaidFrameManager:RegisterEvent("GROUP_ROSTER_UPDATE");
-                CompactRaidFrameManager:RegisterEvent("UPDATE_ACTIVE_BATTLEFIELD");
-                CompactRaidFrameManager:RegisterEvent("UNIT_FLAGS");
-                CompactRaidFrameManager:RegisterEvent("PLAYER_FLAGS_CHANGED");
-                CompactRaidFrameManager:RegisterEvent("PLAYER_ENTERING_WORLD");
-                CompactRaidFrameManager:RegisterEvent("PARTY_LEADER_CHANGED");
-                CompactRaidFrameManager:RegisterEvent("RAID_TARGET_UPDATE");
-                CompactRaidFrameManager:RegisterEvent("PLAYER_TARGET_CHANGED");
-            end
+        sf = EnableAddOn;
+        if state == false then
+            StaticPopup_Show("UFP_HIDERAIDFRAME");
         end
     end
 end
 
-function UnitFramesPlus_PartyToolsHide()
+function UnitFramesPlus_HideRaidFrame()
     if not InCombatLockdown() then
-        UnitFramesPlus_PartyToolsHideSet();
+        UnitFramesPlus_HideRaidFrameSet();
     else
         local func = {};
-        func.name = "UnitFramesPlus_PartyToolsHideSet";
+        func.name = "UnitFramesPlus_HideRaidFrameSet";
         func.callback = function()
-            UnitFramesPlus_PartyToolsHideSet();
+            UnitFramesPlus_HideRaidFrameSet();
         end;
         UnitFramesPlus_WaitforCall(func);
     end
@@ -1406,6 +1404,7 @@ function UnitFramesPlus_PartyInit()
     UnitFramesPlus_PartyHealthPct();
     UnitFramesPlus_PartyBarTextMouseShow();
     UnitFramesPlus_PartyExtraTextFontSize();
+    UnitFramesPlus_HideRaidFrame();
 end
 
 function UnitFramesPlus_PartyCvar()

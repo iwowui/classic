@@ -1,9 +1,9 @@
 ## Interface: 11303
 ## Title: Skillet-Classic |cff7fff7f -Ace3-|r
 ## Notes: A replacement tradeskill window
-## Title-zhCN: |CFF0055FF专业|R 制作窗口扩展
+## Title-zhCN: |CFFFF8000专业|R 制作窗口扩展
 ## Notes-zhCN: 扩展默认制作界面，使之显示更多的信息，并提供过滤功能等
-## Title-zhTW: |CFF0055FF專業|R 製作窗口擴展
+## Title-zhTW: |CFFFF8000專業|R 製作窗口擴展
 ## Notes-zhTW: 擴展預設製作介面，使之顯示更多的資訊，並提供過濾功能等
 ## X-Repple: 专业
 ## Author: bsmorgan

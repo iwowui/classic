@@ -315,6 +315,7 @@ function QuestieTracker:CreateBaseFrame()
 
     frm:SetWidth(100)
     frm:SetHeight(100)
+    frm:SetClampedToScreen(true);
 
     local t = frm:CreateTexture(nil,"BACKGROUND")
     t:SetTexture(ICON_TYPE_BLACK)
@@ -322,10 +323,10 @@ function QuestieTracker:CreateBaseFrame()
     t:SetAllPoints(frm)
     frm.texture = t
 
-    if Questie.db.char.TrackerLocation and Questie.db.char.TrackerLocation[1] and Questie.db.char.TrackerLocation[1] ~= "TOPRIGHT" and Questie.db.char.TrackerLocation[1] ~= "TOPLEFT" then
-        print(QuestieLocale:GetUIString('TRACKER_INVALID_LOCATION') .. " (2)")
-        Questie.db.char.TrackerLocation = nil
-    end
+    -- if Questie.db.char.TrackerLocation and Questie.db.char.TrackerLocation[1] and Questie.db.char.TrackerLocation[1] ~= "TOPRIGHT" and Questie.db.char.TrackerLocation[1] ~= "TOPLEFT" then
+    --     print(QuestieLocale:GetUIString('TRACKER_INVALID_LOCATION') .. " (2)")
+    --     Questie.db.char.TrackerLocation = nil
+    -- end
 
     if Questie.db.char.TrackerLocation then
         -- we need to pcall this because it can error if something like MoveAnything is used to move the tracker

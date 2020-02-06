@@ -134,7 +134,7 @@ hooksecurefunc("WorldStateScoreFrame_Update", function()
 
 	for i = 1, MAX_SCORE_BUTTONS do
 		local scoreButton = _G["WorldStateScoreButton"..i]
-		local name, _, _, _, _, faction, _, _, classToken = GetBattlefieldScore(scrollOffset + i)
+		local name, _, _, _, _, faction, _, _, _, classToken = GetBattlefieldScore(scrollOffset + i)
 		if name and faction and classToken then
 			local n, s = strsplit("-", name, 2)
 			n = colorString(n, classToken)

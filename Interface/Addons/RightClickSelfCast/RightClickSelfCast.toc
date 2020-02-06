@@ -5,9 +5,9 @@
 ## X-Curse-Project-ID: 22070
 ## X-WoWI-ID: 15049
 ## Notes: Makes all the Blizzard actionbars always self-cast on right-click (regardless of current target)
-## Title-zhCN: |CFF69CCF0技能|R 右键自我施法
+## Title-zhCN: |CFFFF8000技能|R 右键自我施法
 ## Notes-zhCN: 当你右键点击动作条上的法术时，自动自我施法
-## Title-zhTW: |CFF69CCF0技能|R 右鍵自我施法
+## Title-zhTW: |CFFFF8000技能|R 右鍵自我施法
 ## Notes-zhTW: 當你右鍵點擊動作條上的法術時，自動自我施法
 ## X-Repple: 技能
 ## DefaultState: Dis

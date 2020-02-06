@@ -124,7 +124,7 @@ UnitFramesPlusDefaultDB = {
         mouseshow = 0,    --鼠标滑过时才显示数值
         hpmpunit = 1,        --生命值和法力值进位
         unittype = 2,    --1为千进制(k/m)，2为万进位(万/亿)
-        hidetools = 0,      --隐藏团队工具
+        hideraid = 0,      --隐藏团队工具
         fontsize = 10,       --扩展显示的数字大小
     },
 

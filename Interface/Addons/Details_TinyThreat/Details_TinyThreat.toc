@@ -10,5 +10,7 @@
 ## DefaultState: Disabled
 
 enUS.lua
+zhCN.lua
+zhTW.lua
 
 Details_TinyThreat.lua

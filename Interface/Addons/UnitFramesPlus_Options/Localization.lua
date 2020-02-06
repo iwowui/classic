@@ -76,7 +76,7 @@
     UFP_OP_Party_Target = "显示队友目标";
     UFP_OP_Party_TargetLite = "简易模式";
     UFP_OP_Party_OnOff = "离线监测";
-    UFP_OP_Party_Hidetools = "隐藏团队工具";
+    UFP_OP_Party_HideRaid = "隐藏系统团队框架";
     UFP_OP_Buff = "显示Buff";
     UFP_OP_Filter = "Buff过滤";
     UFP_OP_FilterAll = "所有";
@@ -182,7 +182,7 @@ elseif GetLocale() == "zhTW" then
     UFP_OP_Party_Target = "顯示隊友目標";
     UFP_OP_Party_TargetLite = "簡易模式";
     UFP_OP_Party_OnOff = "離線監測";
-    UFP_OP_Party_Hidetools = "隱藏團隊工具";
+    UFP_OP_Party_HideRaid = "隱藏系统團隊框架";
     UFP_OP_Buff = "顯示Buff";
     UFP_OP_Filter = "Buff過濾";
     UFP_OP_FilterAll = "所有";
@@ -288,7 +288,7 @@ else
     UFP_OP_Party_Target = "Enable party target";
     UFP_OP_Party_TargetLite = "Lite mode";
     UFP_OP_Party_OnOff = "Offline detection";
-    UFP_OP_Party_Hidetools = "Hide raid tools";
+    UFP_OP_Party_HideRaid = "Hide blizzard raid frame";
     UFP_OP_Buff = "Party member buff";
     UFP_OP_Filter = "Buff filter";
     UFP_OP_FilterAll = "All";
