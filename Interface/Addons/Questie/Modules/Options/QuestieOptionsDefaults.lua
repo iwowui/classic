@@ -64,7 +64,7 @@ function QuestieOptionsDefaults:Load()
             trackerShowCompleteQuests = true,
             trackerShowQuestLevel = true,
             showBlizzardQuestTimer = false,
-            stickyDurabilityFrame = true,
+            stickyDurabilityFrame = false,
             trackerColorObjectives = 'white',
             trackerQuestPadding = 2,
             trackerSortObjectives = 'byComplete',
