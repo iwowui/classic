@@ -320,9 +320,7 @@ end
 function UnitFramesPlus_TargetHPMPPct()
     if UnitFramesPlusDB["target"]["hpmp"] == 0 then
         if TargetHPMPPct:IsEventRegistered("PLAYER_TARGET_CHANGED") then
-            TargetHPMPPct:UnregisterEvent("PLAYER_TARGET_CHANGED");
-            TargetHPMPPct:UnregisterEvent("UNIT_HEALTH_FREQUENT");
-            TargetHPMPPct:UnregisterEvent("UNIT_POWER_FREQUENT");
+            TargetHPMPPct:UnregisterAllEvents();
             TargetHPMPPct:SetScript("OnEvent", nil);
             TargetHPMPPct.HP:Hide();
             TargetHPMPPct.MP:Hide();
@@ -431,7 +429,7 @@ end
 --         if UnitFramesPlusDB["target"]["colortype"] == 1 then
 --             TargetFrameHealthBar:SetScript("OnValueChanged", nil);
 --             -- if chb:IsEventRegistered("UNIT_HEALTH_FREQUENT") then
---             --     chb:UnregisterEvent("UNIT_HEALTH_FREQUENT");
+--             --     chb:UnregisterAllEvents();
 --             -- end
 --             chb:RegisterEvent("PLAYER_TARGET_CHANGED");
 --             chb:RegisterEvent("PLAYER_REGEN_ENABLED");
@@ -443,8 +441,7 @@ end
 --                 UnitFramesPlus_TargetColorHPBarDisplayUpdate();
 --             end)
 --             if chb:IsEventRegistered("PLAYER_TARGET_CHANGED") then
---                 chb:UnregisterEvent("PLAYER_TARGET_CHANGED");
---                 chb:UnregisterEvent("PLAYER_REGEN_ENABLED");
+--                 chb:UnregisterAllEvents();
 --             end
 --             -- chb:RegisterUnitEvent("UNIT_HEALTH_FREQUENT", "target");
 --         end
@@ -452,9 +449,7 @@ end
 --     else
 --         TargetFrameHealthBar:SetScript("OnValueChanged", nil);
 --         if chb:IsEventRegistered("PLAYER_TARGET_CHANGED") then
---             chb:UnregisterEvent("PLAYER_TARGET_CHANGED");
---             chb:UnregisterEvent("PLAYER_REGEN_ENABLED");
---             -- chb:UnregisterEvent("UNIT_HEALTH_FREQUENT");
+--             chb:UnregisterAllEvents();
 --             chb:SetScript("OnEvent", nil);
 --         end
 --         TargetFrameHealthBar:SetStatusBarColor(0, 1, 0);
@@ -513,7 +508,7 @@ function UnitFramesPlus_TargetRace()
     else
         TargetRace:SetText("");
         if tr:IsEventRegistered("PLAYER_TARGET_CHANGED") then
-            tr:UnregisterEvent("PLAYER_TARGET_CHANGED");
+            tr:UnregisterAllEvents();
             tr:SetScript("OnEvent", nil);
         end
     end
@@ -576,7 +571,7 @@ function UnitFramesPlus_TargetClassIcon()
     else
         ClassIcon:SetAlpha(0);
         if tci:IsEventRegistered("PLAYER_TARGET_CHANGED") then
-            tci:UnregisterEvent("PLAYER_TARGET_CHANGED");
+            tci:UnregisterAllEvents();
             tci:SetScript("OnEvent", nil);
         end
     end
@@ -686,8 +681,7 @@ function UnitFramesPlus_TargetPortraitIndicator()
     else
         TargetHitIndicator:Hide();
         if TargetPortraitIndicator:IsEventRegistered("UNIT_COMBAT") then
-            TargetPortraitIndicator:UnregisterEvent("PLAYER_TARGET_CHANGED");
-            TargetPortraitIndicator:UnregisterEvent("UNIT_COMBAT");
+            TargetPortraitIndicator:UnregisterAllEvents();
             TargetPortraitIndicator:SetScript("OnEvent", nil);
             TargetPortraitIndicator:SetScript("OnUpdate", nil);
         end
@@ -1076,8 +1070,7 @@ function UnitFramesPlus_TargetPortrait()
                 tpt:RegisterUnitEvent("UNIT_CONNECTION", "target");
             else
                 if tpt:IsEventRegistered("UNIT_MODEL_CHANGED") then
-                    tpt:UnregisterEvent("UNIT_MODEL_CHANGED");
-                    tpt:UnregisterEvent("UNIT_HEALTH_FREQUENT");
+                    tpt:UnregisterAllEvents();
                 end
             end
             tpt:SetScript("OnEvent", function(self, event, ...)
@@ -1098,12 +1091,7 @@ function UnitFramesPlus_TargetPortrait()
             Target3DPortrait:Hide();
         end
         if tpt:IsEventRegistered("PLAYER_ENTERING_WORLD") then
-            tpt:UnregisterEvent("PLAYER_ENTERING_WORLD");
-            tpt:UnregisterEvent("PLAYER_TARGET_CHANGED");
-            tpt:UnregisterEvent("UNIT_TARGETABLE_CHANGED");
-            tpt:UnregisterEvent("UNIT_MODEL_CHANGED");
-            tpt:UnregisterEvent("UNIT_CONNECTION");
-            tpt:UnregisterEvent("UNIT_HEALTH_FREQUENT");
+            tpt:UnregisterAllEvents();
             tpt:SetScript("OnEvent", nil);
         end
     end

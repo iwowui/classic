@@ -2239,13 +2239,17 @@ do
                     RaidOptionsFrame_UpdatePartyFrames();
                     CompactRaidFrameManager_UpdateShown(CompactRaidFrameManager);
                 end
-                UnitFramesPlus_HideRaidFrameSet();
+                UnitFramesPlus_HideRaidFrame();
+                -- UnitFramesPlus_CompactRaidFrameManager_DisplayUpdate();
+                -- UnitFramesPlus_PartyMemberFrame_UpdateMember();
 
                 if UnitFramesPlusDB["party"]["origin"] ~= 1 then
+                    BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
+                    BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPet);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHP);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHPPct);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyColorName);
-                    -- BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyShortName);
+                    BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyShortName);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyLevel);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPortraitType);
                     BlizzardOptionsPanel_Slider_Disable(UnitFramesPlus_OptionsFrame_PartyPortraitTypeSlider);
@@ -2267,7 +2271,6 @@ do
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPortraitIndicator);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyColorHP);
                     BlizzardOptionsPanel_Slider_Disable(UnitFramesPlus_OptionsFrame_PartyColorHPSlider);
-                    -- BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyTarget);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyTargetLite);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyTargetHPPct);
@@ -2282,6 +2285,10 @@ do
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyTargetClassPortraitNPCNo);
                     BlizzardOptionsPanel_Slider_Disable(UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider);
                 else
+                    BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
+                    UnitFramesPlus_OptionsFrame_PartyHideRaidText:SetTextColor(1, 1, 1);
+                    BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyPet);
+                    UnitFramesPlus_OptionsFrame_PartyPetText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_Slider_Enable(UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider);
                     UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSliderText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyHP);
@@ -2292,8 +2299,8 @@ do
                     end
                     BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyColorName);
                     UnitFramesPlus_OptionsFrame_PartyColorNameText:SetTextColor(1, 1, 1);
-                    -- BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyShortName);
-                    -- UnitFramesPlus_OptionsFrame_PartyShortNameText:SetTextColor(1, 1, 1);
+                    BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyShortName);
+                    UnitFramesPlus_OptionsFrame_PartyShortNameText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyLevel);
                     UnitFramesPlus_OptionsFrame_PartyLevelText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyPortraitType);
@@ -2349,8 +2356,6 @@ do
                     if UnitFramesPlusDB["party"]["colorhp"] == 1 then
                         BlizzardOptionsPanel_Slider_Enable(UnitFramesPlus_OptionsFrame_PartyColorHPSlider);
                     end
-                    -- BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
-                    -- UnitFramesPlus_OptionsFrame_PartyHideRaidText:SetTextColor(1, 1, 1);
                     if UnitFramesPlusDB["partytarget"]["show"] == 1 then
                         BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyTarget);
                         UnitFramesPlus_OptionsFrame_PartyTargetText:SetTextColor(1, 1, 1);
@@ -2419,10 +2424,63 @@ do
         UnitFramesPlus_OptionsFrame_PartyTargetOrigin:SetChecked(UnitFramesPlusDB["party"]["origin"]==1);
     end)
 
+    StaticPopupDialogs["UFP_ENABLERAIDFRAME"] = {
+        text = UFP_OP_Party_EnableRaid,
+        button1 = RELOADUI,
+        OnAccept = function()
+            EnableAddOn("Blizzard_CompactRaidFrames");
+            EnableAddOn("Blizzard_CUFProfiles");
+            ReloadUI();
+        end,
+        whileDead = 1, hideOnEscape = 1, showAlert = 1
+    }
+
+    --隐藏团队工具
+    local UnitFramesPlus_OptionsFrame_PartyHideRaid = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyHideRaid", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:ClearAllPoints();
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyOrigin, "TOPLEFT", 0, -25);
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetHitRectInsets(0, -100, 0, 0);
+    UnitFramesPlus_OptionsFrame_PartyHideRaidText:SetText(UFP_OP_Party_HideRaid);
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetScript("OnClick", function(self)
+        UnitFramesPlusDB["party"]["hideraid"] = 1 - UnitFramesPlusDB["party"]["hideraid"];
+        -- local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
+        -- if state ~= true then
+        --     StaticPopup_Show("UFP_ENABLERAIDFRAME");
+        -- end
+        UnitFramesPlus_HideRaidFrame();
+        -- UnitFramesPlus_CompactRaidFrameManager_DisplayUpdate();
+        -- UnitFramesPlus_PartyMemberFrame_UpdateMember();
+        self:SetChecked(UnitFramesPlusDB["party"]["hideraid"]==1);
+    end)
+
+    -- --团队中显示小队
+    -- local UnitFramesPlus_OptionsFrame_PartyInRaid = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyInRaid", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
+    -- UnitFramesPlus_OptionsFrame_PartyInRaid:ClearAllPoints();
+    -- UnitFramesPlus_OptionsFrame_PartyInRaid:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyHideRaid, "TOPLEFT", 183, 0);
+    -- UnitFramesPlus_OptionsFrame_PartyInRaid:SetHitRectInsets(0, -100, 0, 0);
+    -- UnitFramesPlus_OptionsFrame_PartyInRaidText:SetText(UFP_OP_Party_Always);
+    -- UnitFramesPlus_OptionsFrame_PartyInRaid:SetScript("OnClick", function(self)
+    --     UnitFramesPlusDB["party"]["always"] = 1 - UnitFramesPlusDB["party"]["always"];
+    --     UnitFramesPlus_PartyMemberFrame_UpdateMember();
+    --     self:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
+    -- end)
+
+    --队友宠物
+    local UnitFramesPlus_OptionsFrame_PartyPet = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyPet", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
+    UnitFramesPlus_OptionsFrame_PartyPet:ClearAllPoints();
+    UnitFramesPlus_OptionsFrame_PartyPet:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyHideRaid, "TOPLEFT", 0, -25);
+    UnitFramesPlus_OptionsFrame_PartyPet:SetHitRectInsets(0, -100, 0, 0);
+    UnitFramesPlus_OptionsFrame_PartyPetText:SetText(UFP_OP_Party_Pet);
+    UnitFramesPlus_OptionsFrame_PartyPet:SetScript("OnClick", function(self)
+        UnitFramesPlusDB["party"]["pet"] = 1 - UnitFramesPlusDB["party"]["pet"];
+        UnitFramesPlus_PartyPet();
+        self:SetChecked(UnitFramesPlusDB["party"]["pet"]==1);
+    end)
+
     --队友生命值
     local UnitFramesPlus_OptionsFrame_PartyHP = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyHP", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyHP:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyHP:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyOrigin, "TOPLEFT", 0, -30);
+    UnitFramesPlus_OptionsFrame_PartyHP:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyPet, "TOPLEFT", 0, -25);
     UnitFramesPlus_OptionsFrame_PartyHP:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyHPText:SetText(UFP_OP_Party_HP);
     UnitFramesPlus_OptionsFrame_PartyHP:SetScript("OnClick", function(self)
@@ -2458,7 +2516,7 @@ do
     --队友名字染色
     local UnitFramesPlus_OptionsFrame_PartyColorName = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyColorName", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyColorName:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyColorName:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyHP, "TOPLEFT", 0, -30);
+    UnitFramesPlus_OptionsFrame_PartyColorName:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyHP, "TOPLEFT", 0, -25);
     UnitFramesPlus_OptionsFrame_PartyColorName:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyColorNameText:SetText(UFP_OP_ColorName);
     UnitFramesPlus_OptionsFrame_PartyColorName:SetScript("OnClick", function(self)
@@ -2470,20 +2528,20 @@ do
         self:SetChecked(UnitFramesPlusDB["party"]["colorname"]==1);
     end)
 
-    -- --队友名字显示为(*)
-    -- local UnitFramesPlus_OptionsFrame_PartyShortName = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyShortName", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
-    -- UnitFramesPlus_OptionsFrame_PartyShortName:ClearAllPoints();
-    -- UnitFramesPlus_OptionsFrame_PartyShortName:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyColorName, "TOPLEFT", 180, 0);
-    -- UnitFramesPlus_OptionsFrame_PartyShortName:SetHitRectInsets(0, -100, 0, 0);
-    -- UnitFramesPlus_OptionsFrame_PartyShortNameText:SetText(UFP_OP_ShortName);
-    -- UnitFramesPlus_OptionsFrame_PartyShortName:SetScript("OnClick", function(self)
-    --     UnitFramesPlusDB["party"]["shortname"] = 1 - UnitFramesPlusDB["party"]["shortname"];
-    --     UnitFramesPlus_PartyName();
-    --     for id = 1, 4, 1 do
-    --         UnitFramesPlus_PartyShortNameDisplayUpdate(id);
-    --     end
-    --     self:SetChecked(UnitFramesPlusDB["party"]["shortname"]==1);
-    -- end)
+    --队友名字显示为(*)
+    local UnitFramesPlus_OptionsFrame_PartyShortName = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyShortName", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
+    UnitFramesPlus_OptionsFrame_PartyShortName:ClearAllPoints();
+    UnitFramesPlus_OptionsFrame_PartyShortName:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyColorName, "TOPLEFT", 0, -25);
+    UnitFramesPlus_OptionsFrame_PartyShortName:SetHitRectInsets(0, -100, 0, 0);
+    UnitFramesPlus_OptionsFrame_PartyShortNameText:SetText(UFP_OP_ShortName);
+    UnitFramesPlus_OptionsFrame_PartyShortName:SetScript("OnClick", function(self)
+        UnitFramesPlusDB["party"]["shortname"] = 1 - UnitFramesPlusDB["party"]["shortname"];
+        UnitFramesPlus_PartyName();
+        for id = 1, 4, 1 do
+            UnitFramesPlus_PartyShortNameDisplayUpdate(id);
+        end
+        self:SetChecked(UnitFramesPlusDB["party"]["shortname"]==1);
+    end)
 
     --队友等级
     local UnitFramesPlus_OptionsFrame_PartyLevel = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyLevel", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
@@ -2503,7 +2561,7 @@ do
     --队友离线检测
     local UnitFramesPlus_OptionsFrame_PartyOfflineDetection = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyOfflineDetection", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyOfflineDetection:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyOfflineDetection:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyColorName, "TOPLEFT", 0, -30);
+    UnitFramesPlus_OptionsFrame_PartyOfflineDetection:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyShortName, "TOPLEFT", 0, -25);
     UnitFramesPlus_OptionsFrame_PartyOfflineDetection:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyOfflineDetectionText:SetText(UFP_OP_Party_OnOff);
     UnitFramesPlus_OptionsFrame_PartyOfflineDetection:SetScript("OnClick", function(self)
@@ -2527,7 +2585,7 @@ do
     --队友buff/debuff直接显示
     local UnitFramesPlus_OptionsFrame_PartyBuff = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyBuff", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyBuff:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyBuff:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyOfflineDetection, "TOPLEFT", 0, -30);
+    UnitFramesPlus_OptionsFrame_PartyBuff:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyOfflineDetection, "TOPLEFT", 0, -25);
     UnitFramesPlus_OptionsFrame_PartyBuff:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyBuffText:SetText(UFP_OP_Buff);
     UnitFramesPlus_OptionsFrame_PartyBuff:SetScript("OnClick", function(self)
@@ -2565,7 +2623,7 @@ do
     --队友buff/debuff鼠标提示
     local UnitFramesPlus_OptionsFrame_PartyBuffHidetip = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyBuffHidetip", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyBuffHidetip:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyBuffHidetip:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyBuff, "TOPLEFT", 0, -30);
+    UnitFramesPlus_OptionsFrame_PartyBuffHidetip:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyBuff, "TOPLEFT", 0, -25);
     UnitFramesPlus_OptionsFrame_PartyBuffHidetip:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyBuffHidetipText:SetText(UFP_OP_HideBuffTip);
     UnitFramesPlus_OptionsFrame_PartyBuffHidetip:SetScript("OnClick", function(self)
@@ -2576,7 +2634,7 @@ do
     --队友Buff filter
     local UnitFramesPlus_OptionsFrame_PartyBuffFilter = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyBuffFilter", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyBuffFilter:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyBuffFilter:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyBuffHidetip, "TOPLEFT", 0, -30);
+    UnitFramesPlus_OptionsFrame_PartyBuffFilter:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyBuffHidetip, "TOPLEFT", 0, -25);
     UnitFramesPlus_OptionsFrame_PartyBuffFilter:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyBuffFilterText:SetText(UFP_OP_Filter);
     UnitFramesPlus_OptionsFrame_PartyBuffFilter:SetScript("OnClick", function(self)
@@ -2601,7 +2659,7 @@ do
     -- --队友施法条
     -- local UnitFramesPlus_OptionsFrame_PartyCastbar = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyCastbar", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     -- UnitFramesPlus_OptionsFrame_PartyCastbar:ClearAllPoints();
-    -- UnitFramesPlus_OptionsFrame_PartyCastbar:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyBuffFilter, "TOPLEFT", 0, -30);
+    -- UnitFramesPlus_OptionsFrame_PartyCastbar:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyBuffFilter, "TOPLEFT", 0, -25);
     -- UnitFramesPlus_OptionsFrame_PartyCastbar:SetHitRectInsets(0, -100, 0, 0);
     -- UnitFramesPlus_OptionsFrame_PartyCastbarText:SetText(UFP_OP_Party_CastBar);
     -- UnitFramesPlus_OptionsFrame_PartyCastbar:SetScript("OnClick", function(self)
@@ -2615,7 +2673,7 @@ do
     UnitFramesPlus_OptionsFrame_PartyScaleSlider:SetWidth(154);
     UnitFramesPlus_OptionsFrame_PartyScaleSlider:SetHeight(16);
     UnitFramesPlus_OptionsFrame_PartyScaleSlider:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyScaleSlider:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyBuffFilter, "TOPLEFT", 30, -45);
+    UnitFramesPlus_OptionsFrame_PartyScaleSlider:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyBuffFilter, "TOPLEFT", 30, -40);
     UnitFramesPlus_OptionsFrame_PartyScaleSliderText:SetText(UFP_OP_Scale..(UnitFramesPlusDB["party"]["scale"]*100).."%");
     UnitFramesPlus_OptionsFrame_PartyScaleSliderLow:SetText("50%");
     UnitFramesPlus_OptionsFrame_PartyScaleSliderHigh:SetText("150%");
@@ -2637,7 +2695,7 @@ do
     --目标状态条数值
     local UnitFramesPlus_OptionsFrame_PartyBartext = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyBartext", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyBartext:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyBartext:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyScaleSlider, "TOPLEFT", -30, -35);
+    UnitFramesPlus_OptionsFrame_PartyBartext:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyScaleSlider, "TOPLEFT", -30, -30);
     UnitFramesPlus_OptionsFrame_PartyBartext:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyBartextText:SetText(UFP_OP_Bartex);
     UnitFramesPlus_OptionsFrame_PartyBartext:SetScript("OnClick", function(self)
@@ -2693,7 +2751,7 @@ do
     UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider:SetWidth(95);
     UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider:SetHeight(16);
     UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyBartext, "TOPLEFT", 30, -45);
+    UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyBartext, "TOPLEFT", 30, -40);
     UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSliderText:SetText(UFP_OP_FontSize..UnitFramesPlusDB["party"]["fontsize"]);
     UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSliderLow:SetText("8");
     UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSliderHigh:SetText("16");
@@ -2711,7 +2769,7 @@ do
     --队友生命值、法力值单位
     local UnitFramesPlus_OptionsFrame_PartyHPMPUnit = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyHPMPUnit", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyHPMPUnit:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyHPMPUnit:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider, "TOPLEFT", -30, -30);
+    UnitFramesPlus_OptionsFrame_PartyHPMPUnit:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider, "TOPLEFT", -30, -25);
     UnitFramesPlus_OptionsFrame_PartyHPMPUnit:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyHPMPUnitText:SetText(UFP_OP_Player_Unit);
     UnitFramesPlus_OptionsFrame_PartyHPMPUnit:SetScript("OnClick", function(self)
@@ -2754,7 +2812,7 @@ do
     --队友头像类型开关
     local UnitFramesPlus_OptionsFrame_PartyPortraitType = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyPortraitType", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyPortraitType:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyPortraitType:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyHPMPUnit, "TOPLEFT", 0, -30);
+    UnitFramesPlus_OptionsFrame_PartyPortraitType:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyHPMPUnit, "TOPLEFT", 0, -25);
     UnitFramesPlus_OptionsFrame_PartyPortraitType:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyPortraitTypeText:SetText(UFP_OP_Portrait);
     UnitFramesPlus_OptionsFrame_PartyPortraitType:SetScript("OnClick", function(self)
@@ -2818,7 +2876,7 @@ do
     --队友3D头像背景
     local UnitFramesPlus_OptionsFrame_PartyPortrait3DBG = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyPortrait3DBG", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyPortrait3DBG:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyPortrait3DBG:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyPortraitType, "TOPLEFT", 0, -30);
+    UnitFramesPlus_OptionsFrame_PartyPortrait3DBG:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyPortraitType, "TOPLEFT", 0, -25);
     UnitFramesPlus_OptionsFrame_PartyPortrait3DBG:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyPortrait3DBGText:SetText(UFP_OP_Portrait_3DBG);
     UnitFramesPlus_OptionsFrame_PartyPortrait3DBG:SetScript("OnClick", function(self)
@@ -2845,7 +2903,7 @@ do
     --队友Shift拖动头像
     local UnitFramesPlus_OptionsFrame_PartyShiftDrag = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyShiftDrag", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyShiftDrag:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyShiftDrag:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyPortrait3DBG, "TOPLEFT", 0, -30);
+    UnitFramesPlus_OptionsFrame_PartyShiftDrag:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyPortrait3DBG, "TOPLEFT", 0, -25);
     UnitFramesPlus_OptionsFrame_PartyShiftDrag:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyShiftDragText:SetText(UFP_OP_Shift_Movable);
     UnitFramesPlus_OptionsFrame_PartyShiftDrag:SetScript("OnClick", function(self)
@@ -2890,7 +2948,7 @@ do
     --队友生命条染色
     local UnitFramesPlus_OptionsFrame_PartyColorHP = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyColorHP", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyColorHP:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyColorHP:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyShiftDrag, "TOPLEFT", 0, -30);
+    UnitFramesPlus_OptionsFrame_PartyColorHP:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyShiftDrag, "TOPLEFT", 0, -25);
     UnitFramesPlus_OptionsFrame_PartyColorHP:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyColorHPText:SetText(UFP_OP_ColorHP);
     UnitFramesPlus_OptionsFrame_PartyColorHP:SetScript("OnClick", function(self)
@@ -2940,18 +2998,6 @@ do
         end
     end)
 
-    --隐藏团队工具
-    local UnitFramesPlus_OptionsFrame_PartyHideRaid = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyHideRaid", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
-    UnitFramesPlus_OptionsFrame_PartyHideRaid:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyColorHP, "TOPLEFT", 0, -30);
-    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetHitRectInsets(0, -100, 0, 0);
-    UnitFramesPlus_OptionsFrame_PartyHideRaidText:SetText(UFP_OP_Party_HideRaid);
-    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetScript("OnClick", function(self)
-        UnitFramesPlusDB["party"]["hideraid"] = 1 - UnitFramesPlusDB["party"]["hideraid"];
-        UnitFramesPlus_HideRaidFrame();
-        self:SetChecked(UnitFramesPlusDB["party"]["hideraid"]==1);
-    end)
-
     --队伍目标设定
     local partytargetconfig = UnitFramesPlus_PartyTarget_Options:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
     partytargetconfig:ClearAllPoints();
@@ -2987,13 +3033,17 @@ do
                     RaidOptionsFrame_UpdatePartyFrames();
                     CompactRaidFrameManager_UpdateShown(CompactRaidFrameManager);
                 end
-                UnitFramesPlus_HideRaidFrameSet();
+                UnitFramesPlus_HideRaidFrame();
+                -- UnitFramesPlus_CompactRaidFrameManager_DisplayUpdate();
+                -- UnitFramesPlus_PartyMemberFrame_UpdateMember();
 
                 if UnitFramesPlusDB["party"]["origin"] ~= 1 then
+                    BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
+                    BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPet);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHP);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHPPct);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyColorName);
-                    -- BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyShortName);
+                    BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyShortName);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyLevel);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPortraitType);
                     BlizzardOptionsPanel_Slider_Disable(UnitFramesPlus_OptionsFrame_PartyPortraitTypeSlider);
@@ -3030,6 +3080,10 @@ do
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyTargetClassPortraitNPCNo);
                     BlizzardOptionsPanel_Slider_Disable(UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider);
                 else
+                    BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
+                    UnitFramesPlus_OptionsFrame_PartyHideRaidText:SetTextColor(1, 1, 1);
+                    BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyPet);
+                    UnitFramesPlus_OptionsFrame_PartyPetText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_Slider_Enable(UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider);
                     UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSliderText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyHP);
@@ -3040,8 +3094,8 @@ do
                     end
                     BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyColorName);
                     UnitFramesPlus_OptionsFrame_PartyColorNameText:SetTextColor(1, 1, 1);
-                    -- BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyShortName);
-                    -- UnitFramesPlus_OptionsFrame_PartyShortNameText:SetTextColor(1, 1, 1);
+                    BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyShortName);
+                    UnitFramesPlus_OptionsFrame_PartyShortNameText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyLevel);
                     UnitFramesPlus_OptionsFrame_PartyLevelText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyPortraitType);
@@ -3755,6 +3809,7 @@ function UnitFramesPlus_OptionPanel_OnShow()
         BlizzardOptionsPanel_Slider_Disable(UnitFramesPlus_OptionsFrame_TargetColorHPSlider);
     end
     UnitFramesPlus_OptionsFrame_PartyOrigin:SetChecked(UnitFramesPlusDB["party"]["origin"]==1);
+    UnitFramesPlus_OptionsFrame_PartyPet:SetChecked(UnitFramesPlusDB["party"]["pet"]==1);
     UnitFramesPlus_OptionsFrame_PartyBartext:SetChecked(UnitFramesPlusDB["party"]["bartext"]==1);
     if UnitFramesPlusDB["party"]["bartext"] ~= 1 then
         BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyMouseShow);
@@ -3770,7 +3825,7 @@ function UnitFramesPlus_OptionPanel_OnShow()
     UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider:SetValue(UnitFramesPlusDB["party"]["fontsize"]);
     UnitFramesPlus_OptionsFrame_PartyLevel:SetChecked(UnitFramesPlusDB["party"]["level"]==1);
     UnitFramesPlus_OptionsFrame_PartyColorName:SetChecked(UnitFramesPlusDB["party"]["colorname"]==1);
-    -- UnitFramesPlus_OptionsFrame_PartyShortName:SetChecked(UnitFramesPlusDB["party"]["shortname"]==1);
+    UnitFramesPlus_OptionsFrame_PartyShortName:SetChecked(UnitFramesPlusDB["party"]["shortname"]==1);
     UnitFramesPlus_OptionsFrame_PartyHP:SetChecked(UnitFramesPlusDB["party"]["hp"]==1);
     UnitFramesPlus_OptionsFrame_PartyHPPct:SetChecked(UnitFramesPlusDB["party"]["hppct"]==1);
     if UnitFramesPlusDB["party"]["hp"] ~= 1 then
@@ -3850,11 +3905,14 @@ function UnitFramesPlus_OptionPanel_OnShow()
     end
     UnitFramesPlus_OptionsFrame_PartyScaleSlider:SetValue(UnitFramesPlusDB["party"]["scale"]*100);
     UnitFramesPlus_OptionsFrame_PartyHideRaid:SetChecked(UnitFramesPlusDB["party"]["hideraid"]==1);
+    -- UnitFramesPlus_OptionsFrame_PartyInRaid:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
     if UnitFramesPlusDB["party"]["origin"] ~= 1 then
+        BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
+        BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPet);
         BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHP);
         BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHPPct);
         BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyColorName);
-        -- BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyShortName);
+        BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyShortName);
         BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyLevel);
         BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPortraitType);
         BlizzardOptionsPanel_Slider_Disable(UnitFramesPlus_OptionsFrame_PartyPortraitTypeSlider);

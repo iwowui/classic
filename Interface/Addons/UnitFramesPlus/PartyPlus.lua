@@ -126,17 +126,7 @@ function UnitFramesPlus_PartyLevel()
         else
             _G["UFP_PartyLevel"..id].Text:SetText("");
             if _G["UFP_PartyLevel"..id]:IsEventRegistered("PLAYER_ENTERING_WORLD") then
-                _G["UFP_PartyLevel"..id]:UnregisterEvent("PLAYER_ENTERING_WORLD");
-                _G["UFP_PartyLevel"..id]:UnregisterEvent("GROUP_ROSTER_UPDATE");
-                _G["UFP_PartyLevel"..id]:UnregisterEvent("PARTY_LEADER_CHANGED");
-                _G["UFP_PartyLevel"..id]:UnregisterEvent("PARTY_MEMBER_ENABLE");
-                _G["UFP_PartyLevel"..id]:UnregisterEvent("PARTY_MEMBER_DISABLE");
-                -- _G["UFP_PartyLevel"..id]:UnregisterEvent("UNIT_ENTERED_VEHICLE");
-                -- _G["UFP_PartyLevel"..id]:UnregisterEvent("UNIT_EXITED_VEHICLE");
-                _G["UFP_PartyLevel"..id]:UnregisterEvent("UNIT_CONNECTION");
-                _G["UFP_PartyLevel"..id]:UnregisterEvent("UNIT_PHASE");
-                _G["UFP_PartyLevel"..id]:UnregisterEvent("UNIT_PET");
-                _G["UFP_PartyLevel"..id]:UnregisterEvent("UNIT_LEVEL");
+                _G["UFP_PartyLevel"..id]:UnregisterAllEvents();
                 _G["UFP_PartyLevel"..id]:SetScript("OnEvent", nil);
             end
         end
@@ -179,16 +169,7 @@ end
 --                 end)
 --             elseif UnitFramesPlusDB["party"]["colortype"] == 2 then
 --                 if _G["PartyMemberFrame"..id.."HealthBar"]:IsEventRegistered("PLAYER_ENTERING_WORLD") then
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("PLAYER_ENTERING_WORLD");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("GROUP_ROSTER_UPDATE");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("PARTY_LEADER_CHANGED");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("PARTY_MEMBER_ENABLE");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("PARTY_MEMBER_DISABLE");
---                 -- _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("UNIT_ENTERED_VEHICLE");
---                 -- _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("UNIT_EXITED_VEHICLE");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("UNIT_CONNECTION");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("UNIT_PHASE");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("UNIT_PET");
+--                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterAllEvents();
 --                     _G["PartyMemberFrame"..id.."HealthBar"]:SetScript("OnEvent", nil);
 --                 end
 --                 _G["PartyMemberFrame"..id.."HealthBar"]:SetScript("OnValueChanged", function(self, value)
@@ -201,16 +182,7 @@ end
 --         else
 --             _G["PartyMemberFrame"..id.."HealthBar"]:SetScript("OnValueChanged", nil);
 --             if _G["PartyMemberFrame"..id.."HealthBar"]:IsEventRegistered("PLAYER_ENTERING_WORLD") then
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("PLAYER_ENTERING_WORLD");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("GROUP_ROSTER_UPDATE");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("PARTY_LEADER_CHANGED");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("PARTY_MEMBER_ENABLE");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("PARTY_MEMBER_DISABLE");
---                 -- _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("UNIT_ENTERED_VEHICLE");
---                 -- _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("UNIT_EXITED_VEHICLE");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("UNIT_CONNECTION");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("UNIT_PHASE");
---                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterEvent("UNIT_PET");
+--                 _G["PartyMemberFrame"..id.."HealthBar"]:UnregisterAllEvents();
 --                 _G["PartyMemberFrame"..id.."HealthBar"]:SetScript("OnEvent", nil);
 --             end
 --             _G["PartyMemberFrame"..id.."HealthBar"]:SetStatusBarColor(0, 1, 0);
@@ -267,30 +239,32 @@ function UnitFramesPlus_PartyName()
             _G["UFP_PartyColorName"..id]:RegisterEvent("PARTY_LEADER_CHANGED");
             _G["UFP_PartyColorName"..id]:RegisterEvent("PARTY_MEMBER_ENABLE");
             _G["UFP_PartyColorName"..id]:RegisterEvent("PARTY_MEMBER_DISABLE");
+            _G["UFP_PartyColorName"..id]:RegisterEvent("UPDATE_ACTIVE_BATTLEFIELD");
+            _G["UFP_PartyColorName"..id]:RegisterEvent("PARTY_LOOT_METHOD_CHANGED");
+            _G["UFP_PartyColorName"..id]:RegisterEvent("MUTELIST_UPDATE");
+            _G["UFP_PartyColorName"..id]:RegisterEvent("IGNORELIST_UPDATE");
+            _G["UFP_PartyColorName"..id]:RegisterEvent("VARIABLES_LOADED");
+            _G["UFP_PartyColorName"..id]:RegisterEvent("READY_CHECK");
+            _G["UFP_PartyColorName"..id]:RegisterEvent("READY_CHECK_CONFIRM");
+            _G["UFP_PartyColorName"..id]:RegisterEvent("READY_CHECK_FINISHED");
+            _G["UFP_PartyColorName"..id]:RegisterEvent("UNIT_OTHER_PARTY_CHANGED", "party"..id);
+            _G["UFP_PartyColorName"..id]:RegisterEvent("UNIT_FLAGS", "party"..id);
             -- _G["UFP_PartyColorName"..id]:RegisterUnitEvent("UNIT_ENTERED_VEHICLE", "party"..id);
             -- _G["UFP_PartyColorName"..id]:RegisterUnitEvent("UNIT_EXITED_VEHICLE", "party"..id);
+            _G["UFP_PartyColorName"..id]:RegisterUnitEvent("UNIT_NAME_UPDATE", "party"..id);
             _G["UFP_PartyColorName"..id]:RegisterUnitEvent("UNIT_CONNECTION", "party"..id);
             _G["UFP_PartyColorName"..id]:RegisterUnitEvent("UNIT_PHASE", "party"..id);
             _G["UFP_PartyColorName"..id]:RegisterUnitEvent("UNIT_PET", "party"..id);
             _G["UFP_PartyColorName"..id]:SetScript("OnEvent", function(self, event, ...)
                 -- if tonumber(GetCVar("useCompactPartyFrames")) ~= 1 then
                     UnitFramesPlus_PartyColorNameDisplayUpdate(id);
-                    -- UnitFramesPlus_PartyShortNameDisplayUpdate(id);
+                    UnitFramesPlus_PartyShortNameDisplayUpdate(id);
                 -- end
             end)
         else
             _G["PartyMemberFrame"..id].name:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
             if _G["UFP_PartyColorName"..id]:IsEventRegistered("PLAYER_ENTERING_WORLD") then
-                _G["UFP_PartyColorName"..id]:UnregisterEvent("PLAYER_ENTERING_WORLD");
-                _G["UFP_PartyColorName"..id]:UnregisterEvent("GROUP_ROSTER_UPDATE");
-                _G["UFP_PartyColorName"..id]:UnregisterEvent("PARTY_LEADER_CHANGED");
-                _G["UFP_PartyColorName"..id]:UnregisterEvent("PARTY_MEMBER_ENABLE");
-                _G["UFP_PartyColorName"..id]:UnregisterEvent("PARTY_MEMBER_DISABLE");
-                -- _G["UFP_PartyColorName"..id]:UnregisterEvent("UNIT_ENTERED_VEHICLE");
-                -- _G["UFP_PartyColorName"..id]:UnregisterEvent("UNIT_EXITED_VEHICLE");
-                _G["UFP_PartyColorName"..id]:UnregisterEvent("UNIT_CONNECTION");
-                _G["UFP_PartyColorName"..id]:UnregisterEvent("UNIT_PHASE");
-                _G["UFP_PartyColorName"..id]:UnregisterEvent("UNIT_PET");
+                _G["UFP_PartyColorName"..id]:UnregisterAllEvents();
             end
         end
     end
@@ -307,21 +281,21 @@ function UnitFramesPlus_PartyColorNameDisplayUpdate(id)
     end
 end
 
--- --设置插件时隐藏队友服务器显示
--- function UnitFramesPlus_PartyShortNameDisplayUpdate(id)
---     if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
---         local name, realm = UnitName("party"..id);
---         local fullname = name;
---         if realm then
---             if UnitFramesPlusDB["party"]["shortname"] == 1 then
---                 fullname = name.."(*)";
---             else
---                 fullname = name.."-"..realm;
---             end
---         end
---         _G["PartyMemberFrame"..id].name:SetText(fullname);
---     end
--- end
+--设置插件时隐藏队友服务器显示
+function UnitFramesPlus_PartyShortNameDisplayUpdate(id)
+    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+        local name, realm = UnitName("party"..id);
+        local fullname = name;
+        if realm then
+            if UnitFramesPlusDB["party"]["shortname"] == 1 then
+                fullname = name.."(*)";
+            else
+                fullname = name.."-"..realm;
+            end
+        end
+        _G["PartyMemberFrame"..id].name:SetText(fullname);
+    end
+end
 
 for id = 1, 4, 1 do
     local Party3DPortrait = CreateFrame("PlayerModel", "UFP_Party3DPortrait"..id, _G["PartyMemberFrame"..id]);
@@ -410,10 +384,8 @@ function UnitFramesPlus_PartyPortrait()
                     _G["UFP_PartyPortraitType"..id]:RegisterUnitEvent("UNIT_PHASE", "party"..id);
                     _G["UFP_PartyPortraitType"..id]:RegisterUnitEvent("UNIT_PET", "party"..id);
                 else
-                    if _G["UFP_PartyPortraitType"..id]:IsEventRegistered("UNIT_MODEL_CHANGED") then
-                        _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_MODEL_CHANGED");
-                        _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_CONNECTION");
-                        _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_HEALTH_FREQUENT");
+                    if _G["UFP_PartyPortraitType"..id]:IsEventRegistered("PLAYER_ENTERING_WORLD") then
+                        _G["UFP_PartyPortraitType"..id]:UnregisterAllEvents();
                     end
                 end
                 _G["UFP_PartyPortraitType"..id]:SetScript("OnEvent", function(self, event, ...)
@@ -430,18 +402,7 @@ function UnitFramesPlus_PartyPortrait()
             _G["UFP_Party3DPortrait"..id]:Hide();
             _G["UFP_PartyClassPortrait"..id]:Hide();
             if _G["UFP_PartyPortraitType"..id]:IsEventRegistered("PLAYER_ENTERING_WORLD") then
-                _G["UFP_PartyPortraitType"..id]:UnregisterEvent("PLAYER_ENTERING_WORLD");
-                _G["UFP_PartyPortraitType"..id]:UnregisterEvent("GROUP_ROSTER_UPDATE");
-                _G["UFP_PartyPortraitType"..id]:UnregisterEvent("PARTY_LEADER_CHANGED");
-                _G["UFP_PartyPortraitType"..id]:UnregisterEvent("PARTY_MEMBER_ENABLE");
-                _G["UFP_PartyPortraitType"..id]:UnregisterEvent("PARTY_MEMBER_DISABLE");
-                -- _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_ENTERED_VEHICLE");
-                -- _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_EXITED_VEHICLE");
-                _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_PHASE");
-                _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_PET");
-                _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_MODEL_CHANGED");
-                _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_CONNECTION");
-                _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_HEALTH_FREQUENT");
+                _G["UFP_PartyPortraitType"..id]:UnregisterAllEvents();
                 _G["UFP_PartyPortraitType"..id]:SetScript("OnEvent", nil);
             end
         end
@@ -515,7 +476,7 @@ for id = 1, 4, 1 do
     PartyDeath:SetFrameLevel(7);
     PartyDeath.Text = PartyDeath:CreateFontString("PartyMemberFrame"..id.."DeathText", "OVERLAY", "GameTooltipText");
     PartyDeath.Text:ClearAllPoints();
-    PartyDeath.Text:SetPoint("CENTER", _G["PartyMemberFrame"..id.."HealthBar"], "CENTER", 0, -5);
+    PartyDeath.Text:SetPoint("CENTER", _G["PartyMemberFrame"..id.."Portrait"], "CENTER", 0, 0);
     PartyDeath.Text:SetFont(GameFontNormal:GetFont(), 12, "OUTLINE");
     PartyDeath.Text:SetTextColor(1, 1, 1);
     PartyDeath.Text:SetJustifyH("CENTER");
@@ -552,18 +513,7 @@ function UnitFramesPlus_PartyHealthPct()
         else
             _G["UFP_PartyHPPct"..id].Text:SetText("");
             if _G["UFP_PartyHPPct"..id]:IsEventRegistered("PLAYER_ENTERING_WORLD") then
-                _G["UFP_PartyHPPct"..id]:UnregisterEvent("PLAYER_ENTERING_WORLD");
-                _G["UFP_PartyHPPct"..id]:UnregisterEvent("GROUP_ROSTER_UPDATE");
-                _G["UFP_PartyHPPct"..id]:UnregisterEvent("PARTY_LEADER_CHANGED");
-                _G["UFP_PartyHPPct"..id]:UnregisterEvent("PARTY_MEMBER_ENABLE");
-                _G["UFP_PartyHPPct"..id]:UnregisterEvent("PARTY_MEMBER_DISABLE");
-                -- _G["UFP_PartyHPPct"..id]:UnregisterEvent("UNIT_ENTERED_VEHICLE");
-                -- _G["UFP_PartyHPPct"..id]:UnregisterEvent("UNIT_EXITED_VEHICLE");
-                _G["UFP_PartyHPPct"..id]:UnregisterEvent("UNIT_CONNECTION");
-                _G["UFP_PartyHPPct"..id]:UnregisterEvent("UNIT_PHASE");
-                _G["UFP_PartyHPPct"..id]:UnregisterEvent("UNIT_PET");
-                _G["UFP_PartyHPPct"..id]:UnregisterEvent("UNIT_HEALTH_FREQUENT");
-                _G["UFP_PartyHPPct"..id]:UnregisterEvent("UNIT_POWER_FREQUENT");
+                _G["UFP_PartyHPPct"..id]:UnregisterAllEvents();
                 _G["UFP_PartyHPPct"..id]:SetScript("OnEvent", nil);
             end
         end
@@ -665,11 +615,7 @@ function UnitFramesPlus_PartyPortraitIndicator()
         for id = 1, 4, 1 do
             _G["UFP_PartyHitIndicator"..id]:Hide();
             if _G["UFP_PartyPortraitIndicator"..id]:IsEventRegistered("PLAYER_ENTERING_WORLD") then
-                _G["UFP_PartyPortraitIndicator"..id]:UnregisterEvent("PLAYER_ENTERING_WORLD");
-                _G["UFP_PartyPortraitIndicator"..id]:UnregisterEvent("GROUP_ROSTER_UPDATE");
-                _G["UFP_PartyPortraitIndicator"..id]:UnregisterEvent("PARTY_LEADER_CHANGED");
-                _G["UFP_PartyPortraitIndicator"..id]:UnregisterEvent("UNIT_COMBAT");
-                _G["UFP_PartyPortraitIndicator"..id]:UnregisterEvent("UNIT_CONNECTION");
+                _G["UFP_PartyPortraitIndicator"..id]:UnregisterAllEvents();
                 _G["UFP_PartyPortraitIndicator"..id]:SetScript("OnUpdate", nil);
                 _G["UFP_PartyPortraitIndicator"..id]:SetScript("OnEvent", nil);
             end
@@ -723,10 +669,7 @@ function UnitFramesPlus_PartyOfflineDetection()
             _G["UFP_PartyOfflineStatus"..id]:SetAlpha(0);
         end
         if pm:IsEventRegistered("PLAYER_ENTERING_WORLD") then
-            pm:UnregisterEvent("PLAYER_ENTERING_WORLD");
-            pm:UnregisterEvent("GROUP_ROSTER_UPDATE");
-            pm:UnregisterEvent("PARTY_LEADER_CHANGED");
-            pm:UnregisterEvent("UNIT_CONNECTION");
+            pm:UnregisterAllEvents();
             pm:SetScript("OnEvent", nil);
         end
     end
@@ -785,7 +728,7 @@ end
 
 --Buff filter
 local UnitFramesPlusBuffFilter = {
-    "",
+    nil,
     "CANCELABLE",
     "NOT_CANCELABLE",
     "RAID",
@@ -846,7 +789,7 @@ for id = 1, 4, 1 do
         buff:SetScript("OnEnter",function(self)
             if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["hidetip"] == 0 then
                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-                local filter = "";
+                local filter = nil;
                 if UnitFramesPlusDB["party"]["filter"] == 1 then
                     filter = UnitFramesPlusBuffFilter[UnitFramesPlusDB["party"]["filtertype"]];
                 end
@@ -915,64 +858,68 @@ for id = 1, 4, 1 do
             GameTooltip:Hide();
         end)
     end
-    for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
-        local petdebuff = CreateFrame("Button", "UFP_PartyPetMemberFrame"..id.."Debuff"..j, _G["PartyMemberFrame"..id.."PetFrame"]);
-        petdebuff:SetFrameLevel(7);
-        petdebuff:SetWidth(15);
-        petdebuff:SetHeight(15);
-        petdebuff:SetID(j);
-        petdebuff:ClearAllPoints();
-        if j == 1 then
-            petdebuff:SetPoint("LEFT", _G["PartyMemberFrame"..id.."PetFrame"], "RIGHT", -3, -1);
-        else
-            petdebuff:SetPoint("LEFT", _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j-1], "RIGHT", 2, 0);
-        end
-        petdebuff:SetAttribute("unit", "partypet"..id);
-        RegisterUnitWatch(petdebuff);
+    _G["PartyMemberFrame"..id.."PetFrameDebuff1"]:ClearAllPoints();
+    _G["PartyMemberFrame"..id.."PetFrameDebuff1"]:SetPoint("LEFT", _G["PartyMemberFrame"..id.."PetFrame"], "RIGHT", -3, -1);
+    -- for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
+    --     local petdebuff = CreateFrame("Button", "UFP_PartyPetMemberFrame"..id.."Debuff"..j, _G["PartyMemberFrame"..id.."PetFrame"]);
+    --     petdebuff:SetFrameLevel(7);
+    --     petdebuff:SetWidth(15);
+    --     petdebuff:SetHeight(15);
+    --     petdebuff:SetID(j);
+    --     petdebuff:ClearAllPoints();
+    --     if j == 1 then
+    --         petdebuff:SetPoint("LEFT", _G["PartyMemberFrame"..id.."PetFrame"], "RIGHT", -3, -1);
+    --     else
+    --         petdebuff:SetPoint("LEFT", _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j-1], "RIGHT", 2, 0);
+    --     end
+    --     petdebuff:SetAttribute("unit", "partypet"..id);
+    --     RegisterUnitWatch(petdebuff);
 
-        petdebuff.Icon = petdebuff:CreateTexture("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Icon", "ARTWORK");
-        petdebuff.Icon:ClearAllPoints();
-        petdebuff.Icon:SetAllPoints(petdebuff);
+    --     petdebuff.Icon = petdebuff:CreateTexture("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Icon", "ARTWORK");
+    --     petdebuff.Icon:SetWidth(14);
+    --     petdebuff.Icon:SetHeight(14);
+    --     petdebuff.Icon:ClearAllPoints();
+    --     petdebuff.Icon:SetAllPoints(petdebuff);
 
-        petdebuff.Cooldown = CreateFrame("Cooldown", "UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Cooldown", petdebuff, "CooldownFrameTemplate");
-        petdebuff.Cooldown:SetFrameLevel(8);
-        petdebuff.Cooldown:SetReverse(true);
-        petdebuff.Cooldown:ClearAllPoints();
-        petdebuff.Cooldown:SetAllPoints(petdebuff.Icon);
-        petdebuff.Cooldown:SetParent(petdebuff);
-        -- petdebuff.Cooldown:Hide();
+    --     petdebuff.Cooldown = CreateFrame("Cooldown", "UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Cooldown", petdebuff, "CooldownFrameTemplate");
+    --     petdebuff.Cooldown:SetFrameLevel(8);
+    --     petdebuff.Cooldown:SetReverse(true);
+    --     petdebuff.Cooldown:ClearAllPoints();
+    --     petdebuff.Cooldown:SetAllPoints(petdebuff.Icon);
+    --     petdebuff.Cooldown:SetParent(petdebuff);
+    --     -- petdebuff.Cooldown:Hide();
 
-        petdebuff.CooldownText = petdebuff.Cooldown:CreateFontString("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."CooldownText", "OVERLAY");
-        petdebuff.CooldownText:SetFont(GameFontNormal:GetFont(), 10, "OUTLINE");
-        petdebuff.CooldownText:SetTextColor(1, 1, 1);--(1, 0.75, 0);
-        petdebuff.CooldownText:ClearAllPoints();
-        petdebuff.CooldownText:SetPoint("CENTER", petdebuff.Icon, "CENTER", 0, 0);
-        -- petdebuff.CooldownText:SetPoint("TOPLEFT", petdebuff.Icon, "TOPLEFT", 0, 0);
+    --     petdebuff.CooldownText = petdebuff.Cooldown:CreateFontString("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."CooldownText", "OVERLAY");
+    --     petdebuff.CooldownText:SetFont(GameFontNormal:GetFont(), 10, "OUTLINE");
+    --     petdebuff.CooldownText:SetTextColor(1, 1, 1);--(1, 0.75, 0);
+    --     petdebuff.CooldownText:ClearAllPoints();
+    --     petdebuff.CooldownText:SetPoint("CENTER", petdebuff.Icon, "CENTER", 0, 0);
+    --     -- petdebuff.CooldownText:SetPoint("TOPLEFT", petdebuff.Icon, "TOPLEFT", 0, 0);
 
-        petdebuff.CountText = petdebuff.Cooldown:CreateFontString("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."CountText", "OVERLAY");
-        petdebuff.CountText:SetFont(GameFontNormal:GetFont(), 10, "OUTLINE");
-        petdebuff.CountText:SetTextColor(1, 1, 1);
-        petdebuff.CountText:ClearAllPoints();
-        -- petdebuff.CountText:SetPoint("CENTER", petdebuff.Icon, "BOTTOM", 0, 0);
-        petdebuff.CountText:SetPoint("BOTTOMRIGHT", petdebuff.Icon, "BOTTOMRIGHT", 0, 0);
+    --     petdebuff.CountText = petdebuff.Cooldown:CreateFontString("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."CountText", "OVERLAY");
+    --     petdebuff.CountText:SetFont(GameFontNormal:GetFont(), 10, "OUTLINE");
+    --     petdebuff.CountText:SetTextColor(1, 1, 1);
+    --     petdebuff.CountText:ClearAllPoints();
+    --     -- petdebuff.CountText:SetPoint("CENTER", petdebuff.Icon, "BOTTOM", 0, 0);
+    --     petdebuff.CountText:SetPoint("BOTTOMRIGHT", petdebuff.Icon, "BOTTOMRIGHT", 0, 0);
 
-        petdebuff.Border = petdebuff:CreateTexture("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Border", "OVERLAY");
-        petdebuff.Border:SetTexture("Interface\\Buttons\\UI-Dedebuff-Overlays");
-        petdebuff.Border:SetWidth(17);
-        petdebuff.Border:SetHeight(17);
-        petdebuff.Border:SetTexCoord(0.296875, 0.5703125, 0, 0.515625);
-        petdebuff.Border:ClearAllPoints();
-        petdebuff.Border:SetPoint("TOPLEFT", petdebuff, "TOPLEFT", -1, 1);
+    --     petdebuff.Border = petdebuff:CreateTexture("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Border", "OVERLAY");
+    --     petdebuff.Border:SetTexture("Interface\\Buttons\\UI-Dedebuff-Overlays");
+    --     petdebuff.Border:SetWidth(17);
+    --     petdebuff.Border:SetHeight(17);
+    --     petdebuff.Border:SetTexCoord(0.296875, 0.5703125, 0, 0.515625);
+    --     petdebuff.Border:ClearAllPoints();
+    --     petdebuff.Border:SetPoint("TOPLEFT", petdebuff, "TOPLEFT", -1, 1);
 
-        petdebuff:EnableMouse(true);
-        petdebuff:SetScript("OnEnter",function(self)
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-            GameTooltip:SetUnitDebuff("partypet"..id, j);
-        end)
-        petdebuff:SetScript("OnLeave",function()
-            GameTooltip:Hide();
-        end)
-    end
+    --     petdebuff:EnableMouse(true);
+    --     petdebuff:SetScript("OnEnter",function(self)
+    --         GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+    --         GameTooltip:SetUnitDebuff("partypet"..id, j);
+    --     end)
+    --     petdebuff:SetScript("OnLeave",function()
+    --         GameTooltip:Hide();
+    --     end)
+    -- end
 end
 
 --队友buff/debuff直接显示时隐藏buff鼠标提示
@@ -1001,16 +948,16 @@ function UnitFramesPlus_PartyBuff()
             for j = 1, UFP_MAX_PARTY_DEBUFFS, 1 do
                 _G["UFP_PartyMemberFrame"..id.."Debuff"..j]:SetAlpha(0);
             end
-            for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
-                _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j]:SetAlpha(0);
-            end
+            -- for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
+            --     _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j]:SetAlpha(0);
+            -- end
         end
         pb:SetScript("OnUpdate", nil);
     end
 end
 
 function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
-    local filter = "";
+    local filter = nil;
     if UnitFramesPlusDB["party"]["filter"] == 1 then
         filter = UnitFramesPlusBuffFilter[UnitFramesPlusDB["party"]["filtertype"]];
     end
@@ -1072,6 +1019,7 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                 end
             end
 
+            local filter = nil;
             for j = 1, UFP_MAX_PARTY_DEBUFFS, 1 do
                 local alpha = 0;
                 local cdalpha = 0;
@@ -1079,7 +1027,7 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                 -- local textalpha = 0.7;
                 -- local r, g, b = 0, 1, 0;
 
-                local _, icon, count, _, duration, expirationTime, caster, _, _, spellId = UnitDebuff("party"..id, j);
+                local _, icon, count, _, duration, expirationTime, caster, _, _, spellId = UnitDebuff("party"..id, j, filter);
                 if icon then
                     _G["UFP_PartyMemberFrame"..id.."Debuff"..j].Icon:SetTexture(icon);
                     alpha = 1;
@@ -1132,66 +1080,66 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                 _G["UFP_PartyMemberFrame"..id.."Debuff"..j].CountText:SetText(counttext);
             end
 
+            -- for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
+            --     local alpha = 0;
+            --     local cdalpha = 0;
+            --     local timetext = "";
+            --     -- local textalpha = 0.7;
+            --     -- local r, g, b = 0, 1, 0;
 
-            for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
-                local alpha = 0;
-                local cdalpha = 0;
-                local timetext = "";
-                -- local textalpha = 0.7;
-                -- local r, g, b = 0, 1, 0;
+            --     local _, icon, count, _, duration, expirationTime, caster, _, _, spellId = UnitDebuff("partypet"..id, j);
+            --     if icon then
+            --         -- print(icon)
+            --         _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Icon:SetTexture(icon);
+            --         alpha = 1;
+            --         if count > 1 then
+            --             counttext = count;
+            --         end
 
-                local _, icon, count, _, duration, expirationTime, caster, _, _, spellId = UnitDebuff("partypet"..id, j);
-                if icon then
-                    _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Icon:SetTexture(icon);
-                    alpha = 1;
-                    if count > 1 then
-                        counttext = count;
-                    end
+            --         if UnitFramesPlusDB["party"]["cooldown"] == 1 then
+            --             cdalpha = 1;
 
-                    if UnitFramesPlusDB["party"]["cooldown"] == 1 then
-                        cdalpha = 1;
+            --             if UnitFramesPlusDB["global"]["builtincd"] == 1 and UFPClassicDurations then
+            --                 local durationNew, expirationTimeNew = UFPClassicDurations:GetAuraDurationByUnit("party"..id, spellId, caster)
+            --                 if duration == 0 and durationNew then
+            --                     duration = durationNew
+            --                     expirationTime = expirationTimeNew
+            --                 end
 
-                        if UnitFramesPlusDB["global"]["builtincd"] == 1 and UFPClassicDurations then
-                            local durationNew, expirationTimeNew = UFPClassicDurations:GetAuraDurationByUnit("party"..id, spellId, caster)
-                            if duration == 0 and durationNew then
-                                duration = durationNew
-                                expirationTime = expirationTimeNew
-                            end
+            --                 if UnitFramesPlusDB["global"]["cdtext"] == 1 and expirationTime and expirationTime ~= 0 and duration > 0 then
+            --                     local timeleft = expirationTime - GetTime();
+            --                     if timeleft >= 0 then
+            --                         if timeleft < 60 then
+            --                             timetext = math.floor(timeleft+1);
+            --                             -- textalpha = 1 - timeleft/200;
+            --                             -- r, g, b = UnitFramesPlus_GetRGB(timeleft, 60);
+            --                         elseif timeleft <= 1800 then
+            --                             timetext = math.floor(timeleft/60+1).."m";
+            --                         else
+            --                             timetext = math.floor(timeleft/3600+1).."h";
+            --                         end
+            --                     end
+            --                 end
 
-                            if UnitFramesPlusDB["global"]["cdtext"] == 1 and expirationTime and expirationTime ~= 0 and duration > 0 then
-                                local timeleft = expirationTime - GetTime();
-                                if timeleft >= 0 then
-                                    if timeleft < 60 then
-                                        timetext = math.floor(timeleft+1);
-                                        -- textalpha = 1 - timeleft/200;
-                                        -- r, g, b = UnitFramesPlus_GetRGB(timeleft, 60);
-                                    elseif timeleft <= 1800 then
-                                        timetext = math.floor(timeleft/60+1).."m";
-                                    else
-                                        timetext = math.floor(timeleft/3600+1).."h";
-                                    end
-                                end
-                            end
-
-                            CooldownFrame_Set(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown, expirationTime - duration, duration, true);
-                        else
-                            CooldownFrame_Clear(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown);
-                        end
-                    else
-                        CooldownFrame_Clear(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown);
-                    end
-                end
-                _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j]:SetAlpha(alpha);
-                _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown:SetAlpha(cdalpha);
-                -- _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetTextColor(r, g, b);
-                -- _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetAlpha(textalpha);
-                if (not IsAddOnLoaded("OmniCC")) then
-                    _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetText(timetext);
-                else
-                    _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetText("");
-                end
-                _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CountText:SetText(counttext);
-            end
+            --                 CooldownFrame_Set(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown, expirationTime - duration, duration, true);
+            --             else
+            --                 CooldownFrame_Clear(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown);
+            --             end
+            --         else
+            --             CooldownFrame_Clear(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown);
+            --         end
+            --     end
+            --     _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j]:SetAlpha(alpha);
+            --     _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown:SetAlpha(cdalpha);
+            --     -- _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetTextColor(r, g, b);
+            --     -- _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetAlpha(textalpha);
+            --     if (not IsAddOnLoaded("OmniCC")) then
+            --         _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetText(timetext);
+            --     else
+            --         _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetText("");
+            --     end
+            --     _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CountText:SetText(counttext);
+            -- end
         end
     end
 end
@@ -1338,32 +1286,76 @@ function UnitFramesPlus_PartyBarTextMouseShow()
     end
 end
 
-local sf;
+-- local sf;
+-- StaticPopupDialogs["UFP_HIDERAIDFRAME"] = {
+--     text = UFPLocal_HideRaid,
+--     button1 = RELOADUI,
+--     OnAccept = function()
+--         sf("Blizzard_CompactRaidFrames");
+--         sf("Blizzard_CUFProfiles");
+--         ReloadUI();
+--     end,
+--     whileDead = 1, hideOnEscape = 1, showAlert = 1
+-- }
+-- function UnitFramesPlus_HideRaidFrameSet()
+--     local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
+--     if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["hideraid"] == 1 then
+--         sf = DisableAddOn;
+--         if state == true then
+--             StaticPopup_Show("UFP_HIDERAIDFRAME");
+--         end
+--     else
+--         sf = EnableAddOn;
+--         if state == false then
+--             StaticPopup_Show("UFP_HIDERAIDFRAME");
+--         end
+--     end
+-- end
 
-StaticPopupDialogs["UFP_HIDERAIDFRAME"] = {
-    text = UFPLocal_HideRaid,
-    button1 = RELOADUI,
-    OnAccept = function()
-        sf("Blizzard_CompactRaidFrames");
-        sf("Blizzard_CUFProfiles");
-        ReloadUI();
-    end,
-    whileDead = 1, hideOnEscape = 1, showAlert = 1
-}
-
-function UnitFramesPlus_HideRaidFrameSet()
-    local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
-    if UnitFramesPlusDB["party"]["hideraid"] == 1 then
-        sf = DisableAddOn;
-        if state == true then
-            StaticPopup_Show("UFP_HIDERAIDFRAME");
-        end
+local _GetDisplayedAllyFrames = GetDisplayedAllyFrames;
+function GetDisplayedAllyFrames()
+    local useCompact = GetCVarBool("useCompactPartyFrames")
+    if ( IsInGroup() and (IsInRaid() or useCompact) and (UnitFramesPlusDB["party"]["origin"] ~= 1 or UnitFramesPlusDB["party"]["hideraid"] ~= 1) ) then
+        return "raid";
+    elseif ( IsInGroup() ) then
+        return "party";
     else
-        sf = EnableAddOn;
-        if state == false then
-            StaticPopup_Show("UFP_HIDERAIDFRAME");
+        return nil;
+    end
+end
+
+function UnitFramesPlus_PartyMemberFrame_UpdateMember()
+    for id = 1, 4, 1 do
+        if UnitExists("party"..id) then
+            PartyMemberFrame_UpdateMember(_G["PartyMemberFrame"..id])
         end
     end
+end
+
+local CompactRaidFrameManager_Show;
+function UnitFramesPlus_CompactRaidFrameManager_DisplayUpdate()
+    if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["hideraid"] == 1 then
+        local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
+        if state == true then
+            CompactRaidFrameManager.Show = function() end
+            CompactRaidFrameManager:Hide();
+        end
+    else
+        if GetDisplayedAllyFrames() == "raid" then
+            local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
+            if state == true then
+                CompactRaidFrameManager.Show = CompactRaidFrameManager_Show;
+                CompactRaidFrameManager_UpdateShown(CompactRaidFrameManager);
+                CompactRaidFrameManager_UpdateDisplayCounts(CompactRaidFrameManager);
+                CompactRaidFrameManager_UpdateRaidIcons();
+            end
+        end
+    end
+end
+
+function UnitFramesPlus_HideRaidFrameSet()
+    UnitFramesPlus_CompactRaidFrameManager_DisplayUpdate();
+    UnitFramesPlus_PartyMemberFrame_UpdateMember();
 end
 
 function UnitFramesPlus_HideRaidFrame()
@@ -1379,6 +1371,133 @@ function UnitFramesPlus_HideRaidFrame()
     end
 end
 
+function UnitFramesPlus_PartyPetSet()
+    if UnitFramesPlusDB["party"]["pet"] == 0 then
+        if GetCVar("showPartypets") == "1" then
+            SetCVar("showPartypets", "0");
+        end
+    else
+        if GetCVar("showPartypets") ~= "1" then
+            SetCVar("showPartypets", "1");
+        end
+    end
+    for id = 1, 4, 1 do
+        if UnitExists("party"..id) then
+            if ( UnitIsConnected("party"..id) and UnitExists("partypet"..id) and SHOW_PARTY_PETS == "1" and UnitFramesPlusDB["party"]["pet"] == 1) then
+                _G["PartyMemberFrame"..id.."PetFrame"]:Show();
+                _G["PartyMemberFrame"..id.."PetFrame"]:ClearAllPoints();
+                _G["PartyMemberFrame"..id.."PetFrame"]:SetPoint("TOPLEFT", _G["PartyMemberFrame"..id], "TOPLEFT", 23, -43);
+            else
+                _G["PartyMemberFrame"..id.."PetFrame"]:Hide();
+                _G["PartyMemberFrame"..id.."PetFrame"]:ClearAllPoints();
+                _G["PartyMemberFrame"..id.."PetFrame"]:SetPoint("TOPLEFT", _G["PartyMemberFrame"..id], "TOPLEFT", 23, -27);
+            end
+        end
+    end
+end
+
+function UnitFramesPlus_PartyPet()
+    if not InCombatLockdown() then
+        UnitFramesPlus_PartyPetSet();
+    else
+        local func = {};
+        func.name = "UnitFramesPlus_PartyPetSet";
+        func.callback = function()
+            UnitFramesPlus_PartyPetSet();
+        end;
+        UnitFramesPlus_WaitforCall(func);
+    end
+end
+
+local UFP_Party_UpdateQueued = false
+local UnitFramesPlus_PartyMemberFrame_UpdateMember = PartyMemberFrame_UpdateMember;
+function PartyMemberFrame_UpdateMember(self)
+    if ( GetDisplayedAllyFrames() ~= "party" ) then
+        self:Hide();
+        UpdatePartyMemberBackground();
+        return;
+    end
+    local id = self:GetID();
+    local unit = "party"..id;
+    if ( UnitExists(unit) ) then
+        if InCombatLockdown() then
+            UFP_Party_UpdateQueued = true
+        else
+            self:Show();
+        end
+
+        if VoiceActivityManager then
+            local guid = UnitGUID(unit);
+            VoiceActivityManager:RegisterFrameForVoiceActivityNotifications(self, guid, nil, "VoiceActivityNotificationPartyTemplate", "Button", PartyMemberFrame_VoiceActivityNotificationCreatedCallback);
+        end
+
+        UnitFrame_Update(self, true);
+    else
+        if VoiceActivityManager then
+            VoiceActivityManager:UnregisterFrameForVoiceActivityNotifications(self);
+            self.voiceNotification = nil;
+        end
+        if InCombatLockdown() then
+            UFP_Party_UpdateQueued = true
+        else
+            self:Hide();
+        end
+    end
+    PartyMemberFrame_UpdatePet(self);
+    PartyMemberFrame_UpdatePvPStatus(self);
+    RefreshDebuffs(self, "party"..id, nil, nil, true);
+    PartyMemberFrame_UpdateVoiceStatus(self);
+    PartyMemberFrame_UpdateReadyCheck(self);
+    PartyMemberFrame_UpdateOnlineStatus(self);
+    PartyMemberFrame_UpdateNotPresentIcon(self);
+    UpdatePartyMemberBackground();
+end
+
+local UFP_PartyPet_UpdateQueued = false
+local UnitFramesPlus_PartyMemberFrame_UpdatePet = PartyMemberFrame_UpdatePet;
+function PartyMemberFrame_UpdatePet(self, id)
+    if ( not id ) then
+        id = self:GetID();
+    end
+
+    local frameName = "PartyMemberFrame"..id;
+    local petFrame = _G["PartyMemberFrame"..id.."PetFrame"];
+
+    if InCombatLockdown() then
+        UFP_PartyPet_UpdateQueued = true
+    else
+        if ( UnitIsConnected("party"..id) and UnitExists("partypet"..id) and SHOW_PARTY_PETS == "1" ) then
+            petFrame:Show();
+            petFrame:SetPoint("TOPLEFT", frameName, "TOPLEFT", 23, -43);
+        else
+            petFrame:Hide();
+            petFrame:SetPoint("TOPLEFT", frameName, "TOPLEFT", 23, -27);
+        end
+    end
+
+    PartyMemberFrame_RefreshPetDebuffs(self, id);
+    UpdatePartyMemberBackground();
+end
+
+local ft = CreateFrame("Frame");
+ft:RegisterEvent("PLAYER_REGEN_ENABLED");
+ft:SetScript("OnEvent", function(self, event, ...)
+    if (event == "PLAYER_REGEN_ENABLED") then
+        if UFP_Party_UpdateQueued then
+            for id=1, MAX_PARTY_MEMBERS do
+                PartyMemberFrame_UpdateMember(_G["PartyMemberFrame"..id], id);
+            end
+            UFP_Party_UpdateQueued = false;
+        end
+        if UFP_PartyPet_UpdateQueued then
+            for id=1, MAX_PARTY_MEMBERS do
+                PartyMemberFrame_UpdatePet(_G["PartyMemberFrame"..id], id);
+            end
+            UFP_PartyPet_UpdateQueued = false;
+        end
+    end
+end)
+
 function UnitFramesPlus_PartyExtraTextFontSize()
     for id = 1, 4, 1 do
         _G["PartyMemberFrame"..id.."HealthBarText"]:SetFont(GameFontNormal:GetFont(), UnitFramesPlusDB["party"]["fontsize"], "OUTLINE");
@@ -1390,6 +1509,7 @@ function UnitFramesPlus_PartyExtraTextFontSize()
         _G["PartyMemberFrame"..id.."Name"]:SetFont(GameFontNormalSmall:GetFont(), UnitFramesPlusDB["party"]["fontsize"]+2);
     end
 end
+
 --模块初始化
 function UnitFramesPlus_PartyInit()
     UnitFramesPlus_PartyShiftDrag();
@@ -1404,6 +1524,10 @@ function UnitFramesPlus_PartyInit()
     UnitFramesPlus_PartyHealthPct();
     UnitFramesPlus_PartyBarTextMouseShow();
     UnitFramesPlus_PartyExtraTextFontSize();
+    local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
+    if state == true then
+        CompactRaidFrameManager_Show = CompactRaidFrameManager.Show;
+    end
     UnitFramesPlus_HideRaidFrame();
 end
 

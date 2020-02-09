@@ -5,6 +5,7 @@ if not cfilters then
         white = true,
         black = true,
         trade = true,
+        battle = false,
         d10 = false,
         d20 = false,
         d30 = false,
@@ -18,11 +19,12 @@ if not cfilterlist then cfilterlist = {} end
 if not cfilterlist["white"] then cfilterlist["white"] = {} end
 if not cfilterlist["black"] then cfilterlist["black"] = {"位面", "老板", "代做", "手工", "荣誉", "PVP"} end
 if not cfilterlist["trade"] then cfilterlist["trade"] = {"无限收", "长期", "一组", "每组", "组收", "邮寄", "U寄", "付费", "大量", "带价", "代价", "欢乐豆", "大米", "小米", "收米", "出米", "支付", "微信", "VX", "ZFB", "拉人", "飞机", "航班", "航线", "航空", "附魔", "FM"} end
+if not cfilterlist["battle"] then cfilterlist["battle"] = {"战场", "国家", "奥山", "战歌", "阿拉希"} end
 if not cfilterlist["d10"] then cfilterlist["d10"] = {"怒焰", "NY", "矿井", "死矿", "SK", "哀嚎", "AH"} end
 if not cfilterlist["d20"] then cfilterlist["d20"] = {"影牙", "YY", "黑暗深渊", "监狱", "JY", "诺莫瑞根", "NMRG", "矮子本", "矮人本", "矮人副本", "矮子副本", "沼泽", "ZZ"} end
 if not cfilterlist["d30"] then cfilterlist["d30"] = {"血色", "XS", "图书馆", "军械库", "武器库", "教堂", "墓地", "高地", "GD", "奥达曼", "ADM"} end
 if not cfilterlist["d40"] then cfilterlist["d40"] = {"玛拉顿", "MLD", "祖尔法拉克", "ZUL", "神庙", "黑石深渊"} end
-if not cfilterlist["d50"] then cfilterlist["d50"] = {"斯坦", "十字", "DK", "STSM", "通灵", "TL", "黑石塔", "黑上", "黑下", "厄运"} end
+if not cfilterlist["d50"] then cfilterlist["d50"] = {"斯坦", "十字", "DK", "STSM", "通灵", "TL", "黑石塔", "黑上", "黑下", "厄运", "牵马"} end
 if not cfilterlist["d60"] then cfilterlist["d60"] = {"祖尔格拉布", "祖格", "ZUG", "ZG", "安其拉", "AQL", "神殿", "TAQ", "废墟", "FX", "熔火之心", "MC", "黑龙", "黑翼", "纳克", "NAXX"} end
 if not cfilterlist["diy"] then cfilterlist["diy"] = {"代刷", "带刷", "G一次", "经验", "自由拾取", "深渊", "祖尔"} end
 
@@ -106,7 +108,7 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChannelFilters);
 
 --settings
 local cf = CreateFrame("Frame", "ChannelFiltersFrame", UIParent);
-cf:SetSize(390, 425);
+cf:SetSize(390, 455);
 cf:ClearAllPoints();
 cf:SetPoint("CENTER");
 cf:SetClampedToScreen(true);
@@ -302,10 +304,54 @@ cf.blacklisttradeeditbox:SetScript("OnLeave", function()
     GameTooltip:Hide();
 end)
 
+--blacklist battle
+cf.blacklistbattle = CreateFrame("CheckButton", nil, cf, "InterfaceOptionsCheckButtonTemplate");
+cf.blacklistbattle:ClearAllPoints();
+cf.blacklistbattle:SetPoint("TOPLEFT", cf.blacklisttrade, "TOPLEFT", 0, -30);
+cf.blacklistbattle:SetHitRectInsets(0, -40, 0, 0);
+cf.blacklistbattle.Text:SetText("战场");
+cf.blacklistbattle.Text:SetTextColor(1, 0.82, 0);
+cf.blacklistbattle:SetScript("OnShow", function(self)
+    self:SetChecked(cfilters["battle"]);
+end)
+cf.blacklistbattle:SetScript("OnClick", function(self)
+    cfilters["battle"] = not cfilters["battle"];
+    self:SetChecked(cfilters["battle"]);
+end)
+--blacklist battle editbox
+cf.blacklistbattleeditbox = CreateFrame("EditBox", nil, cf, "InputBoxTemplate");
+cf.blacklistbattleeditbox:ClearAllPoints();
+cf.blacklistbattleeditbox:SetPoint("LEFT", cf.blacklistbattle, "RIGHT", 44, 1);
+cf.blacklistbattleeditbox:SetWidth(285);
+cf.blacklistbattleeditbox:SetHeight(25);
+cf.blacklistbattleeditbox:SetAutoFocus(false);
+cf.blacklistbattleeditbox:ClearFocus();
+cf.blacklistbattleeditbox:SetScript("OnEnterPressed", function(self)
+    savelist(self, "battle");
+end)
+cf.blacklistbattleeditbox:SetScript("OnEscapePressed", function(self)
+    savelist(self, "battle");
+end)
+cf.blacklistbattleeditbox:SetScript("OnEditFocusLost", function(self)
+    savelist(self, "battle");
+    self:SetText(listtostring("battle"));
+end)
+cf.blacklistbattleeditbox:SetScript("OnShow", function(self)
+    self:SetText(listtostring("battle"));
+end)
+cf.blacklistbattleeditbox:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_TOP");
+    GameTooltip:AddLine(listtostring("battle"));
+    GameTooltip:Show();
+end)
+cf.blacklistbattleeditbox:SetScript("OnLeave", function()
+    GameTooltip:Hide();
+end)
+
 --blacklist 10
 cf.blacklist10 = CreateFrame("CheckButton", nil, cf, "InterfaceOptionsCheckButtonTemplate");
 cf.blacklist10:ClearAllPoints();
-cf.blacklist10:SetPoint("TOPLEFT", cf.blacklisttrade, "TOPLEFT", 0, -30);
+cf.blacklist10:SetPoint("TOPLEFT", cf.blacklistbattle, "TOPLEFT", 0, -30);
 cf.blacklist10:SetHitRectInsets(0, -40, 0, 0);
 cf.blacklist10.Text:SetText("10+");
 cf.blacklist10.Text:SetTextColor(1, 0.82, 0);

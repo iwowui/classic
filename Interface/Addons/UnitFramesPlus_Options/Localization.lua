@@ -69,6 +69,7 @@
     UFP_OP_ShortName = "隐藏服务器名";
     UFP_OP_Party_Options = "队伍设定";
     UFP_OP_Party_Origin = "关闭团队风格小队界面";
+    UFP_OP_Party_Pet = "显示队友宠物";
     UFP_OP_Party_Level = "显示等级";
     UFP_OP_Party_HP = "显示生命值";
     UFP_OP_Party_HPPct = "显示为百分比";
@@ -76,7 +77,9 @@
     UFP_OP_Party_Target = "显示队友目标";
     UFP_OP_Party_TargetLite = "简易模式";
     UFP_OP_Party_OnOff = "离线监测";
-    UFP_OP_Party_HideRaid = "隐藏系统团队框架";
+    UFP_OP_Party_HideRaid = "隐藏系统团队框架并显示小队框架";
+    UFP_OP_Party_EnableRaid  = "重载界面以启用系统团队插件\n（请勿使用Grid2等插件再次禁用！）";
+    -- UFP_OP_Party_Always = "团队中显示小队";
     UFP_OP_Buff = "显示Buff";
     UFP_OP_Filter = "Buff过滤";
     UFP_OP_FilterAll = "所有";
@@ -175,6 +178,7 @@ elseif GetLocale() == "zhTW" then
     UFP_OP_ShortName = "隱藏伺服器名";
     UFP_OP_Party_Options = "隊伍設定";
     UFP_OP_Party_Origin = "關閉團隊風格小隊介面";
+    UFP_OP_Party_Pet = "顯示隊友寵物";
     UFP_OP_Party_Level = "顯示等級";
     UFP_OP_Party_HP = "顯示生命值";
     UFP_OP_Party_HPPct = "顯示為百分比";
@@ -182,7 +186,9 @@ elseif GetLocale() == "zhTW" then
     UFP_OP_Party_Target = "顯示隊友目標";
     UFP_OP_Party_TargetLite = "簡易模式";
     UFP_OP_Party_OnOff = "離線監測";
-    UFP_OP_Party_HideRaid = "隱藏系统團隊框架";
+    UFP_OP_Party_HideRaid = "隱藏系统團隊框架并顯示小隊框架";
+    UFP_OP_Party_EnableRaid  = "重載介面以啟用系統團隊插件\n（請勿使用Grid2等插件再次禁用！）";
+    -- UFP_OP_Party_Always = "團隊中顯示小隊";
     UFP_OP_Buff = "顯示Buff";
     UFP_OP_Filter = "Buff過濾";
     UFP_OP_FilterAll = "所有";
@@ -281,6 +287,7 @@ else
     UFP_OP_ShortName = "Hide realm name";
     UFP_OP_Party_Options = "Party Options";
     UFP_OP_Party_Origin = "Disable raid-style party frames";
+    UFP_OP_Party_Pet = "Show party pet";
     UFP_OP_Party_Level = "Party member level";
     UFP_OP_Party_HP = "Party member HP";
     UFP_OP_Party_HPPct = "Show as percent";
@@ -288,7 +295,9 @@ else
     UFP_OP_Party_Target = "Enable party target";
     UFP_OP_Party_TargetLite = "Lite mode";
     UFP_OP_Party_OnOff = "Offline detection";
-    UFP_OP_Party_HideRaid = "Hide blizzard raid frame";
+    UFP_OP_Party_HideRaid = "Hide blizzard raid frame and show party frame";
+    UFP_OP_Party_EnableRaid  = "Reload to enbale blizzard raid addons\n(DONOT disbale again with Grid2, etc.)";
+    -- UFP_OP_Party_Always = "Show party in raid";
     UFP_OP_Buff = "Party member buff";
     UFP_OP_Filter = "Buff filter";
     UFP_OP_FilterAll = "All";

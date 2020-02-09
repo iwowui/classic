@@ -7,9 +7,10 @@
 ## Notes-zhTW: 能量和法力恢復提示
 ## X-Repple: 职业
 ## LoadOnDemand: 0
-## Version: 1.2.7
+## Version: 1.2.9
 ## Author: 星沉海底
 ## X-Website: https://github.com/starpt
 ## X-eMail: starpt@gmail.com
+## SavedVariablesPerCharacter: PowerSparkDB
 
 PowerSpark.lua
