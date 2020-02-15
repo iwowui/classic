@@ -32,6 +32,18 @@ function UnitFramesPlus_CombatCheck()
     return false;
 end
 
+local UnitFramesPlus_CompactRaidFrameManager_UpdateContainerLockVisibility = CompactRaidFrameManager_UpdateContainerLockVisibility
+function CompactRaidFrameManager_UpdateContainerLockVisibility(self)
+    local combat = UnitFramesPlus_CombatCheck();
+    if combat == false then
+        if ( GetDisplayedAllyFrames() ~= "raid" or not CompactRaidFrameManagerDisplayFrameLockedModeToggle.lockMode ) then
+            CompactRaidFrameManager_LockContainer(self);
+        else
+            CompactRaidFrameManager_UnlockContainer(self);
+        end
+    end
+end
+
 local UnitFramesPlus_CompactRaidFrameManager_UpdateShown = CompactRaidFrameManager_UpdateShown
 function CompactRaidFrameManager_UpdateShown(self)
     local combat = UnitFramesPlus_CombatCheck();
@@ -935,6 +947,7 @@ function UnitFramesPlus_PartyFrame_OnEvent(self, event, ...)
         UnitFramesPlus_PartyHealthPctDisplayUpdate(self);
         UnitFramesPlus_PartyPowerDisplayUpdate(self);
         UnitFramesPlus_PartyPowerTypeDisplayUpdate(self);
+        UnitFramesPlus_PartyColorHPBarDisplayUpdate(self);
         if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["indicator"] == 1 then
             _G["UFP_PartyFrame"..self:GetID().."PortraitIndicatorText"]:Hide();
         end
@@ -949,6 +962,7 @@ function UnitFramesPlus_PartyFrame_OnEvent(self, event, ...)
         UnitFramesPlus_PartyHealthPctDisplayUpdate(self);
         UnitFramesPlus_PartyPowerDisplayUpdate(self);
         UnitFramesPlus_PartyPowerTypeDisplayUpdate(self);
+        UnitFramesPlus_PartyColorHPBarDisplayUpdate(self);
         if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["indicator"] == 1 then
             _G["UFP_PartyFrame"..self:GetID().."PortraitIndicatorText"]:Hide();
         end
@@ -959,6 +973,7 @@ function UnitFramesPlus_PartyFrame_OnEvent(self, event, ...)
         UnitFramesPlus_PartyHealthPctDisplayUpdate(self);
         UnitFramesPlus_PartyPowerDisplayUpdate(self);
         UnitFramesPlus_PartyPowerTypeDisplayUpdate(self);
+        UnitFramesPlus_PartyColorHPBarDisplayUpdate(self);
         if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["indicator"] == 1 then
             _G["UFP_PartyFrame"..self:GetID().."PortraitIndicatorText"]:Hide();
         end
@@ -1013,6 +1028,7 @@ function UnitFramesPlus_PartyFrame_OnEvent(self, event, ...)
         UnitFramesPlus_PartyHealthPctDisplayUpdate(self);
         UnitFramesPlus_PartyPowerDisplayUpdate(self);
         UnitFramesPlus_PartyPowerTypeDisplayUpdate(self);
+        UnitFramesPlus_PartyColorHPBarDisplayUpdate(self);
         if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["indicator"] == 1 then
             _G["UFP_PartyFrame"..self:GetID().."PortraitIndicatorText"]:Hide();
         end
@@ -1023,6 +1039,7 @@ function UnitFramesPlus_PartyFrame_OnEvent(self, event, ...)
         UnitFramesPlus_PartyHealthPctDisplayUpdate(self);
         UnitFramesPlus_PartyPowerDisplayUpdate(self);
         UnitFramesPlus_PartyPowerTypeDisplayUpdate(self);
+        UnitFramesPlus_PartyColorHPBarDisplayUpdate(self);
     elseif ( event == "UNIT_OTHER_PARTY_CHANGED" ) then
         UnitFramesPlus_PartyFrame_UpdateNotPresentIcon(self);
     elseif ( event == "UNIT_NAME_UPDATE" ) then
