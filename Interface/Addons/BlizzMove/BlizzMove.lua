@@ -5,7 +5,7 @@
 --/run f = GetMouseFocus(); while f do DEFAULT_CHAT_FRAME:AddMessage(f:GetName()); f = f:GetParent() end
 _G.BlizzMove = _G.BlizzMove or {}
 
-movableFrames = {
+local movableFrames = {
 	AddonList,
 	AudioOptionsFrame,
 	BankFrame,
@@ -52,17 +52,18 @@ else
 	table.insert(movableFrames, WorldStateScoreFrame)
 end
 
-movableFramesWithHandle = {
+local movableFramesWithHandle = {
 	["CharacterFrame"] =  { PaperDollFrame, PetPaperDollFrame, CompanionFrame, ReputationFrame, SkillFrame, HonorFrame, TokenFrame },
 	["ColorPickerFrame"] = { BlizzMove:CreateMoveHandleAtPoint(ColorPickerFrame, "CENTER", "TOPRIGHT", -8, -8) },
 	["MailFrame"] = { SendMailFrame },
-	["ObjectiveTrackerFrame"] = { BlizzMove:CreateMoveHandleAtPoint(ObjectiveTrackerFrame, "CENTER", "TOPRIGHT", 8, -12) },
-	["QuestWatchFrame"] = { BlizzMove:CreateMoveHandleAtPoint(QuestWatchFrame, "CENTER", "TOPRIGHT", -12, -20) },
+
+	-- These frames work, but its better to use something like MoveAnything. Since this way causes wierd unwanted behavior.
+--	["ObjectiveTrackerFrame"] = { BlizzMove:CreateMoveHandleAtPoint(ObjectiveTrackerFrame, "CENTER", "TOPRIGHT", 8, -12) },
+--	["QuestWatchFrame"] = { BlizzMove:CreateMoveHandleAtPoint(QuestWatchFrame, "CENTER", "TOPRIGHT", -12, -20) },
 }
 
-movableFramesLoadOnDemand = {
+local movableFramesLoadOnDemand = {
 	["Blizzard_AchievementUI"] = function() BlizzMove:SetMoveHandle(AchievementFrame, AchievementFrameHeader) end,
-	["Blizzard_AdventureMap"] = function() BlizzMove:SetMoveHandle(AdventureMapFrame) end,
 	["Blizzard_AlliedRacesUI"] = function() BlizzMove:SetMoveHandle(AlliedRacesFrame) end,
 	["Blizzard_ArchaeologyUI"] = function() BlizzMove:SetMoveHandle(ArchaeologyFrame) end,
 	["Blizzard_ArtifactUI"] = function() BlizzMove:SetMoveHandle(ArtifactFrame); BlizzMove:SetMoveHandle(ArtifactRelicForgeFrame) end,
@@ -78,7 +79,7 @@ movableFramesLoadOnDemand = {
 	["Blizzard_ChallengesUI"] = function() BlizzMove:SetMoveHandle(ChallengesKeystoneFrame) end,
 	["Blizzard_Channels"] = function() BlizzMove:SetMoveHandle(ChannelFrame) end,
 	["Blizzard_Collections"] = function() BlizzMove:SetMoveHandle(CollectionsJournal); BlizzMove:SetMoveHandle(WardrobeFrame) end,
-	["Blizzard_Communities"] = function() BlizzMove:SetMoveHandle(ClubFinderGuildFinderFrame.RequestToJoinFrame); BlizzMove:SetMoveHandle(CommunitiesFrame); BlizzMove:SetMoveHandle(CommunitiesFrame.RecruitmentDialog); BlizzMove:SetMoveHandle(CommunitiesGuildLogFrame); BlizzMove:SetMoveHandle(CommunitiesGuildNewsFiltersFrame); BlizzMove:SetMoveHandle(CommunitiesGuildTextEditFrame) end,
+	["Blizzard_Communities"] = function() BlizzMove:SetMoveHandle(CommunitiesFrame); if tocversion >= 20000 then BlizzMove:SetMoveHandle(ClubFinderGuildFinderFrame.RequestToJoinFrame); BlizzMove:SetMoveHandle(CommunitiesFrame.RecruitmentDialog); BlizzMove:SetMoveHandle(CommunitiesGuildLogFrame); BlizzMove:SetMoveHandle(CommunitiesGuildNewsFiltersFrame); BlizzMove:SetMoveHandle(CommunitiesGuildTextEditFrame) end end,
 	["Blizzard_Contribution"] = function() BlizzMove:SetMoveHandle(ContributionCollectionFrame) end,
 	["Blizzard_DeathRecap"] = function() BlizzMove:SetMoveHandle(DeathRecapFrame) end,
 	["Blizzard_EncounterJournal"] = function() BlizzMove:SetMoveHandle(EncounterJournal) end,
@@ -90,6 +91,7 @@ movableFramesLoadOnDemand = {
 	["Blizzard_GuildControlUI"] = function() BlizzMove:SetMoveHandle(GuildControlUI) end,
 	["Blizzard_GuildUI"] = function() BlizzMove:SetMoveHandle(GuildFrame) end,
 	["Blizzard_InspectUI"] = function() BlizzMove:SetMoveHandle(InspectFrame) end,
+	["Blizzard_IslandsPartyPoseUI"] = function() BlizzMove:SetMoveHandle(IslandsPartyPoseFrame) end,
 	["Blizzard_IslandsQueueUI"] = function() BlizzMove:SetMoveHandle(IslandsQueueFrame) end,
 	["Blizzard_ItemAlterationUI"] = function() BlizzMove:SetMoveHandle(TransmogrifyFrame) end,
 	["Blizzard_ItemInteractionUI"] = function() BlizzMove:SetMoveHandle(ItemInteractionFrame) end,
@@ -99,7 +101,7 @@ movableFramesLoadOnDemand = {
 	["Blizzard_MacroUI"] = function() BlizzMove:SetMoveHandle(MacroFrame) end,
 	["Blizzard_ObliterumUI"] = function() BlizzMove:SetMoveHandle(ObliterumForgeFrame) end,
 	["Blizzard_OrderHallUI"] = function() BlizzMove:SetMoveHandle(OrderHallTalentFrame) end,
-	["Blizzard_PartyPoseUI"] = function() BlizzMove:SetMoveHandle(PartyPoseFrame) end,
+--	["Blizzard_PartyPoseUI"] = function() BlizzMove:SetMoveHandle(PartyPoseFrame) end, -- Template?
 	["Blizzard_PVPMatch"] = function() BlizzMove:SetMoveHandle(PVPMatchResults) end,
 	["Blizzard_PVPUI"] = function() BlizzMove:SetMoveHandle(PVPMatchScoreboard) end,
 	["Blizzard_ReforgingUI"] = function() BlizzMove:SetMoveHandle(ReforgingFrame) end,

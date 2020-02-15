@@ -6,7 +6,7 @@
 ## Notes-zhTW: 以整合方式顯示你身上和銀行的包裹,包含整理功能
 ## X-Repple: 界面
 ## Author: Dencer
-## Version: 1.5.0
+## Version: 1.6.1
 ## OptionalDeps: tdPack2
 ## SavedVariables: TDDB_BAG2
 

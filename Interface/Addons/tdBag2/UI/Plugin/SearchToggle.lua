@@ -52,8 +52,6 @@ function SearchToggle:OnEnter()
     GameTooltip:Show()
 end
 
-local separatorInfo
-
 function SearchToggle:CreateMenu()
     local result = {}
     local searches = self.meta.sets.searches
@@ -67,35 +65,7 @@ function SearchToggle:CreateMenu()
                 tinsert(searches, text)
             end,
         })
-        if not separatorInfo then
-            separatorInfo = {
-                text = '',
-                hasArrow = false,
-                dist = 0,
-                isTitle = true,
-                isUninteractable = true,
-                notCheckable = true,
-                iconOnly = true,
-                icon = [[Interface\Common\UI-TooltipDivider-Transparent]],
-                tCoordLeft = 0,
-                tCoordRight = 1,
-                tCoordTop = 0,
-                tCoordBottom = 1,
-                tSizeX = 0,
-                tSizeY = 8,
-                tFitDropDownSizeX = true,
-                iconInfo = {
-                    tCoordLeft = 0,
-                    tCoordRight = 1,
-                    tCoordTop = 0,
-                    tCoordBottom = 1,
-                    tSizeX = 0,
-                    tSizeY = 8,
-                    tFitDropDownSizeX = true,
-                },
-            }
-        end
-        tinsert(result, separatorInfo)
+        tinsert(result, self.SEPARATOR)
     end
 
     if #searches == 0 then
@@ -122,5 +92,15 @@ function SearchToggle:CreateMenu()
             })
         end
     end
+
+    tinsert(result, self.SEPARATOR)
+    tinsert(result, {
+        text = L['Global search'],
+        notCheckable = true,
+        func = function()
+            ns.Addon:ToggleFrame(ns.BAG_ID.SEARCH, true)
+        end,
+    })
+
     return result
 end

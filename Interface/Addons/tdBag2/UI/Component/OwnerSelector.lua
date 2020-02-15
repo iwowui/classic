@@ -11,9 +11,6 @@ local ipairs = ipairs
 
 ---- WOW
 local CreateFrame = CreateFrame
-local EasyMenu_Initialize = EasyMenu_Initialize
-local HideDropDownMenu = HideDropDownMenu
-local ToggleDropDownMenu = ToggleDropDownMenu
 local SetPortraitTexture = SetPortraitTexture
 
 ---- UI
@@ -84,7 +81,7 @@ end
 
 function OwnerSelector:UpdateIcon()
     if not self.meta.profile.iconCharacter then
-        self.portrait:SetTexture(ns.BAG_ICONS[self.meta.bagId])
+        self.portrait:SetTexture(self.meta.icon)
         self.portrait:SetTexCoord(0, 1, 0, 1)
     elseif self.meta:IsSelf() then
         SetPortraitTexture(self.portrait, 'player')
@@ -135,7 +132,7 @@ function OwnerSelector:CreateOwnerMenu(name)
                 text = DELETE,
                 func = function()
                     Cache:DeleteOwnerInfo(name)
-                    HideDropDownMenu(1)
+                    self:CloseMenu()
                 end,
             },
         },

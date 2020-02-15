@@ -95,7 +95,7 @@ end
 --Fires on MAP_EXPLORATION_UPDATED.
 function QuestieEventHandler:MAP_EXPLORATION_UPDATED()
     Questie:Debug(DEBUG_DEVELOP, "[EVENT] MAP_EXPLORATION_UPDATED");
-    if Questie.db.global.hideUnexploredMapIcons then
+    if Questie.db.char.hideUnexploredMapIcons then
         QuestieMap.utils:MapExplorationUpdate();
     end
 end
@@ -312,6 +312,7 @@ end
 local function _AllQuestWindowsClosed()
     if GossipFrame and (not GossipFrame:IsVisible())
         and GossipFrameGreetingPanel and (not GossipFrameGreetingPanel:IsVisible())
+        and QuestFrameGreetingPanel and (not QuestFrameGreetingPanel:IsVisible())
         and QuestFrameDetailPanel and (not QuestFrameDetailPanel:IsVisible())
         and QuestFrameProgressPanel and (not QuestFrameProgressPanel:IsVisible())
         and QuestFrameRewardPanel and (not QuestFrameRewardPanel:IsVisible()) then
@@ -323,10 +324,12 @@ end
 function QuestieEventHandler:QUEST_FINISHED()
     Questie:Debug(DEBUG_DEVELOP, "[EVENT] QUEST_FINISHED")
 
-    if _AllQuestWindowsClosed() then
-        Questie:Debug(DEBUG_DEVELOP, "All quest windows closed! Resetting shouldRunAuto")
-        QuestieAuto:ResetModifier()
-    end
+    C_Timer.After(0.5, function()
+        if _AllQuestWindowsClosed() then
+            Questie:Debug(DEBUG_DEVELOP, "All quest windows closed! Resetting shouldRunAuto")
+            QuestieAuto:ResetModifier()
+        end
+    end)
 
     local numEntries, numQuests = GetNumQuestLogEntries();
     if (NumberOfQuestInLog ~= numQuests) then

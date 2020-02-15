@@ -64,8 +64,10 @@ function QuestieMap:GetFramesForQuest(questId)
     local frames = {}
     --If no frames exists or if the quest does not exist we just return an empty list
     if (QuestieMap.questIdFrames[questId]) then
-        for i, name in ipairs(QuestieMap.questIdFrames[questId]) do
-            tinsert(frames, _G[name])
+        for i, name in pairs(QuestieMap.questIdFrames[questId]) do
+            if _G[name] then
+                frames[name] = _G[name]
+            end
         end
     end
     return frames
@@ -73,15 +75,17 @@ end
 
 function QuestieMap:UnloadQuestFrames(questId, iconType)
     if(QuestieMap.questIdFrames[questId]) then
-        if(iconType == nil) then
-            for _, frame in ipairs(QuestieMap:GetFramesForQuest(questId)) do
+        if iconType == nil then
+            for _, frame in pairs(QuestieMap:GetFramesForQuest(questId)) do
                 frame:Unload();
             end
             QuestieMap.questIdFrames[questId] = nil;
         else
-            for _, frame in ipairs(QuestieMap:GetFramesForQuest(questId)) do
-                if(frame and frame.data and frame.data.Icon == iconType) then
+            for name, frame in pairs(QuestieMap:GetFramesForQuest(questId)) do
+                if frame and frame.data and frame.data.Icon == iconType then
                     frame:Unload();
+                    QuestieMap.questIdFrames[questId][name] = nil
+                    _G[name] = nil
                 end
             end
         end
@@ -147,7 +151,7 @@ end
 -- Rescale all the icons
 function QuestieMap:RescaleIcons(modifier)
     for _, framelist in pairs(QuestieMap.questIdFrames) do
-        for _, frameName in ipairs(framelist) do
+        for _, frameName in pairs(framelist) do
             rescaleIcon(frameName, modifier)
         end
     end
@@ -449,8 +453,12 @@ function QuestieMap:DrawWorldIcon(data, areaID, x, y, showFlag)
         error("Questie".."Data.Id must be set to the quests ID!")
     end
     if ZoneDataAreaIDToUiMapID[areaID] == nil then
-        error("No UiMapID for ("..tostring(ZoneDataAreaIDToUiMapID[areaID])..") :".. areaID .. tostring(data.Name))
-        return nil, nil
+        if QuestieZoneToParentTable[areaID] == nil then
+            error("No UiMapID for ("..tostring(ZoneDataAreaIDToUiMapID[areaID])..") :".. areaID .. tostring(data.Name))
+            return nil, nil
+        else
+            areaID = QuestieZoneToParentTable[areaID]
+        end
     end
 
     if(showFlag == nil) then
@@ -562,12 +570,14 @@ function QuestieMap:DrawWorldIcon(data, areaID, x, y, showFlag)
         QuestieMap.questIdFrames[data.Id] = {}
     end
 
-    tinsert(QuestieMap.questIdFrames[data.Id], iconMap:GetName())
-    tinsert(QuestieMap.questIdFrames[data.Id], iconMinimap:GetName())
+    -- tinsert(QuestieMap.questIdFrames[data.Id], iconMap:GetName())
+    -- tinsert(QuestieMap.questIdFrames[data.Id], iconMinimap:GetName())
+    QuestieMap.questIdFrames[data.Id][iconMap:GetName()] = iconMap:GetName()
+    QuestieMap.questIdFrames[data.Id][iconMinimap:GetName()] = iconMinimap:GetName()
 
 
     --Hide unexplored logic
-    if(not QuestieMap.utils:IsExplored(iconMap.UiMapID, x, y) and questieGlobalDB.hideUnexploredMapIcons) then
+    if(not QuestieMap.utils:IsExplored(iconMap.UiMapID, x, y) and Questie.db.char.hideUnexploredMapIcons) then
         iconMap:FakeHide()
         iconMinimap:FakeHide()
     end

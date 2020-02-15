@@ -3,39 +3,31 @@
 -- @Link   : https://dengsir.github.io
 -- @Date   : 10/17/2019, 10:21:54 AM
 
+---- WOW
+local CreateFrame = CreateFrame
+
+---- UI
+local UIParent = UIParent
+
 ---@type ns
 local ns = select(2, ...)
 local Addon = ns.Addon
-local Frame = ns.UI.Frame
+local SimpleFrame = ns.UI.SimpleFrame
 
 local LibWindow = LibStub('LibWindow-1.1')
 
 ---@class tdBag2ContainerFrame: tdBag2Frame
----@field protected meta tdBag2FrameMeta
----@field protected portrait Texture
----@field protected Icon string
 ---@field protected Container tdBag2Container
 ---@field protected BagFrame tdBag2BagFrame
 ---@field protected TokenFrame tdBag2TokenFrame
 ---@field protected PluginFrame tdBag2PluginFrame
-local ContainerFrame = ns.Addon:NewClass('UI.ContainerFrame', Frame)
+local ContainerFrame = ns.Addon:NewClass('UI.ContainerFrame', SimpleFrame)
 
 function ContainerFrame:Constructor(_, bagId)
-    self:ShowBottomBar()
-
     ns.UI.MoneyFrame:Bind(self.MoneyFrame, self.meta)
     ns.UI.TokenFrame:Bind(self.TokenFrame, self.meta)
     ns.UI.BagFrame:Bind(self.BagFrame, self.meta)
     ns.UI.PluginFrame:Bind(self.PluginFrame, self.meta)
-
-    self.Container = ns.UI.Container:New(self, self.meta)
-    self.Container:SetPoint('TOPLEFT', self.Inset, 'TOPLEFT', 8, -8)
-    self.Container:SetSize(1, 1)
-    self.Container:SetCallback('OnLayout', function()
-        self:UpdateSize()
-        self:PlaceBagFrame()
-        self:PlaceSearchBox()
-    end)
 
     local function OnFocusChanged()
         if self:IsVisible() then
@@ -47,8 +39,12 @@ function ContainerFrame:Constructor(_, bagId)
     self.SearchBox:HookScript('OnEditFocusGained', OnFocusChanged)
 end
 
+function ContainerFrame:Create(bagId)
+    return self:Bind(CreateFrame('Frame', nil, UIParent, 'tdBag2FrameTemplate'), bagId)
+end
+
 function ContainerFrame:OnShow()
-    Frame.OnShow(self)
+    SimpleFrame.OnShow(self)
     self:RegisterEvent('UPDATE_ALL', 'Update')
     self:RegisterEvent('SEARCH_CHANGED')
     self:RegisterFrameEvent('TOKEN_FRAME_TOGGLED', 'PlaceTokenFrame')
@@ -69,7 +65,9 @@ function ContainerFrame:PLUGIN_FRAME_TOGGLED()
 end
 
 function ContainerFrame:UpdateSize()
-    return self:SetSize(self.Container:GetWidth() + 24, self.Container:GetHeight() + 100)
+    SimpleFrame.UpdateSize(self)
+    self:PlaceBagFrame()
+    self:PlaceSearchBox()
 end
 
 function ContainerFrame:Update()

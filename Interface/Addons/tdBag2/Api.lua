@@ -38,6 +38,8 @@ ns.EQUIP_CONTAINER = EQUIP_CONTAINER
 ns.MAIL_CONTAINER = MAIL_CONTAINER
 ns.COD_CONTAINER = COD_CONTAINER
 
+ns.GLOBAL_SEARCH_OWNER = '$search'
+
 ns.ITEM_SIZE = 37
 ns.ITEM_SPACING = 2
 
@@ -83,36 +85,56 @@ local BAG_ID = { --
     BAG = 'bag',
     BANK = 'bank',
     MAIL = 'mail',
+    EQUIP = 'equip',
+    SEARCH = 'global-search',
 }
 
 local BAG_ICONS = { --
     [BAG_ID.BAG] = [[Interface\Buttons\Button-Backpack-Up]],
     [BAG_ID.BANK] = [[Interface\ICONS\INV_Misc_Bag_13]],
     [BAG_ID.MAIL] = [[Interface\MailFrame\Mail-Icon]],
+    [BAG_ID.EQUIP] = [[Interface\ICONS\INV_Helmet_51]],
+    [BAG_ID.SEARCH] = [[Interface\ICONS\INV_Misc_Spyglass_03]],
 }
 
 local BAG_TITLES = { --
     [BAG_ID.BAG] = L.TITLE_BAG,
     [BAG_ID.BANK] = L.TITLE_BANK,
     [BAG_ID.MAIL] = L.TITLE_MAIL,
+    [BAG_ID.EQUIP] = L.TITLE_EQUIP,
+    [BAG_ID.SEARCH] = L['Global search'],
 }
 
 local BAGS = { --
     [BAG_ID.BAG] = {BACKPACK_CONTAINER},
     [BAG_ID.BANK] = {BANK_CONTAINER},
     [BAG_ID.MAIL] = {MAIL_CONTAINER, COD_CONTAINER},
+    [BAG_ID.EQUIP] = {EQUIP_CONTAINER},
+    [BAG_ID.SEARCH] = {},
 }
 
 local BAG_CLASSES = { --
-    [BAG_ID.BAG] = 'Inventory',
-    [BAG_ID.BANK] = 'Bank',
-    [BAG_ID.MAIL] = 'Mail',
+    [BAG_ID.BAG] = 'InventoryFrame',
+    [BAG_ID.BANK] = 'BankFrame',
+    [BAG_ID.MAIL] = 'SimpleFrame',
+    [BAG_ID.EQUIP] = 'SimpleFrame',
+    [BAG_ID.SEARCH] = 'GlobalSearchFrame',
 }
 
-local BAG_TEMPLATES = { --
-    [BAG_ID.BAG] = 'tdBag2FrameTemplate',
-    [BAG_ID.BANK] = 'tdBag2FrameTemplate',
-    [BAG_ID.MAIL] = 'tdBag2BaseFrameTemplate',
+local BAG_ITEM_CLASSES = { --
+    [BAG_ID.BAG] = 'Item',
+    [BAG_ID.BANK] = 'Item',
+    [BAG_ID.MAIL] = 'ItemBase',
+    [BAG_ID.EQUIP] = 'ItemBase',
+    [BAG_ID.SEARCH] = 'ItemBase',
+}
+
+local BAG_CONTAINER_CLASSES = {
+    [BAG_ID.BAG] = 'Container',
+    [BAG_ID.BANK] = 'Container',
+    [BAG_ID.MAIL] = 'TitleContainer',
+    [BAG_ID.EQUIP] = 'Container',
+    [BAG_ID.SEARCH] = 'GlobalSearchContainer',
 }
 
 local BAG_SETS = {}
@@ -147,19 +169,20 @@ ns.BAG_ID = BAG_ID
 ns.BAG_ICONS = BAG_ICONS
 ns.BAG_TITLES = BAG_TITLES
 ns.BAG_CLASSES = BAG_CLASSES
-ns.BAG_TEMPLATES = BAG_TEMPLATES
+ns.BAG_ITEM_CLASSES = BAG_ITEM_CLASSES
+ns.BAG_CONTAINER_CLASSES = BAG_CONTAINER_CLASSES
 
 ns.PLAYER = nil
 ns.REALM = nil
 
-ns.BAG_FAMILY = { --
-    [1] = 'Quiver',
-    [2] = 'Quiver',
-    [3] = 'Soul',
-    [4] = 'Soul',
-    [6] = 'Herb',
-    [7] = 'Enchant',
-    [9] = 'Keyring',
+ns.BAG_FAMILY_KEYS = { --
+    [1] = 'colorQuiver',
+    [2] = 'colorQuiver',
+    [3] = 'colorSoul',
+    [4] = 'colorSoul',
+    [6] = 'colorHerb',
+    [7] = 'colorEnchant',
+    [9] = 'colorKeyring',
 }
 
 ns.TRADE_BAG_ORDER = { --
@@ -182,7 +205,6 @@ ns.FRAME_OPTION_EVENTS = { --
     tradeBagOrder = 'BAG_ORDER_CHANGED',
 
     iconCharacter = 'ICON_CHARACTER_TOGGLED',
-    remainLimit = 'REMAIN_LIMIT_CHANGED',
 }
 
 ns.OPTION_EVENTS = { --
@@ -205,6 +227,8 @@ ns.OPTION_EVENTS = { --
     colorHerb = 'ITEM_COLOR_UPDATE',
     colorKeyring = 'ITEM_COLOR_UPDATE',
     emptyAlpha = 'ITEM_COLOR_UPDATE',
+
+    remainLimit = 'REMAIN_LIMIT_CHANGED',
 
     tipCount = function()
         return ns.Tooltip:Update()

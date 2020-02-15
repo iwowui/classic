@@ -4,6 +4,8 @@ QuestieCorrections = {...}
 -------------------------
 ---@type QuestieDB
 local QuestieDB = QuestieLoader:ImportModule("QuestieDB");
+---@type QuestieEvent
+local QuestieEvent = QuestieLoader:ImportModule("QuestieEvent");
 
 --[[
     This file load the corrections of the database files.
@@ -65,7 +67,12 @@ function QuestieCorrections:Initialize()
     QuestieCorrections.questItemBlacklist = QuestieItemBlacklist:Load()
     QuestieCorrections.hiddenQuests = QuestieQuestBlacklist:Load()
 
-    if QuestieEvent then
-        QuestieEvent:Load()
+    if Questie.db.char.showEventQuests then
+        C_Timer.After(1, function()
+             -- This is done with a delay because on startup the Blizzard API seems to be
+             -- very slow and therefore the date calculation in QuestieEvents isn't done
+             -- correctly.
+            QuestieEvent:Load()
+        end)
     end
 end

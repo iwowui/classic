@@ -70,17 +70,22 @@ function QuestieQuest:ToggleNotes(desiredValue)
         -- show quest notes
         local trackerHiddenQuests = questieCharDB.TrackerHiddenQuests
         for questId, framelist in pairs(QuestieMap.questIdFrames) do
-            if not trackerHiddenQuests or (not trackerHiddenQuests[questId]) then -- Skip quests which are completly hidden from the Tracker menu
-                for _, frameName in ipairs(framelist) do -- this may seem a bit expensive, but its actually really fast due to the order things are checked
+            if (trackerHiddenQuests == nil) or (trackerHiddenQuests[questId] == nil) then -- Skip quests which are completly hidden from the Tracker menu
+                for _, frameName in pairs(framelist) do -- this may seem a bit expensive, but its actually really fast due to the order things are checked
                     local icon = _G[frameName];
-                    local objectiveString = tostring(questId) .. " " .. tostring(icon.data.ObjectiveIndex)
-                    if (questieCharDB.TrackerHiddenObjectives == nil) or (questieCharDB.TrackerHiddenObjectives[objectiveString] == nil) then
-                        if icon ~= nil and icon.hidden and not ((((not questieGlobalDB.enableObjectives) and (icon.data.Type == "monster" or icon.data.Type == "object" or icon.data.Type == "event" or icon.data.Type == "item"))
-                            or ((not questieGlobalDB.enableTurnins) and icon.data.Type == "complete")
-                            or ((not questieGlobalDB.enableAvailable) and icon.data.Type == "available"))
-                            or ((not questieGlobalDB.enableMapIcons) and (not icon.miniMapIcon))
-                            or ((not questieGlobalDB.enableMiniMapIcons) and (icon.miniMapIcon))) or (icon.data.ObjectiveData and icon.data.ObjectiveData.HideIcons) or (icon.data.QuestData and icon.data.QuestData.HideIcons and icon.data.Type ~= "complete") then
-                                icon:FakeUnhide()
+                    if icon.data == nil then
+                        error("Desync! Icon has not been removed correctly, but has already been resetted. Skipping frame \"" .. frameName .. "\" for quest " .. questId)
+                        -- Questie:Debug(DEBUG_CRITICAL, "Desync! Icon has not been removed correctly, but has already been resetted. Skipping frame \"" .. frameName .. "\" for quest", questId)
+                    else
+                        local objectiveString = tostring(questId) .. " " .. tostring(icon.data.ObjectiveIndex)
+                        if (questieCharDB.TrackerHiddenObjectives == nil) or (questieCharDB.TrackerHiddenObjectives[objectiveString] == nil) then
+                            if icon ~= nil and icon.hidden and not ((((not questieGlobalDB.enableObjectives) and (icon.data.Type == "monster" or icon.data.Type == "object" or icon.data.Type == "event" or icon.data.Type == "item"))
+                                or ((not questieGlobalDB.enableTurnins) and icon.data.Type == "complete")
+                                or ((not questieGlobalDB.enableAvailable) and icon.data.Type == "available"))
+                                or ((not questieGlobalDB.enableMapIcons) and (not icon.miniMapIcon))
+                                or ((not questieGlobalDB.enableMiniMapIcons) and (icon.miniMapIcon))) or (icon.data.ObjectiveData and icon.data.ObjectiveData.HideIcons) or (icon.data.QuestData and icon.data.QuestData.HideIcons and icon.data.Type ~= "complete") then
+                                    icon:FakeUnhide()
+                            end
                         end
                     end
                 end
@@ -101,7 +106,7 @@ function QuestieQuest:ToggleNotes(desiredValue)
         Questie_Toggle:SetText(QuestieLocale:GetUIString('QUESTIE_MAP_BUTTON_SHOW'));
         -- hide quest notes
         for questId, framelist in pairs(QuestieMap.questIdFrames) do
-            for index, frameName in ipairs(framelist) do -- this may seem a bit expensive, but its actually really fast due to the order things are checked
+            for index, frameName in pairs(framelist) do -- this may seem a bit expensive, but its actually really fast due to the order things are checked
                 local icon = _G[frameName];
                 if icon ~= nil and icon.IsShown ~= nil and (not icon.hidden) then -- check for function to make sure its a frame
                     icon:FakeHide()
@@ -141,7 +146,7 @@ function QuestieQuest:ClearAllNotes()
     end
 
     for questId, framelist in pairs(QuestieMap.questIdFrames) do
-        for index, frameName in ipairs(framelist) do
+        for index, frameName in pairs(framelist) do
             local icon = _G[frameName]
             if icon and icon.Unload then
                 icon:Unload()
@@ -182,6 +187,7 @@ end
 function QuestieQuest:Reset()
     -- clear all notes
     QuestieQuest:ClearAllNotes()
+    QuestieCorrections:Initialize() -- Just to be sure all the right corrections are loaded
 
     -- reset quest log and tooltips
     QuestiePlayer.currentQuestlog = {}
@@ -244,7 +250,7 @@ function QuestieQuest:UpdateHiddenNotes()
 
     -- Update hidden status of quest notes
     for questId, framelist in pairs(QuestieMap.questIdFrames) do
-        for index, frameName in ipairs(framelist) do -- this may seem a bit expensive, but its actually really fast due to the order things are checked
+        for index, frameName in pairs(framelist) do -- this may seem a bit expensive, but its actually really fast due to the order things are checked
             local icon = _G[frameName];
             if icon ~= nil and icon.data then
                 if (QuestieQuest.NotesHidden or (((not questieGlobalDB.enableObjectives) and (icon.data.Type == "monster" or icon.data.Type == "object" or icon.data.Type == "event" or icon.data.Type == "item"))
@@ -900,7 +906,7 @@ function QuestieQuest:PopulateObjectiveNotes(quest) -- this should be renamed to
 
     -- check for special (unlisted) DB objectives
     if quest.SpecialObjectives then
-        Questie:Debug("Adding special objectives")
+        Questie:Debug(DEBUG_DEVELOP, "Adding special objectives")
         local index = 0 -- SpecialObjectives is a string table, but we need a number
         for _, objective in pairs(quest.SpecialObjectives) do
             local result, err = pcall(QuestieQuest.PopulateObjective, QuestieQuest, quest, index, objective, true);
@@ -1227,23 +1233,24 @@ end
 ]]--
 
 --Draw a single available quest, it is used by the DrawAllAvailableQuests function.
-function _QuestieQuest:DrawAvailableQuest(questObject) -- prevent recursion
+---@param quest Quest
+function _QuestieQuest:DrawAvailableQuest(quest) -- prevent recursion
 
     --TODO More logic here, currently only shows NPC quest givers.
-    if questObject.Starts["GameObject"] ~= nil then
-        for _, ObjectID in ipairs(questObject.Starts["GameObject"]) do
+    if quest.Starts["GameObject"] ~= nil then
+        for _, ObjectID in ipairs(quest.Starts["GameObject"]) do
             local obj = QuestieDB:GetObject(ObjectID)
             if(obj ~= nil and obj.spawns ~= nil) then
                 for Zone, Spawns in pairs(obj.spawns) do
                     if(Zone ~= nil and Spawns ~= nil) then
                         for _, coords in ipairs(Spawns) do
                             local data = {}
-                            data.Id = questObject.Id;
-                            data.Icon = _QuestieQuest:GetQuestIcon(questObject)
+                            data.Id = quest.Id;
+                            data.Icon = _QuestieQuest:GetQuestIcon(quest)
                             data.GetIconScale = function() return Questie.db.global.availableScale or 1.3 end
                             data.IconScale = data:GetIconScale()
                             data.Type = "available";
-                            data.QuestData = questObject;
+                            data.QuestData = quest;
                             data.Name = obj.name
 
                             data.IsObjectiveNote = false
@@ -1261,8 +1268,8 @@ function _QuestieQuest:DrawAvailableQuest(questObject) -- prevent recursion
                 end
             end
         end
-    elseif(questObject.Starts["NPC"] ~= nil)then
-        for _, NPCID in ipairs(questObject.Starts["NPC"]) do
+    elseif(quest.Starts["NPC"] ~= nil)then
+        for _, NPCID in ipairs(quest.Starts["NPC"]) do
             local NPC = QuestieDB:GetNPC(NPCID)
             if (NPC ~= nil and NPC.spawns ~= nil and NPC.friendly) then
                 --Questie:Debug(DEBUG_DEVELOP,"Adding Quest:", questObject.Id, "StarterNPC:", NPC.Id)
@@ -1273,12 +1280,12 @@ function _QuestieQuest:DrawAvailableQuest(questObject) -- prevent recursion
                         for _, coords in ipairs(Spawns) do
                             --Questie:Debug("Coords", coords[1], coords[2])
                             local data = {}
-                            data.Id = questObject.Id;
-                            data.Icon = _QuestieQuest:GetQuestIcon(questObject)
+                            data.Id = quest.Id;
+                            data.Icon = _QuestieQuest:GetQuestIcon(quest)
                             data.GetIconScale = function() return Questie.db.global.availableScale or 1.3 end
                             data.IconScale = data.GetIconScale();
                             data.Type = "available";
-                            data.QuestData = questObject;
+                            data.QuestData = quest;
                             data.Name = NPC.name
                             data.IsObjectiveNote = false
                             --data.updateTooltip = function(data)
@@ -1359,7 +1366,7 @@ function QuestieQuest:DrawAllAvailableQuests()--All quests between
         else
             --We might have to update the icon in this situation (config changed/level up)
             for _, frame in ipairs(QuestieMap:GetFramesForQuest(questId)) do
-                if frame and frame.data then
+                if frame and frame.data and frame.data.QuestData then
                     local newIcon = _QuestieQuest:GetQuestIcon(frame.data.QuestData)
                     if newIcon ~= frame.data.Icon then
                         frame:UpdateTexture(newIcon)
@@ -1456,7 +1463,9 @@ function QuestieQuest:CalculateAvailableQuests()
     local playerLevel = QuestiePlayer:GetPlayerLevel()
     local minLevel = playerLevel - Questie.db.global.minLevelFilter
     local maxLevel = playerLevel + Questie.db.global.maxLevelFilter
-    local showRepeatableQuests = Questie.db.global.showRepeatableQuests
+    local showRepeatableQuests = Questie.db.char.showRepeatableQuests
+    local showDungeonQuests = Questie.db.char.showDungeonQuests
+    local showPvPQuests = Questie.db.char.showPvPQuests
 
     if(not Questie.db.char.manualMinLevelOffset) then
         minLevel = playerLevel - GetQuestGreenRange();
@@ -1472,7 +1481,10 @@ function QuestieQuest:CalculateAvailableQuests()
             (not Questie.db.char.complete[questID]) and -- Don't show completed quests
             ((not QuestiePlayer.currentQuestlog[questID]) or QuestieQuest:IsComplete(quest) == -1) and -- Don't show quests if they're already in the quest log
             (not QuestieCorrections.hiddenQuests[questID]) and -- Don't show blacklisted quests
-            ((not quest.Repeatable) or (quest.Repeatable and showRepeatableQuests))) then -- Show repeatable quests if the quest is repeatable and the option is enabled
+            ((not quest.Repeatable) or (quest.Repeatable and showRepeatableQuests)) and -- Show repeatable quests if the quest is repeatable and the option is enabled
+            ((not quest.isDungeonQuest) or (quest.isDungeonQuest and showDungeonQuests)) and -- Show dungeon quests only with the option enabled
+            ((not quest.isPvPQuest) or (quest.isPvPQuest and showPvPQuests)) -- Show PvP quests only with the option enabled
+        ) then
 
             if quest and _QuestieQuest:LevelRequirementsFulfilled(quest, playerLevel, minLevel, maxLevel) then
                 if _QuestieQuest:IsDoable(quest) then

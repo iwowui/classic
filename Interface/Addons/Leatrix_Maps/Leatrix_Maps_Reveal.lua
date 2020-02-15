@@ -1,8 +1,8 @@
 
 	----------------------------------------------------------------------
 	-- Leatrix Maps Reveal Data
-	-- wow.tools/api/export/?name=worldmapoverlay&build=1.13.2.31407
-	-- wow.tools/api/export/?name=worldmapoverlaytile&build=1.13.2.31407
+	-- wow.tools/dbc/api/export/?name=worldmapoverlay&build=1.13.3.33302
+	-- wow.tools/dbc/api/export/?name=worldmapoverlaytile&build=1.13.3.33302
 	----------------------------------------------------------------------
 
 	local void, Leatrix_Maps = ...

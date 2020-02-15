@@ -31,26 +31,37 @@ WoW's Anniversary    16th Nov - 30th Nov
 Pilgrim's Bounty    22nd Nov - 28th Nov    Thanksgiving
 Feast of Winter Veil    15th Dec - 2nd Jan    Christmas
 ]] --
-QuestieEvent = {}
+
+---@class QuestieEvent
+local QuestieEvent = QuestieLoader:CreateModule("QuestieEvent")
 QuestieEvent.activeQuests = {}
 
+---@type QuestieDB
+local QuestieDB = QuestieLoader:ImportModule("QuestieDB")
+
+
 local tinsert = table.insert
+local _WithinDates, _LoadDarkmoonFaire
 
 function QuestieEvent:Load()
     local year = date("%y")
 
     -- We want to replace the Lunar Festival date with the date that we estimate
     QuestieEvent.eventDates["LunarFestival"] = QuestieEvent.lunarFestival[year]
-
     local activeEvents = {}
 
     for eventName, eventData in pairs(QuestieEvent.eventDates) do
         local startDay, startMonth = strsplit("/", eventData.startDate)
         local endDay, endMonth = strsplit("/", eventData.endDate)
 
+        startDay = tonumber(startDay)
+        startMonth = tonumber(startMonth)
+        endDay = tonumber(endDay)
+        endMonth = tonumber(endMonth)
+
         -- startDate = "15/12",
         -- endDate = "2/1",
-        if QuestieEvent:WithinDates(startDay, startMonth, endDay, endMonth) then
+        if _WithinDates(startDay, startMonth, endDay, endMonth) then
             Questie:Debug(DEBUG_INFO, "[QuestieEvent]", eventName,
                           "event is active!")
             activeEvents[eventName] = true
@@ -66,39 +77,116 @@ function QuestieEvent:Load()
         if questData[3] and questData[4] then
             startDay, startMonth = strsplit("/", questData[3])
             endDay, endMonth = strsplit("/", questData[4])
+            startDay = tonumber(startDay)
+            startMonth = tonumber(startMonth)
+            endDay = tonumber(endDay)
+            endMonth = tonumber(endMonth)
         end
 
-        if activeEvents[eventName] == true and QuestieEvent:WithinDates(startDay, startMonth, endDay, endMonth) then
+        if activeEvents[eventName] == true and _WithinDates(startDay, startMonth, endDay, endMonth) then
             QuestieCorrections.hiddenQuests[questId] = nil
             QuestieEvent.activeQuests[questId] = true
         end
     end
 
+    -- Darkmoon Faire is quite special because of its setup days where just two quests are available
+    _LoadDarkmoonFaire()
+
     -- Clear the quests to save memory
-    QuestieEvent.eventQuests = nil
+    -- QuestieEvent.eventQuests = nil
 end
 
-function QuestieEvent:WithinDates(startDay, startMonth, endDay, endMonth)
+function QuestieEvent:Unload()
+    if QuestieEvent.activeQuests == nil then
+        return
+    end
+
+    for questId, _ in pairs(QuestieEvent.activeQuests) do
+        QuestieCorrections.hiddenQuests[questId] = true
+        QuestieEvent.activeQuests[questId] = false
+        -- local quest = QuestieDB:GetQuest(questId)
+        -- quest.isHidden = true
+    end
+end
+
+--- https://classic.wowhead.com/guides/classic-darkmoon-faire#darkmoon-faire-location-and-schedule
+--- Darkmoon Faire starts its setup the first Friday of the month and will begin the following Monday.
+--- The faire ends the sunday after it has begun.
+--- Sunday is the first weekday
+_LoadDarkmoonFaire = function()
+    local date = C_DateAndTime.GetTodaysDate()
+    local weekDay = date.weekDay
+    local day = date.day
+    local month = date.month
+
+    local isInMulgore = (month % 2) == 0
+
+    -- The 16 is the highest date the faire can possibly end
+    -- And on a Monday (weekDay == 2) the faire ended, when it's the second Monday after the first Friday of the month
+    if day > 16 or
+        (weekDay == 2 and (day >= 11 and day <= 17)) or
+        (weekDay ~= 6 and (day - weekDay < 1)) or
+        (weekDay ~= 6 and (day - weekDay == 1)) then
+        return
+    end
+
+    -- The faire is setting up right now or is already up
+    local annoucingQuestId = 7905 -- Alliance announcement quest
+    if isInMulgore then
+        annoucingQuestId = 7926 -- Horde announcement quest
+    end
+    QuestieCorrections.hiddenQuests[annoucingQuestId] = nil
+    QuestieEvent.activeQuests[annoucingQuestId] = true
+
+    if (weekDay >= 2 and day >= 5) or (weekDay == 1 and day >= 10 and day <= 16) then
+        -- The faire is up right now
+        for _, questData in pairs(QuestieEvent.eventQuests) do
+            if questData[1] == "DarkmoonFaire" then
+                local questId = questData[2]
+                QuestieCorrections.hiddenQuests[questId] = nil
+                QuestieEvent.activeQuests[questId] = true
+
+                -- Update the NPC spawns based on the place of the faire
+                for id, data in pairs(QuestieNPCFixes:LoadDarkmoonFixes(isInMulgore)) do
+                    for key, value in pairs(data) do
+                        QuestieDB.npcData[id][key] = value
+                    end
+                end
+            end
+        end
+    end
+end
+
+--- Checks wheather the current date is within the given date range
+---@param startDay number
+---@param startMonth number
+---@param endDay number
+---@param endMonth number
+---@return boolean @True if the current date is between the given, false otherwise
+_WithinDates = function(startDay, startMonth, endDay, endMonth)
     if (not startDay) and (not startMonth) and (not endDay) and (not endMonth) then
         return true
     end
-    local month = tonumber(date("%m"))
-    local day = tonumber(date("%d"))
-    if ((day >= tonumber(startDay) and month == tonumber(startMonth)) or
-        (day <= tonumber(endDay) and month == tonumber(endMonth))) then
-        return true
-    else
+    local date = C_DateAndTime.GetTodaysDate()
+    local day = date.day
+    local month = date.month
+    if (month < startMonth) or -- Too early in the year
+        (month > endMonth) or -- Too late in the year
+        (month == startMonth and day < startDay) or -- Too early in the correct month
+        (month == endMonth and day > endDay) then -- Too late in the correct month
         return false
+    else
+        return true
     end
 end
 
 -- EUROPEAN FORMAT! NO FUCKING AMERICAN SHIDAZZLE FORMAT!
 QuestieEvent.eventDates = {
     ["LunarFestival"] = { -- WARNING THIS DATE VARIES!!!!
-        startDate = "24/1",
-        endDate = "7/2"
+        startDate = "23/1",
+        endDate = "10/2"
     },
-    ["LoveIsInTheAir"] = {startDate = "7/2", endDate = "20/2"},
+    ["LoveIsInTheAir"] = {startDate = "11/2", endDate = "16/2"},
     ["Noblegarden"] = { -- WARNING THIS DATE VARIES!!!!
         startDate = "13/5",
         endDate = "19/5"
@@ -113,7 +201,7 @@ QuestieEvent.eventDates = {
 
 QuestieEvent.lunarFestival = {
     ["19"] = {startDate = "5/2", endDate = "19/2"},
-    ["20"] = {startDate = "24/1", endDate = "7/2"},
+    ["20"] = {startDate = "23/1", endDate = "10/2"},
     -- Below are estimates
     ["21"] = {startDate = "12/2", endDate = "26/2"},
     ["22"] = {startDate = "1/2", endDate = "15/2"},
@@ -199,6 +287,26 @@ tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8644}) -- Stonefort the Elde
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8675}) -- Skychaser the Elder
 tinsert(QuestieEvent.eventQuests, {"LunarFestival", 8719}) -- Bladesing the Elder
 
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8897}) -- Dearest Colara
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8898}) -- Dearest Colara
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8899}) -- Dearest Colara
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8900}) -- Dearest Elenia
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8901}) -- Dearest Elenia
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8902}) -- Dearest Elenia
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8903}) -- Dangerous Love
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8904}) -- Dangerous Love
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8979}) -- Fenstad's Hunch
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8980}) -- Zinge's Assessment
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8981}) -- Gift Giving
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8982}) -- Tracing the Source
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8983}) -- Tracing the Source
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8984}) -- The Source Revealed
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 8993}) -- Gift Giving
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 9024}) -- Aristan's Hunch
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 9025}) -- Morgan's Discovery
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 9026}) -- Tracing the Source
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 9027}) -- Tracing the Source
+tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 9028}) -- The Source Revealed
 tinsert(QuestieEvent.eventQuests, {"LoveIsInTheAir", 9029}) -- A Bubbling Cauldron
 
 tinsert(QuestieEvent.eventQuests, {"MidsummerFireFestival", 9388}) -- Flickering Flames in Kalimdor
@@ -293,10 +401,10 @@ tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7899}) -- Small Furry Paws
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7940}) -- 1200 Tickets - Orb of the Darkmoon
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7900}) -- Torn Bear Pelts
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7907}) -- Darkmoon Beast Deck
+tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7927}) -- Darkmoon Portals Deck
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7929}) -- Darkmoon Elementals Deck
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7928}) -- Darkmoon Warlords Deck
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7946}) -- Spawn of Jubjub
-tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7927}) -- Darkmoon Portals Deck
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 8223}) -- More Glowing Scorpid Blood
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7934}) -- 50 Tickets - Darkmoon Storage Box
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7981}) -- 1200 Tickets - Amulet of the Darkmoon
@@ -311,10 +419,9 @@ tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7892}) -- Big Black Mace
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7937}) -- Your Fortune Awaits You...
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7939}) -- More Dense Grinding Stones
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7893}) -- Rituals of Strength
-tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 8571}) -- <UNUSED> Armor Kits
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7891}) -- Green Iron Bracers
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7896}) -- Green Fireworks
-tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 9249}) -- 40 Tickets - Schematic: Steam Tonk Controller
+-- tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 9249}) -- 40 Tickets - Schematic: Steam Tonk Controller
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7884}) -- Crocolisk Boy and the Bearded Murloc
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7882}) -- Carnival Jerkins
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7897}) -- Mechanical Repair Kits
@@ -324,12 +431,10 @@ tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7881}) -- Carnival Boots
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7890}) -- Heavy Grinding Stone
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7889}) -- Coarse Weightstone
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7945}) -- Your Fortune Awaits You...
-tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7906}) -- Darkmoon Cards - Beasts
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7935}) -- 10 Tickets - Last Month's Mutton
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7938}) -- Your Fortune Awaits You...
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7944}) -- Your Fortune Awaits You...
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7932}) -- 12 Tickets - Lesser Darkmoon Prize
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7930}) -- 5 Tickets - Darkmoon Flower
-tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7904}) -- <UNUSED>
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7931}) -- 5 Tickets - Minor Darkmoon Prize
 tinsert(QuestieEvent.eventQuests, {"DarkmoonFaire", 7936}) -- 50 Tickets - Last Year's Mutton

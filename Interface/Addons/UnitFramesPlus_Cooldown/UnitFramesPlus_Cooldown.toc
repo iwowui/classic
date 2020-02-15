@@ -3,7 +3,7 @@
 ## Title-zhCN: |CFF7FFF7F界面|R 系统头像增强 冷却计时
 ## Title-zhTW: |CFF7FFF7F介面|R 系統頭像增強 冷卻計時
 ## X-Repple: 界面
-## Version: 1.34
+## Version: 1.35
 ## Author: Isler
 ## Author-LibClassicDurations: ullosu
 ## RequiredDeps: UnitFramesPlus
