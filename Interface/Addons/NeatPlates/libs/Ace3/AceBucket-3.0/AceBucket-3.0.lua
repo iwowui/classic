@@ -205,7 +205,7 @@ end
 -- @param handle The handle of the bucket as returned by RegisterBucket*
 function AceBucket:UnregisterBucket(handle)
 	local bucket = AceBucket.buckets[handle]
-	if bucket and AceEvent then
+	if bucket then
 		AceEvent.UnregisterAllEvents(bucket)
 		AceEvent.UnregisterAllMessages(bucket)
 

@@ -155,15 +155,16 @@ if state == true then
         futureFrame:SetScript(
             "OnEvent",
             function(self, event)
-                for _, future in ipairs(futures) do
+                for i = #futures, 1, -1 do
+                    local future = futures[i]
+
                     if future._event == true or future._event == event then
                         future:Run()
                     end
-                end
 
-                for i, future in pairs(futures) do
                     if future._event == nil or future:IsCancelled() or future:IsDone() then
-                        futures[i] = nil
+                        futures[i] = futures[#futures]
+                        futures[#futures] = nil
                     end
                 end
             end

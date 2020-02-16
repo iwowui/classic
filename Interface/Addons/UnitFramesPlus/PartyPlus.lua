@@ -35,7 +35,7 @@ end
 local UnitFramesPlus_CompactRaidFrameManager_UpdateContainerLockVisibility = CompactRaidFrameManager_UpdateContainerLockVisibility
 function CompactRaidFrameManager_UpdateContainerLockVisibility(self)
     local combat = UnitFramesPlus_CombatCheck();
-    if combat == false then
+    if combat == false or (UnitFramesPlusDB["party"]["hideraid"] ~= 1) then
         if ( GetDisplayedAllyFrames() ~= "raid" or not CompactRaidFrameManagerDisplayFrameLockedModeToggle.lockMode ) then
             CompactRaidFrameManager_LockContainer(self);
         else
@@ -47,7 +47,7 @@ end
 local UnitFramesPlus_CompactRaidFrameManager_UpdateShown = CompactRaidFrameManager_UpdateShown
 function CompactRaidFrameManager_UpdateShown(self)
     local combat = UnitFramesPlus_CombatCheck();
-    if combat == false then
+    if combat == false or (UnitFramesPlusDB["party"]["hideraid"] ~= 1) then
         if ( GetDisplayedAllyFrames() ) then
             self:Show();
         else
@@ -112,12 +112,13 @@ for id = 1, 4, 1 do
     PartyFrame:SetWidth(128);
     PartyFrame:SetHeight(53);
     PartyFrame:SetAttribute("unit", "party"..id);
-    RegisterUnitWatch(PartyFrame);
+    -- RegisterUnitWatch(PartyFrame);
     PartyFrame:RegisterForClicks("AnyUp");
     PartyFrame:SetAttribute("*type1", "target");
     PartyFrame:SetAttribute("type2", "togglemenu")
     PartyFrame:SetHitRectInsets(7, 85, 6, 7);
     PartyFrame:ClearAllPoints();
+    PartyFrame:Hide();
     if id == 1 then
         PartyFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 10, -160);
         PartyFrame:SetMovable(1);
@@ -462,7 +463,7 @@ for id = 1, 4, 1 do
             buff:SetPoint("LEFT", _G["UFP_PartyFrame"..id.."Buff"..j-1], "RIGHT", 2, 0);
         end
         buff:SetAttribute("unit", "party"..id);
-        RegisterUnitWatch(buff);
+        -- RegisterUnitWatch(buff);
 
         buff.Icon = buff:CreateTexture("UFP_PartyFrame"..id.."Buff"..j.."Icon", "ARTWORK");
         buff.Icon:ClearAllPoints();
@@ -521,7 +522,7 @@ for id = 1, 4, 1 do
             debuff:SetPoint("LEFT", _G["UFP_PartyFrame"..id.."Debuff"..j-1], "RIGHT", 2, 0);
         end
         debuff:SetAttribute("unit", "party"..id);
-        RegisterUnitWatch(debuff);
+        -- RegisterUnitWatch(debuff);
 
         debuff.Icon = debuff:CreateTexture("UFP_PartyFrame"..id.."Debuff"..j.."Icon", "ARTWORK");
         debuff.Icon:ClearAllPoints();
@@ -581,7 +582,7 @@ for id = 1, 4, 1 do
             petdebuff:SetPoint("LEFT", _G["UFP_PartyPetFrame"..id.."Debuff"..j-1], "RIGHT", 2, 0);
         end
         petdebuff:SetAttribute("unit", "partypet"..id);
-        RegisterUnitWatch(petdebuff);
+        -- RegisterUnitWatch(petdebuff);
 
         petdebuff.Icon = petdebuff:CreateTexture("UFP_PartyPetFrame"..id.."Debuff"..j.."Icon", "ARTWORK");
         petdebuff.Icon:ClearAllPoints();
@@ -625,6 +626,14 @@ for id = 1, 4, 1 do
         petdebuff:SetScript("OnLeave",function()
             GameTooltip:Hide();
         end)
+    end
+end
+
+function UnitFramesPlus_Onload()
+    for id = 1, 4, 1 do
+        if UnitFramesPlusDB["party"]["origin"] == 1 then
+            RegisterUnitWatch(_G["UFP_PartyFrame"..id]);
+        end
     end
 end
 
@@ -1385,7 +1394,7 @@ function UnitFramesPlus_PartyPortrait()
                     or event == "PARTY_MEMBER_DISABLE" 
                     -- or event == "UNIT_EXITED_VEHICLE"  or event == "UNIT_PET" then
                     or event == "UNIT_PET" or event == "UNIT_PORTRAIT_UPDATE" then
-                        if UnitExists("party"..id) then
+                        if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
                             if UnitFramesPlusDB["party"]["portrait3dbg"] == 1 then
                                 local color = RAID_CLASS_COLORS[select(2, UnitClass("party"..id))] or NORMAL_FONT_COLOR;
                                 _G["UFP_PartyFrame"..id.."ThreeDPortrait"].Background:SetVertexColor(color.r/1.5, color.g/1.5, color.b/1.5, 1);
@@ -1393,14 +1402,18 @@ function UnitFramesPlus_PartyPortrait()
                             UnitFramesPlus_PartyPortraitDisplayUpdate(_G["UFP_PartyFrame"..id]);
                         end
                     elseif event == "UNIT_MODEL_CHANGED" or event == "UNIT_CONNECTION" or event == "UNIT_PHASE" then
-                        UnitFramesPlus_PartyPortraitDisplayUpdate(_G["UFP_PartyFrame"..id]);
+                         if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+                            UnitFramesPlus_PartyPortraitDisplayUpdate(_G["UFP_PartyFrame"..id]);
+                        end
                     elseif event == "UNIT_HEALTH_FREQUENT" then
-                        if (not UnitIsConnected("party"..id)) or UnitIsGhost("party"..id) then
-                            _G["UFP_PartyFrame"..id.."ThreeDPortrait"]:SetLight(true, false, 0, 0, 0, 1.0, 0.25, 0.25, 0.25);
-                        elseif UnitIsDead("party"..id) then
-                            _G["UFP_PartyFrame"..id.."ThreeDPortrait"]:SetLight(true, false, 0, 0, 0, 1.0, 1, 0.3, 0.3);
-                        else
-                            _G["UFP_PartyFrame"..id.."ThreeDPortrait"]:SetLight(true, false, 0, 0, 0, 1.0, 1, 1, 1);
+                        if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+                            if (not UnitIsConnected("party"..id)) or UnitIsGhost("party"..id) then
+                                _G["UFP_PartyFrame"..id.."ThreeDPortrait"]:SetLight(true, false, 0, 0, 0, 1.0, 0.25, 0.25, 0.25);
+                            elseif UnitIsDead("party"..id) then
+                                _G["UFP_PartyFrame"..id.."ThreeDPortrait"]:SetLight(true, false, 0, 0, 0, 1.0, 1, 0.3, 0.3);
+                            else
+                                _G["UFP_PartyFrame"..id.."ThreeDPortrait"]:SetLight(true, false, 0, 0, 0, 1.0, 1, 1, 1);
+                            end
                         end
                     end
                 end)
@@ -1432,8 +1445,10 @@ function UnitFramesPlus_PartyPortrait()
         end
     else
         for id = 1, 4, 1 do
-            SetPortraitTexture(_G["UFP_PartyFrame"..id.."Portrait"], "party"..id);
-            _G["UFP_PartyFrame"..id.."Portrait"]:Show();
+            if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+                SetPortraitTexture(_G["UFP_PartyFrame"..id.."Portrait"], "party"..id);
+                _G["UFP_PartyFrame"..id.."Portrait"]:Show();
+            end
             _G["UFP_PartyFrame"..id.."ThreeDPortrait"]:Hide();
             _G["UFP_PartyFrame"..id.."ClassPortrait"]:Hide();
             if _G["UFP_PartyFrame"..id.."PortraitType"]:IsEventRegistered("PLAYER_ENTERING_WORLD") then
@@ -1827,29 +1842,99 @@ end
 local UnitFramesPlus_GetDisplayedAllyFrames = GetDisplayedAllyFrames;
 function GetDisplayedAllyFrames()
     local useCompact = GetCVarBool("useCompactPartyFrames")
-    if ( IsInGroup() and (IsInRaid() or useCompact) and (UnitFramesPlusDB["party"]["origin"] ~= 1 or UnitFramesPlusDB["party"]["hideraid"] ~= 1) ) then
+    if ( IsInGroup() and (IsInRaid() or useCompact) and (UnitFramesPlusDB["party"]["hideraid"] ~= 1) ) then
         return "raid";
-    elseif ( IsInGroup() and UnitFramesPlusDB["party"]["hideraid"] ~= 1) then
+    elseif ( IsInGroup() and not IsInRaid() and UnitFramesPlusDB["party"]["origin"] ~= 1) then
         return "party";
     else
         return nil;
     end
 end
 
-function UnitFramesPlus_UpdatePartyMemberFrame()
-    for id = 1, MAX_PARTY_MEMBERS do
-        _G["PartyMemberFrame"..id]:UnregisterAllEvents();
-        _G["PartyMemberFrame"..id].Show = function() end
-        _G["PartyMemberFrame"..id]:Hide();
-        _G["PartyMemberFrame"..id.."PetFrame"]:UnregisterAllEvents();
-        _G["PartyMemberFrame"..id.."PetFrame"].Show = function() end
-        _G["PartyMemberFrame"..id.."PetFrame"]:Hide();
+local function UnitFramesPlus_FrameDisable(self)
+    if (self) then
+        UnregisterUnitWatch(self)
+
+        self:UnregisterAllEvents()
+
+        if self == PlayerFrame then
+            local events = {
+                "PLAYER_ENTERING_WORLD",
+                "UNIT_ENTERING_VEHICLE",
+                "UNIT_ENTERED_VEHICLE",
+                "UNIT_EXITING_VEHICLE",
+                "UNIT_EXITED_VEHICLE",
+            }
+
+            for i, event in pairs(events) do
+                if pcall(self.RegisterEvent, self, event) then
+                    self:RegisterEvent(event)
+                end
+            end
+        end
+
+        self:SetMovable(true)
+        self:SetUserPlaced(true)
+        self:SetDontSavePosition(true)
+        self:SetMovable(false)
+
+        if not InCombatLockdown() then
+            self:Hide()
+        end
+        self:SetParent(PartyMemberFrameHide)
+
+        self:HookScript("OnShow", function(self)
+            if not InCombatLockdown() then
+                self:Hide()
+            end
+        end)
+
+        local health = self.healthbar
+        if health then
+            health:UnregisterAllEvents()
+        end
+
+        local power = self.manabar
+        if power then
+            power:UnregisterAllEvents()
+        end
+
+        local spell = self.spellbar
+        if spell then
+            spell:UnregisterAllEvents()
+        end
+
+        local powerBarAlt = self.powerBarAlt
+        if powerBarAlt then
+            powerBarAlt:UnregisterAllEvents()
+        end
+
+        local buffFrame = self.BuffFrame
+        if buffFrame then
+            buffFrame:UnregisterAllEvents()
+        end
     end
 end
 
--- local CompactRaidFrameManager_Show;
+local PartyMemberFrameHide = CreateFrame("Frame");
+PartyMemberFrameHide:Hide();
+function UnitFramesPlus_UpdatePartyMemberFrame()
+    for id = 1, MAX_PARTY_MEMBERS do
+        UnitFramesPlus_FrameDisable(_G["PartyMemberFrame"..id]);
+        UnitFramesPlus_FrameDisable(_G["PartyMemberFrame"..id.."PetFrame"]);
+        -- _G["PartyMemberFrame"..id]:UnregisterAllEvents();
+        -- _G["PartyMemberFrame"..id].Show = function() end
+        -- _G["PartyMemberFrame"..id]:Hide();
+        -- _G["PartyMemberFrame"..id]:SetParent(PartyMemberFrameHide);
+        -- _G["PartyMemberFrame"..id.."PetFrame"]:UnregisterAllEvents();
+        -- _G["PartyMemberFrame"..id.."PetFrame"].Show = function() end
+        -- _G["PartyMemberFrame"..id.."PetFrame"]:Hide();
+    end
+end
+
+local CompactRaidFrameManager_Show = CompactRaidFrameManager.Show;
 function UnitFramesPlus_UpdateCompactRaidFrameManager()
-    if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["hideraid"] == 1 then
+    if UnitFramesPlusDB["party"]["hideraid"] == 1 then
         local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
         if state == true then
             CompactRaidFrameManager.Show = function() end
@@ -1859,7 +1944,7 @@ function UnitFramesPlus_UpdateCompactRaidFrameManager()
         if GetDisplayedAllyFrames() == "raid" or GetDisplayedAllyFrames() == "party" then
             local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
             if state == true then
-                CompactRaidFrameManager.Show = nil;
+                CompactRaidFrameManager.Show = CompactRaidFrameManager_Show;
                 CompactRaidFrameManager_UpdateShown(CompactRaidFrameManager);
                 CompactRaidFrameManager_UpdateDisplayCounts(CompactRaidFrameManager);
                 CompactRaidFrameManager_UpdateRaidIcons();
@@ -1924,6 +2009,7 @@ end
 
 --模块初始化
 function UnitFramesPlus_PartyInit()
+    UnitFramesPlus_Onload();
     -- UnitFramesPlus_PartyShiftDrag();
     -- UnitFramesPlus_PartyOfflineDetection();
     UnitFramesPlus_PartyPortrait();

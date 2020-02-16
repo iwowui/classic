@@ -2247,6 +2247,7 @@ do
 
                 if UnitFramesPlusDB["party"]["origin"] ~= 1 then
                     -- BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
+                    BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHidetip);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPet);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHP);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHPPct);
@@ -2289,6 +2290,8 @@ do
                 else
                     -- BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
                     -- UnitFramesPlus_OptionsFrame_PartyHideRaidText:SetTextColor(1, 1, 1);
+                    BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyHidetip);
+                    UnitFramesPlus_OptionsFrame_PartyHidetipText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyPet);
                     UnitFramesPlus_OptionsFrame_PartyPetText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_Slider_Enable(UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider);
@@ -2459,7 +2462,8 @@ do
             end
         end
 
-        if lock == false and not InCombatLockdown() then
+        -- if lock == false and not InCombatLockdown() then
+        if not InCombatLockdown() then
             UnitFramesPlusDB["party"]["hideraid"] = 1 - UnitFramesPlusDB["party"]["hideraid"];
             UnitFramesPlus_HideRaidFrame();
         end
@@ -3066,6 +3070,7 @@ do
 
                 if UnitFramesPlusDB["party"]["origin"] ~= 1 then
                     -- BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
+                    BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHidetip);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPet);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHP);
                     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHPPct);
@@ -3109,6 +3114,8 @@ do
                 else
                     -- BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
                     -- UnitFramesPlus_OptionsFrame_PartyHideRaidText:SetTextColor(1, 1, 1);
+                    BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyHidetip);
+                    UnitFramesPlus_OptionsFrame_PartyHidetipText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyPet);
                     UnitFramesPlus_OptionsFrame_PartyPetText:SetTextColor(1, 1, 1);
                     BlizzardOptionsPanel_Slider_Enable(UnitFramesPlus_OptionsFrame_PartyExtraTextFontSizeSlider);
@@ -3180,6 +3187,8 @@ do
                     end
                     -- BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
                     -- UnitFramesPlus_OptionsFrame_PartyHideRaidText:SetTextColor(1, 1, 1);
+                    BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyHidetip);
+                    UnitFramesPlus_OptionsFrame_PartyHidetipText:SetTextColor(1, 1, 1);
                     if UnitFramesPlusDB["partytarget"]["show"] == 1 then
                         BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyTarget);
                         UnitFramesPlus_OptionsFrame_PartyTargetText:SetTextColor(1, 1, 1);
@@ -3934,7 +3943,8 @@ function UnitFramesPlus_OptionPanel_OnShow()
     UnitFramesPlus_OptionsFrame_PartyHideRaid:SetChecked(UnitFramesPlusDB["party"]["hideraid"]==1);
     -- UnitFramesPlus_OptionsFrame_PartyInRaid:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
     if UnitFramesPlusDB["party"]["origin"] ~= 1 then
-        BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
+        -- BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHideRaid);
+        BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHidetip);
         BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPet);
         BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHP);
         BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyHPPct);

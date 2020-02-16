@@ -68,7 +68,7 @@
     -- UFP_OP_Focus_ToF = "显示焦点目标";
     UFP_OP_ShortName = "隐藏服务器名";
     UFP_OP_Party_Options = "队伍设定";
-    UFP_OP_Party_Origin = "使用传统风格小队界面";
+    UFP_OP_Party_Origin = "显示传统风格小队界面";
     UFP_OP_Party_Pet = "显示队友宠物";
     UFP_OP_Party_Level = "显示等级";
     UFP_OP_Party_HP = "显示生命值";
@@ -178,7 +178,7 @@ elseif GetLocale() == "zhTW" then
     -- UFP_OP_Focus_ToF = "顯示焦點目標";
     UFP_OP_ShortName = "隱藏伺服器名";
     UFP_OP_Party_Options = "隊伍設定";
-    UFP_OP_Party_Origin = "使用傳統風格小隊介面";
+    UFP_OP_Party_Origin = "顯示傳統風格小隊介面";
     UFP_OP_Party_Pet = "顯示隊友寵物";
     UFP_OP_Party_Level = "顯示等級";
     UFP_OP_Party_HP = "顯示生命值";
@@ -288,7 +288,7 @@ else
     -- UFP_OP_Focus_ToF = "Enable focus target";
     UFP_OP_ShortName = "Hide realm name";
     UFP_OP_Party_Options = "Party Options";
-    UFP_OP_Party_Origin = "Orgin-style party frames";
+    UFP_OP_Party_Origin = "Show orgin-style party frames";
     UFP_OP_Party_Pet = "Show party pet";
     UFP_OP_Party_Level = "Party member level";
     UFP_OP_Party_HP = "Party member HP";

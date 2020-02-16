@@ -8,7 +8,7 @@
 ## X-Repple: 辅助
 ## Author: yess
 ## X-WoWI-ID: 23875
-## Version: v2.1.3-classic
+## Version: v2.1.4-classic
 
 
 Handle.lua
