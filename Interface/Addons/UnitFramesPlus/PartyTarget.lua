@@ -5,7 +5,7 @@ local UFP_MAX_PARTYTARGET_DEBUFFS = 5;
 
 --队友目标
 for id = 1, 4, 1 do
-    local ToPFrame = CreateFrame("Button", "UFP_PartyTarget"..id, _G["UFP_PartyFrame"..id], "SecureUnitButtonTemplate, SecureHandlerAttributeTemplate");
+    local ToPFrame = CreateFrame("Button", "UFP_PartyTarget"..id, _G["PartyMemberFrame"..id], "SecureUnitButtonTemplate, SecureHandlerAttributeTemplate");
     ToPFrame:SetFrameLevel(8);
     ToPFrame:SetWidth(80);
     ToPFrame:SetHeight(16);
@@ -120,7 +120,7 @@ function UnitFramesPlus_PartyTarget_ModeSet()
     else
         for id = 1, 4, 1 do
             _G["UFP_PartyTarget"..id].Border:Hide();
-            UnitFramesPlus_PartyTargetClassPortraitDisplayUpdate(_G["UFP_PartyFrame"..id]);
+            UnitFramesPlus_PartyTargetClassPortraitDisplayUpdate(id);
             _G["UFP_PartyTarget"..id].Texture:Show();
             _G["UFP_PartyTarget"..id].Highlight:Show();
             _G["UFP_PartyTarget"..id].PowerBar:Show();
@@ -170,7 +170,7 @@ function UnitFramesPlus_PartyTarget()
             self.timer = (self.timer or 0) + elapsed;
             if self.timer >= 0.2 then
                 for id = 1, 4, 1 do
-                    UnitFramesPlus_PartyTargetDisplayUpdate(_G["UFP_PartyFrame"..id]);
+                    UnitFramesPlus_PartyTargetDisplayUpdate(id);
                 end
                 self.timer = 0;
             end
@@ -180,21 +180,19 @@ function UnitFramesPlus_PartyTarget()
     end
 end
 
-function UnitFramesPlus_PartyTargetDisplayUpdate(self)
-    local id = self:GetID();
+function UnitFramesPlus_PartyTargetDisplayUpdate(id)
     local unit = "party"..id.."target";
     if UnitExists(unit) then
-        local name = UnitName(unit);
-        -- local name, realm = UnitName(unit);
-        -- local fullname = name;
-        -- if realm then
-        --     if UnitFramesPlusDB["partytarget"]["shortname"] == 1 then
-        --         fullname = name.."(*)";
-        --     else
-        --         fullname = name.."-"..realm;
-        --     end
-        -- end
-        -- _G["UFP_PartyTarget"..id].Name:SetText(fullname);
+        -- short name
+        local name, realm = UnitName(unit);
+        local fullname = name;
+        if realm and realm ~= "" then
+            if UnitFramesPlusDB["partytarget"]["shortname"] == 1 then
+                fullname = name.."(*)";
+            else
+                fullname = name.."-"..realm;
+            end
+        end
         _G["UFP_PartyTarget"..id].Name:SetText(name);
 
         local color = NORMAL_FONT_COLOR;
@@ -230,7 +228,7 @@ function UnitFramesPlus_PartyTargetDisplayUpdate(self)
                 _G["UFP_PartyTarget"..id].HealthBar:SetStatusBarColor(0.65, 0.9, 0.85);
             end
         else
-            UnitFramesPlus_PartyTargetClassPortraitDisplayUpdate(_G["UFP_PartyFrame"..id]);
+            UnitFramesPlus_PartyTargetClassPortraitDisplayUpdate(id);
 
             local ToPNameColor = PowerBarColor[UnitPowerType(unit)] or PowerBarColor["MANA"];
             _G["UFP_PartyTarget"..id].PowerBar:SetStatusBarColor(ToPNameColor.r, ToPNameColor.g, ToPNameColor.b);
@@ -267,8 +265,7 @@ function UnitFramesPlus_PartyTargetDisplayUpdate(self)
     end
 end
 
-function UnitFramesPlus_PartyTargetClassPortraitDisplayUpdate(self)
-    local id = self:GetID();
+function UnitFramesPlus_PartyTargetClassPortraitDisplayUpdate(id)
     if UnitFramesPlusDB["partytarget"]["portrait"] == 1 
     and (UnitFramesPlusDB["partytarget"]["portraitnpcno"] ~= 1 or UnitIsPlayer("party"..id.."target")) then
         -- if _G["UFP_PartyTarget"..id].Portrait:IsShown() then
@@ -331,7 +328,7 @@ function UnitFramesPlus_PartyTargetPositionSet()
     end
     for id = 1, 4, 1 do
         _G["UFP_PartyTarget"..id]:ClearAllPoints();
-        _G["UFP_PartyTarget"..id]:SetPoint("TOPLEFT", _G["UFP_PartyFrame"..id], "TOPLEFT", xOffset, yOffset);
+        _G["UFP_PartyTarget"..id]:SetPoint("TOPLEFT", _G["PartyMemberFrame"..id], "TOPLEFT", xOffset, yOffset);
     end
 end
 
@@ -413,7 +410,7 @@ end
 
 local topdb = CreateFrame("Frame");
 function UnitFramesPlus_PartyTargetDebuff()
-    -- UnitFramesPlus_PartyMemberPosition();
+    UnitFramesPlus_PartyMemberPosition();
     if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["partytarget"]["show"] == 1 and UnitFramesPlusDB["partytarget"]["debuff"] == 1 then
         topdb:SetScript("OnUpdate", function(self, elapsed)
             self.timer = (self.timer or 0) + elapsed;

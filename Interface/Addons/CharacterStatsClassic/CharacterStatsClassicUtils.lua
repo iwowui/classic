@@ -156,34 +156,48 @@ local function CSC_GetPlayerMissChances(unit, playerHit)
 	local missChanceVsNPC = 5; -- Level 60 npcs with 300 def
 	local missChanceVsBoss = 9;
 	local missChanceVsPlayer = 5; -- Level 60 player def is 300 base
+	local totalWeaponSkill = nil;
 
 	local mainHandItemId = 16;
+	local unitClassLoc = select(2, UnitClass(unit));
 
-	local itemId = GetInventoryItemID(unit, mainHandItemId);
-	if (itemId) then
-		local itemSubtypeId = select(7, GetItemInfoInstant(itemId));
-		if itemSubtypeId then
-			local weaponString = weaponStringByWeaponId[itemSubtypeId];
-			if weaponString then
-				local skillRank, skillModifier = CSC_GetSkillRankAndModifier(CSC_WEAPON_SKILLS_HEADER, weaponString);
-				if skillRank and skillModifier then
-					-- Weapon skill from racials should be already in skillRank
-					local totalWeaponSkill = skillRank + skillModifier;
-					local bossDefense = 315; -- level 63
-					
-					local playerBossDeltaSkill = bossDefense - totalWeaponSkill;
-					
-					if (playerBossDeltaSkill > 10) then
-						if (hitChance >= 1) then
-							hitChance = hitChance - 1;
-						end
+	-- Druid checks
+	local shapeIndex = -1;
+	if (unitClassLoc == "DRUID") then
+		shapeIndex = CSC_GetShapeshiftForm();
+	end
 
-						missChanceVsBoss = 5 + (playerBossDeltaSkill * 0.2);
-					else
-						missChanceVsBoss = 5 + (playerBossDeltaSkill * 0.1);
+	if (unitClassLoc == "DRUID") and (shapeIndex > 0) then
+		totalWeaponSkill = UnitLevel(unit) * 5;
+	else
+		local itemId = GetInventoryItemID(unit, mainHandItemId);
+		if (itemId) then
+			local itemSubtypeId = select(7, GetItemInfoInstant(itemId));
+			if itemSubtypeId then
+				local weaponString = weaponStringByWeaponId[itemSubtypeId];
+				if weaponString then
+					local skillRank, skillModifier = CSC_GetSkillRankAndModifier(CSC_WEAPON_SKILLS_HEADER, weaponString);
+					if skillRank and skillModifier then
+						-- Weapon skill from racials should be already in skillRank
+						totalWeaponSkill = skillRank + skillModifier;
 					end
 				end
 			end
+		end
+	end
+
+	if totalWeaponSkill then
+		local bossDefense = 315; -- level 63
+		local playerBossDeltaSkill = bossDefense - totalWeaponSkill;
+		
+		if (playerBossDeltaSkill > 10) then
+			if (hitChance >= 1) then
+				hitChance = hitChance - 1;
+			end
+
+			missChanceVsBoss = 5 + (playerBossDeltaSkill * 0.2);
+		else
+			missChanceVsBoss = 5 + (playerBossDeltaSkill * 0.1);
 		end
 	end
 
@@ -730,22 +744,31 @@ local function CSC_GetBlockValue(unit)
 	CSC_ScanTooltip:ClearLines();
 
 	local blockFromShield = 0;
-	local offHandIndex = 17;
+	local firstItemslotIndex = 1;
+	local lastItemslotIndex = 18;
 
-	local hasItem = CSC_ScanTooltip:SetInventoryItem(unit, offHandIndex);
-	if hasItem then
-		local maxLines = CSC_ScanTooltip:NumLines();
-		for line=1, maxLines do
-			local leftText = getglobal(CSC_ScanTooltipPrefix.."TextLeft"..line);
-			if leftText:GetText() then
-				local valueTxt = string.match(leftText:GetText(), "%d+ "..ITEM_MOD_BLOCK_RATING_SHORT);
-				if valueTxt then
-					valueTxt = string.match(valueTxt, "%d+");
-					if valueTxt then
-						local numValue = tonumber(valueTxt);
-						if numValue then
-							blockFromShield = numValue;
-							break;
+	local blockValueIDs = { ITEM_MOD_BLOCK_RATING_SHORT, ITEM_MOD_BLOCK_RATING, ITEM_MOD_BLOCK_VALUE };
+
+	for itemslot=firstItemslotIndex, lastItemslotIndex do
+		local hasItem = CSC_ScanTooltip:SetInventoryItem(unit, itemslot);
+		if hasItem then
+			local maxLines = CSC_ScanTooltip:NumLines();
+			for line=1, maxLines do
+				local leftText = getglobal(CSC_ScanTooltipPrefix.."TextLeft"..line);
+				if leftText:GetText() then
+					for blockValueID=1, 3 do
+						local valueTxt = string.match(leftText:GetText(), "%d+ "..blockValueIDs[blockValueID]);
+						if not valueTxt then
+							valueTxt = string.match(leftText:GetText(), string.sub( blockValueIDs[blockValueID], 1, -5).." %d+");
+						end
+						if valueTxt then
+							valueTxt = string.match(valueTxt, "%d+");
+							if valueTxt then
+								local numValue = tonumber(valueTxt);
+								if numValue then
+									blockFromShield = blockFromShield+numValue;
+								end
+							end
 						end
 					end
 				end
