@@ -5,7 +5,7 @@
 ## Title-zhTW: |CFFFF8000輔助|R 姓名版增強 暴雪風格
 ## X-Repple: 辅助
 ## Author: delabarra.
-## Version: 1.5
+## Version: 2.0
 ## Dependencies: NeatPlates, NeatPlatesHub
 
 NeatPlates_BlizzardPlates.lua

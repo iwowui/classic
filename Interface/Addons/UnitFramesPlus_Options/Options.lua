@@ -2453,14 +2453,14 @@ do
         --     StaticPopup_Show("UFP_ENABLERAIDFRAME");
         -- end
 
-        local lock = false;
-        for id = 1, MAX_PARTY_MEMBERS, 1 do
-            if ( UnitExists("party"..id) ) then
-                if UnitInParty("party"..id) and UnitAffectingCombat("party"..id) then
-                    lock = true;
-                end
-            end
-        end
+        -- local lock = false;
+        -- for id = 1, MAX_PARTY_MEMBERS, 1 do
+        --     if ( UnitExists("party"..id) ) then
+        --         if UnitInParty("party"..id) and UnitAffectingCombat("party"..id) then
+        --             lock = true;
+        --         end
+        --     end
+        -- end
 
         -- if lock == false and not InCombatLockdown() then
         if not InCombatLockdown() then

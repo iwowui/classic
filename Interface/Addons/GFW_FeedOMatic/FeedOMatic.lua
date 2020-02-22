@@ -151,7 +151,6 @@ function FOM_FeedButton_OnEnter()
 	FOM_FeedTooltipTextLeft2:SetJustifyH("LEFT");
 	FOM_FeedTooltipTextLeft3:SetJustifyH("LEFT");
 	FOM_FeedTooltipTextLeft4:SetJustifyH("LEFT");
-	
 end
 
 function FOM_TooltipDebug()	
@@ -187,7 +186,6 @@ function FOM_FeedButton_OnLeave()
 end
 
 function FOM_OnLoad(self)
-
 	-- Register for Events
 	self:RegisterEvent("VARIABLES_LOADED");
 	self:RegisterEvent("SPELLS_CHANGED");
@@ -205,7 +203,6 @@ function FOM_OnLoad(self)
 	BINDING_HEADER_GFW_FEEDOMATIC = GetAddOnMetadata(addonName, "Title"); -- gets us the localized title if needed
 	
 	--GFWUtils.Debug = true;
-
 end
 
 function FOM_HookTooltip(frame)
@@ -217,7 +214,6 @@ function FOM_HookTooltip(frame)
 end
 
 function FOM_OnTooltipSetItem(self)
-
 	if FOM_Config.Tooltip then
 		local _, link = self:GetItem();
 		if not link then return false; end
@@ -245,7 +241,6 @@ function FOM_OnTooltipSetItem(self)
 	else
 		return false;
 	end
-	
 end
 
 function FOM_TooltipAddFoodQuality(self, itemID)
@@ -289,7 +284,6 @@ function FOM_GetFeedPetSpellName()
 end
 
 function FOM_Initialize(self)
-	
 	local _, realClass = UnitClass("player");
 	if (realClass ~= "HUNTER") then
 	 	self:UnregisterAllEvents();
@@ -351,8 +345,7 @@ function FOM_Initialize(self)
 	self:UnregisterEvent("VARIABLES_LOADED");
 	self:UnregisterEvent("SPELLS_CHANGED");
 
-	FOM_Initialized = true;
-		
+	FOM_Initialized = true;	
 end
 
 function FOM_OnEvent(self, event, arg1, arg2)
@@ -442,7 +435,9 @@ function FOM_OnEvent(self, event, arg1, arg2)
 		FOM_FoodsPanel.refresh();
 	end
 
-	FOM_FeedButtonCount:SetText(GetItemCount(FOM_NextFoodLink))
+	if FOM_FeedButtonCount ~= nil then
+		FOM_FeedButtonCount:SetText(GetItemCount(FOM_NextFoodLink))
+	end
 end
 
 function FOM_UpdateBindings()
@@ -492,7 +487,6 @@ function FOM_ScanQuests()
 end
 
 function FOM_ChatCommandHandler(msg)
-
 	if ( msg == "" ) then
 		GFW_FeedOMatic:ShowConfig();
 		return;
@@ -538,7 +532,6 @@ function FOM_ChatCommandHandler(msg)
 end
 
 function FOM_PickFoodForButton()
-
 	if (not FOM_GetFeedPetSpellName()) then
 		return;
 	end
@@ -624,7 +617,6 @@ function FOM_SetupButton(bag, slot, modifier)
 end
 
 function FOM_RandomEmote(foodLink)
-	
 	local localeEmotes = FOM_Emotes[GetLocale()];
 	if (localeEmotes) then
 		local randomEmotes = {};
@@ -795,7 +787,6 @@ function FOM_IsInDiet(foodItemID, dietList)
 	end
 	
 	return nil;
-
 end
 FOM_DietForFood = FOM_IsInDiet
 
@@ -890,7 +881,6 @@ function FOM_BuildFoodsUI(panel)
 	scrollFrame:SetScript("OnVerticalScroll", function(self, offset) 
 		FauxScrollFrame_OnVerticalScroll(self, offset, FOM_LIST_HEIGHT, FOM_FoodListUIUpdate);
 	end);
-		
 end
 
 function FOM_FoodListShowTooltip(button)
@@ -1023,7 +1013,6 @@ function FOM_FoodListUI_UpdateList()
 end
 
 function FOM_FoodListUIUpdate()
-
 	local numListItems = #FOM_FoodsUIList;
 	local listOffset = FauxScrollFrame_GetOffset(FOM_FoodListScrollFrame);
 	if (listOffset > numListItems - FOM_MAX_LIST_DISPLAYED) then
@@ -1146,7 +1135,6 @@ function FOM_FoodListUIUpdate()
 			listButton:Hide();
 		end
 	end
-	
 end
 
 ------------------------------------------------------
@@ -1198,7 +1186,6 @@ local function setProfileOption(info, value)
 			FOM_FeedButton:Show();
 		end
 	end
-	
 end
 
 local titleText = GetAddOnMetadata(addonName, "Title");

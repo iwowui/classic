@@ -80,10 +80,8 @@ L["Soul Color"] = true
 L["Time Remaining"] = true
 L["TITLE_BAG"] = "%s's Inventory"
 L["TITLE_BANK"] = "%s's Bank"
---[[Translation missing --]]
---[[ L["TITLE_COD"] = ""--]] 
---[[Translation missing --]]
---[[ L["TITLE_EQUIP"] = ""--]] 
+L["TITLE_COD"] = "%s's COD"
+L["TITLE_EQUIP"] = "%s's Equip"
 L["TITLE_MAIL"] = "%s's Mail"
 L["Token Frame"] = true
 L["TOOLTIP_CHANGE_PLAYER"] = "View another character's items."
@@ -118,6 +116,8 @@ L["Visiting the Mail Box"] = true
 L.TITLE_BAG = '%s\'s Inventory'
 L.TITLE_BANK = '%s\'s Bank'
 L.TITLE_MAIL = '%s\'s Mail'
+L.TITLE_EQUIP = '%s\'s Equip'
+L.TITLE_COD = '%s\'s COD'
 
 L['Total'] = true
 L['|cffff2020(Offline)|r'] = true

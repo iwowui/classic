@@ -8,7 +8,7 @@
 ## Notes-zhTW: 簡單實用的地圖模組。
 ## X-Repple: 地图
 
-## Version: 1.13.48
+## Version: 1.13.49
 ## Author: Leatrix
 ## SavedVariables: LeaMapsDB
 
