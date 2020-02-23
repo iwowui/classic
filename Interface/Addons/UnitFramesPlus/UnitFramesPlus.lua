@@ -248,6 +248,13 @@ local function UnitFramesPlus_Options_Init()
         end
         UnitFramesPlusVar["version"] = UnitFramesPlusDefaultVar["version"];
     end
+
+    -- 检测团队插件
+    if IsAddOnLoaded("Blizzard_CompactRaidFrames") then
+        UnitFramesPlusDB["party"]["hideraid"] = 0;
+    else
+        UnitFramesPlusDB["party"]["hideraid"] = 1;
+    end
 end
 
 --模块初始化

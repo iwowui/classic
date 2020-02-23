@@ -1,6 +1,6 @@
 ## Interface: 11303
 ## Author: Peter Getov
-## Version: 3.3
+## Version: 3.3.1
 ## Title: |cff00aeffCharacterStatsClassic|r
 ## Notes: Advanced Character Stats
 ## Title-zhCN: |CFFFF8000辅助|R 详细人物属性

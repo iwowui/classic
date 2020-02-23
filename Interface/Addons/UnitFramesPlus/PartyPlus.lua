@@ -89,6 +89,29 @@ local function UnitFramesPlus_PartyShiftDrag()
 
     PartyMemberFrame1:SetMovable(1);
     PartyMemberFrame1:SetClampedToScreen(1);
+
+    for id = 2, 4, 1 do
+        _G["PartyMemberFrame"..id]:SetScript("OnMouseDown", function(self, elapsed)
+            if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["movable"] == 1 then
+                if IsShiftKeyDown() and (not InCombatLockdown()) then
+                    PartyMemberFrame1:StartMoving();
+                    UnitFramesPlusVar["party"]["moving"] = 1;
+                end
+            end
+        end)
+
+        _G["PartyMemberFrame"..id]:SetScript("OnMouseUp", function(self, elapsed)
+            if UnitFramesPlusVar["party"]["moving"] == 1 then
+                PartyMemberFrame1:StopMovingOrSizing();
+                UnitFramesPlusVar["party"]["moving"] = 0;
+                UnitFramesPlusVar["party"]["moved"] = 1;
+                local left = PartyMemberFrame1:GetLeft();
+                local bottom = PartyMemberFrame1:GetBottom();
+                UnitFramesPlusVar["party"]["x"] = left;
+                UnitFramesPlusVar["party"]["y"] = bottom;
+            end
+        end)
+    end
 end
 
 --队友等级
@@ -1142,8 +1165,9 @@ function UnitFramesPlus_PartyPositionSet()
         PartyMemberFrame1:ClearAllPoints();
         PartyMemberFrame1:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", UnitFramesPlusVar["party"]["x"], UnitFramesPlusVar["party"]["y"]);
     else
-        if not PartyMemberFrame1:GetPoint() then
-            PartyMemberFrame1:SetPoint("TOPLEFT", 10, -160)
+        if not IsAddOnLoaded("Blizzard_CompactRaidFrames") then
+            PartyMemberFrame1:ClearAllPoints();
+            PartyMemberFrame1:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 10, -160)
         end
     end
 end
@@ -1317,6 +1341,52 @@ function UnitFramesPlus_PartyPet()
     end
 end
 
+local sf;
+StaticPopupDialogs["UFP_HIDERAIDFRAME"] = {
+    text = UFPLocal_HideRaid,
+    button1 = OKAY,
+    button2 = CANCEL,
+    OnAccept = function()
+        sf("Blizzard_CompactRaidFrames");
+        sf("Blizzard_CUFProfiles");
+        ReloadUI();
+    end,
+    OnCancel = function()
+        UnitFramesPlusDB["party"]["hideraid"] = 1 - UnitFramesPlusDB["party"]["hideraid"];
+        if IsAddOnLoaded("UnitFramesPlus_Options") then
+            _G["UnitFramesPlus_OptionsFrame_PartyHideRaid"]:SetChecked(UnitFramesPlusDB["party"]["hideraid"]==1);
+        end
+    end,
+    whileDead = 1, hideOnEscape = 1, showAlert = 1
+}
+function UnitFramesPlus_HideRaidFrameSet()
+    local state = IsAddOnLoaded("Blizzard_CompactRaidFrames");
+    if UnitFramesPlusDB["party"]["hideraid"] == 1 then
+        sf = DisableAddOn;
+        if state == true then
+            StaticPopup_Show("UFP_HIDERAIDFRAME");
+        end
+    else
+        sf = EnableAddOn;
+        if state == false then
+            StaticPopup_Show("UFP_HIDERAIDFRAME");
+        end
+    end
+end
+
+function UnitFramesPlus_HideRaidFrame()
+    if not InCombatLockdown() then
+        UnitFramesPlus_HideRaidFrameSet();
+    else
+        local func = {};
+        func.name = "UnitFramesPlus_HideRaidFrameSet";
+        func.callback = function()
+            UnitFramesPlus_HideRaidFrameSet();
+        end;
+        UnitFramesPlus_WaitforCall(func);
+    end
+end
+
 function UnitFramesPlus_PartyExtraTextFontSize()
     for id = 1, 4, 1 do
         _G["PartyMemberFrame"..id.."HealthBarText"]:SetFont(GameFontNormal:GetFont(), UnitFramesPlusDB["party"]["fontsize"], "OUTLINE");
@@ -1329,9 +1399,18 @@ function UnitFramesPlus_PartyExtraTextFontSize()
     end
 end
 
+function UnitFramesPlus_PartyMemberFrameFix()
+    for id = 1, 4, 1 do
+        _G["PartyMemberFrame"..id.."NotPresentIcon"]:ClearAllPoints();
+        _G["PartyMemberFrame"..id.."NotPresentIcon"]:SetPoint("RIGHT", _G["PartyMemberFrame"..id], "LEFT", -2, 0);
+    end
+end
+
 --模块初始化
 function UnitFramesPlus_PartyInit()
+    UnitFramesPlus_PartyMemberFrameFix();
     UnitFramesPlus_PartyShiftDrag();
+    UnitFramesPlus_PartyPosition();
     -- UnitFramesPlus_PartyOfflineDetection();
     UnitFramesPlus_PartyPortrait();
     UnitFramesPlus_PartyPortraitIndicator();
@@ -1343,6 +1422,7 @@ function UnitFramesPlus_PartyInit()
     UnitFramesPlus_PartyHealthPct();
     UnitFramesPlus_PartyBarTextMouseShow();
     UnitFramesPlus_PartyExtraTextFontSize();
+    UnitFramesPlus_HideRaidFrame();
 end
 
 function UnitFramesPlus_PartyCvar()

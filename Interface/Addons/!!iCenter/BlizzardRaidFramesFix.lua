@@ -1,6 +1,4 @@
-local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
-
-if state == true then
+if IsAddOnLoaded("Blizzard_CompactRaidFrames") then
     local resolveUnitID
 
     do
@@ -999,7 +997,47 @@ if state == true then
             )
         end
 
-        eventHandlers.PLAYER_ENTERING_WORLD = eventHandlers.GROUP_ROSTER_UPDATE
+        local _CompactUnitFrameProfiles_ApplyProfile = CompactUnitFrameProfiles_ApplyProfile
+
+        function eventHandlers.PLAYER_ENTERING_WORLD(self)
+            if not InCombatLockdown() then
+                CompactRaidFrameContainer_UpdateDisplayedUnits(self)
+
+                if RaidProfileExists(GetActiveRaidProfile()) then
+                    _CompactUnitFrameProfiles_ApplyProfile(GetActiveRaidProfile())
+                else
+                    for _, settingName in ipairs(
+                        {
+                            "Managed",
+                            "Locked",
+                            "SortMode",
+                            "KeepGroupsTogether",
+                            "DisplayPets",
+                            "DisplayMainTankAndAssist",
+                            "IsShown",
+                            "ShowBorders",
+                            "HorizontalGroups"
+                        }
+                    ) do
+                        local settingValue = CompactRaidFrameManager_GetSetting(settingName)
+                        CompactRaidFrameManager_SetSetting(settingName, settingValue)
+                    end
+
+                    CompactRaidFrameContainer_ApplyToFrames(CompactRaidFrameContainer, "normal", DefaultCompactUnitFrameSetup)
+                    CompactRaidFrameContainer_ApplyToFrames(CompactRaidFrameContainer, "normal", CompactUnitFrame_UpdateAll)
+                    CompactRaidFrameContainer_ApplyToFrames(CompactRaidFrameContainer, "mini", DefaultCompactMiniFrameSetup)
+                    CompactRaidFrameContainer_ApplyToFrames(CompactRaidFrameContainer, "mini", CompactUnitFrame_UpdateAll)
+                    CompactRaidFrameContainer_ApplyToFrames(CompactRaidFrameContainer, "group", CompactRaidGroup_UpdateBorder)
+
+                    CompactRaidFrameManager.dynamicContainerPosition = true
+                    CompactRaidFrameManager_UpdateContainerBounds(CompactRaidFrameManager)
+
+                    CompactRaidFrameContainer_TryUpdate(CompactRaidFrameContainer)
+                end
+            else
+                eventHandlers.GROUP_ROSTER_UPDATE(self)
+            end
+        end
 
         function eventHandlers.UNIT_PET(self, unit)
             if self._displayPets then

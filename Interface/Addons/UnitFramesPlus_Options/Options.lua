@@ -2233,7 +2233,7 @@ do
                 UnitFramesPlusDB["party"]["origin"] = 1 - UnitFramesPlusDB["party"]["origin"];
                 UnitFramesPlus_PartyOrigin();
 
-                local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
+                local state = IsAddOnLoaded("Blizzard_CompactRaidFrames");
                 if state == true then
                     RaidOptionsFrame_UpdatePartyFrames();
                     CompactRaidFrameManager_UpdateShown(CompactRaidFrameManager);
@@ -2417,16 +2417,17 @@ do
         UnitFramesPlus_OptionsFrame_PartyTargetOrigin:SetChecked(UnitFramesPlusDB["party"]["origin"]==1);
     end)
 
-    StaticPopupDialogs["UFP_ENABLERAIDFRAME"] = {
-        text = UFP_OP_Party_EnableRaid,
-        button1 = RELOADUI,
-        OnAccept = function()
-            EnableAddOn("Blizzard_CompactRaidFrames");
-            EnableAddOn("Blizzard_CUFProfiles");
-            ReloadUI();
-        end,
-        whileDead = 1, hideOnEscape = 1, showAlert = 1
-    }
+    --隐藏团队工具
+    local UnitFramesPlus_OptionsFrame_PartyHideRaid = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyHideRaid", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:ClearAllPoints();
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyOrigin, "TOPLEFT", 180, 0);
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetHitRectInsets(0, -100, 0, 0);
+    UnitFramesPlus_OptionsFrame_PartyHideRaidText:SetText(UFP_OP_Party_HideRaid);
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetScript("OnClick", function(self)
+        UnitFramesPlusDB["party"]["hideraid"] = 1 - UnitFramesPlusDB["party"]["hideraid"];
+        UnitFramesPlus_HideRaidFrame();
+        self:SetChecked(UnitFramesPlusDB["party"]["hideraid"]==1);
+    end)
 
     --队友宠物
     local UnitFramesPlus_OptionsFrame_PartyPet = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyPet", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
@@ -3763,6 +3764,7 @@ function UnitFramesPlus_OptionPanel_OnShow()
         BlizzardOptionsPanel_Slider_Disable(UnitFramesPlus_OptionsFrame_TargetColorHPSlider);
     end
     UnitFramesPlus_OptionsFrame_PartyOrigin:SetChecked(UnitFramesPlusDB["party"]["origin"]==1);
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetChecked(UnitFramesPlusDB["party"]["hideraid"]==1);
     UnitFramesPlus_OptionsFrame_PartyPet:SetChecked(UnitFramesPlusDB["party"]["pet"]==1);
     UnitFramesPlus_OptionsFrame_PartyBartext:SetChecked(UnitFramesPlusDB["party"]["bartext"]==1);
     if UnitFramesPlusDB["party"]["bartext"] ~= 1 then
