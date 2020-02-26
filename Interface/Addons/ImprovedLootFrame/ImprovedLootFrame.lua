@@ -183,14 +183,18 @@ local function Announce(chn)
 	else
 		SendChatMessage("*** "..format(TEXT_MODE_A_STRING_POSSESSIVE, UnitName("target"))..LOOT.." ***", chn)
 	end
+	local link
+	local messlink = "+ %s"
 	for i = 1, GetNumLootItems() do
-		local link
-		local _, lootName = GetLootSlotInfo(i)
+		local _, lootName, lootQuantity = GetLootSlotInfo(i)
 		if lootName then
-			link = GetLootSlotLink(i) -- or lootName
+			link = GetLootSlotLink(i)
 			if link then
-				local messlink = "+ %s"
-				SendChatMessage(format(messlink, link), chn)
+				SendChatMessage(format(messlink, link).." ×"..lootQuantity, chn)
+			elseif lootQuantity == 0 then
+				if ImprovedLootFrameDB["coin"] == 1 then
+					SendChatMessage(format(messlink, string.gsub(lootName, "\n", "")), chn)
+				end
 			end
 		end
 	end
@@ -229,6 +233,7 @@ function ImprovedLootFrame_Options_Init()
     if not ImprovedLootFrameDB then ImprovedLootFrameDB = {} end
     if not ImprovedLootFrameDB["oneloot"] then ImprovedLootFrameDB["oneloot"] = 1 end
     if not ImprovedLootFrameDB["announce"] then ImprovedLootFrameDB["announce"] = 1 end
+    if not ImprovedLootFrameDB["coin"] then ImprovedLootFrameDB["coin"] = 0 end
 end
 
 local ilf = CreateFrame("Frame");
@@ -245,12 +250,15 @@ end)
 if GetLocale() == "zhCN" then
     ImprovedLootFrameOPT_Oneloot  = "启用单页拾取";
     ImprovedLootFrameOPT_Announce = "显示掉落通报按钮";
+    ImprovedLootFrameOPT_Coins    = "通报金币";
 elseif GetLocale() == "zhTW" then
     ImprovedLootFrameOPT_Oneloot  = "启用单页拾取";
     ImprovedLootFrameOPT_Announce = "显示掉落通报按钮";
+    ImprovedLootFrameOPT_Coins    = "通报金币";
 else
     ImprovedLootFrameOPT_Oneloot  = "Enable one page loot frame";
     ImprovedLootFrameOPT_Announce = "Show loot announce button";
+    ImprovedLootFrameOPT_Coins    = "Announce coins";
 end
 
 --option panel
@@ -287,9 +295,20 @@ do
         ImprovedLootFrame_Announce();
         self:SetChecked(ImprovedLootFrameDB["announce"]==1);
     end)
+
+    local ImprovedLootFrameCoins = CreateFrame("CheckButton", "ImprovedLootFrameCoins", ImprovedLootFrame_OptionsFrame, "InterfaceOptionsCheckButtonTemplate");
+    ImprovedLootFrameCoins:ClearAllPoints();
+    ImprovedLootFrameCoins:SetPoint("TOPLEFT", ImprovedLootFrameAnnounce, "TOPLEFT", 0, -30);
+    ImprovedLootFrameCoins:SetHitRectInsets(0, -100, 0, 0);
+    ImprovedLootFrameCoinsText:SetText(ImprovedLootFrameOPT_Coins);
+    ImprovedLootFrameCoins:SetScript("OnClick", function(self)
+        ImprovedLootFrameDB["coin"] = 1 - ImprovedLootFrameDB["coin"];
+        self:SetChecked(ImprovedLootFrameDB["coin"]==1);
+    end)
 end
 
 function ImprovedLootFrame_OptionPanel_OnShow()
     ImprovedLootFrameOneloot:SetChecked(ImprovedLootFrameDB["oneloot"]==1);
     ImprovedLootFrameAnnounce:SetChecked(ImprovedLootFrameDB["announce"]==1);
+    ImprovedLootFrameCoins:SetChecked(ImprovedLootFrameDB["coin"]==1);
 end
