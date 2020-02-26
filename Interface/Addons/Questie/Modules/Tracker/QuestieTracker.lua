@@ -299,7 +299,7 @@ function QuestieTracker:ResetDurabilityFrame()
 end
 
 function QuestieTracker:MoveDurabilityFrame()
-    if Questie.db.global.trackerEnabled and DurabilityFrame:IsShown() then -- todo: check if frames are actually on top of eachother (user might have tracker at the other side of the screen)
+    if Questie.db.global.trackerEnabled and Questie.db.global.stickyDurabilityFrame and DurabilityFrame:IsShown() then -- todo: check if frames are actually on top of eachother (user might have tracker at the other side of the screen)
         DurabilityFrame:ClearAllPoints()
         DurabilityFrame:SetPoint("RIGHT", _QuestieTracker.baseFrame, "LEFT", 0, 0)
     end

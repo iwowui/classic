@@ -66,31 +66,7 @@ end
 
 --非战斗状态中允许shift+左键拖动队友头像
 local function UnitFramesPlus_PartyShiftDrag()
-    PartyMemberFrame1:SetScript("OnMouseDown", function(self, elapsed)
-        if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["movable"] == 1 then
-            if IsShiftKeyDown() and (not InCombatLockdown()) then
-                PartyMemberFrame1:StartMoving();
-                UnitFramesPlusVar["party"]["moving"] = 1;
-            end
-        end
-    end)
-
-    PartyMemberFrame1:SetScript("OnMouseUp", function(self, elapsed)
-        if UnitFramesPlusVar["party"]["moving"] == 1 then
-            PartyMemberFrame1:StopMovingOrSizing();
-            UnitFramesPlusVar["party"]["moving"] = 0;
-            UnitFramesPlusVar["party"]["moved"] = 1;
-            local left = PartyMemberFrame1:GetLeft();
-            local bottom = PartyMemberFrame1:GetBottom();
-            UnitFramesPlusVar["party"]["x"] = left;
-            UnitFramesPlusVar["party"]["y"] = bottom;
-        end
-    end)
-
-    PartyMemberFrame1:SetMovable(1);
-    PartyMemberFrame1:SetClampedToScreen(1);
-
-    for id = 2, 4, 1 do
+    for id = 1, 4, 1 do
         _G["PartyMemberFrame"..id]:SetScript("OnMouseDown", function(self, elapsed)
             if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["movable"] == 1 then
                 if IsShiftKeyDown() and (not InCombatLockdown()) then
@@ -112,6 +88,9 @@ local function UnitFramesPlus_PartyShiftDrag()
             end
         end)
     end
+
+    PartyMemberFrame1:SetMovable(1);
+    PartyMemberFrame1:SetClampedToScreen(1);
 end
 
 --队友等级
@@ -878,64 +857,66 @@ for id = 1, 4, 1 do
         end)
     end
 
-    for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
-        local petdebuff = CreateFrame("Button", "UFP_PartyPetMemberFrame"..id.."Debuff"..j, _G["PartyMemberFrame"..id.."PetFrame"]);
-        petdebuff:SetFrameLevel(7);
-        petdebuff:SetWidth(15);
-        petdebuff:SetHeight(15);
-        petdebuff:SetID(j);
-        petdebuff:ClearAllPoints();
-        if j == 1 then
-            petdebuff:SetPoint("LEFT", _G["PartyMemberFrame"..id.."PetFrame"], "RIGHT", -3, -1);
-        else
-            petdebuff:SetPoint("LEFT", _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j-1], "RIGHT", 2, 0);
-        end
-        petdebuff:SetAttribute("unit", "partypet"..id);
-        RegisterUnitWatch(petdebuff);
+    _G["PartyMemberFrame"..id.."PetFrameDebuff1"]:ClearAllPoints();
+    _G["PartyMemberFrame"..id.."PetFrameDebuff1"]:SetPoint("LEFT", _G["PartyMemberFrame"..id.."PetFrame"], "RIGHT", -3, -1);
+    -- for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
+    --     local petdebuff = CreateFrame("Button", "UFP_PartyPetMemberFrame"..id.."Debuff"..j, _G["PartyMemberFrame"..id.."PetFrame"]);
+    --     petdebuff:SetFrameLevel(7);
+    --     petdebuff:SetWidth(15);
+    --     petdebuff:SetHeight(15);
+    --     petdebuff:SetID(j);
+    --     petdebuff:ClearAllPoints();
+    --     if j == 1 then
+    --         petdebuff:SetPoint("LEFT", _G["PartyMemberFrame"..id.."PetFrame"], "RIGHT", -3, -1);
+    --     else
+    --         petdebuff:SetPoint("LEFT", _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j-1], "RIGHT", 2, 0);
+    --     end
+    --     petdebuff:SetAttribute("unit", "partypet"..id);
+    --     RegisterUnitWatch(petdebuff);
 
-        petdebuff.Icon = petdebuff:CreateTexture("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Icon", "ARTWORK");
-        petdebuff.Icon:ClearAllPoints();
-        petdebuff.Icon:SetAllPoints(petdebuff);
+    --     petdebuff.Icon = petdebuff:CreateTexture("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Icon", "ARTWORK");
+    --     petdebuff.Icon:ClearAllPoints();
+    --     petdebuff.Icon:SetAllPoints(petdebuff);
 
-        petdebuff.Cooldown = CreateFrame("Cooldown", "UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Cooldown", petdebuff, "CooldownFrameTemplate");
-        petdebuff.Cooldown:SetFrameLevel(8);
-        petdebuff.Cooldown:SetReverse(true);
-        petdebuff.Cooldown:ClearAllPoints();
-        petdebuff.Cooldown:SetAllPoints(petdebuff.Icon);
-        petdebuff.Cooldown:SetParent(petdebuff);
-        -- petdebuff.Cooldown:Hide();
+    --     petdebuff.Cooldown = CreateFrame("Cooldown", "UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Cooldown", petdebuff, "CooldownFrameTemplate");
+    --     petdebuff.Cooldown:SetFrameLevel(8);
+    --     petdebuff.Cooldown:SetReverse(true);
+    --     petdebuff.Cooldown:ClearAllPoints();
+    --     petdebuff.Cooldown:SetAllPoints(petdebuff.Icon);
+    --     petdebuff.Cooldown:SetParent(petdebuff);
+    --     -- petdebuff.Cooldown:Hide();
 
-        petdebuff.CooldownText = petdebuff.Cooldown:CreateFontString("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."CooldownText", "OVERLAY");
-        petdebuff.CooldownText:SetFont(GameFontNormal:GetFont(), 10, "OUTLINE");
-        petdebuff.CooldownText:SetTextColor(1, 1, 1);--(1, 0.75, 0);
-        petdebuff.CooldownText:ClearAllPoints();
-        petdebuff.CooldownText:SetPoint("CENTER", petdebuff.Icon, "CENTER", 0, 0);
-        -- petdebuff.CooldownText:SetPoint("TOPLEFT", petdebuff.Icon, "TOPLEFT", 0, 0);
+    --     petdebuff.CooldownText = petdebuff.Cooldown:CreateFontString("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."CooldownText", "OVERLAY");
+    --     petdebuff.CooldownText:SetFont(GameFontNormal:GetFont(), 10, "OUTLINE");
+    --     petdebuff.CooldownText:SetTextColor(1, 1, 1);--(1, 0.75, 0);
+    --     petdebuff.CooldownText:ClearAllPoints();
+    --     petdebuff.CooldownText:SetPoint("CENTER", petdebuff.Icon, "CENTER", 0, 0);
+    --     -- petdebuff.CooldownText:SetPoint("TOPLEFT", petdebuff.Icon, "TOPLEFT", 0, 0);
 
-        petdebuff.CountText = petdebuff.Cooldown:CreateFontString("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."CountText", "OVERLAY");
-        petdebuff.CountText:SetFont(GameFontNormal:GetFont(), 10, "OUTLINE");
-        petdebuff.CountText:SetTextColor(1, 1, 1);
-        petdebuff.CountText:ClearAllPoints();
-        -- petdebuff.CountText:SetPoint("CENTER", petdebuff.Icon, "BOTTOM", 0, 0);
-        petdebuff.CountText:SetPoint("BOTTOMRIGHT", petdebuff.Icon, "BOTTOMRIGHT", 0, 0);
+    --     petdebuff.CountText = petdebuff.Cooldown:CreateFontString("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."CountText", "OVERLAY");
+    --     petdebuff.CountText:SetFont(GameFontNormal:GetFont(), 10, "OUTLINE");
+    --     petdebuff.CountText:SetTextColor(1, 1, 1);
+    --     petdebuff.CountText:ClearAllPoints();
+    --     -- petdebuff.CountText:SetPoint("CENTER", petdebuff.Icon, "BOTTOM", 0, 0);
+    --     petdebuff.CountText:SetPoint("BOTTOMRIGHT", petdebuff.Icon, "BOTTOMRIGHT", 0, 0);
 
-        petdebuff.Border = petdebuff:CreateTexture("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Border", "OVERLAY");
-        petdebuff.Border:SetTexture("Interface\\Buttons\\UI-Dedebuff-Overlays");
-        petdebuff.Border:SetWidth(17);
-        petdebuff.Border:SetHeight(17);
-        petdebuff.Border:SetTexCoord(0.296875, 0.5703125, 0, 0.515625);
-        petdebuff.Border:ClearAllPoints();
-        petdebuff.Border:SetPoint("TOPLEFT", petdebuff, "TOPLEFT", -1, 1);
+    --     petdebuff.Border = petdebuff:CreateTexture("UFP_PartyPetMemberFrame"..id.."Debuff"..j.."Border", "OVERLAY");
+    --     petdebuff.Border:SetTexture("Interface\\Buttons\\UI-Debuff-Overlays");
+    --     petdebuff.Border:SetWidth(17);
+    --     petdebuff.Border:SetHeight(17);
+    --     petdebuff.Border:SetTexCoord(0.296875, 0.5703125, 0, 0.515625);
+    --     petdebuff.Border:ClearAllPoints();
+    --     petdebuff.Border:SetPoint("TOPLEFT", petdebuff, "TOPLEFT", -1, 1);
 
-        petdebuff:EnableMouse(true);
-        petdebuff:SetScript("OnEnter",function(self)
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-            GameTooltip:SetUnitDebuff("partypet"..id, j);
-        end)
-        petdebuff:SetScript("OnLeave",function()
-            GameTooltip:Hide();
-        end)
-    end
+    --     petdebuff:EnableMouse(true);
+    --     petdebuff:SetScript("OnEnter",function(self)
+    --         GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+    --         GameTooltip:SetUnitDebuff("partypet"..id, j);
+    --     end)
+    --     petdebuff:SetScript("OnLeave",function()
+    --         GameTooltip:Hide();
+    --     end)
+    -- end
 end
 
 --队友buff/debuff直接显示时隐藏buff鼠标提示
@@ -964,9 +945,9 @@ function UnitFramesPlus_PartyBuff()
             for j = 1, UFP_MAX_PARTY_DEBUFFS, 1 do
                 _G["UFP_PartyMemberFrame"..id.."Debuff"..j]:SetAlpha(0);
             end
-            for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
-                _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j]:SetAlpha(0);
-            end
+            -- for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
+            --     _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j]:SetAlpha(0);
+            -- end
         end
         pb:SetScript("OnUpdate", nil);
     end
@@ -1096,66 +1077,66 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                 _G["UFP_PartyMemberFrame"..id.."Debuff"..j].CountText:SetText(counttext);
             end
 
-            for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
-                local alpha = 0;
-                local cdalpha = 0;
-                local timetext = "";
-                -- local textalpha = 0.7;
-                -- local r, g, b = 0, 1, 0;
+            -- for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
+            --     local alpha = 0;
+            --     local cdalpha = 0;
+            --     local timetext = "";
+            --     -- local textalpha = 0.7;
+            --     -- local r, g, b = 0, 1, 0;
 
-                local _, icon, count, _, duration, expirationTime, caster, _, _, spellId = UnitDebuff("partypet"..id, j);
-                if icon then
-                    -- print(icon)
-                    _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Icon:SetTexture(icon);
-                    alpha = 1;
-                    if count > 1 then
-                        counttext = count;
-                    end
+            --     local _, icon, count, _, duration, expirationTime, caster, _, _, spellId = UnitDebuff("partypet"..id, j);
+            --     if icon then
+            --         -- print(icon)
+            --         _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Icon:SetTexture(icon);
+            --         alpha = 1;
+            --         if count > 1 then
+            --             counttext = count;
+            --         end
 
-                    if UnitFramesPlusDB["party"]["cooldown"] == 1 then
-                        cdalpha = 1;
+            --         if UnitFramesPlusDB["party"]["cooldown"] == 1 then
+            --             cdalpha = 1;
 
-                        if UnitFramesPlusDB["global"]["builtincd"] == 1 and UFPClassicDurations then
-                            local durationNew, expirationTimeNew = UFPClassicDurations:GetAuraDurationByUnit("party"..id, spellId, caster)
-                            if duration == 0 and durationNew then
-                                duration = durationNew
-                                expirationTime = expirationTimeNew
-                            end
+            --             if UnitFramesPlusDB["global"]["builtincd"] == 1 and UFPClassicDurations then
+            --                 local durationNew, expirationTimeNew = UFPClassicDurations:GetAuraDurationByUnit("party"..id, spellId, caster)
+            --                 if duration == 0 and durationNew then
+            --                     duration = durationNew
+            --                     expirationTime = expirationTimeNew
+            --                 end
 
-                            if UnitFramesPlusDB["global"]["cdtext"] == 1 and expirationTime and expirationTime ~= 0 and duration > 0 then
-                                local timeleft = expirationTime - GetTime();
-                                if timeleft >= 0 then
-                                    if timeleft < 60 then
-                                        timetext = math.floor(timeleft+1);
-                                        -- textalpha = 1 - timeleft/200;
-                                        -- r, g, b = UnitFramesPlus_GetRGB(timeleft, 60);
-                                    elseif timeleft <= 1800 then
-                                        timetext = math.floor(timeleft/60+1).."m";
-                                    else
-                                        timetext = math.floor(timeleft/3600+1).."h";
-                                    end
-                                end
-                            end
+            --                 if UnitFramesPlusDB["global"]["cdtext"] == 1 and expirationTime and expirationTime ~= 0 and duration > 0 then
+            --                     local timeleft = expirationTime - GetTime();
+            --                     if timeleft >= 0 then
+            --                         if timeleft < 60 then
+            --                             timetext = math.floor(timeleft+1);
+            --                             -- textalpha = 1 - timeleft/200;
+            --                             -- r, g, b = UnitFramesPlus_GetRGB(timeleft, 60);
+            --                         elseif timeleft <= 1800 then
+            --                             timetext = math.floor(timeleft/60+1).."m";
+            --                         else
+            --                             timetext = math.floor(timeleft/3600+1).."h";
+            --                         end
+            --                     end
+            --                 end
 
-                            CooldownFrame_Set(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown, expirationTime - duration, duration, true);
-                        else
-                            CooldownFrame_Clear(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown);
-                        end
-                    else
-                        CooldownFrame_Clear(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown);
-                    end
-                end
-                _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j]:SetAlpha(alpha);
-                _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown:SetAlpha(cdalpha);
-                -- _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetTextColor(r, g, b);
-                -- _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetAlpha(textalpha);
-                if (not IsAddOnLoaded("OmniCC")) then
-                    _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetText(timetext);
-                else
-                    _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetText("");
-                end
-                _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CountText:SetText(counttext);
-            end
+            --                 CooldownFrame_Set(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown, expirationTime - duration, duration, true);
+            --             else
+            --                 CooldownFrame_Clear(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown);
+            --             end
+            --         else
+            --             CooldownFrame_Clear(_G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown);
+            --         end
+            --     end
+            --     _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j]:SetAlpha(alpha);
+            --     _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Cooldown:SetAlpha(cdalpha);
+            --     -- _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetTextColor(r, g, b);
+            --     -- _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetAlpha(textalpha);
+            --     if (not IsAddOnLoaded("OmniCC")) then
+            --         _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetText(timetext);
+            --     else
+            --         _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CooldownText:SetText("");
+            --     end
+            --     _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].CountText:SetText(counttext);
+            -- end
         end
     end
 end

@@ -211,7 +211,7 @@ TargetHPMPPct.Pct:Hide();
 function UnitFramesPlus_TargetHPValueDisplayUpdate()
     if not UnitExists("target") then return end
     local CurHP, MaxHP;
-    if UnitFramesPlusDB["global"]["exacthp"] == 1 and UnitFramesPlus_GetUnitHealth then
+    if UnitFramesPlusDB["global"]["exacthp"] == 1 and UnitFramesPlus_GetUnitHealth and UnitIsEnemy("player", "target") and UnitIsPlayer("target") then
         CurHP, MaxHP = UnitFramesPlus_GetUnitHealth("target");
     else
         CurHP = UnitHealth("target");

@@ -7,7 +7,7 @@
 ## Notes-zhTW: 顯示副本背景故事、相關任務及BOSS攻略提示
 ## X-Repple: 地图
 ## Author: Thandrenn
-## Version: 4.11.61
+## Version: 4.11.62
 ## X-Author-Faction: Alliance
 ## X-Author-Server: Atiesh US
 ## X-eMail: mystery8@gmail.com
@@ -15,8 +15,8 @@
 ## X-Category: Quests
 ## X-License: GPLv2
 ## X-Credits: AtlasQuest Team
-## X-Localizations: enUS, zhCN
-## X-Date: January 19, 2020
+## X-Localizations: enUS, zhCN, zhTW
+## X-Date: February 24, 2020
 ## X-Help: AtlasQuestHelp
 ## RequiredDeps: Atlas
 ## OptionalDeps: 

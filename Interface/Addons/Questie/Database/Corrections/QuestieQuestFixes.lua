@@ -533,6 +533,12 @@ function QuestieQuestFixes:Load()
         [2922] = {
             [QuestieDB.questKeys.preQuestSingle] = {}, -- Save Techbot's Brain doesn't need the Tinkmaster Overspark breadcrumb #687
         },
+        [2925] = {
+            [QuestieDB.questKeys.exclusiveTo] = {2924},
+        },
+        [2931] = {
+            [QuestieDB.questKeys.exclusiveTo] = {2930},
+        },
         [2945] = {
             [QuestieDB.questKeys.startedBy] = {{6212},nil,{9326}},
         },
@@ -1384,6 +1390,9 @@ function QuestieQuestFixes:Load()
         },
         [9033] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 178,
+        },
+        [9063] = {
+            [QuestieDB.questKeys.zoneOrSort] = 493,
         },
         [9261] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 77,

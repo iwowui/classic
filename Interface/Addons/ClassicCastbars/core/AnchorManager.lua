@@ -26,7 +26,6 @@ local anchors = {
     },
 
     party = {
-        "UFP_PartyFrame%d",
         "SUFHeaderpartyUnitButton%d",
         "XPerl_party%d",
         "ElvUF_PartyGroup1UnitButton%d",

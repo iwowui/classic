@@ -3,7 +3,7 @@
 
 local ADDONNAME = ...;
 local MAJOR_VERSION = 1;
-local MINOR_VERSION = 2;
+local MINOR_VERSION = 3;
 
 local levelmax = 63;--in classic, maxlevel=63, like Kel'Thuzad, C'Thun, Nefarian, Ragnaros, Onyxia
 
@@ -451,7 +451,7 @@ end
 local function UnitFramesPlus_MobHealth_Init()
     if not UnitFramesPlusMobHealthDB or UnitFramesPlusMobHealthDB["ver"] ~= MAJOR_VERSION.."."..MINOR_VERSION then
         UnitFramesPlusMobHealthDB = {
-            ["npc"] = UnitFramesPlus_CreatureHealthCache or {},
+            ["npc"] = {},
             ["pc"]  = {},
             ["pet"] = {},
             ["ver"] = MAJOR_VERSION.."."..MINOR_VERSION,

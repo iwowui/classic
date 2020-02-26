@@ -1249,6 +1249,38 @@ if enabled > 0 then
 	end
 end
 
+local enabled = GetAddOnEnableState(playerName, "ImprovedLootFrame");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameILF	= "拾取增强";
+		FF_DescILF	= "单页拾取，掉落通报";
+	elseif GetLocale() == "zhTW" then
+		FF_NameILF	= "拾取增强";
+		FF_DescILF	= "单页拾取，掉落通报";
+	else
+		FF_NameILF	= "ImprovedLootFrame";
+		FF_DescILF	= "Expands the loot frame to fit all items onto one page and show loot announce button.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "ILF";
+				name= FF_NameILF;
+				subtext= "Improved Loot Frame";
+				tooltip = FF_DescILF;
+				icon= "Interface\\Icons\\Racial_Dwarf_FindTreasure";
+				callback= function(button)
+					if not IsAddOnLoaded("ImprovedLootFrame") then
+						LoadAddOn("ImprovedLootFrame");
+					end
+					InterfaceOptionsFrame_OpenToCategory("ImprovedLootFrame");
+					InterfaceOptionsFrame_OpenToCategory("ImprovedLootFrame");
+				end;
+			}
+		);
+	end
+end
+
 local enabled = GetAddOnEnableState(playerName, "ReforgeLite");
 if enabled > 0 then
 	if GetLocale() == "zhCN" then

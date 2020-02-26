@@ -1,4 +1,29 @@
 ﻿
+local prefix = "%%d %%s ";
+if GetLocale() == "zhCN" or GetLocale() == "zhTW" then
+    prefix = "%%d%%s";
+end
+local logouttext = string.gsub(tostring(CAMP_TIMER), prefix, "", 1);
+local antilogout = CreateFrame("frame");
+local function AntiLogout()
+    if ExtraConfiguration["antilogout"] == 1 then
+        antilogout:SetScript("OnUpdate", function(self, elapsed)
+            self.timer = (self.timer or 0) + elapsed;
+            if self.timer >= 5 then
+                if StaticPopup1:IsShown() and StaticPopup1Button1:GetText() == CANCEL and not IsResting() and UnitIsAFK("player") then
+                    local text = StaticPopup1Text:GetText();
+                    if string.find(text, logouttext) then
+                        StaticPopup1Button1:Click();
+                    end
+                end
+                self.timer = 0;
+            end
+        end);
+    else
+        antilogout:SetScript("OnUpdate", nil);
+    end
+end
+
 local function AntiCrab()
     if ExtraConfiguration["anticrab"] == 1 then
         if GetCVar("overrideArchive") ~= 0 then
@@ -43,6 +68,7 @@ switch:SetScript("OnEvent", function(self, event, ...)
             if not ExtraConfiguration["anticrab"] then ExtraConfiguration["anticrab"] = 1; end
             if not ExtraConfiguration["blueshaman"] then ExtraConfiguration["blueshaman"] = 0; end
             if not ExtraConfiguration["maxcamera"] then ExtraConfiguration["maxcamera"] = 1; end
+            if not ExtraConfiguration["antilogout"] then ExtraConfiguration["antilogout"] = 0; end
             Switch_OptionPanel_OnShow();
             switch:UnregisterEvent("ADDON_LOADED");
         end
@@ -56,6 +82,7 @@ switch:SetScript("OnEvent", function(self, event, ...)
         -- end
         AntiCrab();
         BlueShaman();
+        AntiLogout();
         switch:UnregisterEvent("VARIABLES_LOADED");
     elseif event == "PLAYER_ENTERING_WORLD" then
         MaxCameraDistance()
@@ -69,16 +96,19 @@ if GetLocale() == "zhCN" then
     SWITCH_ANTICRAB        = "原汁原味（重启游戏后生效）";
     SWITCH_BLUESHAMAN      = "蓝色萨满";
     SWITCH_MAXCAMERA       = "自动拉远镜头";
+    SWITCH_ANTILOGOUT      = "非休息区不自动登出（有风险&掉线无效&触发时会提示插件出错）";
 elseif GetLocale() == "zhTW" then
     SWITCH_INFO            = "雜項設置";
     SWITCH_ANTICRAB        = "原汁原味（重啟遊戲後生效）";
     SWITCH_BLUESHAMAN      = "藍色薩滿";
     SWITCH_MAXCAMERA       = "自動拉遠鏡頭";
+    SWITCH_ANTILOGOUT      = "非休息區不自動登出（有風險&掉線無效&觸發時會提示插件出錯）";
 else
     SWITCH_INFO            = "options";
     SWITCH_ANTICRAB        = "original taste (Effective after game restarted)";
     SWITCH_BLUESHAMAN      = "blue shaman";
     SWITCH_MAXCAMERA       = "auto maximize camera distance";
+    SWITCH_ANTILOGOUT      = "Donot automatically logout (dangerous!!!)";
 end
 
 Switch_OptionsFrame = CreateFrame("Frame", "Switch_OptionsFrame", UIParent);
@@ -126,12 +156,24 @@ do
         MaxCameraDistance();
         self:SetChecked(ExtraConfiguration["maxcamera"]==1);
     end)
+
+    local Switch_AntiLogoutEnable = CreateFrame("CheckButton", "Switch_AntiLogoutEnable", Switch_OptionsFrame, "InterfaceOptionsCheckButtonTemplate");
+    Switch_AntiLogoutEnable:ClearAllPoints();
+    Switch_AntiLogoutEnable:SetPoint("TOPLEFT", Switch_MaxCmareaEnable, "TOPLEFT", 0, -30);
+    Switch_AntiLogoutEnable:SetHitRectInsets(0, -100, 0, 0);
+    Switch_AntiLogoutEnableText:SetText(SWITCH_ANTILOGOUT);
+    Switch_AntiLogoutEnable:SetScript("OnClick", function(self)
+        ExtraConfiguration["antilogout"] = 1 - ExtraConfiguration["antilogout"];
+        AntiLogout();
+        self:SetChecked(ExtraConfiguration["antilogout"]==1);
+    end)
 end
 
 function Switch_OptionPanel_OnShow()
     Switch_AnticrabEnable:SetChecked(ExtraConfiguration["anticrab"]==1);
     Switch_BlueshamanEnable:SetChecked(ExtraConfiguration["blueshaman"]==1);
     Switch_MaxCmareaEnable:SetChecked(ExtraConfiguration["maxcamera"]==1);
+    Switch_AntiLogoutEnable:SetChecked(ExtraConfiguration["antilogout"]==1);
 end
 
 --buff来源

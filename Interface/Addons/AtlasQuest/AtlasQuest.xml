@@ -46,6 +46,10 @@
 <Script file="Locale/global-zhCN.lua" />
 <Script file="Locale/classic-zhCN.lua" />
 
+<!--  Traditional Chinese LOCALIZATION -->
+<Script file="Locale/global-zhTW.lua" />
+<Script file="Locale/classic-zhTW.lua" />
+	
 <!--  RUSSIAN LOCALIZATION -->
 <!-- <Script file="Locale/global-ruRU.lua" />
 <Script file="Locale/classic-ruRU.lua" /> -->

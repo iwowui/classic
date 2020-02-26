@@ -57,7 +57,7 @@ function ChannelFilters(self, event, msg, playername, _, channel, _, flag, zonec
             local truename = strsplit("-", playername);
             if truename == UnitName("player") then return false end
             local find = false;
-            if cfilters["white"] == true and next(cfilterlist["white"]) ~= nil then
+            if cfilters["white"] == true and cfilterlist ~= nil and next(cfilterlist["white"]) ~= nil then
                 for _, word in ipairs(cfilterlist["white"]) do
                     local _, result= gsub(string.upper(msg), word, "");
                     if (result > 0) then
@@ -73,7 +73,7 @@ function ChannelFilters(self, event, msg, playername, _, channel, _, flag, zonec
                 local k, v;
                 for k, v in pairs(cfilters) do
                     if k ~= "white" and v == true then
-                        if next(cfilterlist[k]) ~= nil then
+                        if cfilterlist ~= nil and next(cfilterlist[k]) ~= nil then
                             for _, word in ipairs(cfilterlist[k]) do
                                 local _, result= gsub(string.upper(msg), word, "");
                                 if (result > 0) then

@@ -446,15 +446,16 @@ function QuestieQuest:UpdateQuest(questId)
     Questie:Debug(DEBUG_DEVELOP, "[QuestieQuest:UpdateQuest]", questId)
     ---@type Quest
     local quest = QuestieDB:GetQuest(questId)
-    if quest and not Questie.db.char.complete[questId] then
+    if quest and (not Questie.db.char.complete[questId]) then
         QuestieQuest:PopulateQuestLogInfo(quest)
-        QuestieQuest:GetAllQuestObjectives(quest) -- update quest log values in quest object
         QuestieQuest:UpdateObjectiveNotes(quest)
         local isComplete = QuestieQuest:IsComplete(quest)
         if isComplete == 1 then -- Quest is complete
+            Questie:Debug(DEBUG_DEVELOP, "[QuestieQuest:UpdateQuest] Quest is complete")
             QuestieMap:UnloadQuestFrames(questId)
             QuestieQuest:AddFinisher(quest)
         elseif isComplete == -1 then -- Failed quests should be shown as available again
+            Questie:Debug(DEBUG_DEVELOP, "[QuestieQuest:UpdateQuest] Quest failed")
             QuestieMap:UnloadQuestFrames(questId)
             _QuestieQuest:DrawAvailableQuest(quest)
         else
@@ -556,9 +557,9 @@ end
 function QuestieQuest:AddFinisher(quest)
     --We should never ever add the quest if IsQuestFlaggedComplete true.
     local questId = quest.Id
-    Questie:Debug(DEBUG_INFO, "[QuestieQuest]", "Adding finisher for quest ", questId)
+    Questie:Debug(DEBUG_INFO, "[QuestieQuest]", "Adding finisher for quest", questId)
 
-    if(QuestiePlayer.currentQuestlog[questId] and IsQuestFlaggedCompleted(questId) == false and IsQuestComplete(questId) and not Questie.db.char.complete[questId]) then
+    if(QuestiePlayer.currentQuestlog[questId] and (IsQuestFlaggedCompleted(questId) == false) and IsQuestComplete(questId) and (not Questie.db.char.complete[questId])) then
         local finisher = nil
         if quest.Finisher ~= nil then
             if quest.Finisher.Type == "monster" then
@@ -566,10 +567,10 @@ function QuestieQuest:AddFinisher(quest)
             elseif quest.Finisher.Type == "object" then
                 finisher = QuestieDB:GetObject(quest.Finisher.Id)
             else
-                Questie:Debug(DEBUG_SPAM, "[QuestieQuest]: ".. QuestieLocale:GetUIString('DEBUG_UNHANDLE_FINISH', quest.Finisher.Type, questId, quest.name))
+                Questie:Debug(DEBUG_CRITICAL, "[QuestieQuest]: ".. QuestieLocale:GetUIString('DEBUG_UNHANDLE_FINISH', quest.Finisher.Type, questId, quest.name))
             end
         else
-            Questie:Debug(DEBUG_SPAM, "[QuestieQuest]: ".. QuestieLocale:GetUIString('DEBUG_NO_FINISH', questId, quest.name))
+            Questie:Debug(DEBUG_CRITICAL, "[QuestieQuest]: ".. QuestieLocale:GetUIString('DEBUG_NO_FINISH', questId, quest.name))
         end
         if(finisher ~= nil and finisher.spawns ~= nil) then
             for finisherZone, spawns in pairs(finisher.spawns) do
@@ -615,6 +616,7 @@ function QuestieQuest:AddFinisher(quest)
                                 end
                             end
                         else
+                            Questie:Debug(DEBUG_DEVELOP, "[QuestieQuest]: Adding world icon as finisher")
                             --QuestieMap:DrawWorldIcon(data, Zone, coords[1], coords[2])
                             local x = coords[1];
                             local y = coords[2];
@@ -631,6 +633,7 @@ function QuestieQuest:AddFinisher(quest)
                                 --    y = midY;
                                 --end
                             end
+                            Questie:Debug(DEBUG_DEVELOP, "[QuestieQuest]:", finisherZone, x, y)
 
                             local icon, _ = QuestieMap:DrawWorldIcon(data, finisherZone, x, y)
 
@@ -641,6 +644,8 @@ function QuestieQuest:AddFinisher(quest)
                     end
                 end
             end
+        else
+            Questie:Debug(DEBUG_CRITICAL, "[QuestieQuest]: finisher or finisher.spawns == nil")
         end
     end
 end
@@ -679,7 +684,7 @@ function QuestieQuest:ForceToMap(type, id, label, customScale)
 end
 
 function QuestieQuest:PopulateObjective(Quest, ObjectiveIndex, Objective, BlockItemTooltips) -- must be pcalled
-    Questie:Debug(DEBUG_SPAM, "[QuestieQuest:PopulateObjective]")
+    Questie:Debug(DEBUG_DEVELOP, "[QuestieQuest:PopulateObjective]")
     if not Objective.AlreadySpawned then
         Objective.AlreadySpawned = {};
     end
@@ -787,7 +792,7 @@ function QuestieQuest:PopulateObjective(Quest, ObjectiveIndex, Objective, BlockI
                     end
                 end
             elseif completed and Objective.AlreadySpawned then -- unregister notes
-                for id, spawn in pairs(Objective.AlreadySpawned) do
+                for _, spawn in pairs(Objective.AlreadySpawned) do
                     for _, note in pairs(spawn.mapRefs) do
                         note:Unload();
                     end
