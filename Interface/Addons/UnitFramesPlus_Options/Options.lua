@@ -2209,10 +2209,72 @@ do
     partyconfig:SetPoint("TOPLEFT", 16, -16);
     partyconfig:SetText(UFP_OP_Party_Options);
 
+    --隐藏团队工具
+    local UnitFramesPlus_OptionsFrame_PartyHideRaid = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyHideRaid", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:ClearAllPoints();
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetPoint("TOPLEFT", partyconfig, "TOPLEFT", 0, -40);
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetHitRectInsets(0, -100, 0, 0);
+    UnitFramesPlus_OptionsFrame_PartyHideRaidText:SetText(UFP_OP_Party_HideRaid);
+    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetScript("OnClick", function(self)
+        UnitFramesPlusDB["party"]["hideraid"] = 1 - UnitFramesPlusDB["party"]["hideraid"];
+        UnitFramesPlus_HideRaidFrame();
+        -- if UnitFramesPlusDB["party"]["hideraid"] == 1 then
+        --     BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_PartyInRaid);
+        --     UnitFramesPlus_OptionsFrame_PartyInRaidText:SetTextColor(1, 1, 1);
+        -- else
+        --     BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyInRaid);
+        -- end
+        -- self:SetChecked(UnitFramesPlusDB["party"]["hideraid"]==1);
+    end)
+
+    StaticPopupDialogs["UFP_SHOWPARTYFRAME"] = {
+        text = UFPLocal_ShowParty..UFP_OP_Party_Error,
+        button1 = OKAY,
+        button2 = CANCEL,
+        OnAccept = function()
+            ReloadUI();
+        end,
+        OnCancel = function()
+            UnitFramesPlusDB["party"]["always"] = 1 - UnitFramesPlusDB["party"]["always"];
+            UnitFramesPlus_OptionsFrame_PartyInRaid:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
+        end,
+        whileDead = 1, hideOnEscape = 1, showAlert = 1
+    }
+
+    StaticPopupDialogs["UFP_SHOWPARTYFRAME2"] = {
+        text = UFPLocal_ShowParty,
+        button1 = OKAY,
+        button2 = CANCEL,
+        OnAccept = function()
+            ReloadUI();
+        end,
+        OnCancel = function()
+            UnitFramesPlusDB["party"]["always"] = 1 - UnitFramesPlusDB["party"]["always"];
+            UnitFramesPlus_OptionsFrame_PartyInRaid:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
+        end,
+        whileDead = 1, hideOnEscape = 1, showAlert = 1
+    }
+
+    --团队中显示小队
+    local UnitFramesPlus_OptionsFrame_PartyInRaid = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyInRaid", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
+    UnitFramesPlus_OptionsFrame_PartyInRaid:ClearAllPoints();
+    UnitFramesPlus_OptionsFrame_PartyInRaid:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyHideRaid, "TOPLEFT", 180, 0);
+    UnitFramesPlus_OptionsFrame_PartyInRaid:SetHitRectInsets(0, -100, 0, 0);
+    UnitFramesPlus_OptionsFrame_PartyInRaidText:SetText(UFP_OP_Party_Always);
+    UnitFramesPlus_OptionsFrame_PartyInRaid:SetScript("OnClick", function(self)
+        UnitFramesPlusDB["party"]["always"] = 1 - UnitFramesPlusDB["party"]["always"];
+        if UnitFramesPlusDB["party"]["always"] == 1 then
+            StaticPopup_Show("UFP_SHOWPARTYFRAME");
+        else
+            StaticPopup_Show("UFP_SHOWPARTYFRAME2");
+        end
+        -- self:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
+    end)
+
     --自动开启传统小队界面
     local UnitFramesPlus_OptionsFrame_PartyOrigin = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyOrigin", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
     UnitFramesPlus_OptionsFrame_PartyOrigin:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyOrigin:SetPoint("TOPLEFT", partyconfig, "TOPLEFT", 0, -40);
+    UnitFramesPlus_OptionsFrame_PartyOrigin:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyHideRaid, "TOPLEFT", 0, -25);
     UnitFramesPlus_OptionsFrame_PartyOrigin:SetHitRectInsets(0, -100, 0, 0);
     UnitFramesPlus_OptionsFrame_PartyOriginText:SetText(UFP_OP_Party_Origin);
     UnitFramesPlus_OptionsFrame_PartyOrigin:SetScript("OnClick", function(self)
@@ -2415,18 +2477,6 @@ do
         -- end
         self:SetChecked(UnitFramesPlusDB["party"]["origin"]==1);
         UnitFramesPlus_OptionsFrame_PartyTargetOrigin:SetChecked(UnitFramesPlusDB["party"]["origin"]==1);
-    end)
-
-    --隐藏团队工具
-    local UnitFramesPlus_OptionsFrame_PartyHideRaid = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyHideRaid", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
-    UnitFramesPlus_OptionsFrame_PartyHideRaid:ClearAllPoints();
-    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetPoint("TOPLEFT", UnitFramesPlus_OptionsFrame_PartyOrigin, "TOPLEFT", 180, 0);
-    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetHitRectInsets(0, -100, 0, 0);
-    UnitFramesPlus_OptionsFrame_PartyHideRaidText:SetText(UFP_OP_Party_HideRaid);
-    UnitFramesPlus_OptionsFrame_PartyHideRaid:SetScript("OnClick", function(self)
-        UnitFramesPlusDB["party"]["hideraid"] = 1 - UnitFramesPlusDB["party"]["hideraid"];
-        UnitFramesPlus_HideRaidFrame();
-        self:SetChecked(UnitFramesPlusDB["party"]["hideraid"]==1);
     end)
 
     --队友宠物
@@ -3765,6 +3815,10 @@ function UnitFramesPlus_OptionPanel_OnShow()
     end
     UnitFramesPlus_OptionsFrame_PartyOrigin:SetChecked(UnitFramesPlusDB["party"]["origin"]==1);
     UnitFramesPlus_OptionsFrame_PartyHideRaid:SetChecked(UnitFramesPlusDB["party"]["hideraid"]==1);
+    if UnitFramesPlusDB["party"]["hideraid"] ~= 1 then
+        BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyInRaid);
+    end
+    UnitFramesPlus_OptionsFrame_PartyInRaid:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
     UnitFramesPlus_OptionsFrame_PartyPet:SetChecked(UnitFramesPlusDB["party"]["pet"]==1);
     UnitFramesPlus_OptionsFrame_PartyBartext:SetChecked(UnitFramesPlusDB["party"]["bartext"]==1);
     if UnitFramesPlusDB["party"]["bartext"] ~= 1 then

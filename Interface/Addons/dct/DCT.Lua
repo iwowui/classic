@@ -770,8 +770,9 @@ function DCT_ProcCombatTextUpdata(self, event, larg1, larg2, larg3)
 		dct_icon = select(3, GetSpellInfo(larg2))
 		showType = "DCT_SHOWACTIVE"
 	elseif larg1 == "FACTION" then --shenwang
-		dct_amount = larg3
-		dct_spellName = larg2
+		-- dct_amount = larg3
+		-- dct_spellName = larg2
+		dct_spellName, dct_amount = GetCurrentCombatTextEventInfo()
 		if dct_amount and dct_amount < 0 then
 			showId = 2
 			dct_amount = -dct_amount

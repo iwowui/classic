@@ -465,22 +465,14 @@ function WhisperTable_OnClick(self, num, button)
 				end
 				print(name..NOTFIND);
 			else
-				-- local _, whisperRealm = strsplit("-", tag);
-				-- local _, playerRealm = strsplit("-", WhisperTablePlayer);
-				-- if (playerRealm == whisperRealm) then
-				-- 	--非战网消息，与玩家在同一个服务器
-				-- 	local msg = "/w "..name.." ";
-				-- 	if (not SELECTED_CHAT_FRAME.editBox:IsVisible()) then
-				-- 		ChatFrame_OpenChat(msg);
-				-- 	else
-				-- 		SELECTED_CHAT_FRAME.editBox:SetText(msg);
-				-- 	end
-				-- 	ChatEdit_ParseText(ChatFrame1.editBox, 0);
-				-- else
-				-- 	--非战网消息，与玩家不在同一个服务器
-				-- 	print(name..DIFFSRV);
-				-- end
-				local msg = "/w "..name.." ";
+				local msg = "";
+				local _, whisperRealm = strsplit("-", tag);
+				local _, playerRealm = strsplit("-", WhisperTablePlayer);
+				if (playerRealm == whisperRealm) then
+					msg = "/w "..name.." ";
+				else
+					msg = "/w "..name.."-"..whisperRealm.." ";
+				end
 				if (not SELECTED_CHAT_FRAME.editBox:IsVisible()) then
 					ChatFrame_OpenChat(msg);
 				else

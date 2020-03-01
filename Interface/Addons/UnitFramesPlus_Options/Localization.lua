@@ -78,7 +78,8 @@
     UFP_OP_Party_TargetLite = "简易模式";
     UFP_OP_Party_OnOff = "离线监测";
     UFP_OP_Party_HideRaid = "隐藏系统团队框架";
-    -- UFP_OP_Party_Always = "团队中显示小队";
+    UFP_OP_Party_Always = "团队中显示小队";
+    UFP_OP_Party_Error = "\n\n注意：可能导致战斗中插件报错";
     UFP_OP_Buff = "显示Buff";
     UFP_OP_Filter = "Buff过滤";
     UFP_OP_FilterAll = "所有";
@@ -186,7 +187,8 @@ elseif GetLocale() == "zhTW" then
     UFP_OP_Party_TargetLite = "簡易模式";
     UFP_OP_Party_OnOff = "離線監測";
     UFP_OP_Party_HideRaid = "隱藏系统團隊框架";
-    -- UFP_OP_Party_Always = "團隊中顯示小隊";
+    UFP_OP_Party_Always = "團隊中顯示小隊";
+    UFP_OP_Party_Error = "\n\n注意：可能導致戰鬥中插件報錯";
     UFP_OP_Buff = "顯示Buff";
     UFP_OP_Filter = "Buff過濾";
     UFP_OP_FilterAll = "所有";
@@ -294,7 +296,8 @@ else
     UFP_OP_Party_TargetLite = "Lite mode";
     UFP_OP_Party_OnOff = "Offline detection";
     UFP_OP_Party_HideRaid = "Hide blizzard raid frame";
-    -- UFP_OP_Party_Always = "Show party in raid";
+    UFP_OP_Party_Always = "Show party in raid";
+    UFP_OP_Party_Error = "\n\nWarning: this may cause addon errors during combat";
     UFP_OP_Buff = "Party member buff";
     UFP_OP_Filter = "Buff filter";
     UFP_OP_FilterAll = "All";
