@@ -99,7 +99,7 @@ UnitFramesPlusDefaultDB = {
 
     party = {
         origin = 1,         --关闭团队风格小队界面
-        always = 1,         --团队中显示小队
+        always = 0,         --团队中显示小队
         level = 1,          --队友等级
         colorname = 1,      --队友名字染色
         shortname = 1,      --队友名字服务器显示为(*)

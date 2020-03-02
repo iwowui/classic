@@ -138,7 +138,7 @@ end
 --设置插件时刷新队友等级显示
 function UnitFramesPlus_PartyLevelDisplayUpdate(id)
     local LevelText = "";
-    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 and GetDisplayedAllyFrames() == "party" then
         if UnitFramesPlusDB["party"]["level"] == 1 then
             if UnitLevel(_G["PartyMemberFrame"..id].unit) and UnitLevel(_G["PartyMemberFrame"..id].unit) >= 1 then
                 LevelText = UnitLevel(_G["PartyMemberFrame"..id].unit);
@@ -195,7 +195,7 @@ end
 
 --设置插件时刷新队友生命条染色显示
 function UnitFramesPlus_PartyColorHPBarDisplayUpdate(id)
-    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 and GetDisplayedAllyFrames() == "party" then
         if UnitFramesPlusDB["party"]["colorhp"] == 1 then
             if UnitFramesPlusDB["party"]["colortype"] == 2 then
                 local CurHP = UnitHealth("party"..id);
@@ -273,7 +273,7 @@ end
 
 --设置插件时刷新队友名字显示
 function UnitFramesPlus_PartyNameDisplayUpdate(id)
-    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 and GetDisplayedAllyFrames() == "party" then
         -- short name
         local name, realm = UnitName("party"..id);
         local fullname = name;
@@ -411,7 +411,7 @@ end
 
 --刷新队友3D头像背景显示
 function UnitFramesPlus_PartyPortrait3DBGDisplayUpdate(id)
-    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 and GetDisplayedAllyFrames() == "party" then
         if UnitFramesPlusDB["party"]["portrait"] == 1 
         and UnitFramesPlusDB["party"]["portraittype"] == 1
         and UnitFramesPlusDB["party"]["portrait3dbg"] == 1 then
@@ -424,7 +424,7 @@ end
 
 --刷新队友头像显示
 function UnitFramesPlus_PartyPortraitDisplayUpdate(id)
-    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 and GetDisplayedAllyFrames() == "party" then
         if UnitFramesPlusDB["party"]["portraittype"] == 1 then
             if (not UnitIsConnected("party"..id)) or (not UnitIsVisible("party"..id)) then
                 _G["UFP_Party3DPortrait"..id]:SetPortraitZoom(0);
@@ -525,8 +525,8 @@ function UnitFramesPlus_PartyHealthPctDisplayUpdate(id)
     local HPText = "";
     -- local MPText = "";
     local PctText = "";
-    local DeathText = "";
-    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+    -- local DeathText = "";
+    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 and GetDisplayedAllyFrames() == "party" then
         local CurHP = UnitHealth("party"..id);
 
         if UnitFramesPlusDB["party"]["bartext"] == 1 and not UnitIsDead("party"..id) then
@@ -564,7 +564,7 @@ end
 
 function UnitFramesPlus_PartyPowerDisplayUpdate(id)
     local MPText = "";
-    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 and GetDisplayedAllyFrames() == "party" then
         if UnitFramesPlusDB["party"]["bartext"] == 1 and not UnitIsDead("party"..id) then
             local CurManafix, MaxManafix = UnitFramesPlus_GetValueFix(UnitPower("party"..id), UnitPowerMax("party"..id), UnitFramesPlusDB["party"]["hpmpunit"], UnitFramesPlusDB["party"]["unittype"]);
             MPText = CurManafix.."/"..MaxManafix
@@ -978,7 +978,7 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
         filter = UnitFramesPlusBuffFilter[UnitFramesPlusDB["party"]["filtertype"]];
     end
     for id = 1, 4, 1 do
-        if UnitExists("party"..id) then
+        if UnitExists("party"..id) and GetDisplayedAllyFrames() == "party" then
             if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["buff"] == 1 then
                 for j = 1, UFP_MAX_PARTY_BUFFS, 1 do
                     local alpha = 0;
@@ -1171,7 +1171,7 @@ function UnitFramesPlus_PartyPositionSet()
     else
         if not IsAddOnLoaded("Blizzard_CompactRaidFrames") then
             PartyMemberFrame1:ClearAllPoints();
-            PartyMemberFrame1:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 10, -160)
+            PartyMemberFrame1:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 10, -160);
         end
     end
 end
@@ -1355,11 +1355,44 @@ function UnitFramesPlus_PartyPet()
     end
 end
 
+local Hider = CreateFrame("Frame");
+Hider:Hide();
+function UnitFramesPlus_PartyShowHideSet()
+    if GetDisplayedAllyFrames() == "raid" then
+        if PartyMemberFrame1:GetParent() == UIParent then
+            for id = 1, MAX_PARTY_MEMBERS, 1 do
+                _G["PartyMemberFrame"..id]:SetParent(Hider);
+            end
+            PartyMemberBackground:SetParent(Hider);
+        end
+    else
+        if PartyMemberFrame1:GetParent() == Hider then
+            for id = 1, MAX_PARTY_MEMBERS, 1 do
+                _G["PartyMemberFrame"..id]:SetParent(UIParent);
+            end
+            PartyMemberBackground:SetParent(UIParent);
+        end
+    end
+end
+
+function UnitFramesPlus_PartyShowHide()
+    if not InCombatLockdown() then
+        UnitFramesPlus_PartyShowHideSet();
+    else
+        local func = {};
+        func.name = "UnitFramesPlus_PartyShowHideSet";
+        func.callback = function()
+            UnitFramesPlus_PartyShowHideSet();
+        end;
+        UnitFramesPlus_WaitforCall(func);
+    end
+end
+
 -- Interface/FrameXML/UIParent.lua
 local _GetDisplayedAllyFrames = GetDisplayedAllyFrames;
 function UnitFramesPlus_GetDisplayedAllyFrames()
     local useCompact = GetCVarBool("useCompactPartyFrames")
-    if ( IsInGroup() and (IsInRaid() or useCompact) and UnitFramesPlusDB["party"]["hideraid"] ~= 1 ) then
+    if ( IsInGroup() and (IsInRaid() or useCompact) and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or UnitFramesPlusDB["party"]["always"] ~= 1) ) then
         return "raid";
     elseif ( IsInGroup() ) then
         return "party";
@@ -1538,6 +1571,8 @@ end
 local up = CreateFrame("Frame");
 up:RegisterEvent("PLAYER_REGEN_ENABLED");
 up:RegisterEvent("PLAYER_ENTERING_WORLD");
+up:RegisterEvent("GROUP_ROSTER_UPDATE");
+up:RegisterEvent("UPDATE_ACTIVE_BATTLEFIELD");
 up:SetScript("OnEvent", function(self, event, ...)
     -- if UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] == 1 then
         if event == "PLAYER_REGEN_ENABLED" then
@@ -1551,6 +1586,8 @@ up:SetScript("OnEvent", function(self, event, ...)
             for id = 1, MAX_PARTY_MEMBERS, 1 do
                 PartyMemberFrame_UpdateMember(_G["PartyMemberFrame"..id]);
             end
+        elseif event == "GROUP_ROSTER_UPDATE" or event == "UPDATE_ACTIVE_BATTLEFIELD" then
+            UnitFramesPlus_PartyShowHide();
         end
     -- end
 end)
@@ -1558,7 +1595,7 @@ end)
 hooksecurefunc("PartyMemberFrame_UpdateMember", function(self)
     -- if UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] == 1 then
         local id = self:GetID();
-        if ( UnitExists("party"..id) ) then
+        if ( GetDisplayedAllyFrames() == "party" and UnitExists("party"..id) ) then
             _G["PartyMemberFrame"..id.."Texture"]:SetAlpha(1);
             _G["PartyMemberFrame"..id.."Name"]:SetAlpha(1);
             _G["PartyMemberFrame"..id.."HealthBar"]:SetAlpha(1);
@@ -1681,6 +1718,8 @@ end
 
 --模块初始化
 function UnitFramesPlus_PartyInit()
+    UnitFramesPlus_ShowPartyFrame();
+    UnitFramesPlus_PartyShowHide();
     UnitFramesPlus_PartyMemberFrameFix();
     UnitFramesPlus_PartyShiftDrag();
     -- UnitFramesPlus_PartyOfflineDetection();
@@ -1694,7 +1733,6 @@ function UnitFramesPlus_PartyInit()
     UnitFramesPlus_PartyBarTextMouseShow();
     UnitFramesPlus_PartyExtraTextFontSize();
     -- UnitFramesPlus_HideRaidFrame();
-    UnitFramesPlus_ShowPartyFrame();
     UnitFramesPlus_PartyPosition();
     UnitFramesPlus_PartyPet();
     UnitFramesPlus_PartyScale();
