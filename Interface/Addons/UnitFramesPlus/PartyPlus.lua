@@ -864,7 +864,7 @@ for id = 1, 4, 1 do
 
     _G["PartyMemberFrame"..id.."PetFrameDebuff1"]:ClearAllPoints();
     -- _G["PartyMemberFrame"..id.."PetFrameDebuff1"]:SetPoint("LEFT", _G["PartyMemberFrame"..id.."PetFrame"], "RIGHT", -3, -1);
-    _G["PartyMemberFrame"..id.."PetFrameDebuff1"]:SetPoint("BOTTOMLEFT", _G["PartyMemberFrame"..id.."PetFrame"], "TOPLEFT", 0, 0);
+    _G["PartyMemberFrame"..id.."PetFrameDebuff1"]:SetPoint("BOTTOM", _G["PartyMemberFrame"..id.."PetFrame"], "TOP", -26, 0);
     -- for j = 1, UFP_MAX_PARTY_PET_DEBUFFS, 1 do
     --     local petdebuff = CreateFrame("Button", "UFP_PartyPetMemberFrame"..id.."Debuff"..j, _G["PartyMemberFrame"..id.."PetFrame"]);
     --     petdebuff:SetFrameLevel(7);

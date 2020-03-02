@@ -223,8 +223,8 @@ function addon:HideCastbar(castbar, noFadeOut)
     end
 
     local cast = castbar._data
-    if cast and cast.isInterrupted then -- SPELL_INTERRUPT
-        castbar.Text:SetText(_G.INTERRUPTED)
+    if cast and (cast.isInterrupted or cast.isFailed) then
+        castbar.Text:SetText(cast.isInterrupted and _G.INTERRUPTED or _G.FAILED)
         castbar:SetStatusBarColor(castbar.failedCastColor:GetRGB())
         castbar:SetMinMaxValues(0, 1)
         castbar:SetValue(1)
@@ -235,6 +235,11 @@ function addon:HideCastbar(castbar, noFadeOut)
         if castbar.Border:GetAlpha() == 1 then -- not using LSM borders
             local tex = castbar.Border:GetTexture()
             if tex == "Interface\\CastingBar\\UI-CastingBar-Border" or tex == "Interface\\CastingBar\\UI-CastingBar-Border-Small" then
+                if not cast.isChanneled then
+                    castbar.Flash:SetVertexColor(1, 1, 1)
+                else
+                    castbar.Flash:SetVertexColor(0, 1, 0)
+                end
                 castbar.Flash:Show()
             end
         end
@@ -249,20 +254,14 @@ function addon:HideCastbar(castbar, noFadeOut)
         end
     end
 
-    if cast and cast.isCastMaybeComplete then
-        castbar.Spark:SetAlpha(0)
-        -- color castbar slightly yellow when its not 100% sure if the cast is casted or canceled
-        if not cast.isChanneled then
-            castbar:SetStatusBarColor(1, 0.78, 0, 1)
-            castbar:SetMinMaxValues(0, 1)
-            castbar:SetValue(1)
-        else
-            castbar:SetValue(0)
-        end
-    end
-
     if castbar:GetAlpha() > 0 and castbar.fade then
-        castbar.fade:SetDuration(cast and cast.isInterrupted and 1.5 or 0.3)
+        castbar.fade:SetStartDelay(0) -- reset
+        if cast then
+            if cast.isInterrupted or cast.isFailed then
+                castbar.fade:SetStartDelay(0.5)
+            end
+        end
+        castbar.fade:SetDuration(cast and cast.isInterrupted and 1.2 or 0.3)
         castbar.animationGroup:Play()
     end
 end
@@ -299,7 +298,6 @@ function addon:SkinPlayerCastbar()
             if frame.Icon:GetTexture() == 136235 then
                 frame.Icon:SetTexture(136243)
             end
-            frame.Timer:SetPoint("RIGHT", CastingBarFrame, (frame.Text:GetText():len() >= 19) and 30 or -6, 0)
         end)
 
         hooksecurefunc("PlayerFrame_DetachCastBar", function()

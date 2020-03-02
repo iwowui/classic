@@ -21,6 +21,7 @@ namespace.addon = addon
 ClassicCastbars = addon -- global ref for ClassicCastbars_Options
 
 -- upvalues for speed
+local gsub = _G.string.gsub
 local strfind = _G.string.find
 local pairs = _G.pairs
 local UnitGUID = _G.UnitGUID
@@ -174,7 +175,7 @@ function addon:StoreCast(unitGUID, spellName, spellID, iconTexturePath, castTime
     cast.pushbackValue = nil
     cast.isInterrupted = nil
     cast.isCastComplete = nil
-    cast.isCastMaybeComplete = nil
+    cast.isFailed = nil
 
     self:StartAllCasts(unitGUID)
 end
@@ -432,7 +433,7 @@ local stopCastOnDamageList = namespace.stopCastOnDamageList
 local ARCANE_MISSILES = GetSpellInfo(5143)
 
 function addon:COMBAT_LOG_EVENT_UNFILTERED()
-    local _, eventType, _, srcGUID, srcName, srcFlags, _, dstGUID,  _, dstFlags, _, _, spellName = CombatLogGetCurrentEventInfo()
+    local _, eventType, _, srcGUID, srcName, srcFlags, _, dstGUID, _, dstFlags, _, _, spellName = CombatLogGetCurrentEventInfo()
 
     if eventType == "SPELL_CAST_START" then
         local spellID = castedSpells[spellName]
@@ -526,7 +527,7 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED()
     elseif eventType == "SPELL_AURA_APPLIED" then
         if crowdControls[spellName] and activeTimers[dstGUID] then
             -- Aura that interrupts cast was applied
-            activeTimers[dstGUID].isCastMaybeComplete = true
+            activeTimers[dstGUID].isFailed = true
             return self:DeleteCast(dstGUID)
         elseif castTimeIncreases[spellName] and activeTimers[dstGUID] then
             -- Cast modifiers doesnt modify already active casts, only the next time the player casts
@@ -539,13 +540,22 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED()
             return self:DeleteCast(srcGUID, nil, nil, true)
         end
     elseif eventType == "SPELL_CAST_FAILED" then
-        if srcGUID == self.PLAYER_GUID then
-            -- Spamming cast keybinding triggers SPELL_CAST_FAILED so check if actually casting or not for the player
-            if not CastingInfo() then
-                return self:DeleteCast(srcGUID)
+        local cast = activeTimers[srcGUID]
+        if cast then
+            if srcGUID == self.PLAYER_GUID then
+                -- Spamming cast keybinding triggers SPELL_CAST_FAILED so check if actually casting or not for the player
+                if not CastingInfo() then
+                    if not cast.isChanneled then
+                        cast.isFailed = true
+                    end
+                    return self:DeleteCast(srcGUID, nil, nil, cast.isChanneled) -- note: channels shows finish anim on cast failed
+                end
+            else
+                if not cast.isChanneled then
+                    cast.isFailed = true
+                end
+                return self:DeleteCast(srcGUID, nil, nil, cast.isChanneled)
             end
-        else
-            return self:DeleteCast(srcGUID)
         end
     elseif eventType == "PARTY_KILL" or eventType == "UNIT_DIED" or eventType == "SPELL_INTERRUPT" then
         return self:DeleteCast(dstGUID, eventType == "SPELL_INTERRUPT")
@@ -553,7 +563,8 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED()
         if bit_band(dstFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 then -- is player, and not pet
             local cast = activeTimers[dstGUID]
             if cast then
-                if stopCastOnDamageList[cast.spellName] then
+                if stopCastOnDamageList[cast.spellName] and activeTimers[dstGUID] then
+                    activeTimers[dstGUID].isFailed = true
                     return self:DeleteCast(dstGUID)
                 end
 
@@ -581,7 +592,15 @@ addon:SetScript("OnUpdate", function(self, elapsed)
                     -- of lag we have to only stop it if the cast has been active for atleast 0.25 sec
                     if cast and cast.isPlayer and currTime - cast.timeStart > 0.25 then
                         if not castStopBlacklist[cast.spellName] and GetUnitSpeed(unitID) ~= 0 then
-                            self:DeleteCast(unitGUID)
+                            local castAlmostFinishied = ((currTime - cast.timeStart) > cast.maxValue - 0.05)
+                            -- due to lag its possible that the cast is successfuly casted but still shows interrupted
+                            -- unless we ignore the last few miliseconds here
+                            if not castAlmostFinishied then
+                                if not cast.isChanneled then
+                                    cast.isFailed = true
+                                end
+                                self:DeleteCast(unitGUID, nil, nil, cast.isChanneled)
+                            end
                         end
                     end
                 end
@@ -615,11 +634,30 @@ addon:SetScript("OnUpdate", function(self, elapsed)
                     castbar.Spark:SetPoint("CENTER", castbar, "LEFT", sparkPosition, 0)
                 end
             else
+                -- slightly adjust color of the castbar when its not 100% sure if the cast is casted or failed
+                -- (gotta put it here to run before fadeout anim)
+                if not cast.isCastComplete and not cast.isInterrupted and not cast.isFailed then
+                    castbar.Spark:SetAlpha(0)
+                    if not cast.isChanneled then
+                        local c = self.db[gsub(unit, "%d", "")].statusColor
+                        castbar:SetStatusBarColor(c[1], c[2] + 0.1, c[3], c[4])
+                        castbar:SetMinMaxValues(0, 1)
+                        castbar:SetValue(1)
+                    else
+                        castbar:SetValue(0)
+                    end
+                end
+
                 -- Delete cast incase stop event wasn't detected in CLEU
                 if castTime <= -0.25 then -- wait atleast 0.25s before deleting incase CLEU stop event is happening at same time
-                    local skipFade = ((currTime - cast.timeStart) > cast.maxValue + 0.25)
-                    cast.isCastMaybeComplete = true
-                    self:DeleteCast(cast.unitGUID, false, true, false, skipFade)
+                    if cast.isChanneled and not cast.isCastComplete and not cast.isInterrupted and not cast.isFailed then
+                        -- show finish animation on channels that doesnt have CLEU stop event
+                        -- Note: channels always have finish animations on stop, even if it was an early stop
+                        self:DeleteCast(cast.unitGUID, false, true, true, false)
+                    else
+                        local skipFade = ((currTime - cast.timeStart) > cast.maxValue + 0.25)
+                        self:DeleteCast(cast.unitGUID, false, true, false, skipFade)
+                    end
                 end
             end
         end

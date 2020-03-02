@@ -298,6 +298,30 @@ do
 	ImprovedLootFrameOnelootText:SetText(ImprovedLootFrameOPT_Oneloot);
 	ImprovedLootFrameOneloot:SetScript("OnClick", function(self)
 		ImprovedLootFrameDB["oneloot"] = 1 - ImprovedLootFrameDB["oneloot"];
+		if ImprovedLootFrameDB["oneloot"] == 0 then
+			LootFrame:SetHeight(240);
+
+			LOOTFRAME_NUMBUTTONS = 4;
+
+			local id = 4;
+			while true do
+				id = id + 1;
+				if _G["LootButton"..id] then 
+					_G["LootButton"..id]:Hide();
+				else
+					break;
+				end
+			end
+
+			LootButton1:ClearAllPoints();
+			LootButton1:SetPoint("TOPLEFT", "LootFrame", "TOPLEFT", 9, -68);
+			LootButton2:ClearAllPoints();
+			LootButton2:SetPoint("TOPLEFT", "LootFrame", "TOPLEFT", 9, -109);
+			LootButton3:ClearAllPoints();
+			LootButton3:SetPoint("TOPLEFT", "LootFrame", "TOPLEFT", 9, -150);
+			LootButton4:ClearAllPoints();
+			LootButton4:SetPoint("TOPLEFT", "LootFrame", "TOPLEFT", 9, -193);
+		end
 		self:SetChecked(ImprovedLootFrameDB["oneloot"]==1);
 	end)
 
