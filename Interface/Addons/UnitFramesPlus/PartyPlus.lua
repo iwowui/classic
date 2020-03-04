@@ -195,7 +195,7 @@ end
 
 --设置插件时刷新队友生命条染色显示
 function UnitFramesPlus_PartyColorHPBarDisplayUpdate(id)
-    if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+    if UnitExists("party"..id) and UnitIsConnected("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
         if UnitFramesPlusDB["party"]["colorhp"] == 1 then
             if UnitFramesPlusDB["party"]["colortype"] == 2 then
                 local CurHP = UnitHealth("party"..id);
@@ -1110,7 +1110,6 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
 
             --     local _, icon, count, _, duration, expirationTime, caster, _, _, spellId = UnitDebuff("partypet"..id, j);
             --     if icon then
-            --         -- print(icon)
             --         _G["UFP_PartyPetMemberFrame"..id.."Debuff"..j].Icon:SetTexture(icon);
             --         alpha = 1;
             --         if count > 1 then
@@ -1356,25 +1355,41 @@ function UnitFramesPlus_PartyPet()
     end
 end
 
-local Hider = CreateFrame("Frame");
-Hider:Hide();
+local UFPHider = CreateFrame("Frame");
+UFPHider:Hide();
 function UnitFramesPlus_PartyShowHideSet()
     if GetDisplayedAllyFrames() == nil or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or UnitFramesPlusDB["party"]["always"] ~= 1)) then
         -- if PartyMemberFrame1:GetParent() == UIParent then
             for id = 1, MAX_PARTY_MEMBERS, 1 do
-                _G["PartyMemberFrame"..id]:SetParent(Hider);
-                _G["PartyMemberFrame"..id.."PetFrame"]:SetParent(Hider);
+                _G["PartyMemberFrame"..id]:SetParent(UFPHider);
             end
-            PartyMemberBackground:SetParent(Hider);
+            -- PartyMemberBackground:SetParent(UFPHider);
         -- end
     else
-        -- if PartyMemberFrame1:GetParent() == Hider then
+        -- if PartyMemberFrame1:GetParent() == UFPHider then
             for id = 1, MAX_PARTY_MEMBERS, 1 do
                 _G["PartyMemberFrame"..id]:SetParent(UIParent);
+            end
+            -- PartyMemberBackground:SetParent(UIParent);
+        -- end
+    end
+    if GetDisplayedAllyFrames() == nil or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or UnitFramesPlusDB["party"]["always"] ~= 1)) or UnitFramesPlusDB["party"]["pet"] ~= 1 then
+        -- if PartyMemberFrame1PetFrame:GetParent() == UIParent then
+            for id = 1, MAX_PARTY_MEMBERS, 1 do
+                _G["PartyMemberFrame"..id.."PetFrame"]:SetParent(UFPHider);
+            end
+        -- end
+    else
+        -- if PartyMemberFrame1PetFrame:GetParent() == UFPHider then
+            for id = 1, MAX_PARTY_MEMBERS, 1 do
                 _G["PartyMemberFrame"..id.."PetFrame"]:SetParent(UIParent);
             end
-            PartyMemberBackground:SetParent(UIParent);
         -- end
+    end
+
+    RaidOptionsFrame_UpdatePartyFrames();
+    for id = 1, MAX_PARTY_MEMBERS, 1 do
+        UnitFramesPlus_PartyMemberFrame_UpdateMember(_G["PartyMemberFrame"..id]);
     end
 end
 
@@ -1589,13 +1604,12 @@ function UnitFramesPlus_ShowPartyFrameSet()
             if _G["PartyMemberFrame"..id.."Portrait"]:GetAlpha() == 0 then
                 _G["PartyMemberFrame"..id.."Portrait"]:SetAlpha(1);
             end
-            if _G["PartyMemberFrame"..id]:GetAlpha() == 0 then
-                _G["PartyMemberFrame"..id]:SetAlpha(1);
-            end
+            local alpha = UnitInOtherParty("party"..id) and 0.6 or 1;
+            _G["PartyMemberFrame"..id]:SetAlpha(alpha);
             _G["UFP_Party3DPortrait"..id]:SetAlpha(1);
             _G["UFP_PartyClassPortrait"..id]:SetAlpha(1);
             if ( UnitExists("partypet"..id) and UnitFramesPlusDB["party"]["pet"] == 1 ) then
-                _G["PartyMemberFrame"..id.."PetFrame"]:SetAlpha(1);
+                _G["PartyMemberFrame"..id.."PetFrame"]:SetAlpha(alpha);
             end
         end
         _G["PartyMemberFrame"..id].Hide = function(self)
@@ -1626,15 +1640,23 @@ function UnitFramesPlus_ShowPartyFrameSet()
         _G["PartyMemberFrame"..id]:Hide();
 
         _G["PartyMemberFrame"..id.."PetFrame"]:Show();
-        _G["PartyMemberFrame"..id.."PetFrame"].Show = function(self) self:SetAlpha(1) end
+        _G["PartyMemberFrame"..id.."PetFrame"].Show = function(self) 
+            if ( UnitExists("partypet"..id) and UnitFramesPlusDB["party"]["pet"] == 1 ) then
+                local alpha = UnitInOtherParty("party"..id) and 0.6 or 1;
+                _G["PartyMemberFrame"..id.."PetFrame"]:SetAlpha(alpha);
+            end
+        end
         _G["PartyMemberFrame"..id.."PetFrame"].Hide = function(self) self:SetAlpha(0) end
         _G["PartyMemberFrame"..id.."PetFrame"]:Hide();
     end
 
-    PartyMemberBackground:Show();
-    PartyMemberBackground.Show = function(self) self:SetAlpha(1) end
-    PartyMemberBackground.Hide = function(self) self:SetAlpha(0) end
+    -- PartyMemberBackground:Show();
+    -- PartyMemberBackground.Show = function(self) self:SetAlpha(1) end
+    -- PartyMemberBackground.Hide = function(self) self:SetAlpha(0) end
+    -- PartyMemberBackground:Hide();
     PartyMemberBackground:Hide();
+    PartyMemberBackground.Show = function() end
+    PartyMemberBackground.Hide = function() end
 end
 
 function UnitFramesPlus_ShowPartyFrame()
@@ -1715,15 +1737,14 @@ end)
 --     -- end
 -- end);
 
--- hooksecurefunc("PartyMemberHealthCheck", function(self, value)
---     -- if UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] == 1 then
---         for id = 1, MAX_PARTY_MEMBERS, 1 do
---             if not UnitExists("party"..id) then
---                 _G["PartyMemberFrame"..id.."Portrait"]:SetAlpha(0);
---             end
---         end
---     -- end
--- end)
+hooksecurefunc("PartyMemberHealthCheck", function(self, value)
+    -- if UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] == 1 then
+        local id = self:GetParent():GetID();
+        if not UnitExists("party"..id) then
+            _G["PartyMemberFrame"..id.."Portrait"]:SetAlpha(0);
+        end
+    -- end
+end)
 
 local sf;
 StaticPopupDialogs["UFP_HIDERAIDFRAME"] = {

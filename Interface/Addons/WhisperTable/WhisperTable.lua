@@ -355,9 +355,11 @@ function WhisperTable_ListShow()
 				_G["WhisperTable_Del"..i]:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIcon-Blizz");
 				_G["WhisperTable_Del"..i]:GetPushedTexture():SetTexCoord(0.18, 0.82, 0, 1);
 			elseif WhisperTableDB["class"][tag] == "BN" then
-				_G["WhisperTable_Del"..i]:SetNormalTexture("Interface\\FriendsFrame\\PlusManz-BattleNet");
+				-- _G["WhisperTable_Del"..i]:SetNormalTexture("Interface\\FriendsFrame\\PlusManz-BattleNet");
+				_G["WhisperTable_Del"..i]:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIcon-Battlenet");
 				_G["WhisperTable_Del"..i]:GetNormalTexture():SetTexCoord(0, 1, 0, 1);
-				_G["WhisperTable_Del"..i]:SetPushedTexture("Interface\\FriendsFrame\\PlusManz-BattleNet");
+				-- _G["WhisperTable_Del"..i]:SetPushedTexture("Interface\\FriendsFrame\\PlusManz-BattleNet");
+				_G["WhisperTable_Del"..i]:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIcon-Battlenet");
 				_G["WhisperTable_Del"..i]:GetPushedTexture():SetTexCoord(0, 1, 0, 1);
 			elseif WhisperTableDB["class"][tag] ~= nil then
 				local coords = CLASS_ICON_TCOORDS[WhisperTableDB["class"][tag]];
@@ -373,9 +375,11 @@ function WhisperTable_ListShow()
 					_G["WhisperTable_Del"..i]:GetPushedTexture():SetTexCoord(0, 1, 0, 1);
 				end
 			else
-				_G["WhisperTable_Del"..i]:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIcon-Battlenet");
+				-- _G["WhisperTable_Del"..i]:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIcon-Battlenet");
+				_G["WhisperTable_Del"..i]:SetNormalTexture("Interface\\Icons\\Ability_Vanish");
 				_G["WhisperTable_Del"..i]:GetNormalTexture():SetTexCoord(0, 1, 0, 1);
-				_G["WhisperTable_Del"..i]:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIcon-Battlenet");
+				-- _G["WhisperTable_Del"..i]:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIcon-Battlenet");
+				_G["WhisperTable_Del"..i]:SetPushedTexture("Interface\\Icons\\Ability_Vanish");
 				_G["WhisperTable_Del"..i]:GetPushedTexture():SetTexCoord(0, 1, 0, 1);
 			end
 

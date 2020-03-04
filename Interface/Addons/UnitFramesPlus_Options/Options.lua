@@ -2227,33 +2227,33 @@ do
         -- self:SetChecked(UnitFramesPlusDB["party"]["hideraid"]==1);
     end)
 
-    StaticPopupDialogs["UFP_SHOWPARTYFRAME"] = {
-        text = UFPLocal_ShowParty..UFP_OP_Party_Error,
-        button1 = OKAY,
-        button2 = CANCEL,
-        OnAccept = function()
-            ReloadUI();
-        end,
-        OnCancel = function()
-            UnitFramesPlusDB["party"]["always"] = 1 - UnitFramesPlusDB["party"]["always"];
-            UnitFramesPlus_OptionsFrame_PartyInRaid:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
-        end,
-        whileDead = 1, hideOnEscape = 1, showAlert = 1
-    }
+    -- StaticPopupDialogs["UFP_SHOWPARTYFRAME"] = {
+    --     text = UFPLocal_ShowParty..UFP_OP_Party_Error,
+    --     button1 = OKAY,
+    --     button2 = CANCEL,
+    --     OnAccept = function()
+    --         ReloadUI();
+    --     end,
+    --     OnCancel = function()
+    --         UnitFramesPlusDB["party"]["always"] = 1 - UnitFramesPlusDB["party"]["always"];
+    --         UnitFramesPlus_OptionsFrame_PartyInRaid:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
+    --     end,
+    --     whileDead = 1, hideOnEscape = 1, showAlert = 1
+    -- }
 
-    StaticPopupDialogs["UFP_SHOWPARTYFRAME2"] = {
-        text = UFPLocal_ShowParty,
-        button1 = OKAY,
-        button2 = CANCEL,
-        OnAccept = function()
-            ReloadUI();
-        end,
-        OnCancel = function()
-            UnitFramesPlusDB["party"]["always"] = 1 - UnitFramesPlusDB["party"]["always"];
-            UnitFramesPlus_OptionsFrame_PartyInRaid:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
-        end,
-        whileDead = 1, hideOnEscape = 1, showAlert = 1
-    }
+    -- StaticPopupDialogs["UFP_SHOWPARTYFRAME2"] = {
+    --     text = UFPLocal_ShowParty,
+    --     button1 = OKAY,
+    --     button2 = CANCEL,
+    --     OnAccept = function()
+    --         ReloadUI();
+    --     end,
+    --     OnCancel = function()
+    --         UnitFramesPlusDB["party"]["always"] = 1 - UnitFramesPlusDB["party"]["always"];
+    --         UnitFramesPlus_OptionsFrame_PartyInRaid:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
+    --     end,
+    --     whileDead = 1, hideOnEscape = 1, showAlert = 1
+    -- }
 
     --团队中显示小队
     local UnitFramesPlus_OptionsFrame_PartyInRaid = CreateFrame("CheckButton", "UnitFramesPlus_OptionsFrame_PartyInRaid", UnitFramesPlus_Party_Options, "InterfaceOptionsCheckButtonTemplate");
@@ -2263,12 +2263,13 @@ do
     UnitFramesPlus_OptionsFrame_PartyInRaidText:SetText(UFP_OP_Party_Always);
     UnitFramesPlus_OptionsFrame_PartyInRaid:SetScript("OnClick", function(self)
         UnitFramesPlusDB["party"]["always"] = 1 - UnitFramesPlusDB["party"]["always"];
-        if UnitFramesPlusDB["party"]["always"] == 1 then
-            StaticPopup_Show("UFP_SHOWPARTYFRAME");
-        else
-            StaticPopup_Show("UFP_SHOWPARTYFRAME2");
-        end
-        -- self:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
+        -- if UnitFramesPlusDB["party"]["always"] == 1 then
+        --     StaticPopup_Show("UFP_SHOWPARTYFRAME");
+        -- else
+        --     StaticPopup_Show("UFP_SHOWPARTYFRAME2");
+        -- end
+        UnitFramesPlus_PartyShowHide();
+        self:SetChecked(UnitFramesPlusDB["party"]["always"]==1);
     end)
 
     --自动开启传统小队界面
@@ -2488,6 +2489,7 @@ do
     UnitFramesPlus_OptionsFrame_PartyPet:SetScript("OnClick", function(self)
         UnitFramesPlusDB["party"]["pet"] = 1 - UnitFramesPlusDB["party"]["pet"];
         UnitFramesPlus_PartyPet();
+        UnitFramesPlus_PartyShowHide();
         self:SetChecked(UnitFramesPlusDB["party"]["pet"]==1);
     end)
 
@@ -2972,9 +2974,17 @@ do
         else
             BlizzardOptionsPanel_Slider_Disable(UnitFramesPlus_OptionsFrame_PartyColorHPSlider);
         end
-        -- UnitFramesPlus_PartyColorHPBar();
-        for id = 1, 4, 1 do
-            UnitFramesPlus_PartyColorHPBarDisplayUpdate(id);
+        if UnitFramesPlusDB["party"]["colorhp"] == 1 then
+            -- UnitFramesPlus_PartyColorHPBar();
+            for id = 1, 4, 1 do
+                UnitFramesPlus_PartyColorHPBarDisplayUpdate(id);
+            end
+        else
+            if UnitExists("party"..id) and UnitIsConnected("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
+                for id = 1, 4, 1 do
+                    _G["PartyMemberFrame"..id.."HealthBar"]:SetStatusBarColor(0, 1, 0);
+                end
+            end
         end
         if UnitFramesPlusDB["party"]["colorhp"] == 1 then
             if UnitFramesPlusDB["player"]["colorhp"] == 1 

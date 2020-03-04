@@ -1,6 +1,6 @@
 
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.50 (26th February 2020)
+	-- 	Leatrix Maps 1.13.51 (4th March 2020)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.50"
+	LeaMapsLC["AddonVer"] = "1.13.51"
 	LeaMapsLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -1077,7 +1077,7 @@
 					{"TravelA", 71.6, 56.4, L["Boat to"] .. " " .. L["Menethil Harbor"] .. ", " .. L["Wetlands"], nil, fATex, nil, nil, nil, nil},
 				},
 				--[[Tanaris]] [1446] = {
-					{"Dungeon", 38.7, 20.0, L["Zul'Farrak"], L["Dungeon"], dnTex, 42, 46},
+					{"Dungeon", 38.7, 20.0, L["Zul'Farrak"], L["Dungeon"], dnTex, 44, 54},
 					{"FlightA", 51.0, 29.3, L["Gadgetzan"] .. ", " .. L["Tanaris"], nil, tATex, nil, nil},
 					{"FlightH", 51.6, 25.4, L["Gadgetzan"] .. ", " .. L["Tanaris"], nil, tHTex, nil, nil},
 				},
