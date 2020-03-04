@@ -2012,6 +2012,47 @@ if enabled > 0 then
 	end
 end
 
+local enabled = GetAddOnEnableState(playerName, "Recount");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameRecount	= "图形化伤害统计";
+		FF_DescRecount	= "图形化显示的伤害/治疗统计插件.";
+	elseif GetLocale() == "zhTW" then
+		FF_NameRecount	= "圖形化傷害統計";
+		FF_DescRecount	= "圖形化顯示的傷害/治療統計插件.";
+	else
+		FF_NameRecount	= "Recount";
+		FF_DescRecount	= "Records Damage and Healing for Graph Based Display.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "Recount";
+				name= FF_NameRecount;
+				subtext= "Recount";
+				tooltip = FF_DescRecount;
+				icon= "Interface\\Icons\\Spell_Nature_Sentinal";
+				callback= function(button)
+					if not IsAddOnLoaded("Recount") then
+						LoadAddOn("Recount");
+					end
+					if button == "LeftButton" then
+						if LibStub("AceAddon-3.0"):GetAddon("Recount").MainWindow:IsShown() then
+							LibStub("AceAddon-3.0"):GetAddon("Recount").MainWindow:Hide()
+						else
+							LibStub("AceAddon-3.0"):GetAddon("Recount").MainWindow:Show()
+							LibStub("AceAddon-3.0"):GetAddon("Recount"):RefreshMainWindow()
+						end
+					elseif button == "RightButton" then
+						-- LibStub("AceConfigDialog-3.0"):SetDefaultSize("Recount", 500, 550)
+						LibStub("AceConfigDialog-3.0"):Open("Recount")
+					end
+				end;
+			}
+		);
+	end
+end
+
 local enabled = GetAddOnEnableState(playerName, "Details");
 if enabled > 0 then
 	if GetLocale() == "zhCN" then
@@ -2108,6 +2149,37 @@ if enabled > 0 then
 					end
 					InterfaceOptionsFrame_OpenToCategory("AdvancedInterfaceOptions");
 					InterfaceOptionsFrame_OpenToCategory("AdvancedInterfaceOptions");
+				end;
+			}
+		);
+	end
+end
+
+local enabled = GetAddOnEnableState(playerName, "Leatrix_Plus");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameLeatrix_Plus	= "功能百宝箱";
+		FF_DescLeatrix_Plus	= "哆啦A梦的百宝袋";
+	elseif GetLocale() == "zhTW" then
+		FF_NameLeatrix_Plus	= "功能百寶箱";
+		FF_DescLeatrix_Plus	= "哆啦A夢的百寶袋";
+	else
+		FF_NameLeatrix_Plus	= "Leatrix Plus";
+		FF_DescLeatrix_Plus	= "Quality of life addon.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "Leatrix_Plus";
+				name= FF_NameLeatrix_Plus;
+				subtext= "Leatrix_Plus";
+				tooltip = FF_DescLeatrix_Plus;
+				icon= "Interface\\Icons\\INV_Wand_02";
+				callback= function(button)
+					if not IsAddOnLoaded("Leatrix_Plus") then
+						LoadAddOn("Leatrix_Plus");
+					end
+					SlashCmdList["Leatrix_Plus"]("");
 				end;
 			}
 		);

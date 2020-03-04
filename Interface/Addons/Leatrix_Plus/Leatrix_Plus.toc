@@ -1,0 +1,19 @@
+## Interface: 11303
+
+## Title: Leatrix Plus
+## Title-zhCN: |CFFFF8000辅助|R 功能百宝箱
+## Title-zhTW: |CFFFF8000輔助|R 功能百寶箱
+
+## Notes: Quality of life addon.
+## Notes-zhCN: 哆啦A梦的百宝袋
+## Notes-zhTW: 哆啦A夢的百寶袋
+
+## X-Repple: 辅助
+
+## Version: 1.13.52
+## Author: Leatrix
+## SavedVariables: LeaPlusDB
+
+Leatrix_Plus_Library.lua
+Leatrix_Plus_Locale.lua
+Leatrix_Plus.lua

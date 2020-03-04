@@ -6,10 +6,9 @@
 ## Title-zhTW: |CFFFF8000輔助|R 移動視窗
 ## Notes-zhTW: 允許移動系統視窗.
 ## X-Repple: 辅助
-## Author: yess
+## Author: the-rebel-Mermaid - github.com/the-rebel-Mermaid/BlizzMove/
 ## X-WoWI-ID: 23875
-## Version: v2.1.4-classic
-
+## Version: v2.1.4a
 
 Handle.lua
 BlizzMove.lua
