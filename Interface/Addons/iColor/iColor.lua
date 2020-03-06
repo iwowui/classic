@@ -12,8 +12,8 @@ for k, v in pairs(LOCALIZED_CLASS_NAMES_MALE) do BC[v] = k end
 for k, v in pairs(LOCALIZED_CLASS_NAMES_FEMALE) do BC[v] = k end
 
 BC["NEW"] = "NEW"
-RAID_CLASS_COLORS["NEW"] = CreateColor(0, 1, 0.9647, 1);
-RAID_CLASS_COLORS["NEW"].colorStr = RAID_CLASS_COLORS["NEW"]:GenerateHexColor()
+RAID_CLASS_COLORS["NEW"] = CreateColor(0, 1, 0.9647, 1)
+-- RAID_CLASS_COLORS["NEW"].colorStr = RAID_CLASS_COLORS["NEW"]:GenerateHexColor()
 
 local function colorString(string, class)
 	local color = class and RAID_CLASS_COLORS[class] or GetQuestDifficultyColor(string)

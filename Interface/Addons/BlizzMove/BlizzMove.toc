@@ -8,7 +8,7 @@
 ## X-Repple: 辅助
 ## Author: the-rebel-Mermaid - github.com/the-rebel-Mermaid/BlizzMove/
 ## X-WoWI-ID: 23875
-## Version: v2.1.4a
+## Version: v2.1.4b
 
 Handle.lua
 BlizzMove.lua
