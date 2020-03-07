@@ -2283,6 +2283,9 @@ do
         -- if ((not IsInGroup()) or ((not IsInRaid()) and (GetNumSubgroupMembers() > 0))) and not InCombatLockdown() then
             UnitFramesPlusDB["party"]["origin"] = 1 - UnitFramesPlusDB["party"]["origin"];
             UnitFramesPlus_PartyStyle();
+            for id = 1, MAX_PARTY_MEMBERS, 1 do
+                PartyMemberFrame_UpdateMember(_G["PartyMemberFrame"..id]);
+            end
 
             if UnitFramesPlusDB["party"]["origin"] ~= 1 then
                 BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPet);
@@ -2995,6 +2998,9 @@ do
         -- if ((not IsInGroup()) or ((not IsInRaid()) and (GetNumSubgroupMembers() > 0))) and not InCombatLockdown() then
             UnitFramesPlusDB["party"]["origin"] = 1 - UnitFramesPlusDB["party"]["origin"];
             UnitFramesPlus_PartyStyle();
+            for id = 1, MAX_PARTY_MEMBERS, 1 do
+                PartyMemberFrame_UpdateMember(_G["PartyMemberFrame"..id]);
+            end
 
             if UnitFramesPlusDB["party"]["origin"] ~= 1 then
                 BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyPet);

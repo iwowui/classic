@@ -14,8 +14,9 @@ local presetHooks = {
     StatStain = { { "OnCreate", function(frame) LibStub("AceAddon-3.0"):GetAddon("StatStain"):AddTooltip(frame) end } },
     Mendeleev = { { "OnShow", function(frame) Mendeleev:OnTooltipSetItem(frame) end }, { "OnHide", function(frame) Mendeleev:OnTooltipCleared(frame) end } },
     CowTip = { { "OnShow", function(frame) local ct = CowTip:GetModule("Appearance") if ct then ct:SetScale(nil, frame) ct:SetFont(nil, frame) ct:SetTexture(nil, nil, nil, nil, frame) end end } },
-    TipTac = { { "OnCreate", function(frame) TipTac:AddModifiedTip(frame) end } },    
+    TipTac = { { "OnCreate", function(frame) TipTac:AddModifiedTip(frame) end } },
 }
+
 local tooltipTypes = {
     item = true,
     spell = true,
@@ -23,6 +24,7 @@ local tooltipTypes = {
     quest = true,
     enchant = true,
     talent = true,
+    instancelock = true,
 }
 
 local MIT = CreateFrame("Frame")
@@ -65,32 +67,32 @@ end
 local OldSetItemRef = SetItemRef
 -- Our replacement function
 SetItemRef = function(...)
-    local self, link, text, button = ...
-    
+    local link, text, button, chatFrame = ...
+
     -- Don't mess with modified clicks
     if IsModifiedClick() then
         return OldSetItemRef(...)
     end
-    
+
     -- Check if it's an item / profession link
-    local linkType = strmatch(link, "^.+|H(%w+):.+")
-    if not tooltipTypes[linkType] then
+    local linkType = strsplit(":", link)
+    if not linkType or not tooltipTypes[linkType] then
         return OldSetItemRef(...)
     end
-    
+
     -- Check shown tooltips (and close if it matches)
-    local isShown = MIT:IsLinkShown(link)
+    local isShown = MIT:IsLinkShown(text)
     if isShown then
         return HideUIPanel(getglobal(isShown))
     end
-    
+
     -- ItemRef not shown? Use it first
     if not ItemRefTooltip:IsVisible() then
-        links["ItemRefTooltip"] = link
+        links["ItemRefTooltip"] = text
         return OldSetItemRef(...)
     end
-    
-    MIT:ShowFrame(MIT:GetAvailableFrame(), link)
+
+    MIT:ShowFrame(MIT:GetAvailableFrame(), text)
 end
 
 function MIT:ShowFrame(frame, link)
@@ -116,7 +118,7 @@ function MIT:GetLinkString(frame)
     return links[(type(frame) == "string" and frame) or frame:GetName()]
 end
 
-function MIT:IsLinkShown(link)    
+function MIT:IsLinkShown(link)
     for i,v in pairs(links) do
         if v == link then
             return i

@@ -5,16 +5,19 @@ if GetLocale() == "zhCN" or GetLocale() == "zhTW" then
 end
 local logouttext = string.gsub(tostring(CAMP_TIMER), prefix, "", 1);
 local antilogout = CreateFrame("frame");
-local function AntiLogout()
-    if ExtraConfiguration["antilogout"] == 1 then
+local function AntiAFKLogout()
+    if ExtraConfiguration["antiafk"] == 1 or ExtraConfiguration["antilogout"] == 1 then
         antilogout:SetScript("OnUpdate", function(self, elapsed)
             self.timer = (self.timer or 0) + elapsed;
             if self.timer >= 5 then
-                if StaticPopup1:IsShown() and StaticPopup1Button1:GetText() == CANCEL and not IsResting() and UnitIsAFK("player") then
+                if ExtraConfiguration["antilogout"] == 1 and StaticPopup1:IsShown() and StaticPopup1Button1:GetText() == CANCEL and not IsResting() and UnitIsAFK("player") then
                     local text = StaticPopup1Text:GetText();
                     if string.find(text, logouttext) then
                         StaticPopup1Button1:Click();
                     end
+                end
+                if ExtraConfiguration["antiafk"] == 1 and UnitIsAFK("player") then
+                    SendChatMessage("|cffffffffSober!|r", "WHISPER", "COMMON", UnitName("player"));
                 end
                 self.timer = 0;
             end
@@ -61,10 +64,10 @@ local function MaxCameraDistance()
     end
 end
 
-local switch = CreateFrame('Frame')
+local switch = CreateFrame('Frame');
 switch:RegisterEvent("ADDON_LOADED");
-switch:RegisterEvent("VARIABLES_LOADED")
-switch:RegisterEvent("PLAYER_ENTERING_WORLD")
+switch:RegisterEvent("VARIABLES_LOADED");
+switch:RegisterEvent("PLAYER_ENTERING_WORLD");
 switch:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local name = ...;
@@ -73,6 +76,7 @@ switch:SetScript("OnEvent", function(self, event, ...)
             if not ExtraConfiguration["anticrab"] then ExtraConfiguration["anticrab"] = 1; end
             if not ExtraConfiguration["blueshaman"] then ExtraConfiguration["blueshaman"] = 0; end
             if not ExtraConfiguration["maxcamera"] then ExtraConfiguration["maxcamera"] = 1; end
+            if not ExtraConfiguration["antiafk"] then ExtraConfiguration["antiafk"] = 0; end
             if not ExtraConfiguration["antilogout"] then ExtraConfiguration["antilogout"] = 0; end
             Switch_OptionPanel_OnShow();
             switch:UnregisterEvent("ADDON_LOADED");
@@ -80,17 +84,17 @@ switch:SetScript("OnEvent", function(self, event, ...)
     elseif event == "VARIABLES_LOADED" then
         --自动取消敏感词过滤
         if GetCVar("profanityFilter") ~= 0 then
-            SetCVar("profanityFilter", 0)
+            SetCVar("profanityFilter", 0);
         end
         -- if GetCVar("overrideArchive") ~= 0 then
-        --     SetCVar("overrideArchive", 0)
+        --     SetCVar("overrideArchive", 0);
         -- end
         AntiCrab();
         BlueShaman();
-        AntiLogout();
+        AntiAFKLogout();
         switch:UnregisterEvent("VARIABLES_LOADED");
     elseif event == "PLAYER_ENTERING_WORLD" then
-        MaxCameraDistance()
+        MaxCameraDistance();
     end
 end)
 
@@ -101,18 +105,21 @@ if GetLocale() == "zhCN" then
     SWITCH_ANTICRAB        = "原汁原味（重启游戏后生效）";
     SWITCH_BLUESHAMAN      = "蓝色萨满（可能导致战斗中无法调整队伍）";
     SWITCH_MAXCAMERA       = "自动拉远镜头";
+    SWITCH_ANTIAFK         = "自动脱离离开状态";
     SWITCH_ANTILOGOUT      = "非休息区不自动登出（有风险&掉线无效&触发时会提示插件出错）";
 elseif GetLocale() == "zhTW" then
     SWITCH_INFO            = "雜項設置";
     SWITCH_ANTICRAB        = "原汁原味（重啟遊戲後生效）";
     SWITCH_BLUESHAMAN      = "藍色薩滿（可能導致戰鬥中無法調整隊伍）";
     SWITCH_MAXCAMERA       = "自動拉遠鏡頭";
+    SWITCH_ANTIAFK         = "自動脫離離開狀態";
     SWITCH_ANTILOGOUT      = "非休息區不自動登出（有風險&掉線無效&觸發時會提示插件出錯）";
 else
     SWITCH_INFO            = "options";
     SWITCH_ANTICRAB        = "original taste (Effective after game restarted)";
     SWITCH_BLUESHAMAN      = "blue shaman (may cause taint in party/raid during combat)";
     SWITCH_MAXCAMERA       = "auto maximize camera distance";
+    SWITCH_ANTIAFK         = "Donot automatically afk";
     SWITCH_ANTILOGOUT      = "Donot automatically logout (dangerous!!!)";
 end
 
@@ -162,14 +169,25 @@ do
         self:SetChecked(ExtraConfiguration["maxcamera"]==1);
     end)
 
+    local Switch_AntiAFKEnable = CreateFrame("CheckButton", "Switch_AntiAFKEnable", Switch_OptionsFrame, "InterfaceOptionsCheckButtonTemplate");
+    Switch_AntiAFKEnable:ClearAllPoints();
+    Switch_AntiAFKEnable:SetPoint("TOPLEFT", Switch_MaxCmareaEnable, "TOPLEFT", 0, -30);
+    Switch_AntiAFKEnable:SetHitRectInsets(0, -100, 0, 0);
+    Switch_AntiAFKEnableText:SetText(SWITCH_ANTIAFK);
+    Switch_AntiAFKEnable:SetScript("OnClick", function(self)
+        ExtraConfiguration["antiafk"] = 1 - ExtraConfiguration["antiafk"];
+        AntiAFKLogout();
+        self:SetChecked(ExtraConfiguration["antiafk"]==1);
+    end)
+
     local Switch_AntiLogoutEnable = CreateFrame("CheckButton", "Switch_AntiLogoutEnable", Switch_OptionsFrame, "InterfaceOptionsCheckButtonTemplate");
     Switch_AntiLogoutEnable:ClearAllPoints();
-    Switch_AntiLogoutEnable:SetPoint("TOPLEFT", Switch_MaxCmareaEnable, "TOPLEFT", 0, -30);
+    Switch_AntiLogoutEnable:SetPoint("TOPLEFT", Switch_AntiAFKEnable, "TOPLEFT", 0, -30);
     Switch_AntiLogoutEnable:SetHitRectInsets(0, -100, 0, 0);
     Switch_AntiLogoutEnableText:SetText(SWITCH_ANTILOGOUT);
     Switch_AntiLogoutEnable:SetScript("OnClick", function(self)
         ExtraConfiguration["antilogout"] = 1 - ExtraConfiguration["antilogout"];
-        AntiLogout();
+        AntiAFKLogout();
         self:SetChecked(ExtraConfiguration["antilogout"]==1);
     end)
 end
@@ -178,6 +196,7 @@ function Switch_OptionPanel_OnShow()
     Switch_AnticrabEnable:SetChecked(ExtraConfiguration["anticrab"]==1);
     Switch_BlueshamanEnable:SetChecked(ExtraConfiguration["blueshaman"]==1);
     Switch_MaxCmareaEnable:SetChecked(ExtraConfiguration["maxcamera"]==1);
+    Switch_AntiAFKEnable:SetChecked(ExtraConfiguration["antiafk"]==1);
     Switch_AntiLogoutEnable:SetChecked(ExtraConfiguration["antilogout"]==1);
 end
 
