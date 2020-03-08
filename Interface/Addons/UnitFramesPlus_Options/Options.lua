@@ -1727,6 +1727,7 @@ do
     UnitFramesPlus_OptionsFrame_TargetPortraitType:SetScript("OnClick", function(self)
         UnitFramesPlusDB["target"]["portrait"] = 1 - UnitFramesPlusDB["target"]["portrait"];
         UnitFramesPlus_TargetPortrait();
+        UnitFramesPlus_TargetPortraitDisplayUpdate();
         if UnitFramesPlusDB["target"]["portrait"] == 1 then
             BlizzardOptionsPanel_Slider_Enable(UnitFramesPlus_OptionsFrame_TargetPortraitTypeSlider);
             if UnitFramesPlusDB["target"]["portraittype"] == 1 then
@@ -1777,6 +1778,7 @@ do
         if UnitFramesPlusDB["target"]["portraittype"] ~= value then
             UnitFramesPlusDB["target"]["portraittype"] = value;
             UnitFramesPlus_TargetPortrait();
+            UnitFramesPlus_TargetPortraitDisplayUpdate();
             if value == 1 then
                 BlizzardOptionsPanel_CheckButton_Enable(UnitFramesPlus_OptionsFrame_TargetPortrait3DBG);
                 UnitFramesPlus_OptionsFrame_TargetPortrait3DBGText:SetTextColor(1, 1, 1);
@@ -2676,7 +2678,8 @@ do
     UnitFramesPlus_OptionsFrame_PartyBartext:SetScript("OnClick", function(self)
         UnitFramesPlusDB["party"]["bartext"] = 1 - UnitFramesPlusDB["party"]["bartext"];
         for id = 1, 4, 1 do
-            UnitFramesPlus_PartyHealthPctDisplayUpdate(id)
+            UnitFramesPlus_PartyHealthPctDisplayUpdate(id);
+            UnitFramesPlus_PartyPowerDisplayUpdate(id);
         end
         if UnitFramesPlusDB["party"]["bartext"] ~= 1 then
             BlizzardOptionsPanel_CheckButton_Disable(UnitFramesPlus_OptionsFrame_PartyMouseShow);
@@ -2715,7 +2718,8 @@ do
             UnitFramesPlus_OptionsFrame_GlobalMouseShow:SetChecked(false);
         end
         for id = 1, 4, 1 do
-            UnitFramesPlus_PartyHealthPctDisplayUpdate(id)
+            UnitFramesPlus_PartyHealthPctDisplayUpdate(id);
+            UnitFramesPlus_PartyPowerDisplayUpdate(id);
         end
         UnitFramesPlus_PartyBarTextMouseShow();
         self:SetChecked(UnitFramesPlusDB["party"]["mouseshow"]==1);
@@ -2757,7 +2761,8 @@ do
             end
         end
         for id = 1, 4, 1 do
-            UnitFramesPlus_PartyHealthPctDisplayUpdate(id)
+            UnitFramesPlus_PartyHealthPctDisplayUpdate(id);
+            UnitFramesPlus_PartyPowerDisplayUpdate(id);
         end
         self:SetChecked(UnitFramesPlusDB["party"]["hpmpunit"]==1);
     end)
@@ -2778,7 +2783,8 @@ do
             if UnitFramesPlusDB["party"]["unittype"] ~= value then
                 UnitFramesPlusDB["party"]["unittype"] = value;
                 for id = 1, 4, 1 do
-                    UnitFramesPlus_PartyHealthPctDisplayUpdate(id)
+                    UnitFramesPlus_PartyHealthPctDisplayUpdate(id);
+                    UnitFramesPlus_PartyPowerDisplayUpdate(id);
                 end
             end
         end)

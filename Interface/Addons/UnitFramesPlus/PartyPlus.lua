@@ -267,6 +267,7 @@ function UnitFramesPlus_PartyName()
             if _G["UFP_PartyColorName"..id]:IsEventRegistered("PLAYER_ENTERING_WORLD") then
                 _G["UFP_PartyColorName"..id]:UnregisterAllEvents();
             end
+            _G["UFP_PartyColorName"..id]:SetScript("OnEvent", nil);
         end
     end
 end
@@ -382,9 +383,11 @@ function UnitFramesPlus_PartyPortrait()
                     -- _G["UFP_PartyPortraitType"..id]:RegisterUnitEvent("UNIT_EXITED_VEHICLE", "party"..id);
                     _G["UFP_PartyPortraitType"..id]:RegisterUnitEvent("UNIT_PHASE", "party"..id);
                     _G["UFP_PartyPortraitType"..id]:RegisterUnitEvent("UNIT_PET", "party"..id);
+                    _G["UFP_PartyPortraitType"..id]:RegisterUnitEvent("UNIT_CONNECTION", "party"..id);
                 else
-                    if _G["UFP_PartyPortraitType"..id]:IsEventRegistered("PLAYER_ENTERING_WORLD") then
-                        _G["UFP_PartyPortraitType"..id]:UnregisterAllEvents();
+                    if _G["UFP_PartyPortraitType"..id]:IsEventRegistered("UNIT_MODEL_CHANGED") then
+                        _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_MODEL_CHANGED");
+                        _G["UFP_PartyPortraitType"..id]:UnregisterEvent("UNIT_HEALTH_FREQUENT");
                     end
                 end
                 _G["UFP_PartyPortraitType"..id]:SetScript("OnEvent", function(self, event, ...)

@@ -21,8 +21,10 @@ local function UnitFramesPlus_PlayerShiftDrag()
         end
     end)
 
-    PlayerFrame:SetMovable(1);
-    PlayerFrame:SetClampedToScreen(1);
+    PlayerFrame_SetLocked(true);
+    PlayerFrame:SetMovable(true);
+    PlayerFrame:SetUserPlaced(false);
+    PlayerFrame:SetClampedToScreen(true);
 
     hooksecurefunc("PlayerFrame_ResetUserPlacedPosition", function()
         UnitFramesPlusVar["player"]["moved"] = 0;

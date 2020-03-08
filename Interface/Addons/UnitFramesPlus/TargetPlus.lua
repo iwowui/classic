@@ -1070,7 +1070,8 @@ function UnitFramesPlus_TargetPortrait()
                 tpt:RegisterUnitEvent("UNIT_CONNECTION", "target");
             else
                 if tpt:IsEventRegistered("UNIT_MODEL_CHANGED") then
-                    tpt:UnregisterAllEvents();
+                    tpt:UnregisterEvent("UNIT_MODEL_CHANGED");
+                    tpt:UnregisterEvent("UNIT_HEALTH_FREQUENT");
                 end
             end
             tpt:SetScript("OnEvent", function(self, event, ...)
