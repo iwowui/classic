@@ -4,7 +4,6 @@ local PoolManager = namespace.PoolManager
 
 local addon = namespace.addon
 local activeFrames = addon.activeFrames
-local gsub = _G.string.gsub
 local strfind = _G.string.find
 local unpack = _G.unpack
 local min = _G.math.min
@@ -159,12 +158,7 @@ function addon:DisplayCastbar(castbar, unitID)
     local parentFrame = AnchorManager:GetAnchor(unitID)
     if not parentFrame then return end
 
-    local db = self.db[gsub(unitID, "%d", "")] -- nameplate1 -> nameplate
-    if unitID == "nameplate-testmode" then
-        db = self.db.nameplate
-    elseif unitID == "party-testmode" then
-        db = self.db.party
-    end
+    local db = self.db[self:GetUnitType(unitID)]
 
     if not castbar.animationGroup then
         castbar.animationGroup = castbar:CreateAnimationGroup()
@@ -215,7 +209,7 @@ function addon:DisplayCastbar(castbar, unitID)
     castbar:Show()
 end
 
-function addon:HideCastbar(castbar, noFadeOut)
+function addon:HideCastbar(castbar, unitID, noFadeOut)
     if noFadeOut then
         castbar:SetAlpha(0)
         castbar:Hide()
@@ -225,7 +219,7 @@ function addon:HideCastbar(castbar, noFadeOut)
     local cast = castbar._data
     if cast and (cast.isInterrupted or cast.isFailed) then
         castbar.Text:SetText(cast.isInterrupted and _G.INTERRUPTED or _G.FAILED)
-        castbar:SetStatusBarColor(castbar.failedCastColor:GetRGB())
+        castbar:SetStatusBarColor(unpack(self.db[self:GetUnitType(unitID)].statusColorFailed))
         castbar:SetMinMaxValues(0, 1)
         castbar:SetValue(1)
         castbar.Spark:SetAlpha(0)
@@ -276,7 +270,10 @@ function addon:SkinPlayerCastbar()
         CastingBarFrame.Timer:SetFontObject("SystemFont_Shadow_Small")
         CastingBarFrame:HookScript("OnUpdate", function(frame)
             if db.enabled and db.showTimer then
-                frame.Timer:SetPoint("RIGHT", CastingBarFrame, (frame.Text:GetText():len() >= 19) and 30 or -6, 0)
+                local spellText = frame.Text and frame.Text:GetText()
+                if spellText then
+                    frame.Timer:SetPoint("RIGHT", CastingBarFrame, (spellText:len() >= 19) and 30 or -6, 0)
+                end
 
                 if frame.fadeOut or (not frame.casting and not frame.channeling) then
                     -- just show no text at zero, the numbers looks kinda weird when Flash animation is playing
@@ -322,7 +319,7 @@ function addon:SkinPlayerCastbar()
 	CastingBarFrame_SetStartChannelColor(CastingBarFrame, unpack(db.statusColorChannel))
 	--CastingBarFrame_SetFinishedCastColor(CastingBarFrame, unpack(db.statusColor))
 	--CastingBarFrame_SetNonInterruptibleCastColor(CastingBarFrame, 0.7, 0.7, 0.7)
-    --CastingBarFrame_SetFailedCastColor(CastingBarFrame, 1.0, 0.0, 0.0)
+    CastingBarFrame_SetFailedCastColor(CastingBarFrame, unpack(db.statusColorFailed))
     if CastingBarFrame.isTesting then
         CastingBarFrame:SetStatusBarColor(CastingBarFrame.startCastColor:GetRGB())
     end

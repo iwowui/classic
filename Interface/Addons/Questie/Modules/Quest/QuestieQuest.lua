@@ -1,30 +1,32 @@
 ---@class QuestieQuest
-local QuestieQuest = QuestieLoader:CreateModule("QuestieQuest");
+local QuestieQuest = QuestieLoader:CreateModule("QuestieQuest")
 -------------------------
 --Import modules.
 -------------------------
 ---@type QuestieProfessions
-local QuestieProfessions = QuestieLoader:ImportModule("QuestieProfessions");
+local QuestieProfessions = QuestieLoader:ImportModule("QuestieProfessions")
 ---@type QuestieReputation
-local QuestieReputation = QuestieLoader:ImportModule("QuestieReputation");
+local QuestieReputation = QuestieLoader:ImportModule("QuestieReputation")
 ---@type QuestieTooltips
-local QuestieTooltips = QuestieLoader:ImportModule("QuestieTooltips");
+local QuestieTooltips = QuestieLoader:ImportModule("QuestieTooltips")
 ---@type QuestieTracker
-local QuestieTracker = QuestieLoader:ImportModule("QuestieTracker");
+local QuestieTracker = QuestieLoader:ImportModule("QuestieTracker")
 ---@type QuestieDBMIntegration
-local QuestieDBMIntegration = QuestieLoader:ImportModule("QuestieDBMIntegration");
+local QuestieDBMIntegration = QuestieLoader:ImportModule("QuestieDBMIntegration")
 ---@type QuestieFramePool
-local QuestieFramePool = QuestieLoader:ImportModule("QuestieFramePool");
+local QuestieFramePool = QuestieLoader:ImportModule("QuestieFramePool")
 ---@type QuestieMap
-local QuestieMap = QuestieLoader:ImportModule("QuestieMap");
+local QuestieMap = QuestieLoader:ImportModule("QuestieMap")
 ---@type QuestieLib
-local QuestieLib = QuestieLoader:ImportModule("QuestieLib");
+local QuestieLib = QuestieLoader:ImportModule("QuestieLib")
 ---@type QuestieHash
-local QuestieHash = QuestieLoader:ImportModule("QuestieHash");
+local QuestieHash = QuestieLoader:ImportModule("QuestieHash")
 ---@type QuestiePlayer
-local QuestiePlayer = QuestieLoader:ImportModule("QuestiePlayer");
+local QuestiePlayer = QuestieLoader:ImportModule("QuestiePlayer")
 ---@type QuestieDB
-local QuestieDB = QuestieLoader:ImportModule("QuestieDB");
+local QuestieDB = QuestieLoader:ImportModule("QuestieDB")
+---@type QuestieCorrections
+local QuestieCorrections = QuestieLoader:ImportModule("QuestieCorrections")
 
 local _QuestieQuest = QuestieQuest.private
 local libS = LibStub:GetLibrary("AceSerializer-3.0")
@@ -72,6 +74,7 @@ function QuestieQuest:ToggleNotes(desiredValue)
         for questId, framelist in pairs(QuestieMap.questIdFrames) do
             if (trackerHiddenQuests == nil) or (trackerHiddenQuests[questId] == nil) then -- Skip quests which are completly hidden from the Tracker menu
                 for _, frameName in pairs(framelist) do -- this may seem a bit expensive, but its actually really fast due to the order things are checked
+                    ---@type IconFrame
                     local icon = _G[frameName];
                     if icon.data == nil then
                         error("Desync! Icon has not been removed correctly, but has already been resetted. Skipping frame \"" .. frameName .. "\" for quest " .. questId)
@@ -79,12 +82,8 @@ function QuestieQuest:ToggleNotes(desiredValue)
                     else
                         local objectiveString = tostring(questId) .. " " .. tostring(icon.data.ObjectiveIndex)
                         if (questieCharDB.TrackerHiddenObjectives == nil) or (questieCharDB.TrackerHiddenObjectives[objectiveString] == nil) then
-                            if icon ~= nil and icon.hidden and not ((((not questieGlobalDB.enableObjectives) and (icon.data.Type == "monster" or icon.data.Type == "object" or icon.data.Type == "event" or icon.data.Type == "item"))
-                                or ((not questieGlobalDB.enableTurnins) and icon.data.Type == "complete")
-                                or ((not questieGlobalDB.enableAvailable) and icon.data.Type == "available"))
-                                or ((not questieGlobalDB.enableMapIcons) and (not icon.miniMapIcon))
-                                or ((not questieGlobalDB.enableMiniMapIcons) and (icon.miniMapIcon))) or (icon.data.ObjectiveData and icon.data.ObjectiveData.HideIcons) or (icon.data.QuestData and icon.data.QuestData.HideIcons and icon.data.Type ~= "complete") then
-                                    icon:FakeUnhide()
+                            if icon ~= nil and icon.hidden and (not icon:ShouldBeHidden()) then
+                                icon:FakeUnhide()
                             end
                         end
                     end
@@ -251,13 +250,10 @@ function QuestieQuest:UpdateHiddenNotes()
     -- Update hidden status of quest notes
     for questId, framelist in pairs(QuestieMap.questIdFrames) do
         for index, frameName in pairs(framelist) do -- this may seem a bit expensive, but its actually really fast due to the order things are checked
+            ---@type IconFrame
             local icon = _G[frameName];
             if icon ~= nil and icon.data then
-                if (QuestieQuest.NotesHidden or (((not questieGlobalDB.enableObjectives) and (icon.data.Type == "monster" or icon.data.Type == "object" or icon.data.Type == "event" or icon.data.Type == "item"))
-                 or ((not questieGlobalDB.enableTurnins) and icon.data.Type == "complete")
-                 or ((not questieGlobalDB.enableAvailable) and icon.data.Type == "available"))
-                 or ((not questieGlobalDB.enableMapIcons) and (not icon.miniMapIcon))
-                 or ((not questieGlobalDB.enableMiniMapIcons) and (icon.miniMapIcon))) or (icon.data.ObjectiveData and icon.data.ObjectiveData.HideIcons) or (icon.data.QuestData and icon.data.QuestData.HideIcons and icon.data.Type ~= "complete") then
+                if icon:ShouldBeHidden() then
                     icon:FakeHide()
                 else
                     icon:FakeUnhide()
@@ -1468,6 +1464,10 @@ function QuestieQuest:CalculateAvailableQuests()
     local playerLevel = QuestiePlayer:GetPlayerLevel()
     local minLevel = playerLevel - Questie.db.global.minLevelFilter
     local maxLevel = playerLevel + Questie.db.global.maxLevelFilter
+    if Questie.db.char.manualMinLevelOffsetAbsolute then
+        minLevel = Questie.db.global.minLevelFilter
+        maxLevel = Questie.db.global.maxLevelFilter
+    end
     local showRepeatableQuests = Questie.db.char.showRepeatableQuests
     local showDungeonQuests = Questie.db.char.showDungeonQuests
     local showPvPQuests = Questie.db.char.showPvPQuests

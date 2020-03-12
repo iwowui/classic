@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: ClassicAuraDurations
 ## Title-zhCN: |CFFFF8000辅助|R 冷却计时库
 ## Title-zhTW: |CFFFF8000輔助|R 冷卻計時庫

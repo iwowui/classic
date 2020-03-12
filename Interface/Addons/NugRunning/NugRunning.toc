@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: NugRunning
 ## Notes: Spelltimers
 ## Title-zhCN: |CFFFF8000辅助|R 法术计时条
@@ -9,7 +9,7 @@
 ## Author: d87
 ## SavedVariablesPerCharacter: NRunDB_Char
 ## SavedVariables: NRunDB_Global, NugRunningConfigCustom
-## Version: 1.13.35
+## Version: 1.13.36
 
 ## X-WoWI-ID: 10440
 ## X-Curse-Project-ID: 27470
@@ -17,7 +17,6 @@
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 Libs\LibSharedMedia-3.0\lib.xml
-Libs\LibTotemInfo-1.0\embeds.xml
 
 helpers.lua
 classic.config.lua

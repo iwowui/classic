@@ -1,4 +1,5 @@
-QuestieItemFixes = {...}
+---@class QuestieItemFixes
+local QuestieItemFixes = QuestieLoader:CreateModule("QuestieItemFixes")
 -------------------------
 --Import modules.
 -------------------------
@@ -24,8 +25,32 @@ function QuestieItemFixes:Load()
         [1206] = {
             [QuestieDB.itemKeys.npcDrops] = {},
         },
+        [1262] = {
+            [QuestieDB.itemKeys.name] = "Keg of Thunderbrew",
+            [QuestieDB.itemKeys.relatedQuests] = {116,117},
+            [QuestieDB.itemKeys.npcDrops] = {239},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
         [1529] = {
             [QuestieDB.itemKeys.npcDrops] = {},
+        },
+        [1939] = {
+            [QuestieDB.itemKeys.name] = "Skin of Sweet Rum",
+            [QuestieDB.itemKeys.relatedQuests] = {116},
+            [QuestieDB.itemKeys.npcDrops] = {465},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [1941] = {
+            [QuestieDB.itemKeys.name] = "Cask of Merlot",
+            [QuestieDB.itemKeys.relatedQuests] = {116},
+            [QuestieDB.itemKeys.npcDrops] = {277},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [1942] = {
+            [QuestieDB.itemKeys.name] = "Bottle of Moonshine",
+            [QuestieDB.itemKeys.relatedQuests] = {116},
+            [QuestieDB.itemKeys.npcDrops] = {274},
+            [QuestieDB.itemKeys.objectDrops] = {},
         },
         [2318] = {
             [QuestieDB.itemKeys.npcDrops] = {},
@@ -159,7 +184,7 @@ function QuestieItemFixes:Load()
         [4904] = {
             [QuestieDB.itemKeys.name] = "Venomtail Antidote",
             [QuestieDB.itemKeys.relatedQuests] = {812},
-            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.npcDrops] = {3189},
             [QuestieDB.itemKeys.objectDrops] = {},
         },
         [5051] = {
@@ -775,6 +800,9 @@ function QuestieItemFixes:Load()
             [QuestieDB.itemKeys.npcDrops] = {14347},
             [QuestieDB.itemKeys.objectDrops] = {},
         },
+        [20023] = {
+            [QuestieDB.itemKeys.npcDrops] = {8766},
+        },
         [21557] = {
             [QuestieDB.itemKeys.name] = "Small Red Rocket",
             [QuestieDB.itemKeys.relatedQuests] = {8867,},
@@ -858,6 +886,10 @@ end
 
 _AddMissingItemIDs = function()
     local missingItemIDs = {
+        1262,
+        1939,
+        1941,
+        1942,
         -- Small Rockets
         21557,
         21558,

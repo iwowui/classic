@@ -1,4 +1,4 @@
-﻿## Interface: 11303
+﻿## Interface: 11304
 ## Title: DamageEx
 ## Notes: Shows the damage,target heal and the spell name.
 ## Title-zhCN: |CFFFF8000战斗|R 增强伤害显示器(Dex)

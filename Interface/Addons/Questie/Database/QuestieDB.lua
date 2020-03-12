@@ -1,16 +1,20 @@
 ---@class QuestieDB
-local QuestieDB = QuestieLoader:CreateModule("QuestieDB");
+local QuestieDB = QuestieLoader:CreateModule("QuestieDB")
 -------------------------
 --Import modules.
 -------------------------
 ---@type QuestieStreamLib
-local QuestieStreamLib = QuestieLoader:ImportModule("QuestieStreamLib");
+local QuestieStreamLib = QuestieLoader:ImportModule("QuestieStreamLib")
 ---@type QuestieLib
-local QuestieLib = QuestieLoader:ImportModule("QuestieLib");
+local QuestieLib = QuestieLoader:ImportModule("QuestieLib")
 ---@type QuestiePlayer
-local QuestiePlayer = QuestieLoader:ImportModule("QuestiePlayer");
+local QuestiePlayer = QuestieLoader:ImportModule("QuestiePlayer")
 ---@type QuestieDBZone
 local QuestieDBZone = QuestieLoader:ImportModule("QuestieDBZone")
+---@type QuestieCorrections
+local QuestieCorrections = QuestieLoader:ImportModule("QuestieCorrections")
+---@type QuestieQuestFixes
+local QuestieQuestFixes = QuestieLoader:ImportModule("QuestieQuestFixes")
 
 local tinsert = table.insert
 
@@ -222,7 +226,7 @@ function QuestieDB:GetQuest(questId) -- /dump QuestieDB:GetQuest(867)
     local questType, questTag = GetQuestTagInfo(questId)
     if questType == 81 then
         QO.isDungeonQuest = true
-    elseif questType == 41 or QuestieQuestFixes:IsPvPQuest(questId) then
+    elseif questType == 41 or QuestieDB:IsPvPQuest(questId) then
         QO.isPvPQuest = true
     end
 
@@ -411,7 +415,7 @@ function QuestieDB:GetQuest(questId) -- /dump QuestieDB:GetQuest(867)
     ---@return boolean @Returns true if all listed pre quests are complete or none is listed, false otherwise
     function QO:IsPreQuestGroupFulfilled()
         local preQuestGroup = self.preQuestGroup
-        if not preQuestGroup  or not next(preQuestGroup) then
+        if not preQuestGroup or not next(preQuestGroup) then
             return true
         end
         for _, preQuestId in pairs(preQuestGroup) do
@@ -630,11 +634,11 @@ function QuestieDB:GetQuestsByZoneId(zoneId)
         local quest = QuestieDB:GetQuest(qid);
 
         if quest then
-            if quest.zoneOrSort > 0 and (quest.zoneOrSort == zoneId or (alternativeZoneID and quest.zoneOrSort == alternativeZoneID)) then
-                zoneQuests[qid] = quest;
-            end
-
-            if quest.Starts.NPC and zoneQuests[qid] == nil then
+            if quest.zoneOrSort > 0 then
+                if (quest.zoneOrSort == zoneId or (alternativeZoneID and quest.zoneOrSort == alternativeZoneID)) then
+                    zoneQuests[qid] = quest;
+                end
+            elseif quest.Starts.NPC and zoneQuests[qid] == nil then
                 local npc = QuestieDB:GetNPC(quest.Starts.NPC[1]);
 
                 if npc and npc.friendly and npc.spawns then
@@ -644,9 +648,7 @@ function QuestieDB:GetQuestsByZoneId(zoneId)
                         end
                     end
                 end
-            end
-
-            if quest.Starts.GameObject and zoneQuests[qid] == nil then
+            elseif quest.Starts.GameObject and zoneQuests[qid] == nil then
                 local obj = QuestieDB:GetObject(quest.Starts.GameObject[1]);
 
                 if obj and obj.spawns then
@@ -716,4 +718,62 @@ function QuestieDB:HideClassAndRaceQuests()
         end
     end
     Questie:Debug(DEBUG_DEVELOP, "Other class and race quests hidden");
+end
+
+
+
+local falselyMarkedPvPQuests = {
+    [8105] = true,
+    [8121] = true,
+    [8122] = true,
+    [8166] = true,
+    [8167] = true,
+    [8168] = true,
+    [8368] = true,
+    [8169] = true,
+    [8170] = true,
+    [8171] = true,
+    [8370] = true,
+    [8371] = true,
+    [8374] = true,
+    [8386] = true,
+    [8389] = true,
+    [8390] = true,
+    [8393] = true,
+    [8394] = true,
+    [8395] = true,
+    [8396] = true,
+    [8404] = true,
+    [8405] = true,
+    [8406] = true,
+    [8407] = true,
+    [8408] = true,
+    [8426] = true,
+    [8427] = true,
+    [8428] = true,
+    [8429] = true,
+    [8431] = true,
+    [8432] = true,
+    [8433] = true,
+    [8434] = true,
+    [8436] = true,
+    [8437] = true,
+    [8438] = true,
+    [8439] = true,
+    [8440] = true,
+    [8441] = true,
+    [8442] = true,
+    [8443] = true,
+}
+
+---Checks wheather a quest is a PvP quest or not. Some PvP
+--- quests are falsely marked by the Blizzard GetQuestTagInfo API
+--- and need to be checked by hand
+---@param questId QuestId
+---@return boolean @True if the quest is in the falselyMarkedPvPQuests list, false otherwise
+function QuestieDB:IsPvPQuest(questId)
+    if questId ~= nil and falselyMarkedPvPQuests[questId] ~= nil then
+        return true
+    end
+    return false
 end

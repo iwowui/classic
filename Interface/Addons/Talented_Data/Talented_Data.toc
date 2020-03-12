@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: Talented Data
 ## Notes: Gather localized information about the different talent trees of your toons
 ## Title-zhCN: |CFFFF8000辅助|R 天赋模拟器 数据库

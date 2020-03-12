@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: NeatPlates: |cFF3782D1BlizzardPlates
 ## Notes: Blizzard Vanilla´s Plates.
 ## Title-zhCN: |CFFFF8000辅助|R 姓名版增强 暴雪风格

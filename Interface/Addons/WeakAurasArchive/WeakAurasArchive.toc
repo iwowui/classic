@@ -1,0 +1,9 @@
+## Interface: 11304
+## Title: WeakAuras Archive
+## Title-zhCN: 综合提示 数据存档
+## Title-zhTW: 综合提示 數據存檔
+## LoadOnDemand: 1
+## SavedVariables: WeakAurasArchive
+## Dependencies: WeakAuras
+
+WeakAurasArchive.lua

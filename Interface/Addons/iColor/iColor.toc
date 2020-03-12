@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: |cFF0099FFiColor_classic|r v1.13a
 ## Notes: 系统界面信息按职业染色
 ## Title-zhCN: |CFFFF8000辅助|R 职业染色

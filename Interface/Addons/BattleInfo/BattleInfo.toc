@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: Battle Info
 ## Notes: Enrich your battleground information. Feedback: farmer1992@gmail.com
 ## Title-zhCN: |CFFFF8000战斗|R 战场助手BattleInfo

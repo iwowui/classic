@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: ItemRack
 ## Author: Gello - Updated for Classic by Rottenbeer
 ## Title-zhCN: |CFFFF8000辅助|R 一键换装ItemRack

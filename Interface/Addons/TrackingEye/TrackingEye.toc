@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: Tracking Eye
 ## Title-zhCN: |CFF8000FF职业|R 猎人 追踪按钮
 ## Title-zhTW: |CFF8000FF職業|R 獵人 追蹤按鈕

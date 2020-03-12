@@ -1,4 +1,4 @@
-﻿## Interface: 11303
+﻿## Interface: 11304
 ## Title: AtlasQuest
 ## Notes: Shows the Quests for dungeons and battlegrounds.
 ## Title-zhCN: |CFFFF8000地图|R 副本地图浏览器 |cFFff69b4[副本任务]|r

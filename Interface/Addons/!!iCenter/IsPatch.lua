@@ -105,21 +105,21 @@ if GetLocale() == "zhCN" then
     SWITCH_ANTICRAB        = "原汁原味（重启游戏后生效）";
     SWITCH_BLUESHAMAN      = "蓝色萨满（可能导致战斗中无法调整队伍）";
     SWITCH_MAXCAMERA       = "自动拉远镜头";
-    SWITCH_ANTIAFK         = "自动脱离离开状态";
-    SWITCH_ANTILOGOUT      = "非休息区不自动登出（有风险&掉线无效&触发时会提示插件出错）";
+    SWITCH_ANTIAFK         = "自动脱离离开状态（有被封号风险&掉线无效）";
+    SWITCH_ANTILOGOUT      = "非休息区不自动登出（有被封号风险&掉线无效&触发时会提示插件出错）";
 elseif GetLocale() == "zhTW" then
     SWITCH_INFO            = "雜項設置";
     SWITCH_ANTICRAB        = "原汁原味（重啟遊戲後生效）";
     SWITCH_BLUESHAMAN      = "藍色薩滿（可能導致戰鬥中無法調整隊伍）";
     SWITCH_MAXCAMERA       = "自動拉遠鏡頭";
-    SWITCH_ANTIAFK         = "自動脫離離開狀態";
-    SWITCH_ANTILOGOUT      = "非休息區不自動登出（有風險&掉線無效&觸發時會提示插件出錯）";
+    SWITCH_ANTIAFK         = "自動脫離離開狀態（有被封號风险&掉线无效）";
+    SWITCH_ANTILOGOUT      = "非休息區不自動登出（有被封號風險&掉線無效&觸發時會提示插件出錯）";
 else
     SWITCH_INFO            = "options";
     SWITCH_ANTICRAB        = "original taste (Effective after game restarted)";
     SWITCH_BLUESHAMAN      = "blue shaman (may cause taint in party/raid during combat)";
     SWITCH_MAXCAMERA       = "auto maximize camera distance";
-    SWITCH_ANTIAFK         = "Donot automatically afk";
+    SWITCH_ANTIAFK         = "Donot automatically afk (dangerous!!!)";
     SWITCH_ANTILOGOUT      = "Donot automatically logout (dangerous!!!)";
 end
 

@@ -1163,6 +1163,7 @@ local castSpellIDs = {
     --1002, -- Eyes of the Beast
     --1510, -- Volley
     136, -- Mend Pet
+    7268, -- Arcane Missile
     5143, -- Arcane Missiles
     --10, -- Blizzard
     12051, -- Evocation
@@ -1238,6 +1239,7 @@ namespace.channeledSpells = {
 
     -- MAGE
     [GetSpellInfo(5143)] = 5000,      -- Arcane Missiles
+    [GetSpellInfo(7268)] = 3000,      -- Arcane Missile
     [GetSpellInfo(10)] = 8000,        -- Blizzard
     [GetSpellInfo(12051)] = 8000,     -- Evocation
 
@@ -1729,7 +1731,7 @@ namespace.unaffectedCastModsSpells = {
 
 -- Addon Savedvariables
 namespace.defaultConfig = {
-    version = "16", -- settings version
+    version = "17", -- settings version
     pushbackDetect = true,
     locale = GetLocale(),
 
@@ -1752,6 +1754,7 @@ namespace.defaultConfig = {
         iconPositionY = 0,
         borderColor = { 1, 0.796078431372549, 0, 1 },
         statusColor = { 1, 0.7, 0, 1 },
+        statusColorFailed = { 1, 0, 0 },
         statusColorChannel = { 0, 1, 0, 1 },
         textColor = { 1, 1, 1, 1 },
         textPositionX = 0,
@@ -1779,6 +1782,7 @@ namespace.defaultConfig = {
         iconPositionY = 0,
         borderColor = { 1, 1, 1, 1 },
         statusColor = { 1, 0.7, 0, 1 },
+        statusColorFailed = { 1, 0, 0 },
         statusColorChannel = { 0, 1, 0, 1 },
         textColor = { 1, 1, 1, 1 },
         textPositionX = 0,
@@ -1806,6 +1810,7 @@ namespace.defaultConfig = {
         iconPositionY = 0,
         borderColor = { 1, 1, 1, 1 },
         statusColor = { 1, 0.7, 0, 1 },
+        statusColorFailed = { 1, 0, 0 },
         statusColorChannel = { 0, 1, 0, 1 },
         textColor = { 1, 1, 1, 1 },
         textPositionX = 0,
@@ -1834,6 +1839,7 @@ namespace.defaultConfig = {
         iconPositionY = 0,
         borderColor = { 1, 1, 1, 1 },
         statusColor = { 1, 0.7, 0, 1 },
+        statusColorFailed = { 1, 0, 0 },
         statusColorChannel = { 0, 1, 0, 1 },
         textColor = { 1, 1, 1, 1 },
         textPositionX = 0,
@@ -1844,7 +1850,7 @@ namespace.defaultConfig = {
 
     player = {
         enabled = false,
-        width = 195,
+        width = 190,
         height = 20,
         iconSize = 22,
         showCastInfoOnly = false,
@@ -1853,18 +1859,19 @@ namespace.defaultConfig = {
         autoPosition = true,
         castFont = _G.STANDARD_TEXT_FONT,
         castFontSize = 12,
-        castStatusBar = "Interface\\TargetingFrame\\UI-StatusBar",
-        castBorder = "Interface\\CastingBar\\UI-CastingBar-Border-Small",
+        castStatusBar = "Interface\\RaidFrame\\Raid-Bar-Hp-Fill",
+        castBorder = "Interface\\CastingBar\\UI-CastingBar-Border",
         hideIconBorder = false,
         position = { "CENTER", -18, -87 },
         iconPositionX = -10,
         iconPositionY = 0,
         borderColor = { 1, 1, 1, 1 },
         statusColor = { 1, 0.7, 0, 1 },
+        statusColorFailed = { 1, 0, 0 },
         statusColorChannel = { 0, 1, 0, 1 },
         textColor = { 1, 1, 1, 1 },
         textPositionX = 0,
-        textPositionY = 0,
+        textPositionY = 1,
         frameLevel = 10,
         statusBackgroundColor = { 0, 0, 0, 0.535 },
     },

@@ -1,4 +1,4 @@
-﻿## Interface: 11303
+﻿## Interface: 11304
 ## Title: ChatPlus
 ## Notes: ChatPlus
 ## Title-zhCN: |CFFFF8000辅助|R 聊天增强
@@ -6,7 +6,7 @@
 ## Title-zhTW: |CFFFF8000輔助|R 聊天增強
 ## Notes-zhTW: 增強聊天體驗（文本複製、姓名上色、允許方向鍵、短頻道名、Tab切換頻道等）
 ## X-Repple: 辅助
-## Version: 1.1
+## Version: 1.2
 ## Author: Isler
 ## E-mail: isler@live.com
 ## X-Website: http://wow.isler.me

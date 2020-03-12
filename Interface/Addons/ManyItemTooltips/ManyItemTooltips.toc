@@ -1,4 +1,4 @@
-﻿## Interface: 11303
+﻿## Interface: 11304
 ## Title: ManyItemTooltips
 ## Notes: Allows you to open an unlimited number of item tooltips.
 ## Title-zhCN: |CFFFF8000辅助|R 多物品链接显示

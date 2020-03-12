@@ -121,3 +121,47 @@ hooksecurefunc("FCF_OpenTemporaryWindow", function()
         end)
     end
 end)
+
+for i = 1, NUM_CHAT_WINDOWS do
+    local btn = CreateFrame("Button", "ChatCopyIcon"..i, _G["ChatFrame"..i]);
+    btn.bg = btn:CreateTexture(nil, "ARTWORK");
+    btn.bg:SetTexture("Interface\\AddOns\\ChatPlus\\Media\\copy");
+    btn.bg:SetAllPoints(btn);
+    btn:SetPoint("BOTTOMRIGHT", -2, -3);
+    btn.texture = btn.bg;
+    btn:SetFrameLevel(_G["ChatFrame"..i]:GetFrameLevel()+1);
+    btn:SetWidth(18);
+    btn:SetHeight(18);
+    btn:Hide();
+    btn:SetScript("OnClick", function(self, arg)
+        if ChatPlusDB["chatcopybutton"] == 1 then
+            ShowChatbox(_G["ChatFrame" .. i]);
+        end
+    end)
+    --Show/Hide the click box when moving mouse curson in and out of the chat window.
+    _G['ChatFrame'..i]:SetScript("OnEnter", function(self)
+        if ChatPlusDB["chatcopybutton"] == 1 then
+            btn:Show();
+        end
+    end)
+    _G['ChatFrame'..i]:SetScript("OnLeave", function(self)
+        btn:Hide();
+    end)
+    _G['ChatFrame'..i].ScrollToBottomButton:SetScript("OnEnter", function(self)
+        if ChatPlusDB["chatcopybutton"] == 1 then
+            btn:Show();
+        end
+    end)
+    _G['ChatFrame'..i].ScrollToBottomButton:SetScript("OnLeave", function(self)
+        btn:Hide();
+    end)
+    --Need to run the Show() widget when entering the actual button too or it blinks.
+    function btn.show()
+        btn:Show();
+    end
+    function btn.hide()
+        btn:Hide();
+    end
+    btn:SetScript("OnEnter", btn.show);
+    btn:SetScript("OnLeave", btn.hide);
+end

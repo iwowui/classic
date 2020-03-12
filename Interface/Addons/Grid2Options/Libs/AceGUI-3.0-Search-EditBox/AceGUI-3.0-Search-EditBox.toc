@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: AceGUI-3.0-Search-EditBox
 ## Author: Michael
 ## OptionalDeps: Ace3

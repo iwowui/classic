@@ -1,14 +1,15 @@
 ﻿
 ChatPlusDefaultDB = {
     classcolor = 1,
-    arrowkeys  = 1,
+    arrowkeys = 1,
     tabchannel = 1,
-    chatcopy   = 1,
+    chatcopy = 1,
+    chatcopybutton = 1,
     cancelsticky = 1,
     editboxtotop = 0,
-    shortname  = 0,
-    -- urlcopy    = 1,
-    version = "1.1",
+    shortname = 0,
+    -- urlcopy = 1,
+    version = "1.2",
 }
 
 --设置初始化
@@ -17,8 +18,8 @@ local function ChatPlus_Options_Init()
         ChatPlusDB = ChatPlusDefaultDB;
     end
 
-    local Version = GetAddOnMetadata("ChatPlus", "Version");
-    if (not ChatPlusDB["version"]) or (ChatPlusDB["version"] ~= Version) then
+    -- local Version = GetAddOnMetadata("ChatPlus", "Version");
+    if (not ChatPlusDB["version"]) or (ChatPlusDB["version"] ~= ChatPlusDefaultDB["version"]) then
         local k, v;
         for k, v in pairs(ChatPlusDefaultDB) do
             ChatPlusDB[k] = ChatPlusDB[k] or ChatPlusDefaultDB[k];

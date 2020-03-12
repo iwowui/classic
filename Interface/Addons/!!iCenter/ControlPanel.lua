@@ -600,6 +600,38 @@ if enabled > 0 then
 	end
 end
 
+local enabled = GetAddOnEnableState(playerName, "WeakAuras");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameWeakAuras	= "综合提示";
+		FF_DescWeakAuras	= "一個強大且全面實用的顯示圖形和訊息基於增益，減益和其它觸發。";
+	elseif GetLocale() == "zhTW" then
+		FF_NameWeakAuras	= "综合提示";
+		FF_DescWeakAuras	= "一個強大且全面實用的顯示圖形和訊息基於增益，減益和其它觸發。";
+	else
+		FF_NameWeakAuras	= "WeakAuras";
+		FF_DescWeakAuras	= "A powerful, comprehensive utility for displaying graphics and information.";
+	end
+
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "WeakAuras";
+				name= FF_NameWeakAuras;
+				subtext= "WeakAuras";
+				tooltip = FF_DescWeakAuras;
+				icon= "Interface\\AddOns\\WeakAuras\\Media\\Textures\\icon";
+				callback= function(button)
+					if not IsAddOnLoaded("WeakAurasOptions") then
+						LoadAddOn("WeakAurasOptions");
+					end
+					SlashCmdList["WEAKAURAS"]("");
+				end;
+			}
+		);
+	end
+end
+
 local enabled = GetAddOnEnableState(playerName, "NugRunning");
 if enabled > 0 then
 	if GetLocale() == "zhCN" then

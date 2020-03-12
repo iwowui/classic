@@ -82,6 +82,8 @@ local QuestiePlayer = QuestieLoader:ImportModule("QuestiePlayer");
 local QuestieQuestTimers = QuestieLoader:ImportModule("QuestieQuestTimers")
 ---@type QuestieCombatQueue
 local QuestieCombatQueue = QuestieLoader:ImportModule("QuestieCombatQueue")
+---@type QuestieCorrections
+local QuestieCorrections = QuestieLoader:ImportModule("QuestieCorrections")
 
 -- check if user has updated but not restarted the game (todo: add future new source files to this)
 if  (not LQuestie_EasyMenu) or
@@ -233,7 +235,7 @@ function Questie:OnInitialize()
     QuestieOptions:Initialize();
 
     --Initialize the DB settings.
-    Questie:debug(DEBUG_DEVELOP, QuestieLocale:GetUIString('DEBUG_CLUSTER', Questie.db.global.clusterLevelHotzone))
+    Questie:Debug(DEBUG_DEVELOP, QuestieLocale:GetUIString('DEBUG_CLUSTER', Questie.db.global.clusterLevelHotzone))
     QUESTIE_CLUSTER_DISTANCE = Questie.db.global.clusterLevelHotzone;
 
     -- Creating the minimap config icon
@@ -425,8 +427,4 @@ function Questie:Debug(...)
             Questie:Print(...)
         end
     end
-end
-
-function Questie:debug(...)
-    Questie:Debug(...)
 end

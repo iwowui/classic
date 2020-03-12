@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: LetMeCast
 ## Notes: AutoDismount and AutoStand
 ## Title-zhCN: |CFFFF8000辅助|R 自动下马站立

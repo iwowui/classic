@@ -1,0 +1,19 @@
+## Interface: 11304
+## Title: WeakAuras Templates
+## Title-zhCN: 综合提示 模板
+## Title-zhTW: 综合提示 範本
+## Author: The WeakAuras Team
+## Version: 2.16.6
+## Notes: Templates for WeakAuras
+## X-Category: Interface Enhancements
+## Globe-Main: WeakAuras
+## DefaultState: Enabled
+## LoadOnDemand: 1
+## Dependencies: WeakAuras, WeakAurasOptions
+
+locales.xml
+
+TriggerTemplates.lua
+TriggerTemplatesData.lua
+
+AceGUI-Widgets\AceGUIContainer-WeakAurasTemplateGroup.lua

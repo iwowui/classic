@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: OmniCC Config
 ## Notes: OmniCC's configuration menu
 ## Title-zhCN: |CFFFF8000辅助|R 冷却计时 设置模块

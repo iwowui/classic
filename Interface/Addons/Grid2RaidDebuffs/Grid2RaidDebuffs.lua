@@ -23,6 +23,7 @@ GSRD.defaultDB = { profile = { debuffs = {}, enabledModules = {} } }
 -- general variables
 local instance_id
 local instance_map_id
+local instance_bmap_id
 local instance_map_name
 local statuses = {}
 local spells_order = {}
@@ -37,12 +38,17 @@ local auto_instance
 local auto_debuffs
 local auto_blacklist = { [160029] = true, [36032] = true, [6788] = true, [80354] = true, [95223] = true, [114216] = true, [57723] = true }
 
--- Fix some bugged maps (EJ_GetInstanceInfo does not return valid instanceID for these maps)
--- We replace bugged mapIDs with another non bugged mapIDs of the same instance.
+-- Fix some bugged maps (EJ_GetInstanceInfo does not return valid instanceID for the listed maps)
+-- We replace bugged mapIDs with another non-bugged mapIDs of the same instance.
 local bugged_maps = {
-	[1150] = 1148, -- Fix for Uldir map 1150 (ticket #588)
-	[1515] = 1512, -- Fix for Eternal Palace map 1515 (ticket #691)
-	[1516] = 1512, -- Fix for Eternal Palace map 1516 (ticket #691)
+	-- Fix for Uldir map 1150 (ticket #588)
+	[1150] = 1148,
+	-- Fixes for Eternal Palace (ticket #691)
+	[1515] = 1512,
+	[1516] = 1512,
+	-- Fixes for Ny'alotha the Waking City (ticket #786)
+	[1580] = 1581,
+	[1582] = 1581,
 }
 
 -- LDB Tooltip
@@ -99,6 +105,7 @@ function GSRD:UpdateZoneSpells(event)
 		instance_id = EJ_GetInstanceForMap( (isClassic and map_id) or bugged_maps[bm] or bm )
 		instance_map_id = map_id
 		instance_map_name = GetInstanceInfo()
+		instance_bmap_id = bm or -1
 		for status in next,statuses do
 			status:LoadZoneSpells()
 		end
@@ -262,7 +269,7 @@ function class:LoadZoneSpells()
 			end
 		end
 		if GSRD.debugging then
-			GSRD:Debug("Zone [%s][%d/%d] Status [%s]: %d raid debuffs loaded", instance_map_name, instance_id, instance_map_id, self.name, spells_count)
+			GSRD:Debug("Zone [%s][%d/%d/%d] Status [%s]: %d raid debuffs loaded", instance_map_name, instance_bmap_id, instance_id, instance_map_id, self.name, spells_count)
 		end
 	end
 end

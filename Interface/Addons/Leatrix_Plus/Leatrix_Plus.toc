@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 
 ## Title: Leatrix Plus
 ## Title-zhCN: |CFFFF8000辅助|R 功能百宝箱
@@ -10,7 +10,7 @@
 
 ## X-Repple: 辅助
 
-## Version: 1.13.52
+## Version: 1.13.53
 ## Author: Leatrix
 ## SavedVariables: LeaPlusDB
 

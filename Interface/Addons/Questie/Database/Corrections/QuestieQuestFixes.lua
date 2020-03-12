@@ -1,9 +1,10 @@
-QuestieQuestFixes = {...}
+---@class QuestieQuestFixes
+local QuestieQuestFixes = QuestieLoader:CreateModule("QuestieQuestFixes")
 -------------------------
 --Import modules.
 -------------------------
 ---@type QuestieDB
-local QuestieDB = QuestieLoader:ImportModule("QuestieDB");
+local QuestieDB = QuestieLoader:ImportModule("QuestieDB")
 
 -- Further information on how to use this can be found at the wiki
 -- https://github.com/AeroScripts/QuestieDev/wiki/Corrections
@@ -81,6 +82,9 @@ function QuestieQuestFixes:Load()
         [254] = {
             [QuestieDB.questKeys.parentQuest] = 253,
         },
+        [273] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Find Huldar, Miran, and Saean",{[38]={{51.16, 68.96},},},},
+        },
         [308] = {
             [QuestieDB.questKeys.exclusiveTo] = {311}, -- distracting jarven can't be completed once you get the followup
             [QuestieDB.questKeys.specialFlags] = 1,
@@ -123,6 +127,9 @@ function QuestieQuestFixes:Load()
         [431] = { -- candles of beckoning
             [QuestieDB.questKeys.preQuestSingle] = {366}, -- #638
             [QuestieDB.questKeys.exclusiveTo] = {411}, -- #752
+        },
+        [437] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Enter the Dead Fields",{[130]={{45.91, 21.27},},},},
         },
         [463] = {
             [QuestieDB.questKeys.exclusiveTo] = {276}, --greenwarden cant be completed if you have trampling paws
@@ -217,6 +224,15 @@ function QuestieQuestFixes:Load()
         [742] = {
             [QuestieDB.questKeys.exclusiveTo] = {235,6382,6383,},
         },
+        [754] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Cleanse the Winterhoof Water Well", {[215]={{53.61, 66.2},},},},
+        },
+        [758] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Cleanse the Thunderhorn Water Well", {[215]={{44.52, 45.46},},},},
+        },
+        [760] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Cleanse the Wildmane Well", {[215]={{42.75, 14.16,},},},},
+        },
         [769] = {
             [QuestieDB.questKeys.requiredSkill] = {165,10},
         },
@@ -293,8 +309,14 @@ function QuestieQuestFixes:Load()
         [1026] = {
             [QuestieDB.questKeys.requiredSourceItems] = {5475},
         },
+        [1061] = {
+            [QuestieDB.questKeys.exclusiveTo] = {1062}, -- #1803
+        },
         [1085] = {
             [QuestieDB.questKeys.preQuestSingle] = {1070},
+        },
+        [1090] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Keep Piznik safe while he mines the mysterious ore", {[406]={{71.76, 60.22},},},},
         },
         [1100] = {
             [QuestieDB.questKeys.startedBy] = {nil,{19861},{5791},}, -- #1189
@@ -331,6 +353,9 @@ function QuestieQuestFixes:Load()
         },
         [1204] = {
             [QuestieDB.questKeys.preQuestSingle] = {}, -- #938
+        },
+        [1260] = {
+            [QuestieDB.questKeys.exclusiveTo] = {1204},
         },
         [1265] = {
             [QuestieDB.questKeys.triggerEnd] = {"Sentry Point explored",{[15]={{59.92,40.9},}}},
@@ -386,6 +411,9 @@ function QuestieQuestFixes:Load()
         [1434] = {
             [QuestieDB.questKeys.preQuestSingle] = {1432}, -- #1536
         },
+        [1436] = {
+            [QuestieDB.questKeys.preQuestGroup] = {1434,1480},
+        },
         [1442] = {
             [QuestieDB.questKeys.parentQuest] = 1654,
         },
@@ -404,6 +432,9 @@ function QuestieQuestFixes:Load()
         [1478] = {
             [QuestieDB.questKeys.exclusiveTo] = {1506}, -- #1427
         },
+        [1483] = {
+            [QuestieDB.questKeys.exclusiveTo] = {1093},
+        },
         [1485] = {
             [QuestieDB.questKeys.exclusiveTo] = {1470}, -- #999
         },
@@ -415,6 +446,9 @@ function QuestieQuestFixes:Load()
         },
         [1506] = {
             [QuestieDB.questKeys.exclusiveTo] = {1478}, -- #1427
+        },
+        [1580] = {
+            [QuestieDB.questKeys.requiredSkill] = {356,30},
         },
         [1581] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 77,
@@ -513,6 +547,9 @@ function QuestieQuestFixes:Load()
         [2358] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 77,
         },
+        [2480] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Cure Completed",{[267]={{61.57, 19.21}},},},
+        },
         [2501] = {
             [QuestieDB.questKeys.preQuestSingle] = {}, -- #1541
             [QuestieDB.questKeys.preQuestGroup] = {2500,17}, -- #1541
@@ -529,6 +566,9 @@ function QuestieQuestFixes:Load()
         },
         [2873] = {
             [QuestieDB.questKeys.preQuestSingle] = {}, -- #1566
+        },
+        [2882] = {
+            [QuestieDB.questKeys.zoneOrSort] = 440, -- #1780
         },
         [2922] = {
             [QuestieDB.questKeys.preQuestSingle] = {}, -- Save Techbot's Brain doesn't need the Tinkmaster Overspark breadcrumb #687
@@ -584,6 +624,9 @@ function QuestieQuestFixes:Load()
         },
         [3375] = {
             [QuestieDB.questKeys.parentQuest] = 2201,
+        },
+        [3377] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Zamael Story",{[51]={{29.59, 26.38},},},},
         },
         [3385] = {
             [QuestieDB.questKeys.requiredSkill] = {197,226}, -- You need to be an Artisan for this quest
@@ -690,6 +733,9 @@ function QuestieQuestFixes:Load()
         },
         [4224] = {
             [QuestieDB.questKeys.triggerEnd] = {"Ragged John's Story",{[46]={{64,23},},},},
+        },
+        [4245] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Protect A-Me 01 until you reach Karna Remtravel",{[490]={{46.43, 13.78},},},},
         },
         [4285] = {
             [QuestieDB.questKeys.triggerEnd] = {"Discover and examine the Northern Crystal Pylon",{[490]={{56,12},},},},
@@ -1104,6 +1150,7 @@ function QuestieQuestFixes:Load()
             [QuestieDB.questKeys.requiredRaces] = 178,                      -- Any race can take on quest
             [QuestieDB.questKeys.requiredClasses] = 64,                     -- This quest is for the Shaman class
             [QuestieDB.questKeys.zoneOrSort] = -141,                        -- <0: QuestSort.dbc ID
+            [QuestieDB.questKeys.specialFlags] = 1,
         },
         [7670] = { -- #1432
             [QuestieDB.questKeys.name] = "Lord Grayson Shadowbreaker",
@@ -1144,17 +1191,56 @@ function QuestieQuestFixes:Load()
             [QuestieDB.questKeys.questLevel] = 60,
             [QuestieDB.questKeys.specialFlags] = 1,
         },
+        [8105] = {
+            [QuestieDB.questKeys.specialFlags] = 0,
+        },
+        [8114] = {
+            [QuestieDB.questKeys.requiredMinRep] = {509,3000},
+        },
+        [8115] = {
+            [QuestieDB.questKeys.requiredMinRep] = {509,42000},
+        },
+        [8120] = {
+            [QuestieDB.questKeys.specialFlags] = 0,
+        },
+        [8121] = {
+            [QuestieDB.questKeys.requiredMinRep] = {510,3000},
+        },
+        [8122] = {
+            [QuestieDB.questKeys.requiredMinRep] = {510,42000},
+        },
         [8149] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 77,
         },
         [8150] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 178,
         },
+        [8166] = {
+            [QuestieDB.questKeys.specialFlags] = 0,
+        },
+        [8167] = {
+            [QuestieDB.questKeys.specialFlags] = 0,
+        },
+        [8168] = {
+            [QuestieDB.questKeys.specialFlags] = 0,
+        },
+        [8169] = {
+            [QuestieDB.questKeys.specialFlags] = 0,
+        },
+        [8170] = {
+            [QuestieDB.questKeys.specialFlags] = 0,
+        },
+        [8171] = {
+            [QuestieDB.questKeys.specialFlags] = 0,
+        },
         [8271] = {
             [QuestieDB.questKeys.requiredRaces] = 77,
         },
         [8272] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 178,
+        },
+        [8286] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Discover the Brood of Nozdormu.",{[440]={{63.43, 50.61},},},},
         },
         [8289] = { -- #1435
             [QuestieDB.questKeys.startedBy] = {{14733},nil,nil},
@@ -1403,23 +1489,20 @@ function QuestieQuestFixes:Load()
     }
 end
 
-local falselyMarkedPvPQuests = {}
-
----Checks wheather a quest is a PvP quest or not. Some PvP
---- quests are falsely marked by the Blizzard GetQuestTagInfo API
---- and need to be checked by hand
----@param questId QuestId
----@return boolean @True if the quest is in the falselyMarkedPvPQuests list, false otherwise
-function QuestieQuestFixes:IsPvPQuest(questId)
-    if questId ~= nil and falselyMarkedPvPQuests[questId] ~= nil then
-        return true
+function QuestieQuestFixes:UnloadOtherFactionQuests()
+    local questsToUnload = {}
+    local isHorde = UnitFactionGroup("Player") == "Horde"
+    local flagToCheck = 178
+    if isHorde then
+        flagToCheck = 77 -- Remove Alliance when Horde
     end
-    return false
-end
+    for questId, data in pairs(QuestieDB.questData) do
+        if data[QuestieDB.questKeys.requiredRaces] == flagToCheck then
+            table.insert(questsToUnload, questId)
+        end
+    end
 
-falselyMarkedPvPQuests = {
-    [8404] = true,
-    [8405] = true,
-    [8406] = true,
-    [8408] = true,
-}
+    for _, questId in ipairs(questsToUnload) do
+        QuestieDB.questData[questId] = nil
+    end
+end

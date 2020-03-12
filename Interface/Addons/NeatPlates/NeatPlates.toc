@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: NeatPlates
 ## Notes: Enjoys long walks on Darkshore
 ## Title-zhCN: |CFFFF8000辅助|R 姓名版增强

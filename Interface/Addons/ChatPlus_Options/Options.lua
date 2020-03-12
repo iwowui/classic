@@ -94,10 +94,21 @@ do
         self:SetChecked(ChatPlusDB["chatcopy"]==1);
     end)
 
+    --文本复制按钮
+    local ChatPlus_OptionsFrame_ChatCopyButton = CreateFrame("CheckButton", "ChatPlus_OptionsFrame_ChatCopyButton", ChatPlus_OptionsFrame, "InterfaceOptionsCheckButtonTemplate");
+    ChatPlus_OptionsFrame_ChatCopyButton:ClearAllPoints();
+    ChatPlus_OptionsFrame_ChatCopyButton:SetPoint("TOPLEFT", ChatPlus_OptionsFrame_ChatCopy, "TOPLEFT", 0, -30);
+    ChatPlus_OptionsFrame_ChatCopyButton:SetHitRectInsets(0, -100, 0, 0);
+    ChatPlus_OptionsFrame_ChatCopyButtonText:SetText(CCLocal_ChatCopyButtonText);
+    ChatPlus_OptionsFrame_ChatCopyButton:SetScript("OnClick", function(self)
+        ChatPlusDB["chatcopybutton"] = 1 - ChatPlusDB["chatcopybutton"];
+        self:SetChecked(ChatPlusDB["chatcopybutton"]==1);
+    end)
+
     --短频道名
     local ChatPlus_OptionsFrame_ShortName = CreateFrame("CheckButton", "ChatPlus_OptionsFrame_ShortName", ChatPlus_OptionsFrame, "InterfaceOptionsCheckButtonTemplate");
     ChatPlus_OptionsFrame_ShortName:ClearAllPoints();
-    ChatPlus_OptionsFrame_ShortName:SetPoint("TOPLEFT", ChatPlus_OptionsFrame_ChatCopy, "TOPLEFT", 0, -30);
+    ChatPlus_OptionsFrame_ShortName:SetPoint("TOPLEFT", ChatPlus_OptionsFrame_ChatCopyButton, "TOPLEFT", 0, -30);
     ChatPlus_OptionsFrame_ShortName:SetHitRectInsets(0, -100, 0, 0);
     ChatPlus_OptionsFrame_ShortNameText:SetText(CCLocal_ShortNameText);
     ChatPlus_OptionsFrame_ShortName:SetScript("OnClick", function(self)
@@ -125,6 +136,7 @@ function ChatPlus_OptionPanel_OnShow()
     ChatPlus_OptionsFrame_TabChannel:SetChecked(ChatPlusDB["tabchannel"]==1);
     ChatPlus_OptionsFrame_CancelSticky:SetChecked(ChatPlusDB["cancelsticky"]==1);
     ChatPlus_OptionsFrame_ChatCopy:SetChecked(ChatPlusDB["chatcopy"]==1);
+    ChatPlus_OptionsFrame_ChatCopyButton:SetChecked(ChatPlusDB["chatcopybutton"]==1);
     ChatPlus_OptionsFrame_ShortName:SetChecked(ChatPlusDB["shortname"]==1);
     ChatPlus_OptionsFrame_EditBoxToTop:SetChecked(ChatPlusDB["editboxtotop"]==1);
 end

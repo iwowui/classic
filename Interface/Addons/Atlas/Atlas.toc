@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: Atlas
 ## Notes: Instance Map Browser
 ## Q-CAT-Version: 000400

@@ -1,4 +1,4 @@
-## Interface: 11302
+## Interface: 11304
 ## Title: ThreatClassic-1.0
 ## Author: Es (EsreverWoW), Antiarc
 ## Notes: Library for multi-target threat tracking in WoW Classic.

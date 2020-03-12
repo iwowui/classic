@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: OmniCC
 ## Notes: Cooldown count for everything
 ## Title-zhCN: |CFFFF8000辅助|R 冷却计时

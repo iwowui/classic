@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: SoulSort
 ## Notes: Easy Soul Shard Management
 ## Title-zhCN: |CFF8000FF职业|R 术士 灵魂碎片整理

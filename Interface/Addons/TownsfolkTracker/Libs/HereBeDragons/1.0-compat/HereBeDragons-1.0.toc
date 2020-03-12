@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: Lib: HereBeDragons-1.0
 ## Notes: HereBeDragons-1.0 compat wrapper
 ## Author: Nevcairiel

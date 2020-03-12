@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: SSPVP
 ## Notes: PvP and Battleground mod
 ## Title-zhCN: |CFFFF8000战斗|R 战场助手SSPVP

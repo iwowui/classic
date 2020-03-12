@@ -1,4 +1,4 @@
-﻿## Interface: 11303
+﻿## Interface: 11304
 ## Title: CritSound
 ## Notes: Plays a sound when you perform a critical hit or healing.
 ## Title-zhCN: |CFFFF8000辅助|R 爆击音效

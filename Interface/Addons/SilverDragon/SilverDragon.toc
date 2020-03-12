@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: SilverDragon
 ## Notes: Remember where rares were
 ## Title-zhCN: |CFFFF8000地图|R 稀有怪追踪提醒

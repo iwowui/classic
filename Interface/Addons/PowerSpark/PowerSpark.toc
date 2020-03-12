@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: PowerSpark
 ## Notes: PowerSpark
 ## Title-zhCN: |CFF8000FF职业|R 能量法力恢复提示

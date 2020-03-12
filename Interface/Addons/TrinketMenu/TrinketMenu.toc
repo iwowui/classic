@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: TrinketMenu |cFF99CC01rev|r |cFFFF00007.3.2|r
 ## Notes: Addon to manage trinkets.
 ## Title-zhCN: |CFFFF8000辅助|R 饰品管理器

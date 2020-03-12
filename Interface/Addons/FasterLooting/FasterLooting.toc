@@ -1,4 +1,4 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: FasterLooting
 ## Author: cannon
 ## Notes: Auto loots all items without the delay currently in Classic
