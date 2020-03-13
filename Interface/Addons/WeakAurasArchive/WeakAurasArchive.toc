@@ -1,7 +1,7 @@
 ## Interface: 11304
 ## Title: WeakAuras Archive
-## Title-zhCN: 综合提示 数据存档
-## Title-zhTW: 综合提示 數據存檔
+## Title-zhCN: |CFFFF8000辅助|R 综合提示 数据存档
+## Title-zhTW: |CFFFF8000輔助|R 综合提示 數據存檔
 ## X-Repple: 辅助
 ## LoadOnDemand: 1
 ## SavedVariables: WeakAurasArchive

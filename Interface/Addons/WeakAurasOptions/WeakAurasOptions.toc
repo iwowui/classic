@@ -1,7 +1,7 @@
 ## Interface: 11304
 ## Title: WeakAuras Options
-## Title-zhCN: 综合提示 设置
-## Title-zhTW: 综合提示 設定
+## Title-zhCN: |CFFFF8000辅助|R 综合提示 设置
+## Title-zhTW: |CFFFF8000輔助|R 综合提示 設定
 ## Author: Mirrored and the WeakAuras Team
 ## Version: 2.16.6
 ## Notes: Options for WeakAuras

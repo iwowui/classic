@@ -1,7 +1,7 @@
 ## Interface: 11304
 ## Title: WeakAuras Templates
-## Title-zhCN: 综合提示 模板
-## Title-zhTW: 综合提示 範本
+## Title-zhCN: |CFFFF8000辅助|R 综合提示 模板
+## Title-zhTW: |CFFFF8000輔助|R 综合提示 範本
 ## X-Repple: 辅助
 ## Author: The WeakAuras Team
 ## Version: 2.16.6
