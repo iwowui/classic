@@ -2127,10 +2127,10 @@ end
 local enabled = GetAddOnEnableState(playerName, "oRA3");
 if enabled > 0 then
 	if GetLocale() == "zhCN" then
-		FF_NameoRA	= "团队助手";
+		FF_NameoRA	= "团队助手oRA3";
 		FF_DescoRA	= "队伍和团队助手";
 	elseif GetLocale() == "zhTW" then
-		FF_NameoRA	= "團隊助手";
+		FF_NameoRA	= "團隊助手oRA3";
 		FF_DescoRA	= "隊伍和團隊助手";
 	else
 		FF_NameoRA	= "oRA3";
@@ -2149,6 +2149,37 @@ if enabled > 0 then
 						LoadAddOn("oRA3");
 					end
 					LibStub("AceConfigDialog-3.0"):Open("oRA");
+				end;
+			}
+		);
+	end
+end
+
+local enabled = GetAddOnEnableState(playerName, "ExRT");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameoExRT	= "团队助手ExRT";
+		FF_DescoExRT	= "团队工具辅助";
+	elseif GetLocale() == "zhTW" then
+		FF_NameoExRT	= "團隊助手ExRT";
+		FF_DescoExRT	= "團隊工具輔助";
+	else
+		FF_NameoExRT	= "ExRT";
+		FF_DescoExRT	= "Exorsus Raid Tools";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "ExRT";
+				name= FF_NameoExRT;
+				subtext= "ExRT";
+				tooltip = FF_DescoExRT;
+				icon= "Interface\\AddOns\\ExRT\\media\\MiniMap";
+				callback= function(button)
+					if not IsAddOnLoaded("ExRT") then
+						LoadAddOn("ExRT");
+					end
+					SlashCmdList["exrtSlash"]("");
 				end;
 			}
 		);

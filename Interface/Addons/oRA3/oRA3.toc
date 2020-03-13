@@ -1,9 +1,9 @@
 ## Interface: 11304
 ## Title: oRA3
 ## Notes: Raid and Party Assist
-## Title-zhCN: |CFF80FF80团队|R 团队助手
+## Title-zhCN: |CFF80FF80团队|R 团队助手oRA3
 ## Notes-zhCN: 队伍和团队助手。
-## Title-zhTW: |CFF80FF80團隊|R 團隊助手
+## Title-zhTW: |CFF80FF80團隊|R 團隊助手oRA3
 ## Notes-zhTW: 隊伍和團隊助手。
 ## X-Repple: 团队
 ## DefaultState: Disabled

@@ -7,6 +7,7 @@
 ## Notes: A powerful, comprehensive utility for displaying graphics and information based on buffs, debuffs, and other triggers.
 ## Notes-zhCN: 一个强大且全面实用的显示图形和讯息基于增益，减益和其它触发。
 ## Notes-zhTW: 一個強大且全面實用的顯示圖形和訊息基於增益，減益和其它觸發。
+## X-Repple: 辅助
 ## X-Category: Interface Enhancements
 ## Globe-Post: WeakAurasOptions, WeakAurasModelPaths, WeakAurasTemplates
 ## X-Website: https://www.curseforge.com/wow/addons/weakauras-2

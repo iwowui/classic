@@ -2,6 +2,7 @@
 ## Title: WeakAuras Templates
 ## Title-zhCN: 综合提示 模板
 ## Title-zhTW: 综合提示 範本
+## X-Repple: 辅助
 ## Author: The WeakAuras Team
 ## Version: 2.16.6
 ## Notes: Templates for WeakAuras

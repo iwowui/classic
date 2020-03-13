@@ -1,0 +1,47 @@
+## Interface: 11304
+## Title: Exorsus Raid Tools
+## Notes: Exorsus Raid Tools
+## Title-zhCN: |CFF80FF80团队|R 团队助手ExRT
+## Notes-zhCN: 团队工具辅助
+## Title-zhTW: |CFF80FF80團隊|R 團隊助手ExRT
+## Notes-zhTW: 團隊工具輔助
+## X-Repple: 团队
+## DefaultState: Disabled
+## Author: ykiigor
+## SavedVariables: VExRT
+## Version: 4110
+core.lua
+Functions.lua
+embeds.xml
+ExLib.lua
+localization\localization.en.lua
+localization\localization.cn.lua
+localization\localization.tw.lua
+localization\localization.lua
+BlizzFix.lua
+Options.lua
+ExCD2.lua
+Inspect.lua
+BattleRes.lua
+BossWatcher.lua
+InspectViewer.lua
+Note.lua
+VisNote.lua
+RaidCheck.lua
+InviteTool.lua
+MarksBar.lua
+Marks.lua
+Timers.lua
+Coins.lua
+RaidAttendance.lua
+Encounter.lua
+WhoPulled.lua
+Pets.lua
+AutoLogging.lua
+LootLink.lua
+WAChecker.lua
+Bindings.lua
+Bindings.xml
+Blank.lua
+Profiles.lua
+Changelog.lua

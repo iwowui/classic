@@ -7,6 +7,7 @@
 ## Notes: Options for WeakAuras
 ## Notes-zhCN: WeakAuras的设置
 ## Notes-zhTW: WeakAuras的設定
+## X-Repple: 辅助
 ## X-Category: Interface Enhancements
 ## Globe-Main: WeakAuras
 ## DefaultState: Enabled

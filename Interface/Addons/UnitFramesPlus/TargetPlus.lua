@@ -11,6 +11,9 @@ function UnitFramesPlus_TargetPositionSet()
         TargetFrame:ClearAllPoints();
         TargetFrame:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", UnitFramesPlusVar["target"]["x"], UnitFramesPlusVar["target"]["y"]);
     end
+    if UnitFramesPlus_TargetTargetPosition then
+        UnitFramesPlus_TargetTargetPosition();
+    end
 end
 
 function UnitFramesPlus_TargetPosition()
