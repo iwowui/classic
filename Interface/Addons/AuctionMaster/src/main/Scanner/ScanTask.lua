@@ -391,6 +391,7 @@ local function _PagedScan(self, info)
             --				-- not filtering by category, leave nil for all
             --			end
 
+            if info.isUsable == 0 then info.isUsable = false end
             QueryAuctionItems(info.name, tonumber(info.minLevel), tonumber(info.maxLevel), self.page, info.isUsable, info.qualityIndex, false, info.exactMatch, filterData);
 
             _BlockForAuctionListUpdate(self)

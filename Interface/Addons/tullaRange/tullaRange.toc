@@ -7,6 +7,6 @@
 ## Title-zhTW: |CFFFF8000輔助|R 距離染色
 ## Notes-zhTW: 當技能超出施放範圍時對圖示進行染色
 ## X-Repple: 辅助
-## Version: 8.3.1
+## Version: 8.3.2
 ## SavedVariables: TULLARANGE_COLORS
 tullaRange.lua
