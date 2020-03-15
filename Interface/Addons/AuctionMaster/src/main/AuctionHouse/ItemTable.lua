@@ -391,6 +391,19 @@ local function _CreateRowFrame(self, parent, i)
 	row:SetScript("OnDoubleClick", _RowDoubleClicked)
 	row:SetScript("OnClick", function(but) _SelectedItem(but.obj, but.row) end)
 	row:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+
+	row:SetScript("OnEnter",function(self)
+		if (self.obj.model.GetItemLink) then
+			GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT", 27, -27);
+			local offset = FauxScrollFrame_GetOffset(self.obj.scrollFrame)
+			local idx = offset + row.row
+			local itemLink = self.obj.model:GetItemLink(idx)
+			GameTooltip:SetHyperlink(itemLink)
+		end
+	end)
+	row:SetScript("OnLeave",function()
+		GameTooltip:Hide();
+	end)
 	
 	local texture = row:CreateTexture()
 	texture:SetTexture(SELECT_HIGHLIGHT)

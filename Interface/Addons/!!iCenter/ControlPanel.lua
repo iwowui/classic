@@ -357,10 +357,10 @@ end
 local enabled = GetAddOnEnableState(playerName, "AtlasLootClassic");
 if enabled > 0 then
 	if GetLocale() == "zhCN" then
-		FF_NameAtlasLoot	= "副本掉落物品查询";
+		FF_NameAtlasLoot	= "副本掉落查询";
 		FF_DescAtlasLoot	= "显示副本中的首领与小怪可能掉落的物品";
 	elseif GetLocale() == "zhTW" then
-		FF_NameAtlasLoot	= "首領掉落物品查詢";
+		FF_NameAtlasLoot	= "首領掉落查詢";
 		FF_DescAtlasLoot	= "顯示首領與小怪可能掉落的物品，並可查詢各陣營與戰場的獎勵物品、套裝物品等";
 	else
 		FF_NameAtlasLoot	= "AtlasLoot";
@@ -1852,33 +1852,67 @@ if enabled > 0 then
 	end
 end
 
-if GetLocale() == "zhCN" then
-	FF_NameLHPP	= "低血量魔法视觉警报";
-	FF_DescLHPP	= "低血量魔法视觉警报";
-elseif GetLocale() == "zhTW" then
-	FF_NameLHPP	= "低血量魔法視覺警報";
-	FF_DescLHPP	= "低血量魔法視覺警報";
-else
-	FF_NameLHPP	= "LowHPPulser";
-	FF_DescLHPP	= "Provides visual feedback when health and mana reach the defined percentages.";
+local enabled = GetAddOnEnableState(playerName, "LowHPPulser");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameLHPP	= "低血量魔法视觉警报";
+		FF_DescLHPP	= "低血量魔法视觉警报";
+	elseif GetLocale() == "zhTW" then
+		FF_NameLHPP	= "低血量魔法視覺警報";
+		FF_DescLHPP	= "低血量魔法視覺警報";
+	else
+		FF_NameLHPP	= "LowHPPulser";
+		FF_DescLHPP	= "Provides visual feedback when health and mana reach the defined percentages.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "LHPP";
+				name= FF_NameLHPP;
+				subtext= "LowHPPulser";
+				tooltip = FF_DescLHPP;
+				icon= "Interface\\Icons\\Spell_Holy_DivineSpirit";
+				callback= function(button)
+						if not IsAddOnLoaded("LowHPPulser") then
+							LoadAddOn("LowHPPulser");
+						end
+					InterfaceOptionsFrame_OpenToCategory("LowHPPulser");
+					InterfaceOptionsFrame_OpenToCategory("LowHPPulser");
+				end;
+			}
+		);
+	end
 end
-if ( EarthFeature_AddButton ) then
-	EarthFeature_AddButton(
-		{
-			id= "LHPP";
-			name= FF_NameLHPP;
-			subtext= "LowHPPulser";
-			tooltip = FF_DescLHPP;
-			icon= "Interface\\Icons\\Spell_Holy_DivineSpirit";
-			callback= function(button)
-					if not IsAddOnLoaded("LowHPPulser") then
-						LoadAddOn("LowHPPulser");
-					end
-				InterfaceOptionsFrame_OpenToCategory("LowHPPulser");
-				InterfaceOptionsFrame_OpenToCategory("LowHPPulser");
-			end;
-		}
-	);
+
+local enabled = GetAddOnEnableState(playerName, "SSPVP");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameSSPVP	= "战场助手";
+		FF_DescSSPVP	= "显示全面的战场信息，比如剩余时间，获胜节点，阿拉希盆地最终比分";
+	elseif GetLocale() == "zhTW" then
+		FF_NameSSPVP	= "戰場助手";
+		FF_DescSSPVP	= "顯示全面的戰場信息，比如剩余時間，獲勝節點，阿拉希盆地最終比分";
+	else
+		FF_NameSSPVP	= "SSPVP";
+		FF_DescSSPVP	= "PvP and Battleground mod";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "SSPVP";
+				name= FF_NameSSPVP;
+				subtext= "SSPVP";
+				tooltip = FF_DescSSPVP;
+				icon= "Interface\\Icons\\INV_Banner_03";
+				callback= function(button)
+						if not IsAddOnLoaded("SSPVP") then
+							LoadAddOn("SSPVP");
+						end
+					SlashCmdList["SSPVP"]("");
+				end;
+			}
+		);
+	end
 end
 
 local enabled = GetAddOnEnableState(playerName, "Grid2");

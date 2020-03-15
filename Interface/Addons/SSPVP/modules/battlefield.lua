@@ -121,7 +121,8 @@ function BF:PLAYER_DEAD()
 	if( self.db.profile.release[self.activeBF] ) then
 		local options = C_DeathInfo.GetSelfResurrectOptions()
 		-- No soul stone, release
-		if( not options or #(options) == 0 ) then
+		local _, instanceType = IsInInstance()
+		if( not options or #(options) == 0 ) and instanceType == "pvp" then
 			StaticPopupDialogs["DEATH"].text = L["Releasing..."]
 			RepopMe()
 		else
