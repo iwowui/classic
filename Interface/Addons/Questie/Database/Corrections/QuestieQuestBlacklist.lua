@@ -15,6 +15,13 @@ function QuestieQuestBlacklist:Load()
         [1318] = true, -- Duplicate of 7703 and not in the game
         [7704] = true, -- Not in the game
         [8258] = true, -- Not in the game (yet) -- #1805
+        -- Welcome! quests (Collectors Edition)
+        [5805] = true,
+        [5841] = true,
+        [5842] = true,
+        [5843] = true,
+        [5844] = true,
+        [5847] = true,
         --Stray quests
         [3861] = true, --CLUCK!
         --World event quests
@@ -950,6 +957,7 @@ function QuestieQuestBlacklist:Load()
         [8759] = true,
         [8760] = true,
       --Phase 6 - Naxxramas
+        [9142] = true,
         [9165] = true,
         [9141] = true,
         [9033] = true,

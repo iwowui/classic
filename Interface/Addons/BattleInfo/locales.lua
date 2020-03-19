@@ -41,7 +41,7 @@ L["Spirit heal AE: not dead"] = true
 L["Spirit healing ..."] = true
 L["TITLE"] = "Battle Info"
 L["TOC_NOTES"] = "Enrich your battleground information. Feedback: farmer1992@gmail.com"
-L["Wait for Bunker/Tower to be destoryed, stop auto leaving"] = true
+L["Waiting for Bunker/Tower to be destroyed, stopping auto-leave"] = true
 L["Win rate"] = true
 L["World State Score panel class color"] = true
 
@@ -72,7 +72,7 @@ L["Spirit heal AE: not dead"] = "灵魂医者: 未阵亡"
 L["Spirit healing ..."] = "灵魂医者群体复活中..."
 L["TITLE"] = "BattleInfo 战场助手"
 L["TOC_NOTES"] = "战场信息增强. 反馈: farmer1992@gmail.com"
-L["Wait for Bunker/Tower to be destoryed, stop auto leaving"] = "等待碉堡/哨塔被摧毁，停止自动离开"
+L["Waiting for Bunker/Tower to be destroyed, stopping auto-leave"] = "等待碉堡/哨塔被摧毁，停止自动离开"
 L["Win rate"] = "胜率"
 L["World State Score panel class color"] = "比分面板职业着色"
 
@@ -103,7 +103,7 @@ L["Spirit heal AE: not dead"] = "靈魂治療 AE : 未死亡"
 L["Spirit healing ..."] = "靈魂治療中..."
 L["TITLE"] = "戰場資訊增強"
 L["TOC_NOTES"] = "提供更多實用的戰場資訊。問題與建議: farmer1992@gmail.com"
-L["Wait for Bunker/Tower to be destoryed, stop auto leaving"] = "等待堡壘/塔被摧毀，停止自動離開。"
+L["Waiting for Bunker/Tower to be destroyed, stopping auto-leave"] = "等待堡壘/塔被摧毀，停止自動離開。"
 L["Win rate"] = "勝率"
 L["World State Score panel class color"] = "分數面板顯示職業顏色"
 

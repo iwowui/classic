@@ -1,8 +1,16 @@
 ---@class ns
+---@field L L
+---@field UI UI
+---@field Addon GoodLeaderAddon
+---@field Grade GoodLeaderGrade
 local ns = select(2, ...)
+
+---@class UI
+---@field TagLabel GoodLeaderTagLabel
 
 ns.UI = {}
 ns.L = LibStub('AceLocale-3.0'):GetLocale(...)
+ns.GUI = LibStub('tdGUI-1.0')
 
 local L = ns.L
 
@@ -15,11 +23,15 @@ local L = ns.L
 ---@field guild string
 ---@field guildCount number
 ---@field raids table<number, number>
+---@field scores number[]
+---@field tags string[]
 
 ---@class GoodLeaderAddon
 ---@field userCache table<string, GoodLeaderUserCache>
-local Addon = LibStub('AceAddon-3.0'):NewAddon('GoodLeader', 'AceEvent-3.0', 'LibClass-2.0', 'LibCommSocket-3.0')
+local Addon = LibStub('AceAddon-3.0'):NewAddon('GoodLeader', 'AceEvent-3.0', 'AceBucket-3.0', 'LibClass-2.0',
+                                               'LibCommSocket-3.0')
 ns.Addon = Addon
+GoodLeader = Addon
 
 function Addon:OnInitialize()
     self.userCache = {}
@@ -28,8 +40,11 @@ function Addon:OnInitialize()
     self:ConnectServer('S1' .. UnitFactionGroup('player'))
     self:RegisterServer('SERVER_CONNECTED')
     self:RegisterServer('SGL')
+    self:RegisterServer('SGT')
 
-    self:RegisterEvent('GROUP_ROSTER_UPDATE')
+    -- self:RegisterEvent('INSPECT_READY')
+
+    self.db = LibStub('AceDB-3.0'):New('GOODLEADER_DB', {profile = {cache = {}}})
 end
 
 function Addon:OnEnable()
@@ -83,7 +98,7 @@ function Addon:SERVER_CONNECTED()
     self:SendMessage('GOODLEADER_LOGIN')
 end
 
-function Addon:SGL(_, name, code, msg, activeness, itemPercent, raidData)
+function Addon:SGL(_, name, code, msg, activeness, itemPercent, raidData, scores, tags)
     local user = self:GetUserCache(name)
 
     if code ~= 0 then
@@ -99,9 +114,18 @@ function Addon:SGL(_, name, code, msg, activeness, itemPercent, raidData)
         user.activeness = activeness
         user.itemPercent = itemPercent
         user.raids = raids
+        user.scores = scores
+        user.tags = tags
     end
     self:GROUP_ROSTER_UPDATE()
     self:SendMessage('GOODLEADER_LEADERINFO_UPDATE')
+end
+
+function Addon:SGT(_, tags)
+    self.tags = tags and {strsplit(',', tags)} or {}
+
+    self:RegisterEvent('GROUP_ROSTER_UPDATE')
+    self:GROUP_ROSTER_UPDATE()
 end
 
 function Addon:LookupLeader()
@@ -136,10 +160,44 @@ function Addon:GROUP_ROSTER_UPDATE()
     user.guildCount = count
 end
 
+function Addon:INSPECT_READY(_, guid)
+    if not InspectFrame then
+        return
+    end
+    local unit = InspectFrame.unit
+    if not unit or UnitGUID(unit) ~= guid then
+        return
+    end
+
+    local itemLevel = ns.GetUnitItemLevel(unit)
+    if not itemLevel then
+        self.inspectBucket = self:RegisterBucketEvent('GET_ITEM_INFO_RECEIVED', 1)
+        self.inspectGuid = guid
+        return
+    end
+end
+
+function Addon:GET_ITEM_INFO_RECEIVED()
+    if not self.inspectGuid then
+        return
+    end
+
+    local guid = self.inspectGuid
+
+    self:UnregisterBucket(self.inspectBucket)
+    self.inspectBucket = nil
+    self.inspectGuid = nil
+    self:INSPECT_READY(nil, guid)
+end
+
 function Addon:Toggle()
     if self.MainPanel:IsShown() then
         HideUIPanel(self.MainPanel)
     else
         ShowUIPanel(self.MainPanel)
     end
+end
+
+function Addon:GetGradeTags()
+    return self.tags
 end

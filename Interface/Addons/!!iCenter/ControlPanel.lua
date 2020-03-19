@@ -1873,9 +1873,9 @@ if enabled > 0 then
 				tooltip = FF_DescLHPP;
 				icon= "Interface\\Icons\\Spell_Holy_DivineSpirit";
 				callback= function(button)
-						if not IsAddOnLoaded("LowHPPulser") then
-							LoadAddOn("LowHPPulser");
-						end
+					if not IsAddOnLoaded("LowHPPulser") then
+						LoadAddOn("LowHPPulser");
+					end
 					InterfaceOptionsFrame_OpenToCategory("LowHPPulser");
 					InterfaceOptionsFrame_OpenToCategory("LowHPPulser");
 				end;
@@ -1905,10 +1905,49 @@ if enabled > 0 then
 				tooltip = FF_DescSSPVP;
 				icon= "Interface\\Icons\\INV_Banner_03";
 				callback= function(button)
-						if not IsAddOnLoaded("SSPVP") then
-							LoadAddOn("SSPVP");
-						end
+					if not IsAddOnLoaded("SSPVP") then
+						LoadAddOn("SSPVP");
+					end
 					SlashCmdList["SSPVP"]("");
+				end;
+			}
+		);
+	end
+end
+
+local enabled = GetAddOnEnableState(playerName, "Spy");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameSpy	= "侦测敌方玩家";
+		FF_DescSpy	= "检测并提醒您附近有敌方玩家。";
+	elseif GetLocale() == "zhTW" then
+		FF_NameSpy	= "偵測敵方玩家";
+		FF_DescSpy	= "偵測並警告你附近有敵方玩家出沒。";
+	else
+		FF_NameSpy	= "Spy";
+		FF_DescSpy	= "Detects and alerts you to the presence of nearby enemy players.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "Spy";
+				name= FF_NameSpy;
+				subtext= "Spy";
+				tooltip = FF_DescSpy;
+				icon= "Interface\\Icons\\Ability_Druid_SupriseAttack";
+				callback= function(button)
+					if not IsAddOnLoaded("Spy") then
+						LoadAddOn("Spy");
+					end
+					if button == "LeftButton" then
+						if LibStub("AceAddon-3.0"):GetAddon("Spy").MainWindow:IsShown() then
+							LibStub("AceAddon-3.0"):GetAddon("Spy"):EnableSpy(false, true);
+						else
+							LibStub("AceAddon-3.0"):GetAddon("Spy"):EnableSpy(true, true);
+						end
+					elseif button == "RightButton" then
+						LibStub("AceAddon-3.0"):GetAddon("Spy"):ShowConfig();
+					end
 				end;
 			}
 		);
@@ -2403,4 +2442,3 @@ if GetLocale() == "zhCN" then
 		);
 	end
 end
-

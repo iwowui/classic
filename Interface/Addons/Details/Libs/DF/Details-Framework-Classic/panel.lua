@@ -8472,10 +8472,10 @@ DF.BorderFunctions = {
 	end,
 	
 	SetBorderThickness = function (self, newThickness)
-		DFPixelUtil.SetWidth (f.leftBorder, newThickness, newThickness)
-		DFPixelUtil.SetWidth (f.rightBorder, newThickness, newThickness)
-		DFPixelUtil.SetHeight (f.topBorder, newThickness, newThickness)
-		DFPixelUtil.SetHeight (f.bottomBorder, newThickness, newThickness)
+		DFPixelUtil.SetWidth (self.leftBorder, newThickness, newThickness)
+		DFPixelUtil.SetWidth (self.rightBorder, newThickness, newThickness)
+		DFPixelUtil.SetHeight (self.topBorder, newThickness, newThickness)
+		DFPixelUtil.SetHeight (self.bottomBorder, newThickness, newThickness)
 	end,
 	
 	WidgetType = "border",

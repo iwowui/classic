@@ -64,7 +64,7 @@ function QuestieOptionsDefaults:Load()
             trackerShowCompleteQuests = true,
             trackerShowQuestLevel = true,
             showBlizzardQuestTimer = false,
-            stickyDurabilityFrame = false,
+            stickyDurabilityFrame = true,
             trackerColorObjectives = 'white',
             trackerQuestPadding = 2,
             trackerSortObjectives = 'byComplete',
@@ -72,7 +72,7 @@ function QuestieOptionsDefaults:Load()
             trackerbindSetTomTom = 'ctrlleft',
             trackerbindUntrack = "shiftleft",
             iconFadeLevel = 0.3,
-            trackerLocked = false,
+            trackerLocked = true,
             trackerBackgroundEnabled = false,
         },
         char = {

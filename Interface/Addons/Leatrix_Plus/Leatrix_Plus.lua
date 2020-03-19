@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.53 (11th March 2020)
+-- 	Leatrix Plus 1.13.54 (18th March 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 --	Version
-	LeaPlusLC["AddonVer"] = "1.13.53"
+	LeaPlusLC["AddonVer"] = "1.13.54"
 	LeaPlusLC["RestartReq"] = nil
 
 --	If client restart is required and has not been done, show warning and quit
@@ -1463,7 +1463,7 @@
 			PetPortrait:GetParent():SetFrameLevel(4)
 
 			-- Create configuration panel
-			local ChainPanel = LeaPlusLC:CreatePanel("Player Chain", "ChainPanel")
+			local ChainPanel = LeaPlusLC:CreatePanel("Show player chain", "ChainPanel")
 
 			-- Add dropdown menu
 			LeaPlusLC:CreateDropDown("PlayerChainMenu", "Chain style", ChainPanel, 146, "TOPLEFT", 16, -112, {L["RARE"], L["ELITE"], L["RARE ELITE"]}, "")
@@ -1601,7 +1601,7 @@
 			ColTar:SetScript("OnEvent", TargetFrameCol) -- Events are registered if target option is enabled
 
 			-- Create configuration panel
-			local ClassFrame = LeaPlusLC:CreatePanel("Class Colored Frames", "ClassFrame")
+			local ClassFrame = LeaPlusLC:CreatePanel("Class colored frames", "ClassFrame")
 
 			LeaPlusLC:MakeTx(ClassFrame, "Settings", 16, -72)
 			LeaPlusLC:MakeCB(ClassFrame, "ClassColPlayer", "Show player frame in class color", 16, -92, false, "If checked, the player frame background will be shown in class color.")
@@ -1680,7 +1680,7 @@
 			----------------------------------------------------------------------
 
 			-- Create configuration panel
-			local SideMinimap = LeaPlusLC:CreatePanel("Minimap", "SideMinimap")
+			local SideMinimap = LeaPlusLC:CreatePanel("Customise minimap", "SideMinimap")
 
 			-- Hide panel during combat
 			SideMinimap:RegisterEvent("PLAYER_REGEN_DISABLED")
@@ -1901,7 +1901,7 @@
 		if LeaPlusLC["QuestFontChange"] == "On" then
 
 			-- Create configuration panel
-			local QuestTextPanel = LeaPlusLC:CreatePanel("Quest Text", "QuestTextPanel")
+			local QuestTextPanel = LeaPlusLC:CreatePanel("Resize quest text", "QuestTextPanel")
 
 			LeaPlusLC:MakeTx(QuestTextPanel, "Text size", 16, -72)
 			LeaPlusLC:MakeSL(QuestTextPanel, "LeaPlusQuestFontSize", "Drag to set the font size of quest text.", 10, 36, 1, 16, -92, "%.0f")
@@ -1959,7 +1959,7 @@
 		if LeaPlusLC["MailFontChange"] == "On" then
 
 			-- Create configuration panel
-			local MailTextPanel = LeaPlusLC:CreatePanel("Mail Text", "MailTextPanel")
+			local MailTextPanel = LeaPlusLC:CreatePanel("Resize mail text", "MailTextPanel")
 
 			LeaPlusLC:MakeTx(MailTextPanel, "Text size", 16, -72)
 			LeaPlusLC:MakeSL(MailTextPanel, "LeaPlusMailFontSize", "Drag to set the font size of mail text.", 10, 36, 1, 16, -92, "%.0f")
@@ -2016,7 +2016,7 @@
 		if LeaPlusLC["BookFontChange"] == "On" then
 
 			-- Create configuration panel
-			local BookTextPanel = LeaPlusLC:CreatePanel("Book Text", "BookTextPanel")
+			local BookTextPanel = LeaPlusLC:CreatePanel("Resize book text", "BookTextPanel")
 
 			LeaPlusLC:MakeTx(BookTextPanel, "Text size", 16, -72)
 			LeaPlusLC:MakeSL(BookTextPanel, "LeaPlusBookFontSize", "Drag to set the font size of book text.", 10, 36, 1, 16, -92, "%.0f")
@@ -2544,7 +2544,7 @@
 		do
 
 			-- Create configuration panel
-			local weatherPanel = LeaPlusLC:CreatePanel("Weather Density", "weatherPanel")
+			local weatherPanel = LeaPlusLC:CreatePanel("Set weather density", "weatherPanel")
 			LeaPlusLC:MakeTx(weatherPanel, "Settings", 16, -72)
 			LeaPlusLC:MakeSL(weatherPanel, "WeatherLevel", "Drag to set the density of weather effects.", 0, 3, 1, 16, -92, "%.0f")
 
@@ -3940,7 +3940,7 @@
 			end
 
 			-- Create configuration panel
-			local SideFrames = LeaPlusLC:CreatePanel("Frames", "SideFrames")
+			local SideFrames = LeaPlusLC:CreatePanel("Manage frames", "SideFrames")
 
 			-- Create Titan Panel screen adjust warning
 			local titanFrame = CreateFrame("FRAME", nil, SideFrames)
@@ -4655,7 +4655,7 @@
 			end
 
 			-- Create configuration panel
-			local CooldownPanel = LeaPlusLC:CreatePanel("Cooldowns", "CooldownPanel")
+			local CooldownPanel = LeaPlusLC:CreatePanel("Show cooldowns", "CooldownPanel")
 
 			-- Function to refresh the editbox tooltip with the spell name
 			local function RefSpellTip(self,elapsed)
@@ -4942,7 +4942,7 @@
 			---------------------------------------------------------------------------------------------------------
 
 			-- Create tooltip customisation side panel
-			local SideTip = LeaPlusLC:CreatePanel("Tooltip", "SideTip")
+			local SideTip = LeaPlusLC:CreatePanel("Manage tooltip", "SideTip")
 
 			-- Add controls
 			LeaPlusLC:MakeTx(SideTip, "Settings", 16, -72)
@@ -5582,7 +5582,7 @@
 			local BordRight = WorldFrame:CreateTexture(nil, "ARTWORK"); BordRight:SetColorTexture(0, 0, 0, 1); BordRight:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0); BordRight:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
 
 			-- Create viewport configuration panel
-			local SideViewport = LeaPlusLC:CreatePanel("Viewport", "SideViewport")
+			local SideViewport = LeaPlusLC:CreatePanel("Enable viewport", "SideViewport")
 
 			-- Create resize screen button
 			local resizeScreenBtn = LeaPlusLC:CreateButton("resizeScreenBtn", SideViewport, "Resize Screen", "BOTTOMRIGHT", -16, 10, 0, 25, true, "Click to resize the screen to fit between the top and bottom borders.")
@@ -6707,7 +6707,7 @@
 		----------------------------------------------------------------------
 
 		-- Create configuration panel
-		local InvPanel = LeaPlusLC:CreatePanel("Invite From Whispers", "InvPanel")
+		local InvPanel = LeaPlusLC:CreatePanel("Invite from whispers", "InvPanel")
 
 		-- Add editbox
 		LeaPlusLC:MakeTx(InvPanel, "Settings", 16, -72)

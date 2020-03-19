@@ -211,6 +211,8 @@ QuestieLocale.locale['zhCN'] = {
     ['SLASH_CONFIG'] = "/questie -- 打开设置窗口",
     ['SLASH_TOGGLE_QUESTIE'] = "/questie toggle -- 在地图上显示Questie提示",
     ['SLASH_JOURNEY'] = "/questie journey -- 打开日志窗口",
+    ['SLASH_TRACKER'] = "/questie tracker [show/hide/reset] -- Toggles the Tracker. Add \"show\", \"hide\", \"reset\" to explicit show/hide or reset the Tracker",
+    ['SLASH_TO_MAP'] = "/questie tomap [<npcId>/<npcName>/reset] -- Adds manual notes to the map for a given NPC ID or name. If the name is ambiguous multipe notes might be added. Without a second command the target will be added to the map. The \"reset\" command removes all notes",
     ['SLASH_MINIMAP'] = "/questie minimap -- 切换显示或隐藏Questie小地图图标",
 
     -- Tracker
@@ -277,6 +279,7 @@ QuestieLocale.locale['zhCN'] = {
     ['TRACKER_SET_TOMTOM'] = "显示|cFF54e33bTomTom|r箭头",
     ['TRACKER_SHOW_ICONS'] = "显示标记",
     ['TRACKER_HIDE_ICONS'] = "隐藏标记",
+    ['TRACKER_LINK_TO_CHAT'] = "Link Quest to chat",
     ['TRACKER_OBJECTIVES'] = "目标",
     ['TRACKER_SHOW_ON_MAP'] = "显示于地图",
     ['TRACKER_UNLOCK'] = "解锁框体",

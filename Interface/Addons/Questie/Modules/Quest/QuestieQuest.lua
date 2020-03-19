@@ -372,7 +372,7 @@ function QuestieQuest:CompleteQuest(quest)
     local questId = quest.Id
     QuestiePlayer.currentQuestlog[questId] = nil;
     -- Only quests that aren't repeatable should be marked complete, otherwise objectives for repeatable quests won't track correctly - #1433
-    Questie.db.char.complete[questId] = not quest.Repeatable
+    Questie.db.char.complete[questId] = not quest.IsRepeatable
 
     QuestieHash:RemoveQuestHash(questId)
 
@@ -1272,14 +1272,12 @@ function _QuestieQuest:DrawAvailableQuest(quest) -- prevent recursion
     elseif(quest.Starts["NPC"] ~= nil)then
         for _, NPCID in ipairs(quest.Starts["NPC"]) do
             local NPC = QuestieDB:GetNPC(NPCID)
-            if (NPC ~= nil and NPC.spawns ~= nil and NPC.friendly) then
+            if (NPC ~= nil and NPC.spawns ~= nil) then
                 --Questie:Debug(DEBUG_DEVELOP,"Adding Quest:", questObject.Id, "StarterNPC:", NPC.Id)
                 for npcZone, Spawns in pairs(NPC.spawns) do
                     if(npcZone ~= nil and Spawns ~= nil) then
-                        --Questie:Debug("Zone", Zone)
-                        --Questie:Debug("Qid:", questid)
+
                         for _, coords in ipairs(Spawns) do
-                            --Questie:Debug("Coords", coords[1], coords[2])
                             local data = {}
                             data.Id = quest.Id;
                             data.Icon = _QuestieQuest:GetQuestIcon(quest)
@@ -1384,7 +1382,7 @@ function _QuestieQuest:GetQuestIcon(questObject)
     local icon = {}
     if questObject.requiredLevel > QuestiePlayer.GetPlayerLevel() then
         icon = ICON_TYPE_AVAILABLE_GRAY
-    elseif questObject.Repeatable then
+    elseif questObject.IsRepeatable then
         icon = ICON_TYPE_REPEATABLE
     elseif(questObject:IsTrivial()) then
         icon = ICON_TYPE_AVAILABLE_GRAY
@@ -1422,20 +1420,6 @@ function _QuestieQuest:IsDoable(quest)
         -- If the quest has a parent quest then only show it if the
         -- parent quest is in the quest log
         return _QuestieQuest:IsParentQuestActive(quest.parentQuest)
-    end
-
-    -- check if npc is friendly
-    if quest.Starts["NPC"] ~= nil then
-        local hasValidNPC = false
-        for _, id in ipairs(quest.Starts["NPC"]) do
-            if QuestieDB:GetNPC(id).friendly then
-                hasValidNPC = true
-                break
-            end
-        end
-        if not hasValidNPC then
-            return false
-        end
     end
 
     if not QuestieProfessions:HasProfessionAndSkill(quest.requiredSkill) then
@@ -1478,27 +1462,27 @@ function QuestieQuest:CalculateAvailableQuests()
 
     QuestieQuest.availableQuests = {}
 
-    for questID, v in pairs(QuestieDB.questData) do
-        local quest = QuestieDB:GetQuest(questID)
+    for questId, _ in pairs(QuestieDB.questData) do
+        local quest = QuestieDB:GetQuest(questId)
 
         --Check if we've already completed the quest and that it is not "manually" hidden and that the quest is not currently in the questlog.
         if(
-            (not Questie.db.char.complete[questID]) and -- Don't show completed quests
-            ((not QuestiePlayer.currentQuestlog[questID]) or QuestieQuest:IsComplete(quest) == -1) and -- Don't show quests if they're already in the quest log
-            (not QuestieCorrections.hiddenQuests[questID]) and -- Don't show blacklisted quests
-            ((not quest.Repeatable) or (quest.Repeatable and showRepeatableQuests)) and -- Show repeatable quests if the quest is repeatable and the option is enabled
-            ((not quest.isDungeonQuest) or (quest.isDungeonQuest and showDungeonQuests)) and -- Show dungeon quests only with the option enabled
-            ((not quest.isPvPQuest) or (quest.isPvPQuest and showPvPQuests)) -- Show PvP quests only with the option enabled
+            (not Questie.db.char.complete[questId]) and -- Don't show completed quests
+            ((not QuestiePlayer.currentQuestlog[questId]) or QuestieQuest:IsComplete(quest) == -1) and -- Don't show quests if they're already in the quest log
+            (not QuestieCorrections.hiddenQuests[questId]) and -- Don't show blacklisted quests
+            (showRepeatableQuests or (not quest.IsRepeatable)) and  -- Show repeatable quests if the quest is repeatable and the option is enabled
+            (showDungeonQuests or (not quest:IsDungeonQuest())) and  -- Show dungeon quests only with the option enabled
+            (showPvPQuests or (not quest:IsPvPQuest())) -- Show PvP quests only with the option enabled
         ) then
 
             if quest and _QuestieQuest:LevelRequirementsFulfilled(quest, playerLevel, minLevel, maxLevel) then
                 if _QuestieQuest:IsDoable(quest) then
-                    QuestieQuest.availableQuests[questID] = questID
+                    QuestieQuest.availableQuests[questId] = questId
                 end
             else
                 --If the quests are not within level range we want to unload them
                 --(This is for when people level up or change settings etc)
-                QuestieMap:UnloadQuestFrames(questID);
+                QuestieMap:UnloadQuestFrames(questId);
             end
         end
     end

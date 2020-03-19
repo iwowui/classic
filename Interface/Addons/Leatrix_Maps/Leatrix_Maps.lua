@@ -1,6 +1,6 @@
 
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.52 (11th March 2020)
+	-- 	Leatrix Maps 1.13.54 (18th March 2020)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.52"
+	LeaMapsLC["AddonVer"] = "1.13.54"
 	LeaMapsLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -119,7 +119,7 @@
 			WorldMapUnitPin:SetAppearanceField("raid", "useClassColor", true)
 
 			-- Create configuraton panel
-			local classFrame = LeaMapsLC:CreatePanel("Class Colored Icons", "classFrame")
+			local classFrame = LeaMapsLC:CreatePanel("Class colored icons", "classFrame")
 
 			-- Add controls
 			LeaMapsLC:MakeTx(classFrame, "Settings", 16, -72)
@@ -370,7 +370,7 @@
 			end
 
 			-- Create panel
-			local arrowFrame = LeaMapsLC:CreatePanel("Enlarge Player Arrow", "arrowFrame")
+			local arrowFrame = LeaMapsLC:CreatePanel("Enlarge player arrow", "arrowFrame")
 
 			-- Add controls
 			LeaMapsLC:MakeTx(arrowFrame, "Settings", 16, -72)
@@ -559,7 +559,7 @@
 			SetZoneLevelScript()
 
 			-- Create configuraton panel
-			local levelFrame = LeaMapsLC:CreatePanel("Show Zone Levels", "levelFrame")
+			local levelFrame = LeaMapsLC:CreatePanel("Show zone levels", "levelFrame")
 
 			-- Add controls
 			LeaMapsLC:MakeTx(levelFrame, "Settings", 16, -72)
@@ -834,7 +834,7 @@
 		do
 
 			-- Create configuraton panel
-			local alphaFrame = LeaMapsLC:CreatePanel("Set Map Opacity", "alphaFrame")
+			local alphaFrame = LeaMapsLC:CreatePanel("Set map opacity", "alphaFrame")
 
 			-- Add controls
 			LeaMapsLC:MakeTx(alphaFrame, "Settings", 16, -72)
@@ -1234,7 +1234,7 @@
 			----------------------------------------------------------------------
 
 			-- Create configuraton panel
-			local poiFrame = LeaMapsLC:CreatePanel("Show Points Of Interest", "poiFrame")
+			local poiFrame = LeaMapsLC:CreatePanel("Show points of interest", "poiFrame")
 
 			-- Add controls
 			LeaMapsLC:MakeTx(poiFrame, "Settings", 16, -72)
@@ -1407,7 +1407,7 @@
 			end)
 
 			-- Create tint frame
-			local tintFrame = LeaMapsLC:CreatePanel("Show Unexplored Areas", "tintFrame")
+			local tintFrame = LeaMapsLC:CreatePanel("Show unexplored areas", "tintFrame")
 
 			-- Add controls
 			LeaMapsLC:MakeTx(tintFrame, "Settings", 16, -72)
@@ -2014,7 +2014,14 @@
 		text:SetPoint("TOPLEFT", x, y)
 		text:SetJustifyH("LEFT")
 		text:SetText(L[title])
-		if width then text:SetWidth(width) end
+		if width then
+			text:SetWidth(width) 
+		else
+			if text:GetWidth() > 402 then
+				text:SetWidth(402)
+				text:SetWordWrap(false)
+			end
+		end
 		return text
 	end
 

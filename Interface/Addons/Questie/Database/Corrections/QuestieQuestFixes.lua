@@ -412,6 +412,7 @@ function QuestieQuestFixes:Load()
             [QuestieDB.questKeys.preQuestSingle] = {1432}, -- #1536
         },
         [1436] = {
+            [QuestieDB.questKeys.preQuestSingle] = {},
             [QuestieDB.questKeys.preQuestGroup] = {1434,1480},
         },
         [1442] = {
@@ -541,8 +542,26 @@ function QuestieQuestFixes:Load()
         [2241] = {
             [QuestieDB.questKeys.exclusiveTo] = {}, -- #1466
         },
+        [2259] = {
+            [QuestieDB.questKeys.exclusiveTo] = {2260}, -- #1825
+        },
         [2260] = {
             [QuestieDB.questKeys.preQuestSingle] = {},
+            [QuestieDB.questKeys.exclusiveTo] = {2281}, -- #1825
+        },
+        [2281] = {
+            [QuestieDB.questKeys.exclusiveTo] = {2299}, -- #1817
+        },
+        [2298] = {
+            [QuestieDB.questKeys.preQuestSingle] = {},
+            [QuestieDB.questKeys.exclusiveTo] = {2281}, -- #1825
+        },
+        [2299] = {
+            [QuestieDB.questKeys.exclusiveTo] = {2281}, -- #1817
+        },
+        [2300] = {
+            [QuestieDB.questKeys.preQuestSingle] = {}, -- #1825
+            [QuestieDB.questKeys.exclusiveTo] = {2281}, -- #1817
         },
         [2358] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 77,
@@ -798,6 +817,9 @@ function QuestieQuestFixes:Load()
         [4907] = {
             [QuestieDB.questKeys.exclusiveTo] = {4734},
         },
+        [5057] = {
+            [QuestieDB.questKeys.requiredRaces] = 178,
+        },
         [5059] = {
             [QuestieDB.questKeys.preQuestSingle] = {5058}, -- #922
         },
@@ -812,6 +834,9 @@ function QuestieQuestFixes:Load()
         },
         [5068] = {
             [QuestieDB.questKeys.specialFlags] = 1, -- #1335
+        },
+        [5082] = {
+            [QuestieDB.questKeys.preQuestSingle] = {}, -- #1824
         },
         [5089] = {
             [QuestieDB.questKeys.startedBy] = {{9568},nil,{12780}},
@@ -925,21 +950,47 @@ function QuestieQuestFixes:Load()
             [QuestieDB.questKeys.questLevel] = 55,
         },
         -----------------------
+        [6065] = {
+            [QuestieDB.questKeys.exclusiveTo] = {6066,6067,6061},
+        },
+        [6066] = {
+            [QuestieDB.questKeys.exclusiveTo] = {6065,6067,6061},
+        },
+        [6067] = {
+            [QuestieDB.questKeys.exclusiveTo] = {6065,6066,6061},
+        },
+        [6068] = {
+            [QuestieDB.questKeys.exclusiveTo] = {6069,6070,6062}, -- #1795
+        },
         [6069] = {
             [QuestieDB.questKeys.startedBy] = {{11814,},nil,nil,}, -- #1523
+            [QuestieDB.questKeys.exclusiveTo] = {6068,6070,6062}, -- #1795
         },
         -- "The Hunter's Path" now started by "Kary Thunderhorn" in Thunder Bluff
         [6070] = {
             [QuestieDB.questKeys.startedBy] = {{3038,},nil,nil,},
+            [QuestieDB.questKeys.exclusiveTo] = {6068,6069,6062}, -- #1795
+        },
+        [6071] = {
+            [QuestieDB.questKeys.exclusiveTo] = {6072,6073,6721,6722,6063},
+        },
+        [6072] = {
+            [QuestieDB.questKeys.exclusiveTo] = {6071,6073,6721,6722,6063},
         },
         [6073] = {
             [QuestieDB.questKeys.startedBy] = {{5515,},nil,nil,},
+            [QuestieDB.questKeys.exclusiveTo] = {6071,6072,6721,6722,6063},
         },
         [6074] = {
             [QuestieDB.questKeys.startedBy] = {{5516,},nil,nil,},
+            [QuestieDB.questKeys.exclusiveTo] = {6075,6076,6064},
         },
         [6075] = {
             [QuestieDB.questKeys.startedBy] = {{11807,},nil,nil,},
+            [QuestieDB.questKeys.exclusiveTo] = {6074,6076,6064},
+        },
+        [6076] = {
+            [QuestieDB.questKeys.exclusiveTo] = {6074,6075,6064},
         },
         [6136] = {
             [QuestieDB.questKeys.preQuestSingle] = {6133}, -- #1572
@@ -959,6 +1010,12 @@ function QuestieQuestFixes:Load()
         },
         [6522] = {
             [QuestieDB.questKeys.startedBy] = {{4421},nil,{17008}},
+        },
+        [6562] = {
+            [QuestieDB.questKeys.exclusiveTo] = {6563}, -- #1826
+        },
+        [6563] = {
+            [QuestieDB.questKeys.preQuestSingle] = {}, -- #1826
         },
         [6564] = {
             [QuestieDB.questKeys.startedBy] = {{4802},nil,{16790}},
@@ -980,9 +1037,11 @@ function QuestieQuestFixes:Load()
         },
         [6721] = {
             [QuestieDB.questKeys.startedBy] = {{5116},nil,nil},
+            [QuestieDB.questKeys.exclusiveTo] = {6071,6072,6073,6722,6063},
         },
         [6722] = {
             [QuestieDB.questKeys.startedBy] = {{1231},nil,nil},
+            [QuestieDB.questKeys.exclusiveTo] = {6071,6072,6073,6721,6063},
         },
         [6861] = {
             [QuestieDB.questKeys.objectivesText] = {},
@@ -1168,6 +1227,15 @@ function QuestieQuestFixes:Load()
         [7761] = {
             [QuestieDB.questKeys.startedBy] = {{9046},nil,{18987}},
         },
+        [7785] = {
+            [QuestieDB.questKeys.requiredClasses] = 15,
+        },
+        [7786] = {
+            [QuestieDB.questKeys.requiredClasses] = 15,
+        },
+        [7787] = {
+            [QuestieDB.questKeys.requiredClasses] = 15,
+        },
         [7838] = {
             [QuestieDB.questKeys.specialFlags] = 1, -- #1589
         },
@@ -1254,8 +1322,14 @@ function QuestieQuestFixes:Load()
         [8368] = {
             [QuestieDB.questKeys.exclusiveTo] = {8426,8427,8428,8429,8430},
         },
+        [8371] = {
+            [QuestieDB.questKeys.zoneOrSort] = 3358,
+        },
         [8372] = {
             [QuestieDB.questKeys.exclusiveTo] = {8399,8400,8401,8402,8403},
+        },
+        [8385] = {
+            [QuestieDB.questKeys.zoneOrSort] = 3358,
         },
         [8399] = {
             [QuestieDB.questKeys.exclusiveTo] = {8372,8400,8401,8402,8403},
@@ -1487,22 +1561,4 @@ function QuestieQuestFixes:Load()
             [QuestieDB.questKeys.requiredRaces] = 77,
         },
     }
-end
-
-function QuestieQuestFixes:UnloadOtherFactionQuests()
-    local questsToUnload = {}
-    local isHorde = UnitFactionGroup("Player") == "Horde"
-    local flagToCheck = 178
-    if isHorde then
-        flagToCheck = 77 -- Remove Alliance when Horde
-    end
-    for questId, data in pairs(QuestieDB.questData) do
-        if data[QuestieDB.questKeys.requiredRaces] == flagToCheck then
-            table.insert(questsToUnload, questId)
-        end
-    end
-
-    for _, questId in ipairs(questsToUnload) do
-        QuestieDB.questData[questId] = nil
-    end
 end

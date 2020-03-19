@@ -379,6 +379,41 @@ function QuestieTracker:SetBaseFrame(frm)
     _QuestieTracker.baseFrame = frm
 end
 
+function QuestieTracker:Enable()
+    Questie.db.global.trackerEnabled = true
+    -- may not have been initialized yet
+    if Questie.db.global.hookTracking then
+        QuestieTracker:HookBaseTracker()
+    end
+    QuestieQuestTimers:HideBlizzardTimer()
+    QuestieTracker:Initialize()
+    QuestieTracker:MoveDurabilityFrame()
+    QuestieTracker:Update()
+end
+
+function QuestieTracker:Disable()
+    Questie.db.global.trackerEnabled = false
+    if Questie.db.global.hookTracking then
+        QuestieTracker:Unhook()
+    end
+    QuestieQuestTimers:ShowBlizzardTimer()
+    QuestieTracker:ResetDurabilityFrame()
+    QuestieTracker:Update()
+end
+
+function QuestieTracker:Toggle(value)
+    if value == nil then
+        value = not Questie.db.global.trackerEnabled
+    end
+
+    Questie.db.global.trackerEnabled = value
+    if value then
+        QuestieTracker:Enable()
+    else
+        QuestieTracker:Disable()
+    end
+end
+
 function _QuestieTracker:CreateActiveQuestsFrame()
     local _, numQuests = GetNumQuestLogEntries()
     local frm = CreateFrame("Button", nil, _QuestieTracker.baseFrame)
@@ -673,7 +708,9 @@ function QuestieTracker:Update()
 
     -- adjust base frame size for dragging
     if not Questie.db.char.isTrackerExpanded then
-        _QuestieTracker.baseFrame:SetHeight(1)
+        QuestieCombatQueue:Queue(function()
+            _QuestieTracker.baseFrame:SetHeight(1)
+        end)
     elseif line then
         QuestieCombatQueue:Queue(function(line)
             _QuestieTracker.baseFrame:SetWidth(trackerWidth + trackerBackgroundPadding*2 + Questie.db.global.trackerFontSizeHeader*2)
@@ -823,7 +860,7 @@ function QuestieTracker:UnFocus() -- reset HideIcons to match savedvariable stat
     Questie.db.char.TrackerFocus = nil
 end
 
-function QuestieTracker:FocusObjective(TargetQuest, TargetObjective, isSpecial)
+function QuestieTracker:FocusObjective(TargetQuest, TargetObjective)
     if Questie.db.char.TrackerFocus and (type(Questie.db.char.TrackerFocus) ~= "string" or Questie.db.char.TrackerFocus ~= tostring(TargetQuest.Id) .. " " .. tostring(TargetObjective.Index)) then
         QuestieTracker:UnFocus()
     end
