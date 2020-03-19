@@ -1,8 +1,8 @@
 local _G = _G
 
 zCastBar = CreateFrame("Frame", "zCastBar", UIParent)
-zBar3:AddPlugin(zCastBar)
-zBar3:AddBar(zCastBar)
+-- zBar3:AddPlugin(zCastBar)
+-- zBar3:AddBar(zCastBar)
 
 function zCastBar:Load()
 	self:ResetChildren()
