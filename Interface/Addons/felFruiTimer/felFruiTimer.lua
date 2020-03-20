@@ -20,7 +20,7 @@ if (GetLocale() == "zhCN") then
     NDRAGON = "夜龙之息";
     WBERRY = "风花果";
     SONGFLOWERAURA = "风歌夜曲";
-if (GetLocale() == "zhTW") then
+elseif (GetLocale() == "zhTW") then
     WROOT = "鞭根塊莖";
     NDRAGON = "夜龍之息";
     WBERRY = "風花果";
