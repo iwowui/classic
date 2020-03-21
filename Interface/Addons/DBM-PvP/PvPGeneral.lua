@@ -8,7 +8,7 @@ local ipairs, math = ipairs, math
 local IsInInstance, CreateFrame = IsInInstance, CreateFrame
 local GetPlayerFactionGroup = GetPlayerFactionGroup or UnitFactionGroup--Classic Compat fix
 
-mod:SetRevision("20200320121332")
+mod:SetRevision("20200321122347")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 --mod:AddBoolOption("ColorByClass", true)
@@ -125,6 +125,7 @@ local function ShowEstimatedPoints()
 end
 
 local function ShowBasesToWin()
+	if not AlwaysUpFrame2 then return end
 	if not scoreFrameToWin then
 		scoreFrameToWin = CreateFrame("Frame", nil, AlwaysUpFrame2)
 		scoreFrameToWin:SetHeight(10)

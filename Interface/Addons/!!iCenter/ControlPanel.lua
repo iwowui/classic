@@ -1570,6 +1570,70 @@ if enabled > 0 then
 	end
 end
 
+local enabled = GetAddOnEnableState(playerName, "felFruiTimer");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NamefelFruiTimer	= "费伍德水果";
+		FF_DescfelFruiTimer	= "费伍德水果";
+	elseif GetLocale() == "zhTW" then
+		FF_NamefelFruiTimer	= "费伍德水果";
+		FF_DescfelFruiTimer	= "费伍德水果";
+	else
+		FF_NamefelFruiTimer	= "felFruiTimer";
+		FF_DescfelFruiTimer	= "felFruiTimer";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "felFruiTimer";
+				name= FF_NamefelFruiTimer;
+				subtext= "felFruiTimer";
+				tooltip = FF_DescfelFruiTimer;
+				icon= "Interface\\Icons\\INV_Misc_Food_55";
+				callback= function(button)
+					if not IsAddOnLoaded("felFruiTimer") then
+						LoadAddOn("felFruiTimer");
+					end
+					InterfaceOptionsFrame_OpenToCategory("felFruiTimer");
+					InterfaceOptionsFrame_OpenToCategory("felFruiTimer");
+				end;
+			}
+		);
+	end
+end
+
+local enabled = GetAddOnEnableState(playerName, "bloodOfHeros");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NamebloodOfHeros	= "英雄之血";
+		FF_DescbloodOfHeros	= "英雄之血";
+	elseif GetLocale() == "zhTW" then
+		FF_NamebloodOfHeros	= "英雄之血";
+		FF_DescbloodOfHeros	= "英雄之血";
+	else
+		FF_NamebloodOfHeros	= "bloodOfHeros";
+		FF_DescbloodOfHeros	= "bloodOfHeros";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "bloodOfHeros";
+				name= FF_NamebloodOfHeros;
+				subtext= "bloodOfHeros";
+				tooltip = FF_DescbloodOfHeros;
+				icon= "Interface\\Icons\\Spell_shadow_bloodboil";
+				callback= function(button)
+					if not IsAddOnLoaded("bloodOfHeros") then
+						LoadAddOn("bloodOfHeros");
+					end
+					InterfaceOptionsFrame_OpenToCategory("bloodOfHeros");
+					InterfaceOptionsFrame_OpenToCategory("bloodOfHeros");
+				end;
+			}
+		);
+	end
+end
+
 local enabled = GetAddOnEnableState(playerName, "RecipeRadarClassic");
 if enabled > 0 then
 	if GetLocale() == "zhCN" then
@@ -1884,13 +1948,45 @@ if enabled > 0 then
 	end
 end
 
+local enabled = GetAddOnEnableState(playerName, "BattleInfo");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameBattleInfo	= "战场助手";
+		FF_DescBattleInfo	= "战场信息增强";
+	elseif GetLocale() == "zhTW" then
+		FF_NameBattleInfo	= "戰場助手";
+		FF_DescBattleInfo	= "戰場資訊增強";
+	else
+		FF_NameBattleInfo	= "BattleInfo";
+		FF_DescBattleInfo	= "Enrich your battleground information";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "BattleInfo";
+				name= FF_NameBattleInfo;
+				subtext= "BattleInfo";
+				tooltip = FF_DescBattleInfo;
+				icon= "Interface\\Icons\\Ability_Warrior_OffensiveStance";
+				callback= function(button)
+					if not IsAddOnLoaded("BattleInfo") then
+						LoadAddOn("BattleInfo");
+					end
+					InterfaceOptionsFrame_OpenToCategory("BattleInfo");
+					InterfaceOptionsFrame_OpenToCategory("BattleInfo");
+				end;
+			}
+		);
+	end
+end
+
 local enabled = GetAddOnEnableState(playerName, "SSPVP");
 if enabled > 0 then
 	if GetLocale() == "zhCN" then
-		FF_NameSSPVP	= "战场助手";
+		FF_NameSSPVP	= "战场助手SSPVP";
 		FF_DescSSPVP	= "显示全面的战场信息，比如剩余时间，获胜节点，阿拉希盆地最终比分";
 	elseif GetLocale() == "zhTW" then
-		FF_NameSSPVP	= "戰場助手";
+		FF_NameSSPVP	= "戰場助手SSPVP";
 		FF_DescSSPVP	= "顯示全面的戰場信息，比如剩余時間，獲勝節點，阿拉希盆地最終比分";
 	else
 		FF_NameSSPVP	= "SSPVP";

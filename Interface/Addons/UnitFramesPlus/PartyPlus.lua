@@ -583,6 +583,7 @@ for id = 1, MAX_PARTY_MEMBERS, 1 do
     PartyPortraitIndicator:SetAttribute("unit", "party"..id);
     RegisterUnitWatch(PartyPortraitIndicator);
     _G["UFP_PartyPortraitIndicator"..id]:SetFrameStrata("MEDIUM");
+    _G["UFP_PartyPortraitIndicator"..id]:SetFrameLevel(_G["PartyMemberFrame"..id]:GetFrameLevel()+1);
     _G["UFP_PartyPortraitIndicator"..id].feedbackStartTime = GetTime();
     _G["UFP_PartyPortraitIndicator"..id]:CreateFontString("UFP_PartyHitIndicator"..id, "OVERLAY", "NumberFontNormalHuge");
     _G["UFP_PartyHitIndicator"..id]:ClearAllPoints();
