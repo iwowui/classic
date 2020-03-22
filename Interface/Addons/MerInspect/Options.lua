@@ -26,6 +26,7 @@ local DefaultDB = {
     ShowInspectItemSheet = true,            --顯示观察对象装备列表
         ShowOwnFrameWhenInspecting = false,  --觀察同時顯示自己裝備列表
         ShowItemStats = true,                --顯示裝備屬性統計
+            ShowItemStatsNaive = true,       --顯示裝備屬性統計
 }
 
 local options = {
@@ -38,8 +39,12 @@ local options = {
     { key = "ShowInspectItemSheet",
         child = {
             { key = "ShowOwnFrameWhenInspecting" },
-            { key = "ShowItemStats" },
-        }
+            { key = "ShowItemStats",
+                child = {
+                    { key = "ShowItemStatsNaive" },
+                },
+            },
+        },
     },
 }
 

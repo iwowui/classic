@@ -99,7 +99,7 @@ assignments for Self,
 Party, and Raid Paladins.]=]
 L["PP_COLOR"] = "Change the status colors of the buff buttons"
 L["PP_LOOKS"] = "Change the way PallyPower looks"
-L["PP_NAME"] = "PallyPower"
+L["PP_NAME"] = "  PallyPower Classic"
 L["PP_RAS1"] = "--- Paladin assignments ---"
 L["PP_RAS2"] = "--- End of assignments ---"
 L["PP_RAS3"] = "WARNING: There are more than 5 Paladins in raid."
@@ -113,6 +113,14 @@ L["PP_RESET"] = "Just in case you mess up"
 L["PP_SHOW"] = "When to show PallyPower"
 L["RAID"] = "Raid"
 L["RAID_DESC"] = "Raid only options"
+L["REPORTCHANNEL"] = "Blessings Report Channel"
+L["REPORTCHANNEL_DESC"] = [=[Set the desired chennel to broadcast the Bliessings Report to:
+
+|cffffd200[None]|r Selects channel based on group makeup. (Party/Raid)
+
+|cffffd200[Channel List]|r An auto populated channel list based on channels the player has joined. Default channels such as Trade, General, etc. are automatically filtered from the list.
+
+|cffffff00Note: If you change your Channel Order then you will need to reload your UI and verify that it is broadcasting to the correct channel.|r]=]
 L["RESET"] = "Reset Frames"
 L["RESET_DESC"] = "Reset all PallyPower frames back to center"
 L["RESIZEGRIP"] = [=[Left-Click-Hold to resize 
@@ -127,6 +135,7 @@ L["SEALTRACKER"] = "Seal Tracker"
 L["SEALTRACKER_DESC"] = "Select the Seal you want to track"
 L["SETTINGS"] = "Settings"
 L["SETTINGS_DESC"] = "Change global settings"
+L["SETTINGSBUFF"] = "What to buff with PallyPower"
 L["SHOWGLOBAL"] = "Show Globally"
 L["SHOWGLOBAL_DESC"] = "[Show/Hide] PallyPower"
 L["SHOWPARTY"] = "Show in Party"

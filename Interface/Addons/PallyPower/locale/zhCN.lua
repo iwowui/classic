@@ -110,6 +110,16 @@ L["PP_RESET"] = "重置位置"
 L["PP_SHOW"] = "何时显示 PallyPower"
 L["RAID"] = "团队"
 L["RAID_DESC"] = "团队选项"
+--[[Translation missing --]]
+L["REPORTCHANNEL"] = "Blessings Report Channel"
+--[[Translation missing --]]
+L["REPORTCHANNEL_DESC"] = [=[Set the desired chennel to broadcast the Bliessings Report to:
+
+|cffffd200[None]|r Selects channel based on group makeup. (Party/Raid)
+
+|cffffd200[Channel List]|r An auto populated channel list based on channels the player has joined. Default channels such as Trade, General, etc. are automatically filtered from the list.
+
+|cffffff00Note: If you change your Channel Order then you will need to reload your UI and verify that it is broadcasting to the correct channel.|r]=]
 L["RESET"] = "重置"
 L["RESET_DESC"] = "将所有PallyPower窗口的位置重置回屏幕中央"
 L["RESIZEGRIP"] = "按住左键调整大小 ，右键重置默认大小"
@@ -123,6 +133,8 @@ L["SEALTRACKER"] = "圣印监视器"
 L["SEALTRACKER_DESC"] = "选择你想监视的圣印"
 L["SETTINGS"] = "设置"
 L["SETTINGS_DESC"] = "更改全局设置"
+--[[Translation missing --]]
+L["SETTINGSBUFF"] = "What to buff with PallyPower"
 L["SHOWGLOBAL"] = "全局显示"
 L["SHOWGLOBAL_DESC"] = "[显示/隐藏] PallyPower"
 L["SHOWPARTY"] = "在小队时显示"

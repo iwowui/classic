@@ -161,7 +161,7 @@ L["PP_COLOR"] = "Change the status colors of the buff buttons"
 --[[Translation missing --]]
 L["PP_LOOKS"] = "Change the way PallyPower looks"
 --[[Translation missing --]]
-L["PP_NAME"] = "PallyPower"
+L["PP_NAME"] = "  PallyPower Classic"
 --[[Translation missing --]]
 L["PP_RAS1"] = "--- Paladin assignments ---"
 --[[Translation missing --]]
@@ -185,6 +185,16 @@ L["RAID"] = "Raid"
 --[[Translation missing --]]
 L["RAID_DESC"] = "Raid only options"
 --[[Translation missing --]]
+L["REPORTCHANNEL"] = "Blessings Report Channel"
+--[[Translation missing --]]
+L["REPORTCHANNEL_DESC"] = [=[Set the desired chennel to broadcast the Bliessings Report to:
+
+|cffffd200[None]|r Selects channel based on group makeup. (Party/Raid)
+
+|cffffd200[Channel List]|r An auto populated channel list based on channels the player has joined. Default channels such as Trade, General, etc. are automatically filtered from the list.
+
+|cffffff00Note: If you change your Channel Order then you will need to reload your UI and verify that it is broadcasting to the correct channel.|r]=]
+--[[Translation missing --]]
 L["RESET"] = "Reset Frames"
 L["RESET_DESC"] = "重設所有PallyPower的框架至螢幕中央"
 --[[Translation missing --]]
@@ -206,6 +216,8 @@ L["SEALTRACKER_DESC"] = "Select the Seal you want to track"
 L["SETTINGS"] = "Settings"
 --[[Translation missing --]]
 L["SETTINGS_DESC"] = "Change global settings"
+--[[Translation missing --]]
+L["SETTINGSBUFF"] = "What to buff with PallyPower"
 --[[Translation missing --]]
 L["SHOWGLOBAL"] = "Show Globally"
 --[[Translation missing --]]

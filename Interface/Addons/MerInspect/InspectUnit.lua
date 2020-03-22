@@ -295,7 +295,15 @@ LibEvent:attachTrigger("INSPECT_FRAME_COMPARE", function(self, frame)
         frame.statsFrame:SetParent(frame)
     end
     if (frame.statsFrame) then
-        frame.statsFrame:SetPoint("TOPLEFT", frame.statsFrame:GetParent(), "TOPRIGHT", 1, 0)
+        if MerInspectDB.ShowItemStatsNaive == true then
+            local x, y = 33, 14
+            if (MerInspectDB and MerInspectDB.ShowInspectAngularBorder) then
+                x = 31
+            end
+            frame.statsFrame:SetPoint("TOPLEFT", frame:GetParent(), "TOPRIGHT", -x, -y)
+        else
+            frame.statsFrame:SetPoint("TOPLEFT", frame.statsFrame:GetParent(), "TOPRIGHT", 1, 0)
+        end
     end
 end)
 

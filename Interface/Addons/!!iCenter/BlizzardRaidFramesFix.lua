@@ -1133,4 +1133,55 @@ if IsAddOnLoaded("Blizzard_CompactRaidFrames") then
             end
         end
     )
+
+    function CompactUnitFrame_SetMenuFunc(frame, menuFunc)
+        frame.dropDown = L_Create_UIDropDownMenu(frame:GetName() .. "DropDown", frame)
+
+        L_UIDropDownMenu_Initialize(frame.dropDown, menuFunc, "MENU")
+
+        frame.menu = function()
+            for i = 1, UIDROPDOWNMENU_MAXLEVELS do
+                _G["DropDownList" .. i]:Hide()
+            end
+
+            L_ToggleDropDownMenu(1, nil, frame.dropDown, frame:GetName(), 0, 0)
+        end
+    end
+
+    function CompactUnitFrameDropDown_Initialize(self)
+        local unit = self:GetParent().unit
+
+        if not unit then
+            return
+        end
+
+        local menu
+        local name
+        local id
+
+        if UnitIsUnit(unit, "player") then
+            menu = "SELF"
+        elseif UnitIsUnit(unit, "vehicle") then
+            menu = "VEHICLE"
+        elseif UnitIsUnit(unit, "pet") then
+            menu = "PET"
+        elseif UnitIsPlayer(unit) then
+            id = UnitInRaid(unit)
+
+            if id then
+                menu = "RAID_PLAYER"
+            elseif UnitInParty(unit) then
+                menu = "PARTY"
+            else
+                menu = "PLAYER"
+            end
+        else
+            menu = "TARGET"
+            name = RAID_TARGET_ICON
+        end
+
+        if menu then
+            addonTable.UnitPopup_ShowMenu(self, menu, unit, name, id)
+        end
+    end
 end
