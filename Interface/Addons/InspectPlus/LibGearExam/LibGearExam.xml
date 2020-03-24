@@ -1,0 +1,11 @@
+<Ui>
+
+	<!-- Core -->
+	<Script file="LibGearExam.lua"/>
+
+	<!--  Localisation -->
+	<Script file="enUS.lua"/>
+	<Script file="zhTW.lua"/>
+	<Script file="zhCN.lua"/>
+
+</Ui>

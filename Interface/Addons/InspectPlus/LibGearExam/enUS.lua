@@ -1,0 +1,118 @@
+-- For enchant and gem IDs, check out the following link: https://fr.classic.wowhead.com/enchanting
+-- Pattern entries marked with an "alert" value will cause Examiner to show a warning message,
+-- { p = "Pattern", s = "Category", alert = 1 },
+-- telling that the pattern is thought of as no longer in use. These patterns should eventually be deleted.
+-- Modified by Grome of EU-Sulfuron for patch 1.13.2 September 26th 2019
+
+LibGearExam.Patterns = {
+	--  Base Stats  --
+	{ p = "%+(%d+) Strength", s = "STR" },
+	{ p = "%+(%d+) Agility", s = "AGI" },
+	{ p = "%+(%d+) Stamina", s = "STA" },
+	{ p = "%+(%d+) Intellect", s = "INT" },
+	{ p = "%+(%d+) Spirit", s = "SPI" },
+	
+	{ p = "+(%d+) Armor", s = "ARMOR" },
+
+		
+	--  Resistances (Exclude the Resist-"ance" then it picks up armor patches as well)  --
+	{ p = "%+(%d+) Arcane Resist", s = "ARCANERESIST" },
+	{ p = "%+(%d+) Fire Resist", s = "FIRERESIST" },
+	{ p = "%+(%d+) Nature Resist", s = "NATURERESIST" },
+	{ p = "%+(%d+) Frost Resist", s = "FROSTRESIST" },
+	{ p = "%+(%d+) Shadow Resist", s = "SHADOWRESIST" },
+	{ p = "%+(%d+) to All Resistances", s = { "ARCANERESIST", "FIRERESIST", "NATURERESIST", "FROSTRESIST", "SHADOWRESIST" } },
+
+
+	--  Equip: Defense  --
+	{ p = "Increased Defense %+(%d+)%.", s = "DEFENSE" },
+
+	{ p = "Increases your chance to dodge an attack by (%d+)%%%.", s = "DODGE" },
+
+	{ p = "Increases your chance to block attacks with a shield by (%d+)%%%.", s = "BLOCK" },
+	
+	{ p = "Increases your chance to parry an attack by (%d+)%%%.", s = "PARRY" },
+	
+	{ p = "Increases the block value of your shield by (%d+)%.", s = "BLOCKVALUE" },
+	
+	{ p = "^(%d+) Block$", s = "BLOCKVALUE" },
+
+
+	--  Equip: Melee & Ranged & Magic  --
+	{ p = "Improves your chance to get a critical strike by (%d+)%%%.", s = { "CRIT" }},
+	{ p = "Improves your chance to hit by (%d+)%%%.", s = { "HIT" }},
+	
+	{ p = "Improves your chance to get a critical strike with spells by (%d+)%%%.", s = { "SPELLCRIT" }},
+	{ p = "Improves your chance to hit with spells by (%d+)%%%.", s = { "SPELLHIT" }},
+	
+	
+	-- Skill Bonuses
+	{ p = "Increased Daggers %+(%d+)%.", s = { "DAGGERSKILL" }},
+	
+	{ p = "Increased Axes %+(%d+)%.", s = { "ONEAXESKILL" }},
+	{ p = "Increased Two%-handed Axes %+(%d+)%.", s = { "TWOAXESKILL" }},
+	
+	{ p = "Increased Swords %+(%d+)%.", s = { "ONESWORDSKILL" }},
+	{ p = "Increased Two%-handed Swords %+(%d+)%.", s = { "TWOSWORDSKILL" }},	
+	
+	{ p = "Increased Maces %+(%d+)%.", s = { "ONEMACESKILL" }},
+	{ p = "Increased Two%-handed Maces %+(%d+)%.", s = { "TWOMACESKILL" }},
+	
+	{ p = "Increased Bows %+(%d+)%.", s = { "BOWSKILL" }},
+	{ p = "Increased Guns %+(%d+)%.", s = { "GUNSSKILL" }},
+	{ p = "Increased Crossbows %+(%d+)%.", s = { "CROSSBOWSKILL" }},
+		
+
+    --  Equip: Melee & Ranged
+	{ p = "%+(%d+) Attack Power%.", s = "AP" },
+	{ p = "%+(%d+) Attack Power in Cat, Bear, and Dire Bear forms only%.", s = "APFERAL" },
+
+
+	--  Equip: Magic --
+	{ p = "Increases damage and healing done by magical spells and effects by up to (%d+)%.", s = { "SPELLDMG", "HEAL" } },
+	{ p = "Increases healing done by spells and effects by up to (%d+)%.", s = { "HEAL" } },
+
+	{ p = "Increases damage done by arcane spells and effects by up to (%d+)%.", s = "ARCANEDMG" },
+	{ p = "Increases damage done by fire spells and effects by up to (%d+)%.", s = "FIREDMG" },
+	{ p = "Increases damage done by nature spells and effects by up to (%d+)%.", s = "NATUREDMG" },
+	{ p = "Increases damage done by Frost spells and effects by up to (%d+)%.", s = "FROSTDMG" },
+	{ p = "Increases damage done by shadow spells and effects by up to (%d+)%.", s = "SHADOWDMG" },
+	{ p = "Increases damage done by holy spells and effects by up to (%d+)%.", s = "HOLYDMG" },
+
+
+	--  Health & Mana Per 5 Sec  --
+	{ p = "Restores (%d+) mana per 5 sec%.", s = "MP5" },
+
+	{ p = "Restores (%d+) health per 5 sec%.", s = "HP5"},
+	{ p = "(%d+) health every 5 sec%.", s = "HP5" },
+
+
+	--  Enchants / Socket Bonuses / Mixed / Misc  --
+	{ p = "^Agility %+(%d+)$", s = "AGI" },
+	{ p = "^Stamina %+(%d+)$", s = "STA" },
+	{ p = "^Strength %+(%d+)$", s = "STR" },
+	{ p = "^Intellect %+(%d+)$", s = "INT" },
+	{ p = "^Spirit %+(%d+)$", s = "SPI" },
+	
+	{ p = "^Health %+(%d+)$", s = "HP" },
+	{ p = "^HP %+(%d+)$", s = "HP" },
+	
+	{ p = "^Mana %+(%d+)$", s = "MP" },
+	
+	{ p = "^Reinforced Armor %+(%d+)$", s = "ARMOR" },
+	
+	{ p = "^Scope %(%+(%d+) Damage%)$", s = "RANGEDDMG" },
+	{ p = "^Weapon Damage %+(%d+)$", s = "WPNDMG" },
+	
+	{ p = "^Healing Spells %+(%d+)$", s = "HEAL" },
+	{ p = "^Spell Damage %+(%d+)$", s = "SPELLDMG" },
+
+	{ p = "All Stats %+(%d+)", s = { "STR", "AGI", "STA", "INT", "SPI" } },
+
+	{ p = "%+(%d+) Arcane Spell Damage", s = "ARCANEDMG" },
+	{ p = "%+(%d+) Fire Spell Damage", s = "FIREDMG" },
+	{ p = "%+(%d+) Nature Spell Damage", s = "NATUREDMG" },
+	{ p = "%+(%d+) Frost Spell Damage", s = "FROSTDMG" },
+	{ p = "%+(%d+) Shadow Spell Damage", s = "SHADOWDMG" },
+	{ p = "%+(%d+) Holy Spell Damage", s = "HOLYDMG" },
+};

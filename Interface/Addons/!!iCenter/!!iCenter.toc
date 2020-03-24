@@ -14,7 +14,6 @@
 
 Libs\LibStub\LibStub.lua
 Libs\LibChatAnims\LibChatAnims.xml
-Libs\LibUIDropDownMenu\LibUIDropDownMenu.xml
 
 Libs\Ace3\LibStub\LibStub.lua
 Libs\Ace3\CallbackHandler-1.0\CallbackHandler-1.0.xml
@@ -34,7 +33,6 @@ Libs\Ace3\AceTab-3.0\AceTab-3.0.xml
 Libs\Ace3\AceSerializer-3.0\AceSerializer-3.0.xml
 Libs\Ace3\Ace3.lua
 
-UnitPopup.lua
 BlizzardRaidFramesFix.lua
 
 # GConfirm.lua
