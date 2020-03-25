@@ -134,7 +134,7 @@ local function BuildStatList()
     -- Add Padding + Update Resistances + Shown Items
     AddListEntry();
     UpdateResistances();
-    UpdateShownItems(InspectPlusScroll);
+    UpdateShownItems(InspectPlusFrameScroll);
 end
 
 local StatEntry_OnEnter = function(self, motion)
@@ -144,6 +144,56 @@ end
 
 local function HideGameTooltip(self)
     GameTooltip:Hide();
+end
+
+local IPLocal_ShowRaceBGText = "Race background";
+local IPLocal_AutoInspectText  = "Auto inspect";
+if GetLocale() == "zhCN" then
+    IPLocal_ShowRaceBGText = "种族背景";
+    IPLocal_AutoInspectText  = "自动观察";
+elseif GetLocale() == "zhTW" then
+    IPLocal_ShowRaceBGText = "種族背景";
+    IPLocal_AutoInspectText  = "自動觀察";
+end
+
+local function InspectPlus_Background()
+	if InspectPlusFrame then
+		if InspectPlusDB["bg"] == 1 then
+		    InspectPlusFrame.bgTopLeft:SetAlpha(0.618);
+		    InspectPlusFrame.bgTopRight:SetAlpha(0.618);
+		    InspectPlusFrame.bgBottomLeft:SetAlpha(0.618);
+		    InspectPlusFrame.bgBottomRight:SetAlpha(0.618);
+		else
+		    InspectPlusFrame.bgTopLeft:SetAlpha(0);
+		    InspectPlusFrame.bgTopRight:SetAlpha(0);
+		    InspectPlusFrame.bgBottomLeft:SetAlpha(0);
+		    InspectPlusFrame.bgBottomRight:SetAlpha(0);
+		end
+	end
+end
+
+local InspectPlus_MenuList = {
+	{ text = REFRESH, func = function() ScanGear(info.unit); BuildStatList(); CloseDropDownMenus(); end, },
+	-- { text = KEY_NUMLOCK_MAC, func = function() displayList.count = 0, UpdateShownItems(InspectPlusFrameScroll); CloseDropDownMenus(); end, },
+	{ text = IPLocal_ShowRaceBGText, hasArrow = true,
+		menuList = {
+			{ text = YES, func = function() InspectPlusDB["bg"] = 1; InspectPlus_Background(); CloseDropDownMenus(); end, checked = function() return InspectPlusDB["bg"] == 1; end },
+			{ text = NO, func = function() InspectPlusDB["bg"] = 0; InspectPlus_Background(); CloseDropDownMenus(); end, checked = function() return InspectPlusDB["bg"] == 0; end },
+		},
+	},
+	{ text = IPLocal_AutoInspectText, hasArrow = true,
+		menuList = {
+			{ text = YES, func = function() InspectPlusDB["auto"] = 1; CloseDropDownMenus(); end, checked = function() return InspectPlusDB["auto"] == 1; end },
+			{ text = NO, func = function() InspectPlusDB["auto"] = 0; CloseDropDownMenus(); end, checked = function() return InspectPlusDB["auto"] == 0; end },
+		},
+	},
+	{ text = CANCEL },
+}
+
+local InspectPlus_Menu = CreateFrame("Frame", nil, ip, "UIDropDownMenuTemplate");
+
+local function InspectPlus_Setting()
+	EasyMenu(InspectPlus_MenuList, InspectPlus_Menu, "cursor", 0 , 0, "MENU");
 end
 
 local function CreateInspectPlusFrame()
@@ -188,7 +238,7 @@ local function CreateInspectPlusFrame()
         ip.mask.bg = ip.mask:CreateTexture();
         ip.mask.bg:ClearAllPoints();
         ip.mask.bg:SetAllPoints(ip);
-        ip.mask.bg:SetColorTexture(0, 0, 0, 0.2718);
+        ip.mask.bg:SetColorTexture(0, 0, 0, 0.272);
 
         -- Entries
         for i = 1, 20 do
@@ -227,7 +277,7 @@ local function CreateInspectPlusFrame()
         end
 
         -- Scroll
-        ip.scroll = CreateFrame("ScrollFrame", "InspectPlusScroll", ip, "FauxScrollFrameTemplate");
+        ip.scroll = CreateFrame("ScrollFrame", "InspectPlusFrameScroll", ip, "FauxScrollFrameTemplate");
         ip.scroll:SetFrameLevel(ip.mask:GetFrameLevel()+1);
         ip.scroll:SetPoint("TOPLEFT", entries[1]);
         ip.scroll:SetPoint("BOTTOMRIGHT", entries[#entries], -3, -1);
@@ -277,17 +327,51 @@ local function CreateInspectPlusFrame()
         ip.iLvlAverage = ip:CreateFontString(nil, "ARTWORK", "GameFontNormal");
         ip.iLvlAverage:SetJustifyH("CENTER");
         ip.iLvlAverage:SetPoint("BOTTOM", ip, "TOP", 0, 6);
+
+        -- Settings
+		ip.setting = CreateFrame("Button", "InspectPlusFrameSetting", ip);
+        ip.setting:SetFrameLevel(ip.mask:GetFrameLevel()+1);
+		ip.setting:SetNormalTexture("Interface\\Buttons\\UI-OptionsButton");
+		ip.setting:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Round");
+		ip.setting:SetWidth(16);
+		ip.setting:SetHeight(16);
+		ip.setting:ClearAllPoints();
+		ip.setting:SetPoint("TOPRIGHT", 1, -1);
+		ip.setting:SetAlpha(0.272);
+        ip.setting:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+		ip.setting:SetScript("OnMouseUp", function(self, button)
+            if button == "LeftButton" then
+	            ScanGear(info.unit);
+	            BuildStatList();
+            elseif button == "RightButton" then
+            	InspectPlus_Setting();
+            end
+		end);
+        ip.setting:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR", 0, 0);
+            GameTooltip:SetText(KEY_BUTTON1..": "..REFRESH.."\n"..KEY_BUTTON2..": "..SETTINGS);
+        end)
+        ip.setting:SetScript("OnLeave", function()
+            GameTooltip:Hide();
+        end)
     end
 end
 
 local function TryInspect()
-    if InspectFrame and InspectFrame:IsShown() and CheckInteractDistance(info.unit, 1) and CanInspect(info.unit) then
+    if InspectFrame and InspectFrame:IsShown() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
         ScanGear(info.unit)
         BuildStatList();
         InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
-        C_Timer.After(0.5, function()
-            if InspectFrame and InspectFrame:IsShown() and CheckInteractDistance(info.unit, 1) and CanInspect(info.unit) then
-                ScanGear(info.unit)
+        C_Timer.After(0.1, function()
+            if InspectFrame and InspectFrame:IsShown() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+                ScanGear(info.unit);
+                BuildStatList();
+                InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
+            end
+        end)
+        C_Timer.After(0.2, function()
+            if InspectFrame and InspectFrame:IsShown() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+                ScanGear(info.unit);
                 BuildStatList();
                 InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
             end
@@ -298,6 +382,7 @@ local function TryInspect()
             self.timer = (self.timer or 0) + elapsed;
             if self.timer >= 0.5 then
 				if CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+					ScanGear(info.unit);
 					TryInspect();
 				end
                 self.timer = 0;
@@ -320,10 +405,16 @@ InspectPlus:SetScript("OnEvent", function(self, event, ...)
         local addon = ...
         if addon == 'Blizzard_InspectUI' then
             CreateInspectPlusFrame()
+        elseif addon == 'InspectPlus' then
+        	if not InspectPlusDB then InspectPlusDB = {} end
+        	if not InspectPlusDB["bg"] then InspectPlusDB["bg"] = 1 end
+        	if not InspectPlusDB["auto"] then InspectPlusDB["auto"] = 0 end
         end
     elseif event == "PLAYER_TARGET_CHANGED" then
-        if InspectFrame and InspectFrame:IsShown() and CheckInteractDistance(info.unit, 1) and CanInspect(info.unit) then
-            InspectUnit(info.unit)
+        if InspectFrame and InspectFrame:IsShown() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+        	if InspectPlusDB["auto"] == 1 then
+            	InspectUnit(info.unit)
+            end
         end
     end
 end)

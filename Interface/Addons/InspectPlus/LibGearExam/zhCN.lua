@@ -56,14 +56,16 @@ LibGearExam.Patterns = {
 
 	{ p = "使你躲闪攻击的几率提高(%d+)%%。", s = "DODGE" },
 
-	{ p = "使你的盾牌的格挡值提高(%d+)点。", s = "BLOCK" },
+	{ p = "使你用盾牌格挡攻击的几率提高(%d+)%%。", s = "BLOCK" },
 	
 	{ p = "使你招架攻击的几率提高(%d+)%%。", s = "PARRY" },
-	
-	--{ p = "Increases the block value of your shield by (%d+)%.", s = "BLOCKVALUE" },
+
+	{ p = "使你的盾牌的格挡值提高(%d+)点。", s = "BLOCKVALUE" },
 
     { p = "^(%d+)格挡",			s = "BLOCKVALUE"},	
 	{ p = "^(%d+)点格挡", s = "BLOCKVALUE" },
+
+	{ p = "%+(%d+)%% 格挡", s = "BLOCK" },
 
 
 	--  Equip: Melee & Ranged & Magic  --
