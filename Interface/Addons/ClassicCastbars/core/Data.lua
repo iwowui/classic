@@ -1551,6 +1551,7 @@ namespace.playerInterrupts = {
     [GetSpellInfo(8042)] = 1,  -- Earth Shock
     [GetSpellInfo(19244)] = 1, -- Spell Lock
     [GetSpellInfo(6552)] = 1,  -- Pummel
+    [GetSpellInfo(16979)] = 1, -- Feral Charge
 }
 
 -- Skip pushback calculation for these spells since they
@@ -1586,7 +1587,7 @@ namespace.uninterruptibleList = {
     [GetSpellInfo(4067)] = 1,       -- Big Bronze Bomb
     [GetSpellInfo(4066)] = 1,       -- Small Bronze Bomb
     [GetSpellInfo(4065)] = 1,       -- Large Copper Bomb
-    [GetSpellInfo(13278)] = 1,      -- Gnomish Death Ray
+    [GetSpellInfo(13278)] = 1,      -- Gnomish Death Ray TODO: verify
     [GetSpellInfo(20589)] = 1,      -- Escape Artist
     [GetSpellInfo(20549)] = 1,      -- War Stomp
     [GetSpellInfo(1510)] = 1,       -- Volley
@@ -1598,7 +1599,26 @@ namespace.uninterruptibleList = {
     [GetSpellInfo(2480)] = 1,       -- Shoot Bow
     [GetSpellInfo(7918)] = 1,       -- Shoot Gun
     [GetSpellInfo(7919)] = 1,       -- Shoot Crossbow
-    -- TODO: totem attack?
+    [GetSpellInfo(11202)] = 1,      -- Crippling Poison
+    [GetSpellInfo(3421)] = 1,       -- Crippling Poison II
+    [GetSpellInfo(2835)] = 1,       -- Deadly Poison
+    [GetSpellInfo(2837)] = 1,       -- Deadly Poison II
+    [GetSpellInfo(11355)] = 1,      -- Deadly Poison III
+    [GetSpellInfo(11356)] = 1,      -- Deadly Poison IV
+    [GetSpellInfo(25347)] = 1,      -- Deadly Poison V
+    [GetSpellInfo(8681)] = 1,       -- Instant Poison
+    [GetSpellInfo(8686)] = 1,       -- Instant Poison II
+    [GetSpellInfo(8688)] = 1,       -- Instant Poison III
+    [GetSpellInfo(11338)] = 1,      -- Instant Poison IV
+    [GetSpellInfo(11339)] = 1,      -- Instant Poison V
+    [GetSpellInfo(11343)] = 1,      -- Instant Poison VI
+    [GetSpellInfo(5761)] = 1,       -- Mind-numbing Poison
+    [GetSpellInfo(8693)] = 1,       -- Mind-numbing Poison II
+    [GetSpellInfo(11399)] = 1,      -- Mind-numbing Poison III
+    [GetSpellInfo(13227)] = 1,      -- Wound Poison
+    [GetSpellInfo(13228)] = 1,      -- Wound Poison II
+    [GetSpellInfo(13229)] = 1,      -- Wound Poison III
+    [GetSpellInfo(13230)] = 1,      -- Wound Poison IV
 
     -- these are technically uninterruptible but breaks on dmg
     [GetSpellInfo(22999)] = 1,      -- Defibrillate
@@ -1771,7 +1791,7 @@ namespace.unaffectedCastModsSpells = {
 
 -- Addon Savedvariables
 namespace.defaultConfig = {
-    version = "18", -- settings version
+    version = "19", -- settings version
     locale = GetLocale(),
     npcCastUninterruptibleCache = {},
 
@@ -1957,5 +1977,7 @@ if GetLocale() == "enUS" or GetLocale() == "enGB" then
         ["Alzzin the WildshaperWither"] = true,
         ["Alzzin the WildshaperWild Regeneration"] = true,
         ["Princess TheradrasBoulder"] = true,
+        ["NefarianBellowing Roar"] = true,
+        ["OnyxiaBellowing Roar"] = true,
     }
 end

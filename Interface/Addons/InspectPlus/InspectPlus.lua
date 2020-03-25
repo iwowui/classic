@@ -28,30 +28,33 @@ local function ScanGear(unit)
     for slotName, slotId in next, LibGearExam.SlotIDs do
         local link = (GetInventoryItemLink(unit, slotId) or ""):match(LibGearExam.ITEMLINK_PATTERN);
         info.Items[slotName] = LibGearExam:FixItemStringLevel(link, info.level);
-		if (link) then
-			if (slotName ~= "TabardSlot") and (slotName ~= "ShirtSlot") then
-				local itemLevel = GetDetailedItemLevelInfo(link);
-				if (itemLevel) then
-					if (slotName == "MainHandSlot") and (not info.Items.SecondaryHandSlot) then
-						itemLevel = (itemLevel * 2);
-					end
-					iLvlTotal = (iLvlTotal + itemLevel);
-				end
-			end
-		end
+        if (link) then
+            if (slotName ~= "TabardSlot") and (slotName ~= "ShirtSlot") then
+                -- local itemLevel = GetDetailedItemLevelInfo(link);
+                local _, _, _, itemLevel = GetItemInfo(link);
+                if (itemLevel) then
+                    if (slotName == "MainHandSlot") and (not info.Items.SecondaryHandSlot) then
+                        itemLevel = (itemLevel * 2);
+                    end
+                    iLvlTotal = (iLvlTotal + itemLevel);
+                end
+            end
+        end
     end
     info.iLvlAverage = "iLvl: "..string.format("%.2f", (iLvlTotal / numItems));
 end
 
 -- Show Resistances
 local function UpdateResistances()
-    for i = 1, 5 do
-        local statToken = (LibGearExam.MagicSchools[i].."RESIST");
-        if (unitStats[statToken]) or (isComparing and compareStats[statToken]) then
-            local statText = LibGearExam:GetStatValue(statToken, unitStats, false, info.level, true, false);
-            resists[i].value:SetText(statText);
-        else
-            resists[i].value:SetText("");
+    if InspectPlusDB["target"] == 1 then
+        for i = 1, 5 do
+            local statToken = (LibGearExam.MagicSchools[i].."RESIST");
+            if (unitStats[statToken]) or (isComparing and compareStats[statToken]) then
+                local statText = LibGearExam:GetStatValue(statToken, unitStats, false, info.level, true, false);
+                resists[i].value:SetText(statText);
+            else
+                resists[i].value:SetText("");
+            end
         end
     end
 end
@@ -146,64 +149,44 @@ local function HideGameTooltip(self)
     GameTooltip:Hide();
 end
 
-local IPLocal_ShowRaceBGText = "Race background";
-local IPLocal_AutoInspectText  = "Auto inspect";
-if GetLocale() == "zhCN" then
-    IPLocal_ShowRaceBGText = "种族背景";
-    IPLocal_AutoInspectText  = "自动观察";
-elseif GetLocale() == "zhTW" then
-    IPLocal_ShowRaceBGText = "種族背景";
-    IPLocal_AutoInspectText  = "自動觀察";
-end
-
-local function InspectPlus_Background()
-	if InspectPlusFrame then
-		if InspectPlusDB["bg"] == 1 then
-		    InspectPlusFrame.bgTopLeft:SetAlpha(0.618);
-		    InspectPlusFrame.bgTopRight:SetAlpha(0.618);
-		    InspectPlusFrame.bgBottomLeft:SetAlpha(0.618);
-		    InspectPlusFrame.bgBottomRight:SetAlpha(0.618);
-		else
-		    InspectPlusFrame.bgTopLeft:SetAlpha(0);
-		    InspectPlusFrame.bgTopRight:SetAlpha(0);
-		    InspectPlusFrame.bgBottomLeft:SetAlpha(0);
-		    InspectPlusFrame.bgBottomRight:SetAlpha(0);
-		end
-	end
-end
-
-local InspectPlus_MenuList = {
-	{ text = REFRESH, func = function() ScanGear(info.unit); BuildStatList(); CloseDropDownMenus(); end, },
-	-- { text = KEY_NUMLOCK_MAC, func = function() displayList.count = 0, UpdateShownItems(InspectPlusFrameScroll); CloseDropDownMenus(); end, },
-	{ text = IPLocal_ShowRaceBGText, hasArrow = true,
-		menuList = {
-			{ text = YES, func = function() InspectPlusDB["bg"] = 1; InspectPlus_Background(); CloseDropDownMenus(); end, checked = function() return InspectPlusDB["bg"] == 1; end },
-			{ text = NO, func = function() InspectPlusDB["bg"] = 0; InspectPlus_Background(); CloseDropDownMenus(); end, checked = function() return InspectPlusDB["bg"] == 0; end },
-		},
-	},
-	{ text = IPLocal_AutoInspectText, hasArrow = true,
-		menuList = {
-			{ text = YES, func = function() InspectPlusDB["auto"] = 1; CloseDropDownMenus(); end, checked = function() return InspectPlusDB["auto"] == 1; end },
-			{ text = NO, func = function() InspectPlusDB["auto"] = 0; CloseDropDownMenus(); end, checked = function() return InspectPlusDB["auto"] == 0; end },
-		},
-	},
-	{ text = CANCEL },
-}
-
-local InspectPlus_Menu = CreateFrame("Frame", nil, ip, "UIDropDownMenuTemplate");
-
-local function InspectPlus_Setting()
-	EasyMenu(InspectPlus_MenuList, InspectPlus_Menu, "cursor", 0 , 0, "MENU");
+local function TryInspect()
+    if InspectPlusDB["target"] ~= 1 then return end
+    if not info.unit then info.unit = UnitExists("target") and "target" or "player" end
+    if info.unit == "player" then InspectUnit("player") end
+    if InspectFrame and InspectFrame:IsVisible() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+        ScanGear(info.unit);
+        BuildStatList();
+        InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
+        C_Timer.After(0.05, function()
+            if InspectFrame and InspectFrame:IsVisible() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+                ScanGear(info.unit);
+                BuildStatList();
+                InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
+            end
+        end)
+        C_Timer.After(0.1, function()
+            if InspectFrame and InspectFrame:IsVisible() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+                ScanGear(info.unit);
+                BuildStatList();
+                InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
+            end
+        end)
+        InspectPlus:SetScript("OnUpdate", nil);
+    else
+        InspectPlus:SetScript("OnUpdate", function(self, elapsed)
+            self.timer = (self.timer or 0) + elapsed;
+            if self.timer >= 0.2 then
+                if CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+                    TryInspect();
+                end
+                self.timer = 0;
+            end
+        end)
+    end
 end
 
 local function CreateInspectPlusFrame()
     if not InspectPlusFrame then
-        InspectModelFrameRotateLeftButton:SetAlpha(0);
-        InspectModelFrameRotateRightButton:SetAlpha(0);
-        InspectMainHandSlot:SetFrameLevel(InspectMainHandSlot:GetFrameLevel()+1);
-        InspectSecondaryHandSlot:SetFrameLevel(InspectSecondaryHandSlot:GetFrameLevel()+1);
-        InspectRangedSlot:SetFrameLevel(InspectRangedSlot:GetFrameLevel()+1);
-
         local ip = CreateFrame("Frame", "InspectPlusFrame", InspectPaperDollFrame);
         ip:SetFrameLevel(CharacterModelFrame:GetFrameLevel()-1);
         ip:SetSize(231, 320);
@@ -211,12 +194,16 @@ local function CreateInspectPlusFrame()
         ip:SetPoint("TOP", InspectModelFrame, "TOP", 0, 2);
 
         ip.bgTopLeft = ip:CreateTexture(nil, "OVERLAY");
+        ip.bgTopLeft:ClearAllPoints();
         ip.bgTopLeft:SetPoint("TOPLEFT", 0, 0);
         ip.bgTopRight = ip:CreateTexture(nil, "OVERLAY");
+        ip.bgTopRight:ClearAllPoints();
         ip.bgTopRight:SetPoint("LEFT", ip.bgTopLeft, "RIGHT");
         ip.bgBottomLeft = ip:CreateTexture(nil, "OVERLAY");
+        ip.bgBottomLeft:ClearAllPoints();
         ip.bgBottomLeft:SetPoint("TOP", ip.bgTopLeft, "BOTTOM");
         ip.bgBottomRight = ip:CreateTexture(nil, "OVERLAY");
+        ip.bgBottomRight:ClearAllPoints();
         ip.bgBottomRight:SetPoint("LEFT", ip.bgBottomLeft, "RIGHT");
 
         ip.bgTopLeft:SetWidth(256 * 0.73);
@@ -248,6 +235,7 @@ local function CreateInspectPlusFrame()
                 t:SetSize(200, ITEM_HEIGHT);
                 t.id = i;
 
+                t:ClearAllPoints();
                 if (i == 1) then
                     t:SetPoint("TOPLEFT", 8, -42);
                 else
@@ -256,16 +244,19 @@ local function CreateInspectPlusFrame()
                 end
 
                 t.left = t:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall");
+                t.left:ClearAllPoints();
                 t.left:SetPoint("LEFT");
                 t.left:SetJustifyH("LEFT");
 
                 t.right = t:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall");
+                t.right:ClearAllPoints();
                 t.right:SetPoint("RIGHT");
                 t.right:SetPoint("LEFT", t.left, "RIGHT");
                 t.right:SetTextColor(1, 1, 0);
                 t.right:SetJustifyH("RIGHT");
 
                 t.tip = CreateFrame("Frame", nil, t);
+                t.tip:ClearAllPoints();
                 t.tip:SetPoint("TOPRIGHT");
                 t.tip:SetPoint("BOTTOMRIGHT");
                 t.tip:SetScript("OnEnter", StatEntry_OnEnter);
@@ -279,6 +270,7 @@ local function CreateInspectPlusFrame()
         -- Scroll
         ip.scroll = CreateFrame("ScrollFrame", "InspectPlusFrameScroll", ip, "FauxScrollFrameTemplate");
         ip.scroll:SetFrameLevel(ip.mask:GetFrameLevel()+1);
+        ip.scroll:ClearAllPoints();
         ip.scroll:SetPoint("TOPLEFT", entries[1]);
         ip.scroll:SetPoint("BOTTOMRIGHT", entries[#entries], -3, -1);
         ip.scroll:SetScript("OnVerticalScroll", function(self, offset) FauxScrollFrame_OnVerticalScroll(self, offset, ITEM_HEIGHT, UpdateShownItems) end);
@@ -300,24 +292,30 @@ local function CreateInspectPlusFrame()
 
                 t.value = t:CreateFontString(nil, "ARTWORK", "GameFontNormal");
                 t.value:SetFont(GameFontNormal:GetFont(), 12, "OUTLINE");
+                t.value:ClearAllPoints();
                 t.value:SetPoint("BOTTOM", 1, 3);
                 t.value:SetTextColor(1, 1, 0);
 
                 t:EnableMouse(true);
 
                 t:SetScript("OnEnter", function(self)
-                    GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 8, -8);
-                    GameTooltip:SetText(_G["RESISTANCE"..ResistsID[i].."_NAME"]);
+                    if InspectPlusDB["target"] == 1 then
+                        GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 8, -8);
+                        GameTooltip:SetText(_G["RESISTANCE"..ResistsID[i].."_NAME"]);
+                    end
                 end)
                 t:SetScript("OnLeave", function()
                     GameTooltip:Hide();
                 end)
 
+                t:ClearAllPoints();
                 if (i == 1) then
                     t:SetPoint("TOPLEFT", 36, -5);
                 else
                     t:SetPoint("LEFT", resists[i-1], "RIGHT");
                 end
+
+                t:Hide();
 
                 resists[i] = t;
             end
@@ -326,30 +324,34 @@ local function CreateInspectPlusFrame()
         -- iLvlAverage
         ip.iLvlAverage = ip:CreateFontString(nil, "ARTWORK", "GameFontNormal");
         ip.iLvlAverage:SetJustifyH("CENTER");
+        ip.iLvlAverage:ClearAllPoints();
         ip.iLvlAverage:SetPoint("BOTTOM", ip, "TOP", 0, 6);
 
         -- Settings
-		ip.setting = CreateFrame("Button", "InspectPlusFrameSetting", ip);
+        ip.setting = CreateFrame("Button", "InspectPlusFrameSetting", ip);
         ip.setting:SetFrameLevel(ip.mask:GetFrameLevel()+1);
-		ip.setting:SetNormalTexture("Interface\\Buttons\\UI-OptionsButton");
-		ip.setting:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Round");
-		ip.setting:SetWidth(16);
-		ip.setting:SetHeight(16);
-		ip.setting:ClearAllPoints();
-		ip.setting:SetPoint("TOPRIGHT", 1, -1);
-		ip.setting:SetAlpha(0.272);
+        ip.setting:SetNormalTexture("Interface\\Buttons\\UI-OptionsButton");
+        ip.setting:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Round");
+        ip.setting:SetWidth(16);
+        ip.setting:SetHeight(16);
+        ip.setting:ClearAllPoints();
+        ip.setting:SetPoint("TOPRIGHT", 1, -1);
+        ip.setting:SetAlpha(0.272);
         ip.setting:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-		ip.setting:SetScript("OnMouseUp", function(self, button)
+        ip.setting:SetScript("OnMouseUp", function(self, button)
             if button == "LeftButton" then
-	            ScanGear(info.unit);
-	            BuildStatList();
+                TryInspect();
             elseif button == "RightButton" then
-            	InspectPlus_Setting();
+                InspectPlus_Setting();
             end
-		end);
+        end);
         ip.setting:SetScript("OnEnter", function(self)
             GameTooltip:SetOwner(self, "ANCHOR", 0, 0);
-            GameTooltip:SetText(KEY_BUTTON1..": "..REFRESH.."\n"..KEY_BUTTON2..": "..SETTINGS);
+            if InspectPlusDB["target"] == 1 then
+                GameTooltip:SetText(KEY_BUTTON1..": "..REFRESH.."\n"..KEY_BUTTON2..": "..SETTINGS);
+            else
+                GameTooltip:SetText(KEY_BUTTON2..": "..SETTINGS);
+            end
         end)
         ip.setting:SetScript("OnLeave", function()
             GameTooltip:Hide();
@@ -357,74 +359,60 @@ local function CreateInspectPlusFrame()
     end
 end
 
-local function TryInspect()
-    if InspectFrame and InspectFrame:IsShown() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
-        ScanGear(info.unit)
-        BuildStatList();
-        InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
-        C_Timer.After(0.1, function()
-            if InspectFrame and InspectFrame:IsShown() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
-                ScanGear(info.unit);
-                BuildStatList();
-                InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
-            end
-        end)
-        C_Timer.After(0.2, function()
-            if InspectFrame and InspectFrame:IsShown() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
-                ScanGear(info.unit);
-                BuildStatList();
-                InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
-            end
-        end)
-        InspectPlus:SetScript("OnUpdate", nil);
-    else
-    	InspectPlus:SetScript("OnUpdate", function(self, elapsed)
-            self.timer = (self.timer or 0) + elapsed;
-            if self.timer >= 0.5 then
-				if CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
-					ScanGear(info.unit);
-					TryInspect();
-				end
-                self.timer = 0;
-            end
-        end)
+-- Player iLvlAverage
+local iLvlAverage = PaperDollFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+iLvlAverage:SetJustifyH("CENTER");
+iLvlAverage:ClearAllPoints();
+iLvlAverage:SetPoint("BOTTOM", CharacterModelFrame, "TOP", 0, 6);
+iLvlAverage:SetText("")
+hooksecurefunc("ToggleCharacter", function(tab, onlyShow)
+    if tab == "PaperDollFrame" then
+    	if InspectPlusDB["player"] == 1 then
+	        ScanGear("player");
+	        iLvlAverage:SetText(info.iLvlAverage);
+	    end
     end
-end
+end)
 
 InspectPlus = CreateFrame("Frame");
-InspectPlus:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", "target")
-InspectPlus:RegisterEvent('ADDON_LOADED')
+InspectPlus:RegisterEvent("ADDON_LOADED")
 InspectPlus:RegisterEvent("PLAYER_TARGET_CHANGED");
+InspectPlus:RegisterUnitEvent("UNIT_STATS", "player");
+-- InspectPlus:RegisterUnitEvent("UNIT_RESISTANCES", "player");
+InspectPlus:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", "target")
 InspectPlus:SetScript("OnEvent", function(self, event, ...)
-    if event == "INSPECT_READY" then
-        TryInspect()
-        InspectPlus:UnregisterEvent("INSPECT_READY")
+    if event == "UNIT_STATS" then
+        ScanGear("player");
+        iLvlAverage:SetText(info.iLvlAverage);
+    elseif event == "INSPECT_READY" then
+        TryInspect();
+        InspectPlus:UnregisterEvent("INSPECT_READY");
     elseif event == "UNIT_INVENTORY_CHANGED" then
-    	TryInspect()
+        TryInspect();
     elseif event == "ADDON_LOADED" then
         local addon = ...
-        if addon == 'Blizzard_InspectUI' then
-            CreateInspectPlusFrame()
-        elseif addon == 'InspectPlus' then
-        	if not InspectPlusDB then InspectPlusDB = {} end
-        	if not InspectPlusDB["bg"] then InspectPlusDB["bg"] = 1 end
-        	if not InspectPlusDB["auto"] then InspectPlusDB["auto"] = 0 end
+        if addon == "Blizzard_InspectUI" then
+            CreateInspectPlusFrame();
+            InspectPlus_TargetStats();
+            InspectPlus_Background();
+        elseif addon == "InspectPlus" then
+            if not InspectPlusDB then InspectPlusDB = {} end
+            if not InspectPlusDB["player"] then InspectPlusDB["player"] = 1 end
+            if not InspectPlusDB["target"] then InspectPlusDB["target"] = 1 end
+            if not InspectPlusDB["bg"] then InspectPlusDB["bg"] = 1 end
+            if not InspectPlusDB["auto"] then InspectPlusDB["auto"] = 0 end
         end
     elseif event == "PLAYER_TARGET_CHANGED" then
-        if InspectFrame and InspectFrame:IsShown() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
-        	if InspectPlusDB["auto"] == 1 then
-            	InspectUnit(info.unit)
+        if InspectFrame and InspectFrame:IsVisible() and UnitExists("target") and CheckInteractDistance("target", 1) and CanInspect("target") then
+            if InspectPlusDB["auto"] == 1 then
+                InspectUnit("target");
             end
         end
     end
 end)
 
 hooksecurefunc("InspectFrame_LoadUI", function()
-    local unit = "target";
-    if not UnitExists(unit) then
-        unit = "player";
-    end
-
+    local unit = UnitExists("target") and "target" or "player";
     info.unit = unit;
     -- info.guid = UnitGUID(unit);
     -- info.isSelf = UnitIsUnit(unit, "player");
@@ -446,18 +434,146 @@ hooksecurefunc("InspectFrame_LoadUI", function()
     -- info.guild, info.guildRank, info.guildIndex = GetGuildInfo(unit);
     info.iLvlAverage = 0;
 
-    local _, race = UnitRace(unit);
-    local texture = "Interface\\DressUpFrame\\DressUpBackground-"..race;
-    InspectPlusFrame.bgTopLeft:SetTexture(texture.."1");
-    InspectPlusFrame.bgTopRight:SetTexture(texture.."2");
-    InspectPlusFrame.bgBottomLeft:SetTexture(texture.."3");
-    InspectPlusFrame.bgBottomRight:SetTexture(texture.."4");
+    if InspectPlusDB["bg"] == 1 then
+        local _, race = UnitRace(unit);
+        local texture = "Interface\\DressUpFrame\\DressUpBackground-"..race;
+        InspectPlusFrame.bgTopLeft:SetTexture(texture.."1");
+        InspectPlusFrame.bgTopRight:SetTexture(texture.."2");
+        InspectPlusFrame.bgBottomLeft:SetTexture(texture.."3");
+        InspectPlusFrame.bgBottomRight:SetTexture(texture.."4");
+    end
 
     -- InspectPlusFrame.unitStats = unitStats;
     -- InspectPlusFrame.info = info;
 
-    if CheckInteractDistance(unit, 1) and CanInspect(unit) then
+    if InspectPlusDB["target"] == 1 and CheckInteractDistance(unit, 3) and CanInspect(unit) then
         NotifyInspect(unit);
-        InspectPlus:RegisterEvent("INSPECT_READY")
+        InspectPlus:RegisterEvent("INSPECT_READY");
     end
 end)
+
+local IPLocal_PlayerStatsText  = "Player statistics";
+local IPLocal_TargetStatsText  = "Target statistics";
+local IPLocal_ShowRaceBGText = "Race background";
+local IPLocal_AutoInspectText  = "Auto inspect";
+if GetLocale() == "zhCN" then
+    IPLocal_PlayerStatsText = "自身统计"
+    IPLocal_TargetStatsText = "目标统计"
+    IPLocal_ShowRaceBGText = "种族背景";
+    IPLocal_AutoInspectText  = "自动观察";
+elseif GetLocale() == "zhTW" then
+    IPLocal_PlayerStatsText = "自身統計"
+    IPLocal_TargetStatsText = "目標統計"
+    IPLocal_ShowRaceBGText = "種族背景";
+    IPLocal_AutoInspectText  = "自動觀察";
+end
+
+function InspectPlus_PlayerStats()
+    if InspectPlusDB["player"] == 1 then
+		InspectPlus:RegisterUnitEvent("UNIT_STATS", "player");
+        ScanGear("player");
+        iLvlAverage:SetText(info.iLvlAverage);
+    else
+		InspectPlus:UnregisterEvent("UNIT_STATS");
+        iLvlAverage:SetText("");
+    end
+end
+
+function InspectPlus_TargetStats()
+    if InspectPlusFrame then
+        if InspectPlusDB["target"] == 1 then
+            InspectModelFrameRotateLeftButton:SetAlpha(0);
+            InspectModelFrameRotateRightButton:SetAlpha(0);
+            InspectMainHandSlot:SetFrameLevel(InspectMainHandSlot:GetFrameLevel()+1);
+            InspectSecondaryHandSlot:SetFrameLevel(InspectSecondaryHandSlot:GetFrameLevel()+1);
+            InspectRangedSlot:SetFrameLevel(InspectRangedSlot:GetFrameLevel()+1);
+
+            InspectPlus:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", "target")
+            InspectPlus:RegisterEvent("PLAYER_TARGET_CHANGED");
+            InspectPlusFrameMask:SetAlpha(0.272);
+            for i = 1, 5 do
+                resists[i]:Show();
+            end
+            local unit = UnitExists("target") and "target" or "player";
+            info.unit = unit;
+            info.level = (UnitLevel(unit) or 0);
+            info.iLvlAverage = 0;
+            TryInspect();
+        else
+            InspectModelFrameRotateLeftButton:SetAlpha(1);
+            InspectModelFrameRotateRightButton:SetAlpha(1);
+            InspectMainHandSlot:SetFrameLevel(InspectMainHandSlot:GetFrameLevel()-1);
+            InspectSecondaryHandSlot:SetFrameLevel(InspectSecondaryHandSlot:GetFrameLevel()-1);
+            InspectRangedSlot:SetFrameLevel(InspectRangedSlot:GetFrameLevel()-1);
+
+            InspectPlus:UnregisterEvent("UNIT_INVENTORY_CHANGED")
+            InspectPlus:UnregisterEvent("INSPECT_READY")
+            InspectPlus:UnregisterEvent("PLAYER_TARGET_CHANGED");
+            InspectPlusFrameMask:SetAlpha(0);
+            for i = 1, 5 do
+                resists[i]:Hide();
+            end
+            InspectPlusFrame.iLvlAverage:SetText("");
+            displayList.count = 0;
+            UpdateShownItems(InspectPlusFrameScroll);
+        end
+    end
+end
+
+function InspectPlus_Background()
+    if InspectPlusFrame then
+        if InspectPlusDB["bg"] == 1 then
+            local unit = UnitExists("target") and "target" or "player";
+            local _, race = UnitRace(unit);
+            local texture = "Interface\\DressUpFrame\\DressUpBackground-"..race;
+            InspectPlusFrame.bgTopLeft:SetTexture(texture.."1");
+            InspectPlusFrame.bgTopRight:SetTexture(texture.."2");
+            InspectPlusFrame.bgBottomLeft:SetTexture(texture.."3");
+            InspectPlusFrame.bgBottomRight:SetTexture(texture.."4");
+            InspectPlusFrame.bgTopLeft:SetAlpha(0.618);
+            InspectPlusFrame.bgTopRight:SetAlpha(0.618);
+            InspectPlusFrame.bgBottomLeft:SetAlpha(0.618);
+            InspectPlusFrame.bgBottomRight:SetAlpha(0.618);
+        else
+            InspectPlusFrame.bgTopLeft:SetAlpha(0);
+            InspectPlusFrame.bgTopRight:SetAlpha(0);
+            InspectPlusFrame.bgBottomLeft:SetAlpha(0);
+            InspectPlusFrame.bgBottomRight:SetAlpha(0);
+        end
+    end
+end
+
+local InspectPlus_MenuList = {
+    -- { text = REFRESH, func = function() ScanGear(info.unit); BuildStatList(); CloseDropDownMenus(); end, },
+    -- { text = KEY_NUMLOCK_MAC, func = function() displayList.count = 0; UpdateShownItems(InspectPlusFrameScroll); CloseDropDownMenus(); end, },
+    { text = IPLocal_PlayerStatsText, hasArrow = true,
+        menuList = {
+            { text = YES, func = function() InspectPlusDB["player"] = 1; InspectPlus_PlayerStats(); CloseDropDownMenus(); end, checked = function() return InspectPlusDB["player"] == 1; end },
+            { text = NO, func = function() InspectPlusDB["player"] = 0; InspectPlus_PlayerStats(); CloseDropDownMenus(); end, checked = function() return InspectPlusDB["player"] == 0; end },
+        },
+    },    { text = IPLocal_TargetStatsText, hasArrow = true,
+        menuList = {
+            { text = YES, func = function() InspectPlusDB["target"] = 1; InspectPlus_TargetStats(); CloseDropDownMenus(); end, checked = function() return InspectPlusDB["target"] == 1; end },
+            { text = NO, func = function() InspectPlusDB["target"] = 0; InspectPlus_TargetStats(); CloseDropDownMenus(); end, checked = function() return InspectPlusDB["target"] == 0; end },
+        },
+    },
+    { text = IPLocal_ShowRaceBGText, hasArrow = true,
+        menuList = {
+            { text = YES, func = function() InspectPlusDB["bg"] = 1; InspectPlus_Background(); CloseDropDownMenus(); end, checked = function() return InspectPlusDB["bg"] == 1; end },
+            { text = NO, func = function() InspectPlusDB["bg"] = 0; InspectPlus_Background(); CloseDropDownMenus(); end, checked = function() return InspectPlusDB["bg"] == 0; end },
+        },
+    },
+    { text = IPLocal_AutoInspectText, hasArrow = true,
+        menuList = {
+            { text = YES, func = function() InspectPlusDB["auto"] = 1; CloseDropDownMenus(); end, checked = function() return InspectPlusDB["auto"] == 1; end },
+            { text = NO, func = function() InspectPlusDB["auto"] = 0; CloseDropDownMenus(); end, checked = function() return InspectPlusDB["auto"] == 0; end },
+        },
+    },
+    { text = CANCEL },
+}
+
+local InspectPlus_Menu = CreateFrame("Frame", nil, ip, "UIDropDownMenuTemplate");
+
+function InspectPlus_Setting()
+    EasyMenu(InspectPlus_MenuList, InspectPlus_Menu, "cursor", 0 , 0, "MENU");
+end
