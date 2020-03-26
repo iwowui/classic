@@ -46,7 +46,7 @@ end
 
 -- Show Resistances
 local function UpdateResistances()
-    if InspectPlusDB["target"] == 1 then
+    if (InspectPlusDB["target"] == 1) then
         for i = 1, 5 do
             local statToken = (LibGearExam.MagicSchools[i].."RESIST");
             if (unitStats[statToken]) or (isComparing and compareStats[statToken]) then
@@ -150,22 +150,30 @@ local function HideGameTooltip(self)
 end
 
 local function TryInspect()
-    if InspectPlusDB["target"] ~= 1 then return end
-    if not info.unit then info.unit = UnitExists("target") and "target" or "player" end
-    if info.unit == "player" then InspectUnit("player") end
-    if InspectFrame and InspectFrame:IsVisible() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+    if (InspectPlusDB["target"] ~= 1) then return end
+    if (not info.unit) then info.unit = UnitExists("target") and "target" or "player" end
+    if (info.unit == "player") then InspectUnit("player") end
+    if (InspectFrame and InspectFrame:IsVisible() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit)) then
         ScanGear(info.unit);
         BuildStatList();
         InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
+
+        local guildName, title, rank = GetGuildInfo(info.unit);
+        if (guildName) then
+            InspectPlusFrame.guildinfo:SetFormattedText(GUILD_TITLE_TEMPLATE, title.." ("..rank..")", guildName);
+        else
+            InspectPlusFrame.guildinfo:SetText("");
+        end
+
         C_Timer.After(0.05, function()
-            if InspectFrame and InspectFrame:IsVisible() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+            if (InspectFrame and InspectFrame:IsVisible() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit)) then
                 ScanGear(info.unit);
                 BuildStatList();
                 InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
             end
         end)
         C_Timer.After(0.1, function()
-            if InspectFrame and InspectFrame:IsVisible() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+            if (InspectFrame and InspectFrame:IsVisible() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit)) then
                 ScanGear(info.unit);
                 BuildStatList();
                 InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
@@ -175,8 +183,8 @@ local function TryInspect()
     else
         InspectPlus:SetScript("OnUpdate", function(self, elapsed)
             self.timer = (self.timer or 0) + elapsed;
-            if self.timer >= 0.2 then
-                if CheckInteractDistance(info.unit, 3) and CanInspect(info.unit) then
+            if (self.timer >= 0.2) then
+                if (CheckInteractDistance(info.unit, 3) and CanInspect(info.unit)) then
                     TryInspect();
                 end
                 self.timer = 0;
@@ -186,7 +194,7 @@ local function TryInspect()
 end
 
 local function CreateInspectPlusFrame()
-    if not InspectPlusFrame then
+    if (not InspectPlusFrame) then
         local ip = CreateFrame("Frame", "InspectPlusFrame", InspectPaperDollFrame);
         ip:SetFrameLevel(CharacterModelFrame:GetFrameLevel()-1);
         ip:SetSize(231, 320);
@@ -229,7 +237,7 @@ local function CreateInspectPlusFrame()
 
         -- Entries
         for i = 1, 20 do
-            if not _G["InspectPlusFrameEntry"..i] then
+            if (not _G["InspectPlusFrameEntry"..i]) then
                 local t = CreateFrame("Frame", "InspectPlusFrameEntry"..i, InspectPlusFrame);
                 t:SetFrameLevel(ip.mask:GetFrameLevel());
                 t:SetSize(200, ITEM_HEIGHT);
@@ -280,7 +288,7 @@ local function CreateInspectPlusFrame()
         local Resiststop = {0.2265625, 0, 0.11328125, 0.33984375, 0.453125};
         local Resistsbottom = {0.33984375, 0.11328125, 0.2265625, 0.453125, 0.56640625};
         for i = 1, 5 do
-            if not _G["InspectPlusFrameResistance"..i] then
+            if (not _G["InspectPlusFrameResistance"..i]) then
                 local t = CreateFrame("Frame", "InspectPlusFrameResistance"..i, ip);
                 t:SetFrameLevel(InspectModelFrameRotateLeftButton:GetFrameLevel()+1);
                 t:SetSize(32, 29);
@@ -299,7 +307,7 @@ local function CreateInspectPlusFrame()
                 t:EnableMouse(true);
 
                 t:SetScript("OnEnter", function(self)
-                    if InspectPlusDB["target"] == 1 then
+                    if (InspectPlusDB["target"] == 1) then
                         GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 8, -8);
                         GameTooltip:SetText(_G["RESISTANCE"..ResistsID[i].."_NAME"]);
                     end
@@ -321,11 +329,17 @@ local function CreateInspectPlusFrame()
             end
         end
 
+        -- Guild
+        ip.guildinfo = ip:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall");
+        ip.guildinfo:SetJustifyH("CENTER");
+        ip.guildinfo:ClearAllPoints();
+        ip.guildinfo:SetPoint("TOP", InspectLevelText, "BOTTOM", 0, -1);
+
         -- iLvlAverage
         ip.iLvlAverage = ip:CreateFontString(nil, "ARTWORK", "GameFontNormal");
         ip.iLvlAverage:SetJustifyH("CENTER");
         ip.iLvlAverage:ClearAllPoints();
-        ip.iLvlAverage:SetPoint("BOTTOM", ip, "TOP", 0, 6);
+        ip.iLvlAverage:SetPoint("TOP", InspectLevelText, "BOTTOM", 0, -10);
 
         -- Settings
         ip.setting = CreateFrame("Button", "InspectPlusFrameSetting", ip);
@@ -339,15 +353,15 @@ local function CreateInspectPlusFrame()
         ip.setting:SetAlpha(0.272);
         ip.setting:RegisterForClicks("LeftButtonUp", "RightButtonUp");
         ip.setting:SetScript("OnMouseUp", function(self, button)
-            if button == "LeftButton" then
+            if (button == "LeftButton") then
                 TryInspect();
-            elseif button == "RightButton" then
+            elseif (button == "RightButton") then
                 InspectPlus_Setting();
             end
         end);
         ip.setting:SetScript("OnEnter", function(self)
             GameTooltip:SetOwner(self, "ANCHOR", 0, 0);
-            if InspectPlusDB["target"] == 1 then
+            if (InspectPlusDB["target"] == 1) then
                 GameTooltip:SetText(KEY_BUTTON1..": "..REFRESH.."\n"..KEY_BUTTON2..": "..SETTINGS);
             else
                 GameTooltip:SetText(KEY_BUTTON2..": "..SETTINGS);
@@ -363,14 +377,22 @@ end
 local iLvlAverage = PaperDollFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal");
 iLvlAverage:SetJustifyH("CENTER");
 iLvlAverage:ClearAllPoints();
-iLvlAverage:SetPoint("BOTTOM", CharacterModelFrame, "TOP", 0, 6);
+iLvlAverage:SetPoint("TOP", CharacterLevelText, "BOTTOM", 0, -11);
 iLvlAverage:SetText("")
 hooksecurefunc("ToggleCharacter", function(tab, onlyShow)
-    if tab == "PaperDollFrame" then
-    	if InspectPlusDB["player"] == 1 then
-	        ScanGear("player");
-	        iLvlAverage:SetText(info.iLvlAverage);
-	    end
+    if (tab == "PaperDollFrame") then
+        if (InspectPlusDB["player"] == 1) then
+            ScanGear("player");
+            iLvlAverage:SetText(info.iLvlAverage);
+        end
+    end
+end)
+
+-- Player Guild rank
+hooksecurefunc("PaperDollFrame_SetGuild", function()
+    local guildName, title, rank = GetGuildInfo("player");
+    if (guildName) then
+        CharacterGuildText:SetFormattedText(GUILD_TITLE_TEMPLATE, title.." ("..rank..")", guildName);
     end
 end)
 
@@ -381,30 +403,30 @@ InspectPlus:RegisterUnitEvent("UNIT_STATS", "player");
 -- InspectPlus:RegisterUnitEvent("UNIT_RESISTANCES", "player");
 InspectPlus:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", "target")
 InspectPlus:SetScript("OnEvent", function(self, event, ...)
-    if event == "UNIT_STATS" then
+    if (event == "UNIT_STATS") then
         ScanGear("player");
         iLvlAverage:SetText(info.iLvlAverage);
-    elseif event == "INSPECT_READY" then
+    elseif (event == "INSPECT_READY") then
         TryInspect();
         InspectPlus:UnregisterEvent("INSPECT_READY");
-    elseif event == "UNIT_INVENTORY_CHANGED" then
+    elseif (event == "UNIT_INVENTORY_CHANGED") then
         TryInspect();
-    elseif event == "ADDON_LOADED" then
+    elseif (event == "ADDON_LOADED") then
         local addon = ...
-        if addon == "Blizzard_InspectUI" then
+        if (addon == "Blizzard_InspectUI") then
             CreateInspectPlusFrame();
             InspectPlus_TargetStats();
             InspectPlus_Background();
-        elseif addon == "InspectPlus" then
-            if not InspectPlusDB then InspectPlusDB = {} end
-            if not InspectPlusDB["player"] then InspectPlusDB["player"] = 1 end
-            if not InspectPlusDB["target"] then InspectPlusDB["target"] = 1 end
-            if not InspectPlusDB["bg"] then InspectPlusDB["bg"] = 1 end
-            if not InspectPlusDB["auto"] then InspectPlusDB["auto"] = 0 end
+        elseif (addon == "InspectPlus") then
+            if (not InspectPlusDB) then InspectPlusDB = {} end
+            if (not InspectPlusDB["player"]) then InspectPlusDB["player"] = 1 end
+            if (not InspectPlusDB["target"]) then InspectPlusDB["target"] = 1 end
+            if (not InspectPlusDB["bg"]) then InspectPlusDB["bg"] = 1 end
+            if (not InspectPlusDB["auto"]) then InspectPlusDB["auto"] = 0 end
         end
-    elseif event == "PLAYER_TARGET_CHANGED" then
-        if InspectFrame and InspectFrame:IsVisible() and UnitExists("target") and CheckInteractDistance("target", 1) and CanInspect("target") then
-            if InspectPlusDB["auto"] == 1 then
+    elseif (event == "PLAYER_TARGET_CHANGED") then
+        if (InspectFrame and InspectFrame:IsVisible() and UnitExists("target") and CheckInteractDistance("target", 1) and CanInspect("target")) then
+            if (InspectPlusDB["auto"] == 1) then
                 InspectUnit("target");
             end
         end
@@ -434,7 +456,7 @@ hooksecurefunc("InspectFrame_LoadUI", function()
     -- info.guild, info.guildRank, info.guildIndex = GetGuildInfo(unit);
     info.iLvlAverage = 0;
 
-    if InspectPlusDB["bg"] == 1 then
+    if (InspectPlusDB["bg"] == 1) then
         local _, race = UnitRace(unit);
         local texture = "Interface\\DressUpFrame\\DressUpBackground-"..race;
         InspectPlusFrame.bgTopLeft:SetTexture(texture.."1");
@@ -446,7 +468,7 @@ hooksecurefunc("InspectFrame_LoadUI", function()
     -- InspectPlusFrame.unitStats = unitStats;
     -- InspectPlusFrame.info = info;
 
-    if InspectPlusDB["target"] == 1 and CheckInteractDistance(unit, 3) and CanInspect(unit) then
+    if ((InspectPlusDB["target"] == 1) and CheckInteractDistance(unit, 3) and CanInspect(unit)) then
         NotifyInspect(unit);
         InspectPlus:RegisterEvent("INSPECT_READY");
     end
@@ -456,12 +478,12 @@ local IPLocal_PlayerStatsText  = "Player statistics";
 local IPLocal_TargetStatsText  = "Target statistics";
 local IPLocal_ShowRaceBGText = "Race background";
 local IPLocal_AutoInspectText  = "Auto inspect";
-if GetLocale() == "zhCN" then
+if (GetLocale() == "zhCN") then
     IPLocal_PlayerStatsText = "自身统计"
     IPLocal_TargetStatsText = "目标统计"
     IPLocal_ShowRaceBGText = "种族背景";
     IPLocal_AutoInspectText  = "自动观察";
-elseif GetLocale() == "zhTW" then
+elseif (GetLocale() == "zhTW") then
     IPLocal_PlayerStatsText = "自身統計"
     IPLocal_TargetStatsText = "目標統計"
     IPLocal_ShowRaceBGText = "種族背景";
@@ -469,19 +491,19 @@ elseif GetLocale() == "zhTW" then
 end
 
 function InspectPlus_PlayerStats()
-    if InspectPlusDB["player"] == 1 then
-		InspectPlus:RegisterUnitEvent("UNIT_STATS", "player");
+    if (InspectPlusDB["player"] == 1) then
+        InspectPlus:RegisterUnitEvent("UNIT_STATS", "player");
         ScanGear("player");
         iLvlAverage:SetText(info.iLvlAverage);
     else
-		InspectPlus:UnregisterEvent("UNIT_STATS");
+        InspectPlus:UnregisterEvent("UNIT_STATS");
         iLvlAverage:SetText("");
     end
 end
 
 function InspectPlus_TargetStats()
-    if InspectPlusFrame then
-        if InspectPlusDB["target"] == 1 then
+    if (InspectPlusFrame) then
+        if (InspectPlusDB["target"] == 1) then
             InspectModelFrameRotateLeftButton:SetAlpha(0);
             InspectModelFrameRotateRightButton:SetAlpha(0);
             InspectMainHandSlot:SetFrameLevel(InspectMainHandSlot:GetFrameLevel()+1);
@@ -521,8 +543,8 @@ function InspectPlus_TargetStats()
 end
 
 function InspectPlus_Background()
-    if InspectPlusFrame then
-        if InspectPlusDB["bg"] == 1 then
+    if (InspectPlusFrame) then
+        if (InspectPlusDB["bg"] == 1) then
             local unit = UnitExists("target") and "target" or "player";
             local _, race = UnitRace(unit);
             local texture = "Interface\\DressUpFrame\\DressUpBackground-"..race;

@@ -52,6 +52,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "TradeLink";
+				tab= "main";
 				name= FF_NameWTL;
 				subtext= "TradeLink";
 				tooltip = FF_DescWTL;
@@ -83,6 +84,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "ItemDB";
+				tab= "data";
 				name= FF_NameIDB;
 				subtext= "ItemDB";
 				tooltip = FF_DescIDB;
@@ -176,6 +178,7 @@ if ( EarthFeature_AddButton ) then
 	EarthFeature_AddButton(
 		{
 			id= "WC";
+			tab= "main";
 			name= FF_NameWC;
 			subtext= "World Channel";
 			tooltip = FF_DescWC;
@@ -214,6 +217,7 @@ if ( EarthFeature_AddButton ) then
 	EarthFeature_AddButton(
 		{
 			id= "ACP";
+			tab= "main";
 			name= FF_NameACP;
 			subtext= "Addon Control Panel";
 			tooltip = FF_DescACP;
@@ -239,6 +243,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "GetLinkClassic";
+				tab= "data";
 				name= FF_NameGLC;
 				subtext= "GetLinkClassic";
 				tooltip = FF_DescGLC;
@@ -248,6 +253,42 @@ if enabled > 0 then
 						LoadAddOn("GetLinkClassic");
 					end
 					GLG_SlashHandler();
+				end;
+			}
+		);
+	end
+end
+
+local enabled = GetAddOnEnableState(playerName, "TradeLog");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameTradeLog	= "交易助手";
+		FF_DescTradeLog	= "交易记录及交易界面增强。";
+	elseif GetLocale() == "zhTW" then
+		FF_NameTradeLog	= "交易助手";
+		FF_DescTradeLog	= "交易記錄及交易介面增強。";
+	else
+		FF_NameTradeLog	= "TradeLog";
+		FF_DescTradeLog	= "Trade log, mage warlock trade assistant.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "TradeLog";
+				tab= "data";
+				name= FF_NameTradeLog;
+				subtext= "TradeLog";
+				tooltip = FF_DescTradeLog;
+				icon= "Interface\\GossipFrame\\BankerGossipIcon";
+				callback= function(button)
+					if not IsAddOnLoaded("TradeLog") then
+						LoadAddOn("TradeLog");
+					end
+					if( TradeListFrame:IsVisible() ) then
+						TradeListFrame:Hide();
+					else
+						TradeListFrame:Show();
+					end
 				end;
 			}
 		);
@@ -270,6 +311,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Archy";
+				tab= "data";
 				name= FF_NameArchy;
 				subtext= "Archy";
 				tooltip = FF_DescArchy;
@@ -302,6 +344,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "LeatrixMaps";
+				tab= "data";
 				name= FF_NameLeatrixMaps;
 				subtext= "LeatrixMaps";
 				tooltip = FF_DescLeatrixMaps;
@@ -310,9 +353,11 @@ if enabled > 0 then
 					if not IsAddOnLoaded("Leatrix_Maps") then
 						LoadAddOn("Leatrix_Maps");
 					end
-					--DEFAULT_CHAT_FRAME.editBox:SetText("/leamaps")
-					--ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox,0)
-					SlashCmdList["Leatrix_Maps"]("");
+					if button == "LeftButton" then
+						ToggleWorldMap();
+					elseif button == "RightButton" then
+						SlashCmdList["Leatrix_Maps"]("");
+					end
 				end;
 			}
 		);
@@ -335,6 +380,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Atlas";
+				tab= "data";
 				name= FF_NameAtlas;
 				subtext= "Atlas";
 				tooltip = FF_DescAtlas;
@@ -370,6 +416,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "AtlasLoot";
+				tab= "data";
 				name= FF_NameAtlasLoot;
 				subtext= "AtlasLoot Enhanced";
 				tooltip = FF_DescAtlasLoot;
@@ -411,6 +458,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id = "BankItems";
+				tab= "data";
 				name = FF_NameBankItems;
 				subtext = "BankItems";
 				tooltip = FF_DescBankItems;
@@ -426,6 +474,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id = "GuildBank";
+				tab= "data";
 				name = FF_NameGuildBank;
 				subtext = "GuildBank";
 				tooltip = FF_DescGuildBank;
@@ -457,6 +506,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id = "BaudBag";
+				tab= "ui";
 				name = FF_NameBaudBag;
 				subtext = "BaudBag";
 				tooltip = FF_DescBaudBag;
@@ -489,6 +539,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id = "Combuctor";
+				tab= "ui";
 				name = FF_NameCombuctor;
 				subtext = "Combuctor";
 				tooltip = FF_DescCombuctor;
@@ -521,6 +572,7 @@ end
 -- 		EarthFeature_AddButton(
 -- 			{
 -- 				id = "Inventorian";
+--				tab= "ui";
 -- 				name = FF_NameInventorian;
 -- 				subtext = "Inventorian";
 -- 				tooltip = FF_DescInventorian;
@@ -553,6 +605,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "EAILT";
+				tab= "ui";
 				name= FF_NameEAILT;
 				subtext= "EquippedItemLevelTooltip";
 				tooltip = FF_DescEAILT;
@@ -585,6 +638,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "ClassTimer";
+				tab= "combat";
 				name= FF_NameClassTimer;
 				subtext= "ClassTimer";
 				tooltip = FF_DescClassTimer;
@@ -617,6 +671,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "WeakAuras";
+				tab= "combat";
 				name= FF_NameWeakAuras;
 				subtext= "WeakAuras";
 				tooltip = FF_DescWeakAuras;
@@ -649,6 +704,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "NugRunning";
+				tab= "combat";
 				name= FF_NameNugRunning;
 				subtext= "NugRunning";
 				tooltip = FF_DescNugRunning;
@@ -681,6 +737,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "ClassicCastbars";
+				tab= "combat";
 				name= FF_NameClassicCastbars;
 				subtext= "ClassicCastbars";
 				tooltip = FF_DescClassicCastbars;
@@ -713,6 +770,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Quartz";
+				tab= "ui";
 				name= FF_NameQuartz;
 				subtext= "Quartz";
 				tooltip = FF_DescQuartz;
@@ -746,6 +804,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "NeatPlates";
+				tab= "ui";
 				name= FF_NameNeatPlates;
 				subtext= "NeatPlates";
 				tooltip = FF_DescNeatPlates;
@@ -778,6 +837,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "zBar3";
+				tab= "ui";
 				name= FF_NamezBar;
 				subtext= "zBar3";
 				tooltip = FF_DesczBar;
@@ -809,6 +869,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "OmniCC";
+				tab= "ui";
 				name= FF_NameOmniCC;
 				subtext= "OmniCC";
 				tooltip = FF_DescOmniCC;
@@ -841,6 +902,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "CritSound";
+				tab= "combat";
 				name= FF_NameCritSound;
 				subtext= "CritSound";
 				tooltip = FF_DescCritSound;
@@ -874,6 +936,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "DCT";
+				tab= "combat";
 				name= FF_NameDCT;
 				subtext= "Dennis's Combat Text";
 				tooltip = FF_DescDCT;
@@ -905,6 +968,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "DamageEx";
+				tab= "combat";
 				name= FF_NameDamageEx;
 				subtext= "DamageEx";
 				tooltip = FF_DescDamageEx;
@@ -936,6 +1000,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "DBM";
+				tab= "group";
 				name= FF_NameDBM;
 				subtext= "Deadly Boss Mods";
 				tooltip = FF_DescDBM;
@@ -967,6 +1032,7 @@ if enabled > 0 and (class == "MAGE" or class == "PRIEST" or class == "DRUID" or 
 		EarthFeature_AddButton(
 			{
 				id= "Decursive";
+				tab= "combat";
 				name= FF_NameDecursive;
 				subtext= "Decursive";
 				tooltip = FF_DescDecursive;
@@ -998,6 +1064,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "RangeDisplay";
+				tab= "ui";
 				name= FF_NameRangeDisplay;
 				subtext= "RangeDisplay";
 				tooltip = FF_DescRangeDisplay;
@@ -1029,6 +1096,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Gladius";
+				tab= "combat";
 				name= FF_NameGladius;
 				subtext= "Gladius";
 				tooltip = FF_DescGladius;
@@ -1067,6 +1135,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "EventAlertMod";
+				tab= "ui";
 				name= FF_NameEAM;
 				subtext= "EventAlertMod";
 				tooltip = FF_DescEAM;
@@ -1102,6 +1171,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "EasyTrinket";
+				tab= "ui";
 				name= FF_NameEasyTrinket;
 				subtext= "EasyTrinket";
 				tooltip = FF_DescEasyTrinket;
@@ -1133,6 +1203,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "TrinketMenu";
+				tab= "ui";
 				name= FF_NameTrinketMenu;
 				subtext= "TrinketMenu";
 				tooltip = FF_DescTrinketMenu;
@@ -1164,6 +1235,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "zTip";
+				tab= "ui";
 				name= FF_NamezTip;
 				subtext= "zTip";
 				tooltip = FF_DesczTip;
@@ -1199,6 +1271,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "TinyTip";
+				tab= "ui";
 				name= FF_NameTinyTip;
 				subtext= "TinyTip";
 				tooltip = FF_DescTinyTip;
@@ -1233,6 +1306,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "TinyTooltip";
+				tab= "ui";
 				name= FF_NameTinyTooltip;
 				subtext= "TinyTooltip";
 				tooltip = FF_DescTinyTooltip;
@@ -1265,6 +1339,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "SRTI";
+				tab= "ui";
 				name= FF_NameSRTI;
 				subtext= "Simple Raid Target Icons";
 				tooltip = FF_DescSRTI;
@@ -1297,6 +1372,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "ILF";
+				tab= "ui";
 				name= FF_NameILF;
 				subtext= "Improved Loot Frame";
 				tooltip = FF_DescILF;
@@ -1329,6 +1405,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "ReforgeLite";
+				tab= "data";
 				name= FF_NameReforgeLite;
 				subtext= "ReforgeLite";
 				tooltip = FF_DescReforgeLite;
@@ -1360,6 +1437,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "FishingBuddy";
+				tab= "main";
 				name= FF_NameFishingBuddy;
 				subtext= "FishingBuddy";
 				tooltip = FF_DescFishingBuddy;
@@ -1395,6 +1473,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "NPCScan";
+				tab= "data";
 				name= FF_NameNPCScan;
 				subtext= "NPCScan";
 				tooltip = FF_DescNPCScan;
@@ -1427,6 +1506,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "QuestPlus";
+				tab= "data";
 				name= FF_NameQuestPlus;
 				subtext= "QuestPlus";
 				tooltip = FF_DescQuestPlus;
@@ -1459,6 +1539,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Questie";
+				tab= "data";
 				name= FF_NameQuestie;
 				subtext= "Questie";
 				tooltip = FF_DescQuestie;
@@ -1491,6 +1572,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "ClassicCodex";
+				tab= "data";
 				name= FF_NameClassicCodex;
 				subtext= "ClassicCodex";
 				tooltip = FF_DescClassicCodex;
@@ -1523,6 +1605,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "GatherMate";
+				tab= "data";
 				name= FF_NameGatherMate;
 				subtext= "GatherMate";
 				tooltip = FF_DescGatherMate;
@@ -1555,6 +1638,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Routes";
+				tab= "data";
 				name= FF_NameRoutes;
 				subtext= "Routes";
 				tooltip = FF_DescRoutes;
@@ -1586,6 +1670,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "felFruiTimer";
+				tab= "data";
 				name= FF_NamefelFruiTimer;
 				subtext= "felFruiTimer";
 				tooltip = FF_DescfelFruiTimer;
@@ -1618,6 +1703,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "bloodOfHeros";
+				tab= "data";
 				name= FF_NamebloodOfHeros;
 				subtext= "bloodOfHeros";
 				tooltip = FF_DescbloodOfHeros;
@@ -1650,6 +1736,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "RecipeRadarClassic";
+				tab= "data";
 				name= FF_NameRecipeRadarClassic;
 				subtext= "RecipeRadarClassic";
 				tooltip = FF_DescRecipeRadarClassic;
@@ -1686,6 +1773,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "PhanxChat";
+				tab= "ui";
 				name= FF_NamePhanxChat;
 				subtext= "PhanxChat";
 				tooltip = FF_DescPhanxChat;
@@ -1718,6 +1806,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "ChatPlus";
+				tab= "ui";
 				name= FF_NameChatPlus;
 				subtext= "ChatPlus";
 				tooltip = FF_DescChatPlus;
@@ -1750,6 +1839,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "BadBoy";
+				tab= "ui";
 				name= FF_NameBadBoy;
 				subtext= "BadBoy";
 				tooltip = FF_DescBadBoy;
@@ -1781,6 +1871,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "EUF";
+				tab= "ui";
 				name= FF_NameEUF;
 				subtext= "Enigma Unit Frames";
 				tooltip = FF_DescEUF;
@@ -1813,6 +1904,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "UFP";
+				tab= "ui";
 				name= FF_NameUFP;
 				subtext= "UnitFramesPlus";
 				tooltip = FF_DescUFP;
@@ -1843,6 +1935,7 @@ if ( EarthFeature_AddButton ) then
 	EarthFeature_AddButton(
 		{
 			id= "AI";
+			tab= "group";
 			name= FF_NameAI;
 			subtext= "AutoInvite";
 			tooltip = FF_DescAI;
@@ -1870,6 +1963,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "MH";
+				tab= "group";
 				name= FF_NameMH;
 				subtext= "MeetingHorn";
 				tooltip = FF_DescMH;
@@ -1901,6 +1995,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "GoodLeader";
+				tab= "group";
 				name= FF_NameGL;
 				subtext= "GoodLeader";
 				tooltip = FF_DescGL;
@@ -1932,6 +2027,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "LHPP";
+				tab= "combat";
 				name= FF_NameLHPP;
 				subtext= "LowHPPulser";
 				tooltip = FF_DescLHPP;
@@ -1964,6 +2060,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "BattleInfo";
+				tab= "combat";
 				name= FF_NameBattleInfo;
 				subtext= "BattleInfo";
 				tooltip = FF_DescBattleInfo;
@@ -1996,6 +2093,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "SSPVP";
+				tab= "combat";
 				name= FF_NameSSPVP;
 				subtext= "SSPVP";
 				tooltip = FF_DescSSPVP;
@@ -2027,6 +2125,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Spy";
+				tab= "combat";
 				name= FF_NameSpy;
 				subtext= "Spy";
 				tooltip = FF_DescSpy;
@@ -2066,6 +2165,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Grid";
+				tab= "group";
 				name= FF_NameGrid;
 				subtext= "Grid";
 				tooltip = FF_DescGrid;
@@ -2097,6 +2197,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "ClassicThreatMeter";
+				tab= "group";
 				name= FF_NameClassicThreatMeter;
 				subtext= "ClassicThreatMeter";
 				tooltip = FF_DescClassicThreatMeter;
@@ -2128,6 +2229,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "ThreatClassic2";
+				tab= "group";
 				name= FF_NameThreatClassic2;
 				subtext= "ThreatClassic2";
 				tooltip = FF_DescThreatClassic2;
@@ -2163,6 +2265,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Omen3";
+				tab= "group";
 				name= FF_NameOmen;
 				subtext= "Omen3";
 				tooltip = FF_DescOmen;
@@ -2194,6 +2297,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Skada";
+				tab= "group";
 				name= FF_NameSkada;
 				subtext= "Skada";
 				tooltip = FF_DescSkada;
@@ -2229,6 +2333,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Recount";
+				tab= "group";
 				name= FF_NameRecount;
 				subtext= "Recount";
 				tooltip = FF_DescRecount;
@@ -2270,6 +2375,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Details";
+				tab= "group";
 				name= FF_NameDetails;
 				subtext= "Details";
 				tooltip = FF_DescDetails;
@@ -2309,6 +2415,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "oRA3";
+				tab= "group";
 				name= FF_NameoRA;
 				subtext= "oRA3";
 				tooltip = FF_DescoRA;
@@ -2340,6 +2447,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "ExRT";
+				tab= "group";
 				name= FF_NameoExRT;
 				subtext= "ExRT";
 				tooltip = FF_DescoExRT;
@@ -2371,6 +2479,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "AIO";
+				tab= "main";
 				name= FF_NameAIO;
 				subtext= "AdvancedInterfaceOptions";
 				tooltip = FF_DescAIO;
@@ -2403,6 +2512,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "Leatrix_Plus";
+				tab= "main";
 				name= FF_NameLeatrix_Plus;
 				subtext= "Leatrix_Plus";
 				tooltip = FF_DescLeatrix_Plus;
@@ -2434,6 +2544,7 @@ if enabled > 0 and class == "DEATHKNIGHT" then
 		EarthFeature_AddButton(
 			{
 				id= "RuneItAll";
+				tab= "class";
 				name= FF_NameRuneItAll;
 				subtext= "RuneItAll";
 				tooltip = FF_DescRuneItAll;
@@ -2466,6 +2577,7 @@ if enabled > 0 then
 		EarthFeature_AddButton(
 			{
 				id= "orbSellAndRepair";
+				tab= "main";
 				name= FF_NameorbSellAndRepair;
 				subtext= "orbSellAndRepair";
 				tooltip = FF_DescorbSellAndRepair;
@@ -2497,6 +2609,7 @@ if GetLocale() == "zhCN" then
 		EarthFeature_AddButton(
 			{
 				id= "ExtraConfiguration";
+				tab= "main";
 				name= FF_NameExtraConfig;
 				subtext= "ExtraConfiguration";
 				tooltip = FF_DescExtraConfig;
@@ -2526,6 +2639,7 @@ if GetLocale() == "zhCN" then
 		EarthFeature_AddButton(
 			{
 				id= "Donation";
+				tab= "main";
 				name= "Donation";
 				subtext= "wow.isler.me";
 				tooltip = DonationText;

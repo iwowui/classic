@@ -7,12 +7,15 @@
 	Vjeux and Alexander Brazie
 	Liberated from the Earth library by Ryan "Gryphon" Snook
 	Made standalone by AnduinLothar
+	More by Isler
 
 	-- Description
 	These are functions to allow a user to register a button
 	for their feature to appear within the frame here.
 
 	-- Changes
+	3.0	- Tab view
+		- mouse wheel support
 	2.0	- Refactored to be standalone, renamed
 		- Still accepts old EarthFeature_AddButton(...) calls, but the new syntax is FeatureFrame_AddButton(...)
 	1.0	- Initial separation from Earth
@@ -25,19 +28,34 @@
 
 ]]--
 
+FeatureFrame_Tabs = {
+	main = 1,
+	data = 2,
+	combat = 3,
+	group = 4,
+	ui = 5,
+	class = 6,
+	other = 7,
+}
+FeatureFrame_TabsR = {}
+FeatureFrame_selectedTab = "main";
+
 FeatureFrame_Version = {
-	Version = "2.00";
-	Revision = "$Rev: 4157 $";
+	Version = "3.00"
 }
 
 -- Inform the default UI of our existence...
-UIPanelWindows["FeatureFrame"] = { area = "left",	pushable = 3,	whileDead = 1 };
+UIPanelWindows["FeatureFrame"] = { area = "left", pushable = 3, whileDead = 1 };
 
 -- Max Objects
 FeatureFrame_MAX = 14;
 
 -- Data objects:
 FeatureFrame_Buttons = { };
+for k, v in pairs(FeatureFrame_Tabs) do
+	FeatureFrame_TabsR[v] = k;
+	FeatureFrame_Buttons[k] = {};
+end
 FeatureFrame_CurrentOffset = 0;
 
 --[[
@@ -54,15 +72,24 @@ FeatureFrame_CurrentOffset = 0;
 --		FeatureFrame_AddButton (
 --			{
 --				id = "MyAddOnID";
+--				tab = "MyAddOnTab";
 --				name = "My AddOn";
 --				subtext = "Is very cool";
 --				tooltip = "Long Tool\n Tip Text";
 --				icon = "Interface\\Icons\\Spell_Holy_BlessingOfStrength";
---				callback = function()
---					if (MinimapFrameFrame:IsVisible()) then
---						HideUIPanel(MinimapFrame);
---					else
---						ShowUIPanel(MinimapFrame);
+--				callback = function(button)
+--					if button == "LeftButton" then
+--						if (MinimapFrameFrame:IsVisible()) then
+--							HideUIPanel(MinimapFrame);
+--						else
+--							ShowUIPanel(MinimapFrame);
+--						end
+--					elseif button == "RightButton" then
+--						if (MinimapFrameFrame:IsVisible()) then
+--							HideUIPanel(MinimapFrame);
+--						else
+--							ShowUIPanel(MinimapFrame);
+--						end
 --					end
 --				end;
 --				test = 	function()
@@ -81,10 +108,25 @@ FeatureFrame_CurrentOffset = 0;
 --
 --	]]--
 
+function FeatureFrameTabs_OnLoad()
+	FeatureFrame_selectedTab = "main";
+	FeatureFrameTab1:SetChecked(true);
+	_G["FeatureFrameTab"..FeatureFrame_Tabs["main"]].tooltip = GENERAL;
+	_G["FeatureFrameTab"..FeatureFrame_Tabs["data"]].tooltip = ITEMS;
+	_G["FeatureFrameTab"..FeatureFrame_Tabs["combat"]].tooltip = COMBAT;
+	_G["FeatureFrameTab"..FeatureFrame_Tabs["group"]].tooltip = GROUPS;
+	_G["FeatureFrameTab"..FeatureFrame_Tabs["ui"]].tooltip = SHOW;
+	_G["FeatureFrameTab"..FeatureFrame_Tabs["class"]].tooltip = CLASS;
+	_G["FeatureFrameTab"..FeatureFrame_Tabs["other"]].tooltip = AUCTION_SUBCATEGORY_OTHER;
+end
+
 function FeatureFrame_AddButton ( newButton )
+	if ( newButton.tab == nil or FeatureFrame_Tabs[newButton.tab] == nil ) then
+		newButton.tab = "other";
+	end
 	local i = 1;
-	while ( FeatureFrame_Buttons[i]) do
-		if FeatureFrame_Buttons[i].name ~= newButton.name then
+	while ( FeatureFrame_Buttons[newButton.tab][i]) do
+		if FeatureFrame_Buttons[newButton.tab][i].name ~= newButton.name then
 			i = i + 1;
 		else
 			return false;
@@ -110,16 +152,18 @@ function FeatureFrame_AddButton ( newButton )
 		newButton.test = function () return true; end;
 	end
 
-	table.insert ( FeatureFrame_Buttons, newButton );
+	table.insert ( FeatureFrame_Buttons[newButton.tab], newButton );
 
 	FeatureFrame_UpdateButtons();
 	FeatureFrameMinimapButton:Show();
+	if not _G["FeatureFrameTab"..FeatureFrame_Tabs[newButton.tab]]:IsShown() then
+		_G["FeatureFrameTab"..FeatureFrame_Tabs[newButton.tab]]:Show();
+	end
 	return true;
 end
 
 -- Reverse compat alias
 EarthFeature_AddButton = FeatureFrame_AddButton;
-
 
 function ToggleFeatureFrame()
 	if (FeatureFrame:IsVisible()) then
@@ -136,14 +180,14 @@ function FeatureFrame_OnHide(self)
 end
 
 function FeatureFrameButtons_UpdateColor()
-	local root =  "FeatureFrame";
+	local root = "FeatureFrame";
 	for i=1, FeatureFrame_MAX do
 		local icon = getglobal(root.."Button"..i);
 		local iconTexture = getglobal(root.."Button"..i.."IconTexture");
 
 		local id = FeatureFrameButton_GetOffset() + i;
-		if ( FeatureFrame_Buttons[id] ) then
-			if ( FeatureFrame_Buttons[id].test() == false) then
+		if ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id] ) then
+			if ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id].test() == false) then
 				icon:Disable();
 				iconTexture:SetVertexColor(1.00, 0.00, 0.00);
 			else
@@ -164,8 +208,8 @@ end
 function FeatureFrameButton_OnEnter(self)
 	local id = self:GetID() + FeatureFrameButton_GetOffset();
 
-	if ( FeatureFrame_Buttons[id] ) then
-		local tooltip = FeatureFrame_Buttons[id].tooltip;
+	if ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id] ) then
+		local tooltip = FeatureFrame_Buttons[FeatureFrame_selectedTab][id].tooltip;
 		if ( type ( tooltip ) == "function" ) then
 			tooltip = tooltip();
 		end
@@ -183,9 +227,9 @@ end
 function FeatureFrameButton_OnClick(self, button)
 	local id = self:GetID() + FeatureFrameButton_GetOffset();
 
-	if ( FeatureFrame_Buttons[id] ) then
+	if ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id] ) then
 		self:SetChecked(false);
-		FeatureFrame_Buttons[id].callback(button);
+		FeatureFrame_Buttons[FeatureFrame_selectedTab][id].callback(button);
 	end
 end
 
@@ -194,12 +238,11 @@ function FeatureFrameButton_GetOffset()
 end
 
 function FeatureFrame_NextPage(self)
-	if ( #FeatureFrame_Buttons > FeatureFrame_CurrentOffset + FeatureFrame_MAX ) then
+	if ( #FeatureFrame_Buttons[FeatureFrame_selectedTab] > FeatureFrame_CurrentOffset + FeatureFrame_MAX ) then
 		FeatureFrame_CurrentOffset = FeatureFrame_CurrentOffset + FeatureFrame_MAX;
 	end
 	FeatureFrame_UpdateButtons();
 end
-
 
 function FeatureFrame_PrevPage(self)
 	if ( FeatureFrame_CurrentOffset - FeatureFrame_MAX < 0 ) then
@@ -227,22 +270,22 @@ function FeatureFrame_UpdateButtons()
 		local iconDescription = getglobal(root.."Button"..i.."OtherName");
 
 		local id = FeatureFrameButton_GetOffset() + i;
-		if ( FeatureFrame_Buttons[id] ) then
+		if ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id] ) then
 			icon:Show();
 			icon:Enable();
 			iconTexture:Show();
-			iconTexture:SetTexture(FeatureFrame_Buttons[id].icon);
+			iconTexture:SetTexture(FeatureFrame_Buttons[FeatureFrame_selectedTab][id].icon);
 			iconName:Show();
-			if ( type ( FeatureFrame_Buttons[id].name ) == "function" ) then
-				iconName:SetText(FeatureFrame_Buttons[id].name());
+			if ( type ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id].name ) == "function" ) then
+				iconName:SetText(FeatureFrame_Buttons[FeatureFrame_selectedTab][id].name());
 			else
-				iconName:SetText(FeatureFrame_Buttons[id].name);
+				iconName:SetText(FeatureFrame_Buttons[FeatureFrame_selectedTab][id].name);
 			end
 			iconDescription:Show();
-			if ( type ( FeatureFrame_Buttons[id].subtext ) == "function" ) then
-				iconDescription:SetText(FeatureFrame_Buttons[id].subtext());
+			if ( type ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id].subtext ) == "function" ) then
+				iconDescription:SetText(FeatureFrame_Buttons[FeatureFrame_selectedTab][id].subtext());
 			else
-				iconDescription:SetText(FeatureFrame_Buttons[id].subtext);
+				iconDescription:SetText(FeatureFrame_Buttons[FeatureFrame_selectedTab][id].subtext);
 			end
 		else
 			icon:Hide();
@@ -272,8 +315,30 @@ end
 
 function FeatureFrame_GetCurrentPage()
 	local currentPage = (FeatureFrameButton_GetOffset()/FeatureFrame_MAX) + 1;
-	local maxPages = ceil(#FeatureFrame_Buttons/FeatureFrame_MAX);
+	local maxPages = ceil(#FeatureFrame_Buttons[FeatureFrame_selectedTab]/FeatureFrame_MAX);
 	return currentPage, maxPages;
+end
+
+function FeatureFrameTab_OnClick(self)
+	local id = self:GetID();
+	if ( FeatureFrame_Tabs[FeatureFrame_selectedTab] ~= id ) then
+		-- PlaySound(SOUNDKIT.IG_ABILITY_PAGE_TURN);
+		PlaySound(836);
+		_G["FeatureFrameTab"..FeatureFrame_Tabs[FeatureFrame_selectedTab]]:SetChecked(false);
+		FeatureFrame_selectedTab = FeatureFrame_TabsR[id];
+		FeatureFrame_CurrentOffset = 0;
+		FeatureFrame_UpdateButtons();
+	else
+		self:SetChecked(true);
+	end
+	
+	-- Stop tab flashing
+	if ( self ) then
+		local tabFlash = _G[self:GetName().."Flash"];
+		if ( tabFlash ) then
+			tabFlash:Hide();
+		end
+	end
 end
 
 --[[

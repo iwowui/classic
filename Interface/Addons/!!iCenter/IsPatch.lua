@@ -200,17 +200,25 @@ function Switch_OptionPanel_OnShow()
     Switch_AntiLogoutEnable:SetChecked(ExtraConfiguration["antilogout"]==1);
 end
 
---buff来源
-local CastFrom = "From: ";
-if GetLocale() == "zhCN" then
-    CastFrom = "来自：";
-elseif GetLocale() == "zhTW" then
-    CastFrom = "來自：";
-end
+--buff精确时间&来源
 hooksecurefunc(GameTooltip, "SetUnitAura", function(self, unit, index, filter)
-    local caster = select(7, UnitAura(unit, index, filter));
-    if caster and UnitExists(caster) then
-        GameTooltip:AddLine(CastFrom..UnitName(caster), .65, .85, 1, 1);
+    local _, _, _, _, _, expirationTime, unitCaster = UnitAura(unit, index, filter);
+
+    if expirationTime and expirationTime ~= 0 then
+        local time = expirationTime - GetTime();
+        if time > 0 then
+            local d, h, m, s = ChatFrame_TimeBreakDown(time+1);
+            local dtext = d ~= 0 and format(INT_SPELL_DURATION_DAYS, d) or "";
+            local htext = h ~= 0 and format(INT_SPELL_DURATION_HOURS, h) or "";
+            local mtext = m ~= 0 and format(INT_SPELL_DURATION_MIN, m) or "";
+            local stext = format(INT_SPELL_DURATION_SEC, s);
+            GameTooltip:AddLine(TIME_REMAINING..dtext..htext..mtext..stext);
+            GameTooltip:Show();
+        end
+    end
+
+    if unitCaster and UnitExists(unitCaster) then
+        GameTooltip:AddLine(FROM..UnitName(unitCaster), 0.65, 0.85, 1, 1);
         GameTooltip:Show();
     end
 end)
