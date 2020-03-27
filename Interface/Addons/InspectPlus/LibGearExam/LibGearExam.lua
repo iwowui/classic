@@ -121,6 +121,7 @@ LGE.StatNames = {
 	CRIT = CRIT_CHANCE,
 	HIT = STAT_HIT_CHANCE,
 	HASTE = format(strstr, MELEE, STAT_HASTE), --MELEE.." "..STAT_HASTE,
+	RANGEDHIT = format(strstr, RANGED, STAT_HIT_CHANCE),
 
 	WPNDMG = DAMAGE_TOOLTIP,
 	RANGEDDMG = RANGED_DAMAGE_TOOLTIP,
@@ -222,6 +223,7 @@ LGE.StatRatingBaseTable = {
 	SPELLCRIT = 1,
 	HASTE = 10,
 	HIT = 1,				-- Buffed a little in 4.0.1 (was 10 before)
+	RANGEDHIT = 1,
 	CRIT = 1,
 	EXPERTISE = 2.34483,		-- Buffed a little in 4.0.1 (was 2.5 before)
 	DODGE = 1,

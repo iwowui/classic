@@ -79,20 +79,20 @@ LibGearExam.Patterns = {
 	
 	
 	-- Skill Bonuses
-	{ p = "匕首技能提高%(%d+)%点。", s = { "DAGGERSKILL" }},
+	{ p = "匕首技能提高(%d+)点。", s = { "DAGGERSKILL" }},
 	
-	{ p = "斧类武器技能提高%(%d+)%点。", s = { "ONEAXESKILL" }},
-	{ p = "双手斧技能提高%(%d+)%点。", s = { "TWOAXESKILL" }},
+	{ p = "斧类武器技能提高(%d+)点。", s = { "ONEAXESKILL" }},
+	{ p = "双手斧技能提高(%d+)点。", s = { "TWOAXESKILL" }},
 	
-	{ p = "剑类武器技能提高%(%d+)%点。", s = { "ONESWORDSKILL" }},
-	{ p = "双手剑技能提高%(%d+)%点。", s = { "TWOSWORDSKILL" }},	
+	{ p = "剑类武器技能提高(%d+)点。", s = { "ONESWORDSKILL" }},
+	{ p = "双手剑技能提高(%d+)点。", s = { "TWOSWORDSKILL" }},	
 	
-	{ p = "锤类武器技能提高%(%d+)%点。", s = { "ONEMACESKILL" }},
-	{ p = "双手锤技能提高%(%d+)%点。", s = { "TWOMACESKILL" }},
+	{ p = "锤类武器技能提高(%d+)点。", s = { "ONEMACESKILL" }},
+	{ p = "双手锤技能提高(%d+)点。", s = { "TWOMACESKILL" }},
 	
-	{ p = "弓箭技能提高%(%d+)%点。", s = { "BOWSKILL" }},
-	{ p = "枪械技能提高%(%d+)%点。", s = { "GUNSSKILL" }},
-	{ p = "弩技能提高%(%d+)%点。", s = { "CROSSBOWSKILL" }},
+	{ p = "弓箭技能提高(%d+)点。", s = { "BOWSKILL" }},
+	{ p = "枪械技能提高(%d+)点。", s = { "GUNSSKILL" }},
+	{ p = "弩技能提高(%d+)点。", s = { "CROSSBOWSKILL" }},
 		
 
     --  Equip: Melee & Ranged
@@ -142,6 +142,7 @@ LibGearExam.Patterns = {
 	
 	{ p = "^瞄准镜（%+(%d+) 伤害）$", s = "RANGEDDMG" },
 	{ p = "^武器伤害 %+(%d+)$", s = "WPNDMG" },
+	{ p = "^%+(%d+)%% 命中$", s = "RANGEDHIT" },
 	
 	{ p = "^治疗法术 %+(%d+)$", s = "HEAL" },
 	{ p = "^法术治疗 %+(%d+)$", s = "HEAL" },

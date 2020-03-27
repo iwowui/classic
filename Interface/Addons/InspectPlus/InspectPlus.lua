@@ -14,7 +14,7 @@ local StatEntryOrder = {
     { [0] = PLAYERSTAT_BASE_STATS, "STR", "AGI", "STA", "INT", "SPI", "ARMOR", "MASTERY" },
     { [0] = HEALTH.." & "..MANA, "HP", "MP", "HP5", "MP5" },
     { [0] = format(STAT_TEMPLATE, PLAYERSTAT_SPELL_COMBAT), "SPELLDMG", "HEAL", "ARCANEDMG", "FIREDMG", "NATUREDMG", "FROSTDMG", "SHADOWDMG", "HOLYDMG", "SPELLCRIT", "SPELLHIT", "SPELLHASTE", "SPELLPENETRATION" },
-    { [0] = MELEE.." & "..RANGED, "AP", "RAP", "CRIT", "HIT", "HASTE", "ARMORPENETRATION", "EXPERTISE", "WPNDMG", "RANGEDDMG", "DAGGERSKILL", "ONEAXESKILL", "TWOAXESKILL", "ONESWORDSKILL", "TWOSWORDSKILL", "ONEMACESKILL", "TWOMACESKILL", "BOWSKILL", "GUNSSKILL", "CROSSBOWSKILL" },
+    { [0] = MELEE.." & "..RANGED, "AP", "RAP", "CRIT", "HIT", "RANGEDHIT", "HASTE", "ARMORPENETRATION", "EXPERTISE", "WPNDMG", "RANGEDDMG", "DAGGERSKILL", "ONEAXESKILL", "TWOAXESKILL", "ONESWORDSKILL", "TWOSWORDSKILL", "ONEMACESKILL", "TWOMACESKILL", "BOWSKILL", "GUNSSKILL", "CROSSBOWSKILL" },
     { [0] = PLAYERSTAT_DEFENSES, "DEFENSE", "DODGE", "PARRY", "BLOCK", "BLOCKVALUE", "RESILIENCE", "PVPPOWER" },
 };
 
@@ -154,6 +154,7 @@ local function TryInspect()
     if (not info.unit) then info.unit = UnitExists("target") and "target" or "player" end
     if (info.unit == "player") then InspectUnit("player") end
     if (InspectFrame and InspectFrame:IsVisible() and CheckInteractDistance(info.unit, 3) and CanInspect(info.unit)) then
+        InspectPlus:SetScript("OnUpdate", nil);
         ScanGear(info.unit);
         BuildStatList();
         InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
@@ -179,19 +180,29 @@ local function TryInspect()
                 InspectPlusFrame.iLvlAverage:SetText(info.iLvlAverage);
             end
         end)
-        InspectPlus:SetScript("OnUpdate", nil);
     else
         InspectPlus:SetScript("OnUpdate", function(self, elapsed)
             self.timer = (self.timer or 0) + elapsed;
             if (self.timer >= 0.2) then
                 if (CheckInteractDistance(info.unit, 3) and CanInspect(info.unit)) then
                     TryInspect();
+                else
+                    if displayList.count ~= 0 then
+                        displayList.count = 0;
+                        UpdateShownItems(InspectPlusFrameScroll);
+                    end
                 end
                 self.timer = 0;
             end
         end)
     end
 end
+
+hooksecurefunc("HideUIPanel", function(frame, skipSetPoint)
+    if frame:GetName() == "InspectFrame" then
+        InspectPlus:SetScript("OnUpdate", nil);
+    end
+end)
 
 local function CreateInspectPlusFrame()
     if (not InspectPlusFrame) then
