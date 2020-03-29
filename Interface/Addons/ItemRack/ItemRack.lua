@@ -3,7 +3,7 @@ ItemRack = {}
 local disable_delayed_swaps = nil -- temporary. change nil to 1 to stop attempting to delay set swaps while casting
 local _
 
-ItemRack.Version = "3.25"
+ItemRack.Version = "3.26"
 
 ItemRackUser = {
 	Sets = {}, -- user's sets
@@ -393,6 +393,7 @@ function ItemRack.InitCore()
 	ItemRack.CreateTimer("MenuMouseover",ItemRack.MenuMouseover,.25,1)
 	ItemRack.CreateTimer("TooltipUpdate",ItemRack.TooltipUpdate,1,1)
 	ItemRack.CreateTimer("CooldownUpdate",ItemRack.CooldownUpdate,1,1)
+	ItemRack.CreateTimer("CheckForMountedEvents",ItemRack.CheckForMountedEvents,.5,1)
 	ItemRack.CreateTimer("MinimapDragging",ItemRack.MinimapDragging,0,1)
 	ItemRack.CreateTimer("LocksChanged",ItemRack.LocksChanged,.2)
 	ItemRack.CreateTimer("MinimapShine",ItemRack.MinimapShineUpdate,0,1)
@@ -429,6 +430,7 @@ function ItemRack.InitCore()
 		-- ItemRackFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
 	--end
 	ItemRack.StartTimer("CooldownUpdate")
+	ItemRack.StartTimer("CheckForMountedEvents")
 	ItemRack.MoveMinimap()
 	ItemRack.ReflectAlpha()
 	ItemRack.SetSetBindings()
@@ -1106,7 +1108,7 @@ end
 
 function ItemRack.MenuMouseover()
 	local frame = GetMouseFocus()
-	if MouseIsOver(ItemRackMenuFrame) or IsShiftKeyDown() or (frame and not frame:IsForbidden() and frame:GetName() and frame:IsVisible() and ItemRack.MenuMouseoverFrames[frame:GetName()]) then
+	if MouseIsOver(ItemRackMenuFrame) or IsShiftKeyDown() or (frame and frame:GetName() and frame:IsVisible() and ItemRack.MenuMouseoverFrames[frame:GetName()]) then
 		return -- keep menu open if mouse over menu, shift is down or mouse is immediately over a mouseover frame
 	end
 	for i in pairs(ItemRack.MenuMouseoverFrames) do
