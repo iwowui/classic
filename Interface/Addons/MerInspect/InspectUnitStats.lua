@@ -125,7 +125,7 @@ local function DefaultItemStatsFrame(frame, unit)
 
     for k, v in pairs(playerStats.static) do
         if (not inspectStats.static[k]) then
-            if string.find(k, "Crit") or string.find(k, "Hit") or v == "Dodge" or v == "Block" or v == "Parry" then
+            if string.find(k, "Crit") or string.find(k, "Hit") or k == "Dodge" or k == "Block" or k == "Parry" then
                 playerStats.static[k].value = inspectStats.static[k].value.."%"
             end
             frame.statsFrame2["stat"..index].Label:SetText(LibItemStatsLocale[k] or k)
@@ -134,7 +134,7 @@ local function DefaultItemStatsFrame(frame, unit)
             frame.statsFrame2["stat"..index].PlayerValue:SetText(playerStats.static[k].value)
             frame.statsFrame2["stat"..index].Background:SetShown(index%2~=0)
             frame.statsFrame2["stat"..index]:Show()
-            if rescolors[v] then
+            if rescolors[k] then
                 frame.statsFrame2["stat"..index].Label:SetTextColor(unpack(rescolors[k]))
             else
                 frame.statsFrame2["stat"..index].Label:SetTextColor(unpack({1,0.75,0}))
