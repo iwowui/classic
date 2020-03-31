@@ -24,8 +24,20 @@ local function ShowSupportedItemStatsFrame(frame, unit)
     end
     local stats = LibItemStats:GetUnitStats(unit)
     stats.ilevel = LibItemInfo:GetUnitItemLevel(unit)
-    frame.statsFrame:SetStats(stats):Show()
-    LibEvent:trigger("TogglePlayerStatsFrame", frame.statsFrame, true, false)
+    C_Timer.After(0.05, function()
+        if (InspectFrame and InspectFrame:IsVisible()) then
+            stats = LibItemStats:GetUnitStats(unit)
+            stats.ilevel = LibItemInfo:GetUnitItemLevel(unit)
+        end
+    end)
+    C_Timer.After(0.1, function()
+        if (InspectFrame and InspectFrame:IsVisible()) then
+            stats = LibItemStats:GetUnitStats(unit)
+            stats.ilevel = LibItemInfo:GetUnitItemLevel(unit)
+            frame.statsFrame:SetStats(stats):Show()
+            LibEvent:trigger("TogglePlayerStatsFrame", frame.statsFrame, true, false)
+        end
+    end)
 end
 
 local rescolors = {
@@ -82,88 +94,105 @@ local function DefaultItemStatsFrame(frame, unit)
     -- local playerItemLevel  = LibItemInfo:GetUnitItemLevel("player", playerStats)
     local inspectItemLevel = LibItemInfo:GetUnitItemLevel(unit)
     local playerItemLevel  = LibItemInfo:GetUnitItemLevel("player")
-    local baseInfo = {}
-    table.insert(baseInfo, {label = LEVEL, iv = UnitLevel(unit), pv = UnitLevel("player") })
-    table.insert(baseInfo, {label = STAT_AVERAGE_ITEM_LEVEL, iv = format("%.1f",inspectItemLevel), pv = format("%.1f",playerItemLevel) })
-    local index = 1
-    for _, v in pairs(baseInfo) do
-        frame.statsFrame2["stat"..index].Label:SetText(v.label)
-        frame.statsFrame2["stat"..index].Label:SetFont(ChatFontNormal:GetFont());
-        frame.statsFrame2["stat"..index].Label:SetTextColor(0.2, 1, 1)
-        frame.statsFrame2["stat"..index].Value:SetText(v.iv)
-        frame.statsFrame2["stat"..index].Value:SetTextColor(0, 0.7, 0.9)
-        frame.statsFrame2["stat"..index].PlayerValue:SetText(v.pv)
-        frame.statsFrame2["stat"..index].PlayerValue:SetTextColor(0, 0.7, 0.9)
-        frame.statsFrame2["stat"..index].Background:SetShown(index%2~=0)
-        frame.statsFrame2["stat"..index]:Show()
-        index = index + 1
-    end
-
-    local _, uclass = UnitClass(unit)
-    local _, pclass = UnitClass("player")
-    -- for k, v in pairs(LibItemStatsLocale) do
-    for i = 1, #LibItemStatsName["FULL"] do
-        local v = LibItemStatsName["FULL"][i]
-        -- if (inspectStats.static[k] or playerStats.static[k]) and not string.find(k, "Resistance") then
-        -- if inspectStats.static[v] and not string.find(v, "Resistance") then
-        if inspectStats.static[v] or (uclass == pclass and playerStats.static[v]) then
-            if string.find(v, "Crit") or string.find(v, "Hit") or v == "Dodge" or v == "Block" or v == "Parry" then
-                inspectStats.static[v].value = inspectStats.static[v].value.."%"
-            end
-            frame.statsFrame2["stat"..index].Label:SetText(LibItemStatsLocale[v])
-            frame.statsFrame2["stat"..index].Label:SetFont(ChatFontNormal:GetFont());
-            frame.statsFrame2["stat"..index].Value:SetText(inspectStats.static[v] and inspectStats.static[v].value or "-")
-            frame.statsFrame2["stat"..index].PlayerValue:SetText(playerStats.static[v] and playerStats.static[v].value or "-")
-            frame.statsFrame2["stat"..index].Background:SetShown(index%2~=0)
-            frame.statsFrame2["stat"..index]:Show()
-            if rescolors[v] then
-                frame.statsFrame2["stat"..index].Label:SetTextColor(unpack(rescolors[v]))
-            else
-                frame.statsFrame2["stat"..index].Label:SetTextColor(unpack({1,0.75,0}))
-            end
-            index = index + 1
+    C_Timer.After(0.05, function()
+        if (InspectFrame and InspectFrame:IsVisible()) then
+            inspectStats = LibItemStats:GetUnitStats(unit)
+            playerStats = LibItemStats:GetUnitStats("player")
+            inspectItemLevel = LibItemInfo:GetUnitItemLevel(unit)
+            playerItemLevel  = LibItemInfo:GetUnitItemLevel("player")
         end
-    end
+    end)
+    C_Timer.After(0.1, function()
+        if (InspectFrame and InspectFrame:IsVisible()) then
+            inspectStats = LibItemStats:GetUnitStats(unit)
+            playerStats = LibItemStats:GetUnitStats("player")
+            inspectItemLevel = LibItemInfo:GetUnitItemLevel(unit)
+            playerItemLevel  = LibItemInfo:GetUnitItemLevel("player")
 
-    -- for k, v in pairs(playerStats.static) do
-    --     if (not inspectStats.static[k]) then
-    --         if string.find(k, "Crit") or string.find(k, "Hit") or k == "Dodge" or k == "Block" or k == "Parry" then
-    --             playerStats.static[k].value = inspectStats.static[k].value.."%"
-    --         end
-    --         frame.statsFrame2["stat"..index].Label:SetText(LibItemStatsLocale[k] or k)
-    --         frame.statsFrame2["stat"..index].Label:SetFont(ChatFontNormal:GetFont());
-    --         frame.statsFrame2["stat"..index].Value:SetText("-")
-    --         frame.statsFrame2["stat"..index].PlayerValue:SetText(playerStats.static[k].value)
-    --         frame.statsFrame2["stat"..index].Background:SetShown(index%2~=0)
-    --         frame.statsFrame2["stat"..index]:Show()
-    --         if rescolors[k] then
-    --             frame.statsFrame2["stat"..index].Label:SetTextColor(unpack(rescolors[k]))
-    --         else
-    --             frame.statsFrame2["stat"..index].Label:SetTextColor(unpack({1,0.75,0}))
-    --         end
-    --         index = index + 1
-    --     end
-    -- end
+            local baseInfo = {}
+            table.insert(baseInfo, {label = LEVEL, iv = UnitLevel(unit), pv = UnitLevel("player") })
+            table.insert(baseInfo, {label = STAT_AVERAGE_ITEM_LEVEL, iv = format("%.1f",inspectItemLevel), pv = format("%.1f",playerItemLevel) })
+            local index = 1
+            for _, v in pairs(baseInfo) do
+                frame.statsFrame2["stat"..index].Label:SetText(v.label)
+                frame.statsFrame2["stat"..index].Label:SetFont(ChatFontNormal:GetFont());
+                frame.statsFrame2["stat"..index].Label:SetTextColor(0.2, 1, 1)
+                frame.statsFrame2["stat"..index].Value:SetText(v.iv)
+                frame.statsFrame2["stat"..index].Value:SetTextColor(0, 0.7, 0.9)
+                frame.statsFrame2["stat"..index].PlayerValue:SetText(v.pv)
+                frame.statsFrame2["stat"..index].PlayerValue:SetTextColor(0, 0.7, 0.9)
+                frame.statsFrame2["stat"..index].Background:SetShown(index%2~=0)
+                frame.statsFrame2["stat"..index]:Show()
+                index = index + 1
+            end
 
-    if inspectStats.suit then
-        for _, v in ipairs(inspectStats.suit) do
-            frame.statsFrame2["stat"..index].Label:SetText(v.colorStr..v.value.."|r")
-            frame.statsFrame2["stat"..index].Label:SetFont(ChatFontNormal:GetFont());
-            frame.statsFrame2["stat"..index].Value:SetText("")
-            frame.statsFrame2["stat"..index].PlayerValue:SetText("")
-            frame.statsFrame2["stat"..index].Background:SetShown(index%2~=0)
-            frame.statsFrame2["stat"..index]:Show()
-            index = index + 1
+            local _, uclass = UnitClass(unit)
+            local _, pclass = UnitClass("player")
+            -- for k, v in pairs(LibItemStatsLocale) do
+            for i = 1, #LibItemStatsName["FULL"] do
+                local v = LibItemStatsName["FULL"][i]
+                -- if (inspectStats.static[k] or playerStats.static[k]) and not string.find(k, "Resistance") then
+                -- if inspectStats.static[v] and not string.find(v, "Resistance") then
+                if inspectStats.static[v] or (uclass == pclass and playerStats.static[v]) then
+                    if string.find(v, "Crit") or string.find(v, "Hit") or v == "Dodge" or v == "Block" or v == "Parry" then
+                        inspectStats.static[v].value = inspectStats.static[v].value.."%"
+                    end
+                    frame.statsFrame2["stat"..index].Label:SetText(LibItemStatsLocale[v])
+                    frame.statsFrame2["stat"..index].Label:SetFont(ChatFontNormal:GetFont());
+                    frame.statsFrame2["stat"..index].Value:SetText(inspectStats.static[v] and inspectStats.static[v].value or "-")
+                    frame.statsFrame2["stat"..index].PlayerValue:SetText(playerStats.static[v] and playerStats.static[v].value or "-")
+                    frame.statsFrame2["stat"..index].Background:SetShown(index%2~=0)
+                    frame.statsFrame2["stat"..index]:Show()
+                    if rescolors[v] then
+                        frame.statsFrame2["stat"..index].Label:SetTextColor(unpack(rescolors[v]))
+                    else
+                        frame.statsFrame2["stat"..index].Label:SetTextColor(unpack({1,0.75,0}))
+                    end
+                    index = index + 1
+                end
+            end
+
+            -- for k, v in pairs(playerStats.static) do
+            --     if (not inspectStats.static[k]) then
+            --         if string.find(k, "Crit") or string.find(k, "Hit") or k == "Dodge" or k == "Block" or k == "Parry" then
+            --             playerStats.static[k].value = inspectStats.static[k].value.."%"
+            --         end
+            --         frame.statsFrame2["stat"..index].Label:SetText(LibItemStatsLocale[k] or k)
+            --         frame.statsFrame2["stat"..index].Label:SetFont(ChatFontNormal:GetFont());
+            --         frame.statsFrame2["stat"..index].Value:SetText("-")
+            --         frame.statsFrame2["stat"..index].PlayerValue:SetText(playerStats.static[k].value)
+            --         frame.statsFrame2["stat"..index].Background:SetShown(index%2~=0)
+            --         frame.statsFrame2["stat"..index]:Show()
+            --         if rescolors[k] then
+            --             frame.statsFrame2["stat"..index].Label:SetTextColor(unpack(rescolors[k]))
+            --         else
+            --             frame.statsFrame2["stat"..index].Label:SetTextColor(unpack({1,0.75,0}))
+            --         end
+            --         index = index + 1
+            --     end
+            -- end
+
+            if inspectStats.suit then
+                for _, v in ipairs(inspectStats.suit) do
+                    frame.statsFrame2["stat"..index].Label:SetText(v.colorStr..v.value.."|r")
+                    frame.statsFrame2["stat"..index].Label:SetFont(ChatFontNormal:GetFont());
+                    frame.statsFrame2["stat"..index].Value:SetText("")
+                    frame.statsFrame2["stat"..index].PlayerValue:SetText("")
+                    frame.statsFrame2["stat"..index].Background:SetShown(index%2~=0)
+                    frame.statsFrame2["stat"..index]:Show()
+                    index = index + 1
+                end
+            end
+
+            frame.statsFrame2:SetHeight(index*18-10)
+            while (frame.statsFrame2["stat"..index]) do
+                frame.statsFrame2["stat"..index]:Hide()
+                index = index + 1
+            end
+
+            if not frame.statsFrame2:IsShown() then frame.statsFrame2:Show() end
         end
-    end
-
-    frame.statsFrame2:SetHeight(index*18-10)
-    while (frame.statsFrame2["stat"..index]) do
-        frame.statsFrame2["stat"..index]:Hide()
-        index = index + 1
-    end
-
-    if not frame.statsFrame2:IsShown() then frame.statsFrame2:Show() end
+    end)
 end
 
 hooksecurefunc("ShowInspectItemListFrame", function(unit, parent, itemLevel, maxLevel)
