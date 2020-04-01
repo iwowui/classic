@@ -78,13 +78,13 @@ local function updateFriends()
 					local name = colorString(info.name, BC[info.className])
 					local level = colorString(info.level)
 					local class = colorString(info.className, BC[info.className])
-					nameText = name .. ", Lv" .. level .. "  " .. class
+					nameText = name .. " (" .. level .. ")"
 					if info.area and info.area == myZone then infoText = format("|cff00ff00%s|r", info.area) end
 				end
 			elseif button.buttonType == FRIENDS_BUTTON_TYPE_BNET then
 				local _, presenceName, _, _, _, toonID, client, isOnline = BNGetFriendInfo(button.id)
 				if isOnline and client == BNET_CLIENT_WOW then
-					local _, toonName, _, _, _, _, _, class, _, zoneName, level = BNGetGameAccountInfo(toonID)
+					local _, toonName, _, realm, _, faction, race, class, _, zoneName, level, zoneName2 = BNGetGameAccountInfo(toonID)
 					if presenceName and toonName then
 						level = colorString(level)
 						if BC[class] then
@@ -92,10 +92,18 @@ local function updateFriends()
 						else
 							toonName = colorString(toonName, BC["NEW"])
 						end
-						nameText = presenceName .. " " .. defColor .. "(Lv" .. level .. " " .. toonName .. defColor .. ")"
+						nameText = presenceName .. defColor .. " (" .. toonName .. defColor .. " " .. level .. defColor .. ")"
 					end
-					if zoneName and zoneName == myZone then infoText = format("|cff00ff00%s|r", zoneName) end
-				end	
+					if zoneName2 == BNET_FRIEND_TOOLTIP_WOW_CLASSIC then
+						if zoneName and zoneName == myZone then
+							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. string.gsub(EXPANSION_NAME0, "\n", "") .. format("|cff00ff00%s|r", zoneName) .. " - " .. realm
+						else
+							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. string.gsub(EXPANSION_NAME0, "\n", "") .. " " .. zoneName .. " - " .. realm
+						end
+					else
+						infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. button.info:GetText()
+					end
+				end
 			end
 		end
 		if nameText then button.name:SetText(nameText) end

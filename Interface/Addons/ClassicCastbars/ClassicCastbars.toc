@@ -7,8 +7,9 @@
 ## Notes-zhTW: 在目標和目標姓名板顯示施法條。
 ## X-Repple: 战斗
 ## SavedVariables: ClassicCastbarsDB
+## SavedVariablesPerCharacter: ClassicCastbarsCharDB
 ## Author: Wardz
-## Version: v1.3.1
+## Version: v1.3.2
 ## X-Curse-Project-ID: 322865
 ## X-WoWI-ID: 24925
 
