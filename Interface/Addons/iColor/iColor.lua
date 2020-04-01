@@ -67,6 +67,7 @@ end)
 local function updateFriends()
 	local buttons = FriendsFrameFriendsScrollFrame.buttons
 	local myZone = GetRealZoneText()
+	local myRealm = GetRealmID()
 
 	for i = 1, #buttons do
 		local nameText, infoText
@@ -84,7 +85,7 @@ local function updateFriends()
 			elseif button.buttonType == FRIENDS_BUTTON_TYPE_BNET then
 				local _, presenceName, _, _, _, toonID, client, isOnline = BNGetFriendInfo(button.id)
 				if isOnline and client == BNET_CLIENT_WOW then
-					local _, toonName, _, realm, _, faction, race, class, _, zoneName, level, zoneName2 = BNGetGameAccountInfo(toonID)
+					local _, toonName, _, realm, realmID, faction, race, class, _, zoneName, level, gameText = BNGetGameAccountInfo(toonID)
 					if presenceName and toonName then
 						level = colorString(level)
 						if BC[class] then
@@ -94,14 +95,14 @@ local function updateFriends()
 						end
 						nameText = presenceName .. defColor .. " (" .. toonName .. defColor .. " " .. level .. defColor .. ")"
 					end
-					if zoneName2 == BNET_FRIEND_TOOLTIP_WOW_CLASSIC then
-						if zoneName and zoneName == myZone then
-							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. string.gsub(EXPANSION_NAME0, "\n", "") .. format("|cff00ff00%s|r", zoneName) .. " - " .. realm
+					if gameText and gameText == BNET_FRIEND_TOOLTIP_WOW_CLASSIC then
+						if zoneName and zoneName == myZone and realmID and myRealm == realmID then
+							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. string.gsub(EXPANSION_NAME0, "\n", "") .. format("|cff00ff00%s|r", zoneName) .. " - " .. (realm or UNKNOWN)
 						else
-							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. string.gsub(EXPANSION_NAME0, "\n", "") .. " " .. zoneName .. " - " .. realm
+							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. string.gsub(EXPANSION_NAME0, "\n", "") .. " " .. (zoneName or UNKNOWN) .. " - " .. (realm or UNKNOWN)
 						end
 					else
-						infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. button.info:GetText()
+						infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. (gameText or UNKNOWN)
 					end
 				end
 			end
