@@ -360,7 +360,7 @@
 				self:EnableMouseWheel(1)
 			</OnLoad>
 			<OnMouseWheel>
-				FeatureFrame_OnScroll(self, delta);
+				FeatureFrame_OnScroll(self, delta, IsShiftKeyDown() or IsControlKeyDown() or IsAltKeyDown());
 			</OnMouseWheel>
 		</Scripts>
 	</Frame>

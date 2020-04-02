@@ -120,7 +120,7 @@ function FeatureFrameTabs_OnLoad()
 	_G["FeatureFrameTab"..FeatureFrame_Tabs["other"]].tooltip = AUCTION_SUBCATEGORY_OTHER;
 end
 
-function FeatureFrame_AddButton ( newButton )
+function FeatureFrame_AddButton(newButton)
 	if ( newButton.tab == nil or FeatureFrame_Tabs[newButton.tab] == nil ) then
 		newButton.tab = "other";
 	end
@@ -181,7 +181,7 @@ end
 
 function FeatureFrameButtons_UpdateColor()
 	local root = "FeatureFrame";
-	for i=1, FeatureFrame_MAX do
+	for i = 1, FeatureFrame_MAX, 1 do
 		local icon = getglobal(root.."Button"..i);
 		local iconTexture = getglobal(root.."Button"..i.."IconTexture");
 
@@ -237,27 +237,85 @@ function FeatureFrameButton_GetOffset()
 	return FeatureFrame_CurrentOffset;
 end
 
-function FeatureFrame_NextPage(self)
-	if ( #FeatureFrame_Buttons[FeatureFrame_selectedTab] > FeatureFrame_CurrentOffset + FeatureFrame_MAX ) then
-		FeatureFrame_CurrentOffset = FeatureFrame_CurrentOffset + FeatureFrame_MAX;
-	end
-	FeatureFrame_UpdateButtons();
-end
-
-function FeatureFrame_PrevPage(self)
-	if ( FeatureFrame_CurrentOffset - FeatureFrame_MAX < 0 ) then
-		FeatureFrame_CurrentOffset = 0;
+function FeatureFrame_NextPage(self, key)
+	if not key then
+		if ( #FeatureFrame_Buttons[FeatureFrame_selectedTab] > FeatureFrame_CurrentOffset + FeatureFrame_MAX ) then
+			FeatureFrame_CurrentOffset = FeatureFrame_CurrentOffset + FeatureFrame_MAX;
+		end
 	else
-		FeatureFrame_CurrentOffset = FeatureFrame_CurrentOffset - FeatureFrame_MAX;
+		local nid = FeatureFrame_Tabs[FeatureFrame_selectedTab] + 1;
+		if nid > #FeatureFrame_TabsR then
+			nid = 1;
+		end
+
+		local found = false;
+		for i = nid, #FeatureFrame_TabsR, 1 do
+			if _G["FeatureFrameTab"..i]:IsShown() then
+				nid = i;
+				found = true;
+				break;
+			end
+		end
+		if found == false then
+			for i = 1, nid, 1 do
+				if _G["FeatureFrameTab"..i]:IsShown() then
+					nid = i;
+					found = true;
+					break;
+				end
+			end
+		end
+
+		if _G["FeatureFrameTab"..nid] and _G["FeatureFrameTab"..nid]:IsShown() then
+			FeatureFrameTab_OnClick(_G["FeatureFrameTab"..nid]);
+		end
 	end
 	FeatureFrame_UpdateButtons();
 end
 
-function FeatureFrame_OnScroll(self, delta)
+function FeatureFrame_PrevPage(self, key)
+	if not key then
+		if ( FeatureFrame_CurrentOffset - FeatureFrame_MAX < 0 ) then
+			FeatureFrame_CurrentOffset = 0;
+		else
+			FeatureFrame_CurrentOffset = FeatureFrame_CurrentOffset - FeatureFrame_MAX;
+		end
+	else
+		local nid = FeatureFrame_Tabs[FeatureFrame_selectedTab] - 1;
+		if nid == 0 then
+			nid = #FeatureFrame_TabsR;
+		end
+
+		local found = false;
+		for i = nid, 1, -1 do
+			if _G["FeatureFrameTab"..i]:IsShown() then
+				nid = i;
+				found = true;
+				break;
+			end
+		end
+		if found == false then
+			for i = #FeatureFrame_TabsR, nid, -1 do
+				if _G["FeatureFrameTab"..i]:IsShown() then
+					nid = i;
+					found = true;
+					break;
+				end
+			end
+		end
+
+		if _G["FeatureFrameTab"..nid] and _G["FeatureFrameTab"..nid]:IsShown() then
+			FeatureFrameTab_OnClick(_G["FeatureFrameTab"..nid]);
+		end
+	end
+	FeatureFrame_UpdateButtons();
+end
+
+function FeatureFrame_OnScroll(self, delta, key)
 	if delta > 0 then
-		FeatureFrame_PrevPage(self)
+		FeatureFrame_PrevPage(self, key)
 	else
-		FeatureFrame_NextPage(self)
+		FeatureFrame_NextPage(self, key)
 	end
 end
 
@@ -325,6 +383,7 @@ function FeatureFrameTab_OnClick(self)
 		-- PlaySound(SOUNDKIT.IG_ABILITY_PAGE_TURN);
 		PlaySound(836);
 		_G["FeatureFrameTab"..FeatureFrame_Tabs[FeatureFrame_selectedTab]]:SetChecked(false);
+		self:SetChecked(true);
 		FeatureFrame_selectedTab = FeatureFrame_TabsR[id];
 		FeatureFrame_CurrentOffset = 0;
 		FeatureFrame_UpdateButtons();

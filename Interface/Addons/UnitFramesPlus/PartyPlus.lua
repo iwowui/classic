@@ -1047,6 +1047,7 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                 local alpha = 0;
                 local cdalpha = 0;
                 local timetext = "";
+                local counttext = "";
                 -- local textalpha = 0.7;
                 -- local r, g, b = 0, 1, 0;
 

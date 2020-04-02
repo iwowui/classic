@@ -1323,6 +1323,39 @@ if enabled > 0 then
 	end
 end
 
+local enabled = GetAddOnEnableState(playerName, "MerInspect");
+if enabled > 0 then
+	if GetLocale() == "zhCN" then
+		FF_NameMerInspect	= "观察助手";
+		FF_DescMerInspect	= "在角色界面右侧显示装备列表和详细属性的列表";
+	elseif GetLocale() == "zhTW" then
+		FF_NameMerInspect	= "觀察助手";
+		FF_DescMerInspect	= "在角色介面右側顯示裝備清單和詳細屬性的清單";
+	else
+		FF_NameMerInspect	= "MerInspect";
+		FF_DescMerInspect	= "Inspect Assiest";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "MerInspect";
+				tab= "ui";
+				name= FF_NameMerInspect;
+				subtext= "MerInspect";
+				tooltip = FF_DescMerInspect;
+				icon= "Interface\\Icons\\INV_Misc_Cape_08";
+				callback= function(button)
+					if not IsAddOnLoaded("MerInspect") then
+						LoadAddOn("MerInspect");
+					end
+					InterfaceOptionsFrame_OpenToCategory("MerInspect");
+					InterfaceOptionsFrame_OpenToCategory("MerInspect");
+				end;
+			}
+		);
+	end
+end
+
 local enabled = GetAddOnEnableState(playerName, "SimpleRaidTargetIcons");
 if enabled > 0 then
 	if GetLocale() == "zhCN" then
