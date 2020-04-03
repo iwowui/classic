@@ -17,7 +17,7 @@ local function AntiAFKLogout()
                     end
                 end
                 if ExtraConfiguration["antiafk"] == 1 and UnitIsAFK("player") then
-                    SendChatMessage("|cffffffffSober!|r", "WHISPER", "COMMON", UnitName("player"));
+                    SendChatMessage("|cffffffffSober! "..GetTime().."|r", "WHISPER", "COMMON", UnitName("player"));
                 end
                 self.timer = 0;
             end
@@ -105,22 +105,22 @@ if GetLocale() == "zhCN" then
     SWITCH_ANTICRAB        = "原汁原味（重启游戏后生效）";
     SWITCH_BLUESHAMAN      = "蓝色萨满（可能导致战斗中无法调整队伍）";
     SWITCH_MAXCAMERA       = "自动拉远镜头";
-    SWITCH_ANTIAFK         = "自动脱离离开状态（有被封号风险&掉线无效）";
-    SWITCH_ANTILOGOUT      = "非休息区不自动登出（有被封号风险&掉线无效&触发时会提示插件出错）";
+    SWITCH_ANTIAFK         = "自动脱离离开状态（最小化窗口、掉线无效&有被封号风险）";
+    SWITCH_ANTILOGOUT      = "非休息区不自动登出（最小化窗口、掉线无效&有被封号风险&触发时会提示插件出错）";
 elseif GetLocale() == "zhTW" then
     SWITCH_INFO            = "雜項設置";
     SWITCH_ANTICRAB        = "原汁原味（重啟遊戲後生效）";
     SWITCH_BLUESHAMAN      = "藍色薩滿（可能導致戰鬥中無法調整隊伍）";
     SWITCH_MAXCAMERA       = "自動拉遠鏡頭";
-    SWITCH_ANTIAFK         = "自動脫離離開狀態（有被封號风险&掉线无效）";
-    SWITCH_ANTILOGOUT      = "非休息區不自動登出（有被封號風險&掉線無效&觸發時會提示插件出錯）";
+    SWITCH_ANTIAFK         = "自動脫離離開狀態（最小化窗口、掉線無效&有被封號風險）";
+    SWITCH_ANTILOGOUT      = "非休息區不自動登出（最小化窗口、掉線無效&有被封號風險&觸發時會提示插件出錯）";
 else
     SWITCH_INFO            = "options";
     SWITCH_ANTICRAB        = "original taste (Effective after game restarted)";
     SWITCH_BLUESHAMAN      = "blue shaman (may cause taint in party/raid during combat)";
     SWITCH_MAXCAMERA       = "auto maximize camera distance";
-    SWITCH_ANTIAFK         = "Donot automatically afk (dangerous!!!)";
-    SWITCH_ANTILOGOUT      = "Donot automatically logout (dangerous!!!)";
+    SWITCH_ANTIAFK         = "automatically cancel afk (dangerous!!!)";
+    SWITCH_ANTILOGOUT      = "donot automatically logout (dangerous!!!)";
 end
 
 Switch_OptionsFrame = CreateFrame("Frame", "Switch_OptionsFrame", UIParent);
@@ -206,7 +206,7 @@ hooksecurefunc(GameTooltip, "SetUnitAura", function(self, unit, index, filter)
 
     if expirationTime and expirationTime ~= 0 then
         local time = expirationTime - GetTime();
-        if time > 0 then
+        if time > 60 then
             local d, h, m, s = ChatFrame_TimeBreakDown(time+1);
             local dtext = d ~= 0 and format(INT_SPELL_DURATION_DAYS, d) or "";
             local htext = h ~= 0 and format(INT_SPELL_DURATION_HOURS, h) or "";
