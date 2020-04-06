@@ -97,7 +97,9 @@ local function updateFriends()
 					end
 					if gameText and gameText == BNET_FRIEND_TOOLTIP_WOW_CLASSIC then
 						if zoneName and zoneName == myZone and realmID and myRealm == realmID then
-							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. string.gsub(EXPANSION_NAME0, "\n", "") .. format("|cff00ff00%s|r", zoneName) .. " - " .. (realm or UNKNOWN)
+							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. string.gsub(EXPANSION_NAME0, "\n", "") .. " " .. format("|cff00ff00%s|r", zoneName) .. " - " .. (format("|cff00ff00%s|r", realm) or UNKNOWN)
+						elseif realmID and myRealm == realmID then
+							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. string.gsub(EXPANSION_NAME0, "\n", "") .. " " .. (zoneName or UNKNOWN) .. " - " .. (format("|cff00ff00%s|r", realm) or UNKNOWN)
 						else
 							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. string.gsub(EXPANSION_NAME0, "\n", "") .. " " .. (zoneName or UNKNOWN) .. " - " .. (realm or UNKNOWN)
 						end
