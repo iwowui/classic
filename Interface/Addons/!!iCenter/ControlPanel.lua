@@ -1,8 +1,8 @@
 -- Template --
 --[[
 local playerName = UnitName("player");
-local enabled = GetAddOnEnableState(playerName, "DCT");
-if enabled > 0 then
+local _, title = GetAddOnInfo("DCT");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameDCT	= "战斗指示器";
 		FF_DescDCT	= "显示你战斗中受到的各种信息及法术预警";
@@ -27,6 +27,13 @@ if enabled > 0 then
 					end
 					DCT_showMenu();
 				end;
+				test = function()
+					if not IsAddOnLoaded("DCT") and not IsAddOnLoadOnDemand("DCT") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
@@ -36,8 +43,8 @@ end
 local _, class = UnitClass("player");
 local playerName = UnitName("player");
 
-local enabled = GetAddOnEnableState(playerName, "WarbabyTradeLink");
-if enabled > 0 then
+local _, title = GetAddOnInfo("WarbabyTradeLink");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameWTL	= "专业技能链接大全";
 		FF_DescWTL	= "游戏内生成各交易技能的具有全部项目的技能窗口.";
@@ -63,13 +70,20 @@ if enabled > 0 then
 					local curr = WB_MAX_SKILL_LEVEL;
 					DEFAULT_CHAT_FRAME:AddMessage(WBTradeLink_GetAll(curr));
 				end;
+				test = function()
+					if not IsAddOnLoaded("WarbabyTradeLink") and not IsAddOnLoadOnDemand("WarbabyTradeLink") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "ItemDB");
-if enabled > 0 then
+local _, title = GetAddOnInfo("ItemDB");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameIDB	= "物品数据库";
 		FF_DescIDB	= "搜索本机缓存中物品.";
@@ -97,6 +111,13 @@ if enabled > 0 then
 						ItemDB_Browser:Hide();
 					else
 						ItemDB_Browser:Show();
+					end
+				end;
+				test = function()
+					if not IsAddOnLoaded("ItemDB") and not IsAddOnLoadOnDemand("ItemDB") then
+						return false;
+					else
+						return true;
 					end
 				end;
 			}
@@ -174,6 +195,15 @@ else
 	FF_JOIN		= "World channel joined";
 	FF_LEAVE	= "World channel left";
 end
+local function find_bfw()
+	local t = {GetChannelList()};
+	for i = 1, #t/3 do
+		if t[i*3-1] == FF_WC then
+			return t[i*3-2];
+		end
+	end
+	return -1;
+end
 if ( EarthFeature_AddButton ) then
 	EarthFeature_AddButton(
 		{
@@ -185,11 +215,19 @@ if ( EarthFeature_AddButton ) then
 			icon= "Interface\\Icons\\Ability_Creature_Cursed_04";
 			callback= function(button)
 				if button == "LeftButton" then
-					local _, channelName, _ = GetChannelName(FF_WC);
-					if channelName == nil then
-						JoinPermanentChannel(FF_WC, nil, 1, 1);
-						ChatFrame_RemoveMessageGroup(SELECTED_DOCK_FRAME, "CHANNEL");
-						ChatFrame_AddChannel(SELECTED_DOCK_FRAME, FF_WC);
+					--From alaChat_Classic
+					if find_bfw() < 0 then
+						JoinPermanentChannel(FF_WC, nil, DEFAULT_CHAT_FRAME:GetID());
+						if not find_bfw() then
+							local ticker = C_Timer.NewTicker(0.5, function()
+								JoinPermanentChannel(FF_WC, nil, DEFAULT_CHAT_FRAME:GetID());
+								if not find_bfw() then
+									ChatFrame_AddChannel(DEFAULT_CHAT_FRAME, FF_WC);
+									ticker:Cancel();
+								end
+							end);
+						end
+						ChatFrame_AddChannel(DEFAULT_CHAT_FRAME, FF_WC);
 						print(FF_JOIN);
 					else
 						LeaveChannelByName(FF_WC);
@@ -227,8 +265,8 @@ if ( EarthFeature_AddButton ) then
 	);
 end
 
-local enabled = GetAddOnEnableState(playerName, "GetLinkClassic");
-if enabled > 0 then
+local _, title = GetAddOnInfo("GetLinkClassic");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameGLC	= "物品搜索";
 		FF_DescGLC	= "搜索并创建物品链接。";
@@ -254,13 +292,20 @@ if enabled > 0 then
 					end
 					GLG_SlashHandler();
 				end;
+				test = function()
+					if not IsAddOnLoaded("GetLinkClassic") and not IsAddOnLoadOnDemand("GetLinkClassic") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "TradeLog");
-if enabled > 0 then
+local _, title = GetAddOnInfo("TradeLog");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameTradeLog	= "交易助手";
 		FF_DescTradeLog	= "交易记录及交易界面增强。";
@@ -290,13 +335,20 @@ if enabled > 0 then
 						TradeListFrame:Show();
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("TradeLog") and not IsAddOnLoadOnDemand("TradeLog") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Archy");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Archy");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameArchy	= "考古学助手";
 		FF_DescArchy	= "提供小地图显示挖掘场，显示碎片挖掘点，勘察距离显示器，文物可辨识提示等功能。";
@@ -323,13 +375,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("Archy");
 					InterfaceOptionsFrame_OpenToCategory("Archy");
 				end;
+				test = function()
+					if not IsAddOnLoaded("Archy") and not IsAddOnLoadOnDemand("Archy") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Leatrix_Maps");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Leatrix_Maps");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameLeatrixMaps	= "地图增强";
 		FF_DescLeatrixMaps	= "地图浏览器";
@@ -343,10 +402,10 @@ if enabled > 0 then
 	if(EarthFeature_AddButton) then
 		EarthFeature_AddButton(
 			{
-				id= "LeatrixMaps";
+				id= "Leatrix_Maps";
 				tab= "data";
 				name= FF_NameLeatrixMaps;
-				subtext= "LeatrixMaps";
+				subtext= "Leatrix Maps";
 				tooltip = FF_DescLeatrixMaps;
 				icon = "Interface\\Icons\\Inv_Misc_Map_01";
 				callback= function(button)
@@ -359,13 +418,20 @@ if enabled > 0 then
 						SlashCmdList["Leatrix_Maps"]("");
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("Leatrix_Maps") and not IsAddOnLoadOnDemand("Leatrix_Maps") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Atlas");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Atlas");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameAtlas	= "副本地图";
 		FF_DescAtlas	= "副本地图浏览器";
@@ -395,13 +461,20 @@ if enabled > 0 then
 						LibStub("AceAddon-3.0"):GetAddon("Atlas"):OpenOptions();
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("Atlas") and not IsAddOnLoadOnDemand("Atlas") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "AtlasLootClassic");
-if enabled > 0 then
+local _, title = GetAddOnInfo("AtlasLootClassic");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameAtlasLoot	= "副本掉落查询";
 		FF_DescAtlasLoot	= "显示副本中的首领与小怪可能掉落的物品";
@@ -415,7 +488,7 @@ if enabled > 0 then
 	if(EarthFeature_AddButton) then
 		EarthFeature_AddButton(
 			{
-				id= "AtlasLoot";
+				id= "AtlasLootClassic";
 				tab= "data";
 				name= FF_NameAtlasLoot;
 				subtext= "AtlasLoot Enhanced";
@@ -431,13 +504,20 @@ if enabled > 0 then
 						AtlasLoot.SlashCommands:Run("options");
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("AtlasLootClassic") and not IsAddOnLoadOnDemand("AtlasLootClassic") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "BankItems");
-if enabled > 0 then
+local _, title = GetAddOnInfo("BankItems");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameBankItems	= "离线银行";
 		FF_DescBankItems	= "让你可以随时浏览本ID所有服务器所有人物的装备以及背包、邮件和银行中的物品";
@@ -469,6 +549,13 @@ if enabled > 0 then
 					end
 					BankItems_SlashHandler();
 				end;
+				test = function()
+					if not IsAddOnLoaded("BankItems") and not IsAddOnLoadOnDemand("BankItems") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		)
 		EarthFeature_AddButton(
@@ -485,13 +572,20 @@ if enabled > 0 then
 					end
 					BankItems_GBSlashHandler();
 				end;
+				test = function()
+					if not IsAddOnLoaded("BankItems") and not IsAddOnLoadOnDemand("BankItems") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		)
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "BaudBag");
-if enabled > 0 then
+local _, title = GetAddOnInfo("BaudBag");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameBaudBag	= "背包设定";
 		FF_DescBaudBag	= "设定背包整合的各种参数";
@@ -518,13 +612,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("Baud Bag");
 					InterfaceOptionsFrame_OpenToCategory("Baud Bag");
 				end;
+				test = function()
+					if not IsAddOnLoaded("BaudBag") and not IsAddOnLoadOnDemand("BaudBag") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Combuctor");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Combuctor");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameCombuctor	= "背包设定Combuctor";
 		FF_DescCombuctor	= "设定背包整合的各种参数";
@@ -551,13 +652,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("Combuctor");
 					InterfaceOptionsFrame_OpenToCategory("Combuctor");
 				end;
+				test = function()
+					if not IsAddOnLoaded("Combuctor") and not IsAddOnLoadOnDemand("Combuctor") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
--- local enabled = GetAddOnEnableState(playerName, "Inventorian");
--- if enabled > 0 then
+-- local _, title = GetAddOnInfo("Inventorian");
+-- if title ~= nil then
 -- 	if GetLocale() == "zhCN" then
 -- 		FF_NameInventorian	= "背包设定Inventorian";
 -- 		FF_DescInventorian	= "设定背包整合的各种参数";
@@ -572,7 +680,7 @@ end
 -- 		EarthFeature_AddButton(
 -- 			{
 -- 				id = "Inventorian";
---				tab= "ui";
+-- 				tab= "ui";
 -- 				name = FF_NameInventorian;
 -- 				subtext = "Inventorian";
 -- 				tooltip = FF_DescInventorian;
@@ -584,13 +692,20 @@ end
 -- 					InterfaceOptionsFrame_OpenToCategory("Inventorian");
 -- 					InterfaceOptionsFrame_OpenToCategory("Inventorian");
 -- 				end;
+-- 				test = function()
+-- 					if not IsAddOnLoaded("Inventorian") and not IsAddOnLoadOnDemand("Inventorian") then
+-- 						return true;
+-- 					else
+-- 						return false;
+-- 					end
+-- 				end;
 -- 			}
 -- 		);
 -- 	end
 -- end
 
-local enabled = GetAddOnEnableState(playerName, "EquippedItemLevelTooltip");
-if enabled > 0 then
+local _, title = GetAddOnInfo("EquippedItemLevelTooltip");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameEAILT	= "装备等级与天赋";
 		FF_DescEAILT	= "在鼠标提示信息里显示目标玩家的平均装备等级与天赋。";
@@ -604,7 +719,7 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "EAILT";
+				id= "EquippedItemLevelTooltip";
 				tab= "ui";
 				name= FF_NameEAILT;
 				subtext= "EquippedItemLevelTooltip";
@@ -616,13 +731,20 @@ if enabled > 0 then
 					end
 					LibStub("AceAddon-3.0"):GetAddon("EquippedItemLevelTooltip"):ShowGUI();
 				end;
+				test = function()
+					if not IsAddOnLoaded("EquippedItemLevelTooltip") and not IsAddOnLoadOnDemand("EquippedItemLevelTooltip") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "ClassTimer");
-if enabled > 0 then
+local _, title = GetAddOnInfo("ClassTimer");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameClassTimer	= "职业技能计时器";
 		FF_DescClassTimer	= "显示你的所有技能的计时，并可以增加饰品，武器特效显示。";
@@ -649,13 +771,20 @@ if enabled > 0 then
 					end
 					LibStub("AceConfigDialog-3.0"):Open("ClassTimer");
 				end;
+				test = function()
+					if not IsAddOnLoaded("ClassTimer") and not IsAddOnLoadOnDemand("ClassTimer") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "WeakAuras");
-if enabled > 0 then
+local _, title = GetAddOnInfo("WeakAuras");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameWeakAuras	= "综合提示";
 		FF_DescWeakAuras	= "一個強大且全面實用的顯示圖形和訊息基於增益，減益和其它觸發。";
@@ -682,13 +811,20 @@ if enabled > 0 then
 					end
 					SlashCmdList["WEAKAURAS"]("");
 				end;
+				test = function()
+					if not IsAddOnLoaded("WeakAuras") and not IsAddOnLoadOnDemand("WeakAuras") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "NugRunning");
-if enabled > 0 then
+local _, title = GetAddOnInfo("NugRunning");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameNugRunning	= "法术计时条";
 		FF_DescNugRunning	= "以计时条显示法术的持续时间，支援多目标和姓名板。";
@@ -716,13 +852,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("NugRunning");
 					InterfaceOptionsFrame_OpenToCategory("NugRunning");
 				end;
+				test = function()
+					if not IsAddOnLoaded("NugRunning") and not IsAddOnLoadOnDemand("NugRunning") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "ClassicCastbars");
-if enabled > 0 then
+local _, title = GetAddOnInfo("ClassicCastbars");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameClassicCastbars	= "目标施法条";
 		FF_DescClassicCastbars	= "在目标和目标姓名板显示施法条。";
@@ -749,13 +892,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("ClassicCastbars");
 					InterfaceOptionsFrame_OpenToCategory("ClassicCastbars");
 				end;
+				test = function()
+					if not IsAddOnLoaded("ClassicCastbars") and not IsAddOnLoadOnDemand("ClassicCastbars") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Quartz");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Quartz");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameQuartz	= "模块化施法条";
 		FF_DescQuartz	= "美化并模块化施法条";
@@ -783,13 +933,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("Quartz 3");
 					InterfaceOptionsFrame_OpenToCategory("Quartz 3");
 				end;
+				test = function()
+					if not IsAddOnLoaded("Quartz") and not IsAddOnLoadOnDemand("Quartz") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "NeatPlates");
-if enabled > 0 then
+local _, title = GetAddOnInfo("NeatPlates");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameNeatPlates	= "姓名版增强";
 		FF_DescNeatPlates	= "为姓名版提供多种内容显示";
@@ -816,13 +973,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("NeatPlates");
 					InterfaceOptionsFrame_OpenToCategory("NeatPlates");
 				end;
+				test = function()
+					if not IsAddOnLoaded("NeatPlates") and not IsAddOnLoadOnDemand("NeatPlates") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "zBar3");
-if enabled > 0 then
+local _, title = GetAddOnInfo("zBar3");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NamezBar	= "炽火动作条";
 		FF_DesczBar	= "提供两个可以自由移动、变换形状的扩展动作条";
@@ -848,13 +1012,20 @@ if enabled > 0 then
 					end
 					zBar3:Config(zExBar1);
 				end;
+				test = function()
+					if not IsAddOnLoaded("zBar3") and not IsAddOnLoadOnDemand("zBar3") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "OmniCC");
-if enabled > 0 then
+local _, title = GetAddOnInfo("OmniCC");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameOmniCC	= "冷却计时";
 		FF_DescOmniCC	= "显示物品和技能的冷却倒计时";
@@ -881,13 +1052,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("OmniCC");
 					InterfaceOptionsFrame_OpenToCategory("OmniCC");
 				end;
+				test = function()
+					if not IsAddOnLoaded("OmniCC") and not IsAddOnLoadOnDemand("OmniCC") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "CritSound");
-if enabled > 0 then
+local _, title = GetAddOnInfo("CritSound");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameCritSound	= "爆击音效";
 		FF_DescCritSound	= "当你的近战、远程攻击以及伤害、治疗技能等爆击时播放预设音效";
@@ -915,13 +1093,20 @@ if enabled > 0 then
 					CritSound_SlashHandler();
 					CritSound_SlashHandler();
 				end;
+				test = function()
+					if not IsAddOnLoaded("CritSound") and not IsAddOnLoadOnDemand("CritSound") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "DCT");
-if enabled > 0 then
+local _, title = GetAddOnInfo("DCT");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameDCT	= "战斗指示器";
 		FF_DescDCT	= "显示你战斗中受到的各种信息及法术预警";
@@ -947,13 +1132,20 @@ if enabled > 0 then
 					end
 					DCT_showMenu();
 				end;
+				test = function()
+					if not IsAddOnLoaded("DCT") and not IsAddOnLoadOnDemand("DCT") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "DamageEx");
-if enabled > 0 then
+local _, title = GetAddOnInfo("DamageEx");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameDamageEx	= "增强伤害显示器";
 		FF_DescDamageEx	= "显示你对敌人的伤害，对目标的治疗量，并可显示技能名字";
@@ -979,13 +1171,20 @@ if enabled > 0 then
 					end
 					DEX_showMenu();
 				end;
+				test = function()
+					if not IsAddOnLoaded("DamageEx") and not IsAddOnLoadOnDemand("DamageEx") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "DBM-Core");
-if enabled > 0 then
+local _, title = GetAddOnInfo("DBM-Core");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameDBM	= "DBM";
 		FF_DescDBM	= "Deadly Boss Mods";
@@ -999,7 +1198,7 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "DBM";
+				id= "DBM-Core";
 				tab= "group";
 				name= FF_NameDBM;
 				subtext= "Deadly Boss Mods";
@@ -1011,13 +1210,20 @@ if enabled > 0 then
 					end
 					DBM:LoadGUI();
 				end;
+				test = function()
+					if not IsAddOnLoaded("DBM-Core") and not IsAddOnLoadOnDemand("DBM-Core") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Decursive");
-if enabled > 0 and (class == "MAGE" or class == "PRIEST" or class == "DRUID" or class == "PALADIN" or class == "SHAMAN") then
+local _, title = GetAddOnInfo("Decursive");
+if title ~= nil and (class == "MAGE" or class == "PRIEST" or class == "DRUID" or class == "PALADIN" or class == "SHAMAN") then
 	if GetLocale() == "zhCN" then
 		FF_NameDecursive	= "一键驱散";
 		FF_DescDecursive	= "提供显示和清除负面效果的功能，并提供相应的高级过滤和优先级系统";
@@ -1043,13 +1249,20 @@ if enabled > 0 and (class == "MAGE" or class == "PRIEST" or class == "DRUID" or 
 					end
 					LibStub("AceConfigDialog-3.0"):Open("Decursive");
 				end;
+				test = function()
+					if not IsAddOnLoaded("Decursive") and not IsAddOnLoadOnDemand("Decursive") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "RangeDisplay");
-if enabled > 0 then
+local _, title = GetAddOnInfo("RangeDisplay");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameRangeDisplay	= "目标距离";
 		FF_DescRangeDisplay	= "监视目标距离";
@@ -1075,13 +1288,20 @@ if enabled > 0 then
 					end
 					RangeDisplay:openConfigDialog(ud);
 				end;
+				test = function()
+					if not IsAddOnLoaded("RangeDisplay") and not IsAddOnLoadOnDemand("RangeDisplay") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Gladius");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Gladius");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameGladius	= "竞技场敌方信息";
 		FF_DescGladius	= "简单的竞技场敌方目标框架";
@@ -1113,13 +1333,20 @@ if enabled > 0 then
 					end
 					AceDialog:Open("Gladius");
 				end;
+				test = function()
+					if not IsAddOnLoaded("Gladius") and not IsAddOnLoadOnDemand("Gladius") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "EventAlertMod");
-if enabled > 0 then
+local _, title = GetAddOnInfo("EventAlertMod");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameEAM	= "特效触发提示";
 		FF_DescEAM	= "特效触发醒目提示";
@@ -1150,13 +1377,20 @@ if enabled > 0 then
 						HideUIPanel(EA_Options_Frame);
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("EventAlertMod") and not IsAddOnLoadOnDemand("EventAlertMod") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "EasyTrinket");
-if enabled > 0 then
+local _, title = GetAddOnInfo("EasyTrinket");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameEasyTrinket	= "饰品管理器";
 		FF_DescEasyTrinket	= "饰品管理器";
@@ -1182,13 +1416,20 @@ if enabled > 0 then
 					end
 					EasyTrinket:ShowOption();
 				end;
+				test = function()
+					if not IsAddOnLoaded("EasyTrinket") and not IsAddOnLoadOnDemand("EasyTrinket") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "TrinketMenu");
-if enabled > 0 then
+local _, title = GetAddOnInfo("TrinketMenu");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameTrinketMenu	= "饰品管理器";
 		FF_DescTrinketMenu	= "饰品管理器";
@@ -1214,13 +1455,20 @@ if enabled > 0 then
 					end
 					TrinketMenu.ToggleFrame(TrinketMenu_OptFrame);
 				end;
+				test = function()
+					if not IsAddOnLoaded("TrinketMenu") and not IsAddOnLoadOnDemand("TrinketMenu") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "zTip");
-if enabled > 0 then
+local _, title = GetAddOnInfo("zTip");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NamezTip	= "鼠标提示增强";
 		FF_DesczTip	= "鼠标提示信息增强";
@@ -1250,13 +1498,20 @@ if enabled > 0 then
 					if not zTipOption.ready then zTipOption:Init() end
 					if not zTipOption:IsShown() then zTipOption:Show() end
 				end;
+				test = function()
+					if not IsAddOnLoaded("zTip") and not IsAddOnLoadOnDemand("zTip") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "TinyTip");
-if enabled > 0 then
+local _, title = GetAddOnInfo("TinyTip");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameTinyTip	= "鼠标提示增强";
 		FF_DescTinyTip	= "鼠标提示信息增强";
@@ -1285,13 +1540,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("TinyTip");
 					InterfaceOptionsFrame_OpenToCategory("TinyTip");
 				end;
+				test = function()
+					if not IsAddOnLoaded("TinyTip") and not IsAddOnLoadOnDemand("TinyTip") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "TinyTooltip");
-if enabled > 0 then
+local _, title = GetAddOnInfo("TinyTooltip");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameTinyTooltip	= "鼠标提示增强";
 		FF_DescTinyTooltip	= "鼠标提示信息增强";
@@ -1318,13 +1580,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("TinyTooltip");
 					InterfaceOptionsFrame_OpenToCategory("TinyTooltip");
 				end;
+				test = function()
+					if not IsAddOnLoaded("TinyTooltip") and not IsAddOnLoadOnDemand("TinyTooltip") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "MerInspect");
-if enabled > 0 then
+local _, title = GetAddOnInfo("MerInspect");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameMerInspect	= "观察助手";
 		FF_DescMerInspect	= "在角色界面右侧显示装备列表和详细属性的列表";
@@ -1351,13 +1620,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("MerInspect");
 					InterfaceOptionsFrame_OpenToCategory("MerInspect");
 				end;
+				test = function()
+					if not IsAddOnLoaded("MerInspect") and not IsAddOnLoadOnDemand("MerInspect") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "SimpleRaidTargetIcons");
-if enabled > 0 then
+local _, title = GetAddOnInfo("SimpleRaidTargetIcons");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameSRTI	= "标记助手";
 		FF_DescSRTI	= "Shift、Ctrl（默认）或Alt+鼠标左键单击,或双击鼠标左键快速标记目标";
@@ -1371,7 +1647,7 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "SRTI";
+				id= "SimpleRaidTargetIcons";
 				tab= "ui";
 				name= FF_NameSRTI;
 				subtext= "Simple Raid Target Icons";
@@ -1384,13 +1660,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory(SRTI.menu);
 					InterfaceOptionsFrame_OpenToCategory(SRTI.menu);
 				end;
+				test = function()
+					if not IsAddOnLoaded("SimpleRaidTargetIcons") and not IsAddOnLoadOnDemand("SimpleRaidTargetIcons") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "ImprovedLootFrame");
-if enabled > 0 then
+local _, title = GetAddOnInfo("ImprovedLootFrame");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameILF	= "拾取增强";
 		FF_DescILF	= "单页拾取，掉落通报";
@@ -1404,7 +1687,7 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "ILF";
+				id= "ImprovedLootFrame";
 				tab= "ui";
 				name= FF_NameILF;
 				subtext= "Improved Loot Frame";
@@ -1417,13 +1700,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("ImprovedLootFrame");
 					InterfaceOptionsFrame_OpenToCategory("ImprovedLootFrame");
 				end;
+				test = function()
+					if not IsAddOnLoaded("ImprovedLootFrame") and not IsAddOnLoadOnDemand("ImprovedLootFrame") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "ReforgeLite");
-if enabled > 0 then
+local _, title = GetAddOnInfo("ReforgeLite");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameReforgeLite	= "重铸助手";
 		FF_DescReforgeLite	= "为每个职业和天赋预制了一套属性权重，也可以手动输入自己的权重。";
@@ -1449,13 +1739,20 @@ if enabled > 0 then
 					end
 					ReforgeLite:OnCommand();
 				end;
+				test = function()
+					if not IsAddOnLoaded("ReforgeLite") and not IsAddOnLoadOnDemand("ReforgeLite") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "FishingBuddy");
-if enabled > 0 then
+local _, title = GetAddOnInfo("FishingBuddy");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameFishingBuddy	= "钓鱼助手";
 		FF_DescFishingBuddy	= "钓鱼相关工作助手 -- 装备，鱼类资讯及其它。";
@@ -1485,13 +1782,20 @@ if enabled > 0 then
 						ShowUIPanel(FishingBuddyFrame);
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("FishingBuddy") and not IsAddOnLoadOnDemand("FishingBuddy") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "_NPCScan");
-if enabled > 0 then
+local _, title = GetAddOnInfo("_NPCScan");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameNPCScan	= "稀有精英探测";
 		FF_DescNPCScan	= "搜索附近的NPC寻找稀有怪";
@@ -1505,7 +1809,7 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "NPCScan";
+				id= "_NPCScan";
 				tab= "data";
 				name= FF_NameNPCScan;
 				subtext= "NPCScan";
@@ -1518,13 +1822,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("_|cffCCCC88NPCScan|r");
 					InterfaceOptionsFrame_OpenToCategory("_|cffCCCC88NPCScan|r");
 				end;
+				test = function()
+					if not IsAddOnLoaded("_NPCScan") and not IsAddOnLoadOnDemand("_NPCScan") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "QuestPlus");
-if enabled > 0 then
+local _, title = GetAddOnInfo("QuestPlus");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameQuestPlus	= "系统任务增强";
 		FF_DescQuestPlus	= "任务通报,显示任务等级,自动追踪任务并允许移动任务追踪列表";
@@ -1551,13 +1862,20 @@ if enabled > 0 then
 					QuestPlus_SlashHandler();
 					QuestPlus_SlashHandler();
 				end;
+				test = function()
+					if not IsAddOnLoaded("QuestPlus") and not IsAddOnLoadOnDemand("QuestPlus") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Questie");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Questie");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameQuestie	= "任务助手";
 		FF_DescQuestie	= "全能型任务数据库Questie";
@@ -1584,13 +1902,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("Questie");
 					InterfaceOptionsFrame_OpenToCategory("Questie");
 				end;
+				test = function()
+					if not IsAddOnLoaded("Questie") and not IsAddOnLoadOnDemand("Questie") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "ClassicCodex");
-if enabled > 0 then
+local _, title = GetAddOnInfo("ClassicCodex");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameClassicCodex	= "任务助手 ";
 		FF_DescClassicCodex	= "全能型任务数据库ClassicCodex";
@@ -1617,13 +1942,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("ClassicCodex");
 					InterfaceOptionsFrame_OpenToCategory("ClassicCodex");
 				end;
+				test = function()
+					if not IsAddOnLoaded("ClassicCodex") and not IsAddOnLoadOnDemand("ClassicCodex") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "GatherMate2");
-if enabled > 0 then
+local _, title = GetAddOnInfo("GatherMate2");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameGatherMate	= "采集助手";
 		FF_DescGatherMate	= "收集花草、矿物、气云(工程)、鱼群的位置并将其标注在地图上";
@@ -1637,10 +1969,10 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "GatherMate";
+				id= "GatherMate2";
 				tab= "data";
 				name= FF_NameGatherMate;
-				subtext= "GatherMate";
+				subtext= "GatherMate2";
 				tooltip = FF_DescGatherMate;
 				icon= "Interface\\AddOns\\GatherMate2\\Artwork\\Fish\\sporefish";
 				callback= function(button)
@@ -1650,13 +1982,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("GatherMate 2");
 					InterfaceOptionsFrame_OpenToCategory("GatherMate 2");
 				end;
+				test = function()
+					if not IsAddOnLoaded("GatherMate2") and not IsAddOnLoadOnDemand("GatherMate2") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Routes");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Routes");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameRoutes	= "采集线路图";
 		FF_DescRoutes	= "在已有采集相关数据的基础上形成采集路线，并可以优化路线，提高采集效率。";
@@ -1682,13 +2021,20 @@ if enabled > 0 then
 					end
 					LibStub("AceConfigDialog-3.0"):Open("Routes");
 				end;
+				test = function()
+					if not IsAddOnLoaded("Routes") and not IsAddOnLoadOnDemand("Routes") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "felFruiTimer");
-if enabled > 0 then
+local _, title = GetAddOnInfo("felFruiTimer");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NamefelFruiTimer	= "费伍德水果";
 		FF_DescfelFruiTimer	= "费伍德水果";
@@ -1715,13 +2061,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("felFruiTimer");
 					InterfaceOptionsFrame_OpenToCategory("felFruiTimer");
 				end;
+				test = function()
+					if not IsAddOnLoaded("felFruiTimer") and not IsAddOnLoadOnDemand("felFruiTimer") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "bloodOfHeros");
-if enabled > 0 then
+local _, title = GetAddOnInfo("bloodOfHeros");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NamebloodOfHeros	= "英雄之血";
 		FF_DescbloodOfHeros	= "英雄之血";
@@ -1748,13 +2101,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("bloodOfHeros");
 					InterfaceOptionsFrame_OpenToCategory("bloodOfHeros");
 				end;
+				test = function()
+					if not IsAddOnLoaded("bloodOfHeros") and not IsAddOnLoadOnDemand("bloodOfHeros") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "RecipeRadarClassic");
-if enabled > 0 then
+local _, title = GetAddOnInfo("RecipeRadarClassic");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameRecipeRadarClassic	= "配方雷达";
 		FF_DescRecipeRadarClassic	= "位于售卖食谱在当前区域或者专业";
@@ -1785,13 +2145,20 @@ if enabled > 0 then
 						InterfaceOptionsFrame_OpenToCategory("RecipeRadar");
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("RecipeRadarClassic") and not IsAddOnLoadOnDemand("RecipeRadarClassic") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "PhanxChat");
-if enabled > 0 then
+local _, title = GetAddOnInfo("PhanxChat");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NamePhanxChat	= "聊天增强PhanxChat";
 		FF_DescPhanxChat	= "增强聊天体验（复制网址、姓名上色、允许方向键等）";
@@ -1818,13 +2185,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("PhanxChat");
 					InterfaceOptionsFrame_OpenToCategory("PhanxChat");
 				end;
+				test = function()
+					if not IsAddOnLoaded("PhanxChat") and not IsAddOnLoadOnDemand("PhanxChat") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "ChatPlus");
-if enabled > 0 then
+local _, title = GetAddOnInfo("ChatPlus");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameChatPlus	= "聊天增强";
 		FF_DescChatPlus	= "增强聊天体验（复制文字、姓名上色、允许方向键等）";
@@ -1851,13 +2225,20 @@ if enabled > 0 then
 					ChatPlus_SlashHandler();
 					ChatPlus_SlashHandler();
 				end;
+				test = function()
+					if not IsAddOnLoaded("ChatPlus") and not IsAddOnLoadOnDemand("ChatPlus") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "BadBoy");
-if enabled > 0 then
+local _, title = GetAddOnInfo("BadBoy");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameBadBoy	= "垃圾信息过滤";
 		FF_DescBadBoy	= "一个简单的垃圾信息过滤和自动举报的插件";
@@ -1883,13 +2264,20 @@ if enabled > 0 then
 					end
 					SlashCmdList["BADBOY"]("");
 				end;
+				test = function()
+					if not IsAddOnLoaded("BadBoy") and not IsAddOnLoadOnDemand("BadBoy") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "EN_UnitFrames");
-if enabled > 0 then
+local _, title = GetAddOnInfo("EN_UnitFrames");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameEUF	= "头像增强";
 		FF_DescEUF	= "增强显示头像，显示目标的目标的目标，并显示破甲值等信息，小队头像显示队员职业等级，并显示生命值及法力值";
@@ -1903,7 +2291,7 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "EUF";
+				id= "EN_UnitFrames";
 				tab= "ui";
 				name= FF_NameEUF;
 				subtext= "Enigma Unit Frames";
@@ -1916,13 +2304,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("EN_UnitFrames");
 					InterfaceOptionsFrame_OpenToCategory("EN_UnitFrames");
 				end;
+				test = function()
+					if not IsAddOnLoaded("EN_UnitFrames") and not IsAddOnLoadOnDemand("EN_UnitFrames") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "UnitFramesPlus");
-if enabled > 0 then
+local _, title = GetAddOnInfo("UnitFramesPlus");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameUFP	= "系统头像增强";
 		FF_DescUFP	= "扩展系统头像功能";
@@ -1936,7 +2331,7 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "UFP";
+				id= "UnitFramesPlus";
 				tab= "ui";
 				name= FF_NameUFP;
 				subtext= "UnitFramesPlus";
@@ -1948,6 +2343,13 @@ if enabled > 0 then
 					end
 					UnitFramesPlus_SlashHandler();
 					UnitFramesPlus_SlashHandler();
+				end;
+				test = function()
+					if not IsAddOnLoaded("UnitFramesPlus") and not IsAddOnLoadOnDemand("UnitFramesPlus") then
+						return false;
+					else
+						return true;
+					end
 				end;
 			}
 		);
@@ -1980,8 +2382,8 @@ if ( EarthFeature_AddButton ) then
 	);
 end
 
-local enabled = GetAddOnEnableState(playerName, "MeetingHorn");
-if enabled > 0 then
+local _, title = GetAddOnInfo("MeetingHorn");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameMH	= "集结号";
 		FF_DescMH	= "怀旧服快捷组队";
@@ -1995,7 +2397,7 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "MH";
+				id= "MeetingHorn";
 				tab= "group";
 				name= FF_NameMH;
 				subtext= "MeetingHorn";
@@ -2007,13 +2409,20 @@ if enabled > 0 then
 					end
 					LibStub("AceAddon-3.0"):GetAddon("MeetingHorn"):Toggle();
 				end;
+				test = function()
+					if not IsAddOnLoaded("MeetingHorn") and not IsAddOnLoadOnDemand("MeetingHorn") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "GoodLeader");
-if enabled > 0 then
+local _, title = GetAddOnInfo("GoodLeader");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameGL	= "好团长";
 		FF_DescGL	= "查看当前团长过往开团次数";
@@ -2039,13 +2448,20 @@ if enabled > 0 then
 					end
 					LibStub("AceAddon-3.0"):GetAddon("GoodLeader"):Toggle();
 				end;
+				test = function()
+					if not IsAddOnLoaded("GoodLeader") and not IsAddOnLoadOnDemand("GoodLeader") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "LowHPPulser");
-if enabled > 0 then
+local _, title = GetAddOnInfo("LowHPPulser");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameLHPP	= "低血量魔法视觉警报";
 		FF_DescLHPP	= "低血量魔法视觉警报";
@@ -2059,7 +2475,7 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "LHPP";
+				id= "LowHPPulser";
 				tab= "combat";
 				name= FF_NameLHPP;
 				subtext= "LowHPPulser";
@@ -2072,13 +2488,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("LowHPPulser");
 					InterfaceOptionsFrame_OpenToCategory("LowHPPulser");
 				end;
+				test = function()
+					if not IsAddOnLoaded("LowHPPulser") and not IsAddOnLoadOnDemand("LowHPPulser") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "BattleInfo");
-if enabled > 0 then
+local _, title = GetAddOnInfo("BattleInfo");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameBattleInfo	= "战场助手";
 		FF_DescBattleInfo	= "战场信息增强";
@@ -2105,13 +2528,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("BattleInfo");
 					InterfaceOptionsFrame_OpenToCategory("BattleInfo");
 				end;
+				test = function()
+					if not IsAddOnLoaded("BattleInfo") and not IsAddOnLoadOnDemand("BattleInfo") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "SSPVP");
-if enabled > 0 then
+local _, title = GetAddOnInfo("SSPVP");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameSSPVP	= "战场助手SSPVP";
 		FF_DescSSPVP	= "显示全面的战场信息，比如剩余时间，获胜节点，阿拉希盆地最终比分";
@@ -2137,13 +2567,20 @@ if enabled > 0 then
 					end
 					SlashCmdList["SSPVP"]("");
 				end;
+				test = function()
+					if not IsAddOnLoaded("SSPVP") and not IsAddOnLoadOnDemand("SSPVP") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Spy");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Spy");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameSpy	= "侦测敌方玩家";
 		FF_DescSpy	= "检测并提醒您附近有敌方玩家。";
@@ -2177,13 +2614,20 @@ if enabled > 0 then
 						LibStub("AceAddon-3.0"):GetAddon("Spy"):ShowConfig();
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("Spy") and not IsAddOnLoadOnDemand("Spy") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Grid2");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Grid2");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameGrid	= "团队面板";
 		FF_DescGrid	= "小巧的团队状态监视器";
@@ -2197,10 +2641,10 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "Grid";
+				id= "Grid2";
 				tab= "group";
 				name= FF_NameGrid;
-				subtext= "Grid";
+				subtext= "Grid2";
 				tooltip = FF_DescGrid;
 				icon= "Interface\\AddOns\\Grid2\\media\\icon";
 				callback= function(button)
@@ -2209,13 +2653,20 @@ if enabled > 0 then
 					end
 					Grid2:OnChatCommand();
 				end;
+				test = function()
+					if not IsAddOnLoaded("Grid2") and not IsAddOnLoadOnDemand("Grid2") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "ClassicThreatMeter");
-if enabled > 0 then
+local _, title = GetAddOnInfo("ClassicThreatMeter");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameClassicThreatMeter	= "仇恨统计CTM";
 		FF_DescClassicThreatMeter	= "一个灵活的，多目标的，低资源占用的威胁值计量器";
@@ -2241,13 +2692,20 @@ if enabled > 0 then
 					end
 					ClassicThreatMeterVisibility();
 				end;
+				test = function()
+					if not IsAddOnLoaded("ClassicThreatMeter") and not IsAddOnLoadOnDemand("ClassicThreatMeter") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "ThreatClassic2");
-if enabled > 0 then
+local _, title = GetAddOnInfo("ThreatClassic2");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameThreatClassic2	= "仇恨统计TC2";
 		FF_DescThreatClassic2	= "一个灵活的，多目标的，低资源占用的威胁值计量器";
@@ -2277,13 +2735,20 @@ if enabled > 0 then
 						SlashCmdList["TC2_SLASHCMD"]("");
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("ThreatClassic2") and not IsAddOnLoadOnDemand("ThreatClassic2") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Omen");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Omen");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameOmen	= "仇恨统计";
 		FF_DescOmen	= "一个灵活的，多目标的，低资源占用的威胁值计量器";
@@ -2309,13 +2774,20 @@ if enabled > 0 then
 					end
 					Omen:Toggle();
 				end;
+				test = function()
+					if not IsAddOnLoaded("Omen") and not IsAddOnLoadOnDemand("Omen") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Skada");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Skada");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameSkada	= "伤害统计";
 		FF_DescSkada	= "模块化的伤害统计。";
@@ -2345,13 +2817,20 @@ if enabled > 0 then
 						SlashCmdList["SKADA"]("config");
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("Skada") and not IsAddOnLoadOnDemand("Skada") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Recount");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Recount");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameRecount	= "图形化伤害统计";
 		FF_DescRecount	= "图形化显示的伤害/治疗统计插件.";
@@ -2387,13 +2866,20 @@ if enabled > 0 then
 						LibStub("AceConfigDialog-3.0"):Open("Recount")
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("Recount") and not IsAddOnLoadOnDemand("Recount") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Details");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Details");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameDetails	= "全能伤害统计";
 		FF_DescDetails	= "全能伤害统计。";
@@ -2427,13 +2913,20 @@ if enabled > 0 then
 						end
 					end
 				end;
+				test = function()
+					if not IsAddOnLoaded("Details") and not IsAddOnLoadOnDemand("Details") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "oRA3");
-if enabled > 0 then
+local _, title = GetAddOnInfo("oRA3");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameoRA	= "团队助手oRA3";
 		FF_DescoRA	= "队伍和团队助手";
@@ -2459,13 +2952,20 @@ if enabled > 0 then
 					end
 					LibStub("AceConfigDialog-3.0"):Open("oRA");
 				end;
+				test = function()
+					if not IsAddOnLoaded("oRA3") and not IsAddOnLoadOnDemand("oRA3") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "ExRT");
-if enabled > 0 then
+local _, title = GetAddOnInfo("ExRT");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameoExRT	= "团队助手ExRT";
 		FF_DescoExRT	= "团队工具辅助";
@@ -2491,13 +2991,20 @@ if enabled > 0 then
 					end
 					SlashCmdList["exrtSlash"]("");
 				end;
+				test = function()
+					if not IsAddOnLoaded("ExRT") and not IsAddOnLoadOnDemand("ExRT") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "AdvancedInterfaceOptions");
-if enabled > 0 then
+local _, title = GetAddOnInfo("AdvancedInterfaceOptions");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameAIO	= "高级界面设置";
 		FF_DescAIO	= "修改暴雪自带设置界面中没有的设置。";
@@ -2511,7 +3018,7 @@ if enabled > 0 then
 	if ( EarthFeature_AddButton ) then
 		EarthFeature_AddButton(
 			{
-				id= "AIO";
+				id= "AdvancedInterfaceOptions";
 				tab= "main";
 				name= FF_NameAIO;
 				subtext= "AdvancedInterfaceOptions";
@@ -2524,13 +3031,20 @@ if enabled > 0 then
 					InterfaceOptionsFrame_OpenToCategory("AdvancedInterfaceOptions");
 					InterfaceOptionsFrame_OpenToCategory("AdvancedInterfaceOptions");
 				end;
+				test = function()
+					if not IsAddOnLoaded("AdvancedInterfaceOptions") and not IsAddOnLoadOnDemand("AdvancedInterfaceOptions") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "Leatrix_Plus");
-if enabled > 0 then
+local _, title = GetAddOnInfo("Leatrix_Plus");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameLeatrix_Plus	= "功能百宝箱";
 		FF_DescLeatrix_Plus	= "哆啦A梦的百宝袋";
@@ -2556,13 +3070,20 @@ if enabled > 0 then
 					end
 					SlashCmdList["Leatrix_Plus"]("");
 				end;
+				test = function()
+					if not IsAddOnLoaded("Leatrix_Plus") and not IsAddOnLoadOnDemand("Leatrix_Plus") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "RuneItAll");
-if enabled > 0 and class == "DEATHKNIGHT" then
+local _, title = GetAddOnInfo("RuneItAll");
+if title ~= nil and class == "DEATHKNIGHT" then
 	if GetLocale() == "zhCN" then
 		FF_NameRuneItAll	= "符文条";
 		FF_DescRuneItAll	= "可自由移动死亡骑士的符文条并可改变其外观";
@@ -2589,13 +3110,20 @@ if enabled > 0 and class == "DEATHKNIGHT" then
 					RuneItAll_SlashHandler();
 					RuneItAll_SlashHandler();
 				end;
+				test = function()
+					if not IsAddOnLoaded("RuneItAll") and not IsAddOnLoadOnDemand("RuneItAll") then
+						return false;
+					else
+						return true;
+					end
+				end;
 			}
 		);
 	end
 end
 
-local enabled = GetAddOnEnableState(playerName, "orbSellAndRepair");
-if enabled > 0 then
+local _, title = GetAddOnInfo("orbSellAndRepair");
+if title ~= nil then
 	if GetLocale() == "zhCN" then
 		FF_NameorbSellAndRepair	= "自动贩卖修理";
 		FF_DescorbSellAndRepair	= "与商人交易时自动贩卖灰色垃圾物品，修理装备";
@@ -2621,6 +3149,13 @@ if enabled > 0 then
 					end
 					InterfaceOptionsFrame_OpenToCategory("orbSellAndRepair");
 					InterfaceOptionsFrame_OpenToCategory("orbSellAndRepair");
+				end;
+				test = function()
+					if not IsAddOnLoaded("orbSellAndRepair") and not IsAddOnLoadOnDemand("orbSellAndRepair") then
+						return false;
+					else
+						return true;
+					end
 				end;
 			}
 		);

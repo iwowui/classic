@@ -20,7 +20,7 @@
 		- Still accepts old EarthFeature_AddButton(...) calls, but the new syntax is FeatureFrame_AddButton(...)
 	1.0	- Initial separation from Earth
 
-  -- SVN info
+	-- SVN info
 	$Id: FeatureFrame.lua 4157 2006-10-13 20:12:04Z geowar $
 	$Rev: 4157 $
 	$LastChangedBy: geowar $
@@ -92,11 +92,11 @@ FeatureFrame_CurrentOffset = 0;
 --						end
 --					end
 --				end;
---				test = 	function()
---					if (UnitInParty("party1")) then
---						return true; -- The button is enabled
---					else
+--				test = function()
+--					if not IsAddOnLoaded("MyAddOnID") and not IsAddOnLoadOnDemand("MyAddOnID") then
 --						return false; -- The button is disabled
+--					else
+--						return true; -- The button is enabled
 --					end
 --				end
 --			}
@@ -125,7 +125,7 @@ function FeatureFrame_AddButton(newButton)
 		newButton.tab = "other";
 	end
 	local i = 1;
-	while ( FeatureFrame_Buttons[newButton.tab][i]) do
+	while ( FeatureFrame_Buttons[newButton.tab][i] ) do
 		if FeatureFrame_Buttons[newButton.tab][i].name ~= newButton.name then
 			i = i + 1;
 		else
@@ -187,11 +187,11 @@ function FeatureFrameButtons_UpdateColor()
 
 		local id = FeatureFrameButton_GetOffset() + i;
 		if ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id] ) then
-			if ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id].test() == false) then
-				icon:Disable();
+			if ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id].test() == false ) then
+				-- icon:Disable();
 				iconTexture:SetVertexColor(1.00, 0.00, 0.00);
 			else
-				icon:Enable();
+				-- icon:Enable();
 				iconTexture:SetVertexColor(1.00, 1.00, 1.00);
 			end
 		end
@@ -216,6 +216,9 @@ function FeatureFrameButton_OnEnter(self)
 		if ( tooltip ) then
 			GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 			GameTooltip:SetText(tooltip, 1.0, 1.0, 1.0);
+			if ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id].test() == false ) then
+				GameTooltip:AddLine(STATUS..": "..DISABLE, 1.0, 0.0, 0.0)
+			end
 		end
 	end
 end
@@ -224,12 +227,32 @@ function FeatureFrameButton_OnLeave(self)
 	GameTooltip:Hide();
 end
 
+StaticPopupDialogs["FeatureFrame_EnableAddon"] = {
+	text = LOAD_ADDON.."?",
+	button1 = YES,
+	button2 = NO,
+	OnAccept = function(self, data)
+		EnableAddOn(data);
+		ReloadUI();
+	end,
+	whileDead = 1, hideOnEscape = 1, showAlert = 1
+}
+
 function FeatureFrameButton_OnClick(self, button)
 	local id = self:GetID() + FeatureFrameButton_GetOffset();
 
 	if ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id] ) then
-		self:SetChecked(false);
-		FeatureFrame_Buttons[FeatureFrame_selectedTab][id].callback(button);
+		local addon = FeatureFrame_Buttons[FeatureFrame_selectedTab][id].id;
+		if ( FeatureFrame_Buttons[FeatureFrame_selectedTab][id].test() == false ) then
+			self:SetChecked(false);
+			local dialog = StaticPopup_Show("FeatureFrame_EnableAddon");
+			if (dialog) then
+				dialog.data = addon;
+			end
+		else
+			self:SetChecked(false);
+			FeatureFrame_Buttons[FeatureFrame_selectedTab][id].callback(button);
+		end
 	end
 end
 

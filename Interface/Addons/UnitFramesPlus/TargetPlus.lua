@@ -231,7 +231,7 @@ function UnitFramesPlus_TargetHPValueDisplayUpdate()
         PctText = math.floor(100*CurHP/MaxHP).."%";
     end
 
-    if UnitFramesPlusDB["target"]["bartext"] == 1 and not UnitIsDead("target") and not IsAddOnLoaded("RealMobHealth") then
+    if UnitFramesPlusDB["target"]["bartext"] == 1 and not UnitIsDead("target") then
         BarText = CurHPfix.."/"..MaxHPfix
     end
     TargetFrameTextureFrameHealthBarText:SetText(BarText);
@@ -287,7 +287,7 @@ function UnitFramesPlus_TargetMPValueDisplayUpdate()
         -- PctText == 0 then PctText = "" end
     end
 
-    if UnitFramesPlusDB["target"]["bartext"] == 1 and not UnitIsDead("target") and not IsAddOnLoaded("RealMobHealth") then
+    if UnitFramesPlusDB["target"]["bartext"] == 1 and not UnitIsDead("target") then
         BarText = CurMPfix.."/"..MaxMPfix
     end
     TargetFrameTextureFrameManaBarText:SetText(BarText);
