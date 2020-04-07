@@ -532,7 +532,6 @@ function UnitFramesPlus_TargetRaceDisplayUpdate()
     TargetRace:SetText(raceText);
 end
 
-
 --目标职业图标
 local ClassIcon = CreateFrame("Button", "UFP_TargetClassIcon", TargetFrame);
 ClassIcon:SetWidth(32);

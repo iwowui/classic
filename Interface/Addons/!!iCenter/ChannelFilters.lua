@@ -1,32 +1,46 @@
-﻿if not cfilter then cfilter = true end
-if not cfilterall then cfilterall = false end
-if not cfilters then
-    cfilters = {
-        white = true,
-        black = true,
-        trade = true,
-        battle = false,
-        d10 = false,
-        d20 = false,
-        d30 = false,
-        d40 = false,
-        d50 = false,
-        d60 = false,
-        diy = false,
-    }
+﻿local function ChannelFiltersDB(default)
+    if not cfilter or default == true then cfilter = true end
+    if not cfilterall or default == true then cfilterall = false end
+
+    if not cfilters or default == true then cfilters = {} end
+    if not cfilters["white"] or default == true then cfilters["white"] = true end
+    if not cfilters["black"] or default == true then cfilters["black"] = true end
+    if not cfilters["symbol"] or default == true then cfilters["symbol"] = true end
+    if not cfilters["trade"] or default == true then cfilters["trade"] = true end
+    if not cfilters["battle"] or default == true then cfilters["battle"] = false end
+    if not cfilters["d10"] or default == true then cfilters["d10"] = false end
+    if not cfilters["d20"] or default == true then cfilters["d20"] = false end
+    if not cfilters["d30"] or default == true then cfilters["d30"] = false end
+    if not cfilters["d40"] or default == true then cfilters["d40"] = false end
+    if not cfilters["d50"] or default == true then cfilters["d50"] = false end
+    if not cfilters["d60"] or default == true then cfilters["d60"] = false end
+    if not cfilters["diy"] or default == true then cfilters["diy"] = false end
+
+    if not cfilterlist or default == true then cfilterlist = {} end
+    if not cfilterlist["white"] then cfilterlist["white"] = {} end
+    if not cfilterlist["black"] then cfilterlist["black"] = {} end
+    if not cfilterlist["symbol"] or default == true then cfilterlist["symbol"] = {"`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "[", "]", "{", "}", "<", ">", ",", ".", "|", "?", "，", "。"} end
+    if not cfilterlist["trade"] or default == true then cfilterlist["trade"] = {"代做", "手工", "无限收", "长期", "一组", "每组", "组收", "邮寄", "U寄", "付费", "大量", "带价", "代价", "欢乐豆", "大米", "小米", "收米", "出米", "支付", "微信", "VX", "ZFB", "拉人", "飞机", "航班", "航线", "航空", "附魔", "FM", "偷税", "逃税", "买号", "卖号"} end
+    if not cfilterlist["battle"] or default == true then cfilterlist["battle"] = {"战场", "国家", "奥山", "战歌", "阿拉希", "PVP", "荣誉"} end
+    if not cfilterlist["d10"] or default == true then cfilterlist["d10"] = {"怒焰", "NY", "矿井", "死矿", "SK", "哀嚎", "AH"} end
+    if not cfilterlist["d20"] or default == true then cfilterlist["d20"] = {"影牙", "YY", "黑暗深渊", "监狱", "JY", "诺莫瑞根", "NMRG", "矮子本", "矮人本", "矮人副本", "矮子副本", "沼泽", "ZZ"} end
+    if not cfilterlist["d30"] or default == true then cfilterlist["d30"] = {"血色", "XS", "图书馆", "军械库", "武器库", "教堂", "墓地", "高地", "GD", "奥达曼", "ADM"} end
+    if not cfilterlist["d40"] or default == true then cfilterlist["d40"] = {"玛拉顿", "MLD", "祖尔法拉克", "ZUL", "神庙", "黑石深渊"} end
+    if not cfilterlist["d50"] or default == true then cfilterlist["d50"] = {"斯坦", "十字", "DK", "STSM", "通灵", "TL", "黑石塔", "黑上", "黑下", "厄运", "牵马"} end
+    if not cfilterlist["d60"] or default == true then cfilterlist["d60"] = {"祖尔格拉布", "祖格", "ZUG", "ZG", "安其拉", "AQL", "神殿", "TAQ", "废墟", "FX", "熔火之心", "MC", "黑龙", "黑翼", "BWL", "纳克", "NAXX"} end
+    if not cfilterlist["diy"] or default == true then cfilterlist["diy"] = {"代刷", "带刷", "G一次", "经验", "自由拾取", "深渊", "祖尔", "位面", "老板"} end
 end
-if not cfilterlist then cfilterlist = {} end
-if not cfilterlist["white"] then cfilterlist["white"] = {} end
-if not cfilterlist["black"] then cfilterlist["black"] = {"位面", "老板", "代做", "手工", "荣誉", "PVP"} end
-if not cfilterlist["trade"] then cfilterlist["trade"] = {"无限收", "长期", "一组", "每组", "组收", "邮寄", "U寄", "付费", "大量", "带价", "代价", "欢乐豆", "大米", "小米", "收米", "出米", "支付", "微信", "VX", "ZFB", "拉人", "飞机", "航班", "航线", "航空", "附魔", "FM"} end
-if not cfilterlist["battle"] then cfilterlist["battle"] = {"战场", "国家", "奥山", "战歌", "阿拉希"} end
-if not cfilterlist["d10"] then cfilterlist["d10"] = {"怒焰", "NY", "矿井", "死矿", "SK", "哀嚎", "AH"} end
-if not cfilterlist["d20"] then cfilterlist["d20"] = {"影牙", "YY", "黑暗深渊", "监狱", "JY", "诺莫瑞根", "NMRG", "矮子本", "矮人本", "矮人副本", "矮子副本", "沼泽", "ZZ"} end
-if not cfilterlist["d30"] then cfilterlist["d30"] = {"血色", "XS", "图书馆", "军械库", "武器库", "教堂", "墓地", "高地", "GD", "奥达曼", "ADM"} end
-if not cfilterlist["d40"] then cfilterlist["d40"] = {"玛拉顿", "MLD", "祖尔法拉克", "ZUL", "神庙", "黑石深渊"} end
-if not cfilterlist["d50"] then cfilterlist["d50"] = {"斯坦", "十字", "DK", "STSM", "通灵", "TL", "黑石塔", "黑上", "黑下", "厄运", "牵马"} end
-if not cfilterlist["d60"] then cfilterlist["d60"] = {"祖尔格拉布", "祖格", "ZUG", "ZG", "安其拉", "AQL", "神殿", "TAQ", "废墟", "FX", "熔火之心", "MC", "黑龙", "黑翼", "纳克", "NAXX"} end
-if not cfilterlist["diy"] then cfilterlist["diy"] = {"代刷", "带刷", "G一次", "经验", "自由拾取", "深渊", "祖尔"} end
+
+local cff = CreateFrame("Frame");
+cff:RegisterEvent("ADDON_LOADED");
+cff:SetScript("OnEvent", function(self, event, ...)
+    if event == "ADDON_LOADED" then
+        local name = ...;
+        if name == "!!iCenter" then
+            ChannelFiltersDB(false);
+        end
+    end
+end)
 
 local function listtostring(list)
     local text = "";
@@ -51,15 +65,58 @@ local function savelist(self, list)
     self:ClearFocus();
 end
 
+local special = {"(", ")", ".", "%", "+", "-", "*", "?", "[", "^", "$"};
+local function isspecial(str)
+    for _, v in ipairs(special) do
+        if v == str then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+local function ChannelFiltersShow()
+    ChannelFiltersFrame.blacklisttradeeditbox:SetText(listtostring("trade"));
+    ChannelFiltersFrame.blacklisttrade:SetChecked(cfilters["trade"]);
+    ChannelFiltersFrame.blacklistbattleeditbox:SetText(listtostring("battle"));
+    ChannelFiltersFrame.blacklistbattle:SetChecked(cfilters["battle"]);
+    ChannelFiltersFrame.blacklist10editbox:SetText(listtostring("d10"));
+    ChannelFiltersFrame.blacklist10:SetChecked(cfilters["d10"]);
+    ChannelFiltersFrame.blacklist20editbox:SetText(listtostring("d20"));
+    ChannelFiltersFrame.blacklist20:SetChecked(cfilters["d20"]);
+    ChannelFiltersFrame.blacklist30editbox:SetText(listtostring("d30"));
+    ChannelFiltersFrame.blacklist30:SetChecked(cfilters["d30"]);
+    ChannelFiltersFrame.blacklist40editbox:SetText(listtostring("d40"));
+    ChannelFiltersFrame.blacklist40:SetChecked(cfilters["d40"]);
+    ChannelFiltersFrame.blacklist50editbox:SetText(listtostring("d50"));
+    ChannelFiltersFrame.blacklist50:SetChecked(cfilters["d50"]);
+    ChannelFiltersFrame.blacklist60editbox:SetText(listtostring("d60"));
+    ChannelFiltersFrame.blacklist60:SetChecked(cfilters["d60"]);
+    ChannelFiltersFrame.blacklistdiyeditbox:SetText(listtostring("diy"));
+    ChannelFiltersFrame.blacklistdiy:SetChecked(cfilters["diy"]);
+    ChannelFiltersFrame.blacklistsymboleditbox:SetText(listtostring("symbol"));
+    ChannelFiltersFrame.blacklistsymbol:SetChecked(cfilters["symbol"]);
+end
+
 function ChannelFilters(self, event, msg, playername, _, channel, _, flag, zonechannelid, channelindex, channelname, unused, id)
     if cfilter == true then
         if channelname == "大脚世界频道" or cfilterall == true then
+            local msgx = msg;
+            if cfilters["symbol"] == true and cfilterlist ~= nil and next(cfilterlist["symbol"]) ~= nil then
+                msgx = gsub(msgx, " ", "");
+                for _, word in ipairs(cfilterlist["symbol"]) do
+                    if isspecial(word) then word = "%"..word end
+                    msgx = gsub(msgx, word, "");
+                end
+            end
+
             local truename = strsplit("-", playername);
             if truename == UnitName("player") then return false end
             local find = false;
             if cfilters["white"] == true and cfilterlist ~= nil and next(cfilterlist["white"]) ~= nil then
                 for _, word in ipairs(cfilterlist["white"]) do
-                    local _, result= gsub(string.upper(msg), word, "");
+                    local _, result = gsub(string.upper(msgx), word, "");
                     if (result > 0) then
                         find = true;
                         break;
@@ -72,10 +129,10 @@ function ChannelFilters(self, event, msg, playername, _, channel, _, flag, zonec
             if find then
                 local k, v;
                 for k, v in pairs(cfilters) do
-                    if k ~= "white" and v == true then
+                    if k ~= "white" and k ~= "symbol" and v == true then
                         if cfilterlist ~= nil and next(cfilterlist[k]) ~= nil then
                             for _, word in ipairs(cfilterlist[k]) do
-                                local _, result= gsub(string.upper(msg), word, "");
+                                local _, result = gsub(string.upper(msgx), word, "");
                                 if (result > 0) then
                                     return true;
                                 end
@@ -106,9 +163,20 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", ChannelFilters);
 -- ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", ChannelFilters);
 -- ChatFrame_AddMessageEventFilter("CHAT_MSG_TEXT_EMOTE", ChannelFilters);
 
+local ChannelFilters_MenuList = {
+    { text = RESET, func = function() ChannelFiltersDB(true); ChannelFiltersShow(); end },
+    { text = CANCEL },
+}
+
+local ChannelFilters_Menu = CreateFrame("Frame", nil, glg, "UIDropDownMenuTemplate");
+
+local function ChannelFiltersSetting()
+    EasyMenu(ChannelFilters_MenuList, ChannelFilters_Menu, "cursor", 0 , 0, "MENU");
+end
+
 --settings
 local cf = CreateFrame("Frame", "ChannelFiltersFrame", UIParent);
-cf:SetSize(390, 455);
+cf:SetSize(390, 485);
 cf:ClearAllPoints();
 cf:SetPoint("CENTER");
 cf:SetClampedToScreen(true);
@@ -126,6 +194,17 @@ cf.bg:SetColorTexture(0, 0, 0, 0.5);
 cf.close = CreateFrame("Button", nil, cf, "UIPanelCloseButton");
 cf.close:ClearAllPoints();
 cf.close:SetPoint("TOPRIGHT", cf, "TOPRIGHT", -5, -5);
+
+cf.setting = CreateFrame("Button", nil, cf);
+cf.setting:SetNormalTexture("Interface\\Buttons\\UI-OptionsButton");
+cf.setting:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Round");
+cf.setting:SetWidth(16);
+cf.setting:SetHeight(16);
+cf.setting:ClearAllPoints();
+cf.setting:SetPoint("RIGHT", cf.close, "LEFT", -2, 0);
+cf.setting:SetScript("OnClick", function()
+    ChannelFiltersSetting();
+end);
 
 --enable
 cf.enable = CreateFrame("CheckButton", nil, cf, "InterfaceOptionsCheckButtonTemplate");
@@ -172,7 +251,7 @@ cf.whitelist = CreateFrame("CheckButton", nil, cf, "InterfaceOptionsCheckButtonT
 cf.whitelist:ClearAllPoints();
 cf.whitelist:SetPoint("TOPLEFT", cf.description, "TOPLEFT", -3, -20);
 cf.whitelist:SetHitRectInsets(0, -60, 0, 0);
-cf.whitelist.Text:SetText("白名单");
+cf.whitelist.Text:SetText("自定义白名单（重置时保留）");
 cf.whitelist.Text:SetTextColor(1, 0.82, 0);
 cf.whitelist:SetScript("OnShow", function(self)
     self:SetChecked(cfilters["white"]);
@@ -221,7 +300,7 @@ cf.blacklist = CreateFrame("CheckButton", nil, cf, "InterfaceOptionsCheckButtonT
 cf.blacklist:ClearAllPoints();
 cf.blacklist:SetPoint("TOPLEFT", cf.whitelisteditbox, "TOPLEFT", -9, -28);
 cf.blacklist:SetHitRectInsets(0, -60, 0, 0);
-cf.blacklist.Text:SetText("黑名单");
+cf.blacklist.Text:SetText("自定义黑名单（重置时保留）");
 cf.blacklist.Text:SetTextColor(1, 0.82, 0);
 cf.blacklist:SetScript("OnShow", function(self)
     self:SetChecked(cfilters["black"]);
@@ -653,6 +732,58 @@ cf.blacklistdiyeditbox:SetScript("OnEnter", function(self)
     GameTooltip:Show();
 end)
 cf.blacklistdiyeditbox:SetScript("OnLeave", function()
+    GameTooltip:Hide();
+end)
+
+--blacklist symbol
+cf.blacklistsymbol = CreateFrame("CheckButton", nil, cf, "InterfaceOptionsCheckButtonTemplate");
+cf.blacklistsymbol:ClearAllPoints();
+cf.blacklistsymbol:SetPoint("TOPLEFT", cf.blacklistdiy, "TOPLEFT", 0, -30);
+cf.blacklistsymbol:SetHitRectInsets(0, -40, 0, 0);
+cf.blacklistsymbol.Text:SetText("字符");
+cf.blacklistsymbol.Text:SetTextColor(1, 0.82, 0);
+cf.blacklistsymbol:SetScript("OnShow", function(self)
+    self:SetChecked(cfilters["symbol"]);
+end)
+cf.blacklistsymbol:SetScript("OnClick", function(self)
+    cfilters["symbol"] = not cfilters["symbol"];
+    self:SetChecked(cfilters["symbol"]);
+end)
+cf.blacklistsymbol:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_TOP");
+    GameTooltip:AddLine("识别使用特殊字符间隔的关键字");
+    GameTooltip:Show();
+end)
+cf.blacklistsymbol:SetScript("OnLeave", function()
+    GameTooltip:Hide();
+end)
+--blacklist symbol editbox
+cf.blacklistsymboleditbox = CreateFrame("EditBox", nil, cf, "InputBoxTemplate");
+cf.blacklistsymboleditbox:ClearAllPoints();
+cf.blacklistsymboleditbox:SetPoint("LEFT", cf.blacklistsymbol, "RIGHT", 44, 1);
+cf.blacklistsymboleditbox:SetWidth(285);
+cf.blacklistsymboleditbox:SetHeight(25);
+cf.blacklistsymboleditbox:SetAutoFocus(false);
+cf.blacklistsymboleditbox:ClearFocus();
+cf.blacklistsymboleditbox:SetScript("OnEnterPressed", function(self)
+    savelist(self, "symbol");
+end)
+cf.blacklistsymboleditbox:SetScript("OnEscapePressed", function(self)
+    savelist(self, "symbol");
+end)
+cf.blacklistsymboleditbox:SetScript("OnEditFocusLost", function(self)
+    savelist(self, "symbol");
+    self:SetText(listtostring("symbol"));
+end)
+cf.blacklistsymboleditbox:SetScript("OnShow", function(self)
+    self:SetText(listtostring("symbol"));
+end)
+cf.blacklistsymboleditbox:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_TOP");
+    GameTooltip:AddLine(listtostring("symbol"));
+    GameTooltip:Show();
+end)
+cf.blacklistsymboleditbox:SetScript("OnLeave", function()
     GameTooltip:Hide();
 end)
 
