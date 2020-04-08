@@ -20,7 +20,7 @@
     if not cfilterlist["white"] then cfilterlist["white"] = {} end
     if not cfilterlist["black"] then cfilterlist["black"] = {} end
     if not cfilterlist["symbol"] or default == true then cfilterlist["symbol"] = {"`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "[", "]", "{", "}", "<", ">", ",", ".", "|", "?", "，", "。"} end
-    if not cfilterlist["trade"] or default == true then cfilterlist["trade"] = {"代做", "手工", "无限收", "长期", "一组", "每组", "组收", "邮寄", "U寄", "付费", "大量", "带价", "代价", "欢乐豆", "大米", "小米", "收米", "出米", "支付", "微信", "VX", "ZFB", "拉人", "飞机", "航班", "航线", "航空", "附魔", "FM", "偷税", "逃税", "买号", "卖号"} end
+    if not cfilterlist["trade"] or default == true then cfilterlist["trade"] = {"代做", "加工", "手工", "出售", "求购", "无限收", "长期", "一组", "每组", "组收", "邮寄", "U寄", "付费", "大量", "带价", "代价", "欢乐豆", "大米", "小米", "收米", "出米", "支付", "微信", "VX", "ZFB", "拉人", "飞机", "航班", "航线", "航空", "附魔", "FM", "偷税", "逃税", "买号", "卖号"} end
     if not cfilterlist["battle"] or default == true then cfilterlist["battle"] = {"战场", "国家", "奥山", "战歌", "阿拉希", "PVP", "荣誉"} end
     if not cfilterlist["d10"] or default == true then cfilterlist["d10"] = {"怒焰", "NY", "矿井", "死矿", "SK", "哀嚎", "AH"} end
     if not cfilterlist["d20"] or default == true then cfilterlist["d20"] = {"影牙", "YY", "黑暗深渊", "监狱", "JY", "诺莫瑞根", "NMRG", "矮子本", "矮人本", "矮人副本", "矮子副本", "沼泽", "ZZ"} end
@@ -102,6 +102,9 @@ end
 function ChannelFilters(self, event, msg, playername, _, channel, _, flag, zonechannelid, channelindex, channelname, unused, id)
     if cfilter == true then
         if channelname == "大脚世界频道" or cfilterall == true then
+            local truename = strsplit("-", playername);
+            if truename == UnitName("player") then return false end
+
             local msgx = msg;
             if cfilters["symbol"] == true and cfilterlist ~= nil and next(cfilterlist["symbol"]) ~= nil then
                 msgx = gsub(msgx, " ", "");
@@ -111,8 +114,6 @@ function ChannelFilters(self, event, msg, playername, _, channel, _, flag, zonec
                 end
             end
 
-            local truename = strsplit("-", playername);
-            if truename == UnitName("player") then return false end
             local find = false;
             if cfilters["white"] == true and cfilterlist ~= nil and next(cfilterlist["white"]) ~= nil then
                 for _, word in ipairs(cfilterlist["white"]) do

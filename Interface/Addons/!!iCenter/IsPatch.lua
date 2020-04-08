@@ -83,6 +83,9 @@ switch:SetScript("OnEvent", function(self, event, ...)
         end
     elseif event == "VARIABLES_LOADED" then
         --自动取消敏感词过滤
+        if GetCVar("portal") == "CN" then
+            ConsoleExec("portal TW");
+        end
         if GetCVar("profanityFilter") ~= 0 then
             SetCVar("profanityFilter", 0);
         end

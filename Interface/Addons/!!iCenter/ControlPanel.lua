@@ -265,6 +265,49 @@ if ( EarthFeature_AddButton ) then
 	);
 end
 
+local _, title = GetAddOnInfo("BugSack");
+if title ~= nil then
+	if GetLocale() == "zhCN" then
+		FF_NameBugSack	= "插件错误显示";
+		FF_DescBugSack	= "错误信息收集器，避免中断游戏。";
+	elseif GetLocale() == "zhTW" then
+		FF_NameBugSack	= "插件錯誤顯示";
+		FF_DescBugSack	= "集中顯示錯誤訊息，避免中斷遊戲。";
+	else
+		FF_NameBugSack	= "BugSack";
+		FF_DescBugSack	= "Toss those bugs inna sack.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "BugSack";
+				tab= "main";
+				name= FF_NameBugSack;
+				subtext= "BugSack";
+				tooltip = FF_DescBugSack;
+				icon= "Interface\\Addons\\BugSack\\Media\\icon_red";
+				callback= function(button)
+					if not IsAddOnLoaded("BugSack") then
+						LoadAddOn("BugSack");
+					end
+					if ( BugSackFrame and BugSackFrame:IsVisible() ) then
+						BugSackFrame:Hide();
+					else
+						BugSack:OpenSack();
+					end
+				end;
+				test = function()
+					if not IsAddOnLoaded("BugSack") and not IsAddOnLoadOnDemand("BugSack") then
+						return false;
+					else
+						return true;
+					end
+				end;
+			}
+		);
+	end
+end
+
 local _, title = GetAddOnInfo("GetLinkClassic");
 if title ~= nil then
 	if GetLocale() == "zhCN" then
@@ -329,7 +372,7 @@ if title ~= nil then
 					if not IsAddOnLoaded("TradeLog") then
 						LoadAddOn("TradeLog");
 					end
-					if( TradeListFrame:IsVisible() ) then
+					if TradeListFrame:IsVisible() then
 						TradeListFrame:Hide();
 					else
 						TradeListFrame:Show();
@@ -359,7 +402,7 @@ if title ~= nil then
 		FF_NameArchy	= "Archy";
 		FF_DescArchy	= "Archaeology Assistant";
 	end 
-	if(EarthFeature_AddButton) then
+	if (EarthFeature_AddButton) then
 		EarthFeature_AddButton(
 			{
 				id= "Archy";
@@ -399,7 +442,7 @@ if title ~= nil then
 		FF_NameLeatrixMaps	= "Leatrix Maps";
 		FF_DescLeatrixMaps	= "Enhancements for your maps.";
 	end 
-	if(EarthFeature_AddButton) then
+	if (EarthFeature_AddButton) then
 		EarthFeature_AddButton(
 			{
 				id= "Leatrix_Maps";
@@ -442,7 +485,7 @@ if title ~= nil then
 		FF_NameAtlas	= "Atlas";
 		FF_DescAtlas	= "Instance Map Browser";
 	end 
-	if(EarthFeature_AddButton) then
+	if (EarthFeature_AddButton) then
 		EarthFeature_AddButton(
 			{
 				id= "Atlas";
@@ -485,7 +528,7 @@ if title ~= nil then
 		FF_NameAtlasLoot	= "AtlasLoot";
 		FF_DescAtlasLoot	= "Shows the possible loot from the bosses";
 	end 
-	if(EarthFeature_AddButton) then
+	if (EarthFeature_AddButton) then
 		EarthFeature_AddButton(
 			{
 				id= "AtlasLootClassic";
