@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.56 (1st April 2020)
+-- 	Leatrix Plus 1.13.57 (8th April 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 --	Version
-	LeaPlusLC["AddonVer"] = "1.13.56"
+	LeaPlusLC["AddonVer"] = "1.13.57"
 	LeaPlusLC["RestartReq"] = nil
 
 --	If client restart is required and has not been done, show warning and quit
@@ -930,6 +930,7 @@
 						-- Ignore specific NPCs for selecting, accepting and turning-in quests (required if automation has consequences)
 						if npcID == "15192"	-- Anachronos (Caverns of Time)
 						or npcID == "3430" 	-- Mangletooth (Blood Shard quests, Barrens)
+						or npcID == "14828" -- Gelvas Grimegate (Darkmoon Faire Ticket Redemption, Elwynn Forest and Mulgore)
 						then
 							return true
 						end
@@ -1061,6 +1062,8 @@
 							or npcID == "11039" -- Duke Nicholas Zverenhoff (Eastern Plaguelands)
 							-- Un'Goro crystals
 							or npcID == "9117" 	-- J. D. Collie (Un'Goro Crater)
+							-- E'Ko
+							or npcID == "10307" -- Witch Doctor Mau'ari (Winterspring)
 							then
 								return true
 							end

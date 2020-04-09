@@ -1,5 +1,5 @@
 ## Interface: 11304
-## Version: 1.0.3
+## Version: 1.0.4
 ## Title: BagFreeSpaceCounter
 ## Notes: Displays the amount of unused inventory space
 ## Title-zhCN: |CFFFF8000辅助|R 背包空位

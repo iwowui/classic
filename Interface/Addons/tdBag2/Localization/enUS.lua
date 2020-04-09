@@ -60,6 +60,8 @@ L["Less than %s days"] = true
 L["Less than one day"] = true
 L["Lock Frames"] = true
 L["Mail"] = true
+L["Move down"] = true
+L["Move up"] = true
 L["Never show"] = true
 L["No record"] = true
 L["Normal Color"] = true
@@ -100,6 +102,9 @@ L["TOOLTIP_TOGGLE_GLOBAL_SEARCH"] = "Global search"
 L["TOOLTIP_TOGGLE_MAIL"] = "Open mailbox"
 L["TOOLTIP_TOGGLE_OTHER_FRAME"] = "Open other bags"
 L["TOOLTIP_WATCHED_TOKENS"] = "Change watched tokens"
+L["TOOLTIP_WATCHED_TOKENS_LEFTTIP"] = "Drag item to here to add watch"
+L["TOOLTIP_WATCHED_TOKENS_ONLY_IN_BAG"] = "Only count in backpack"
+L["TOOLTIP_WATCHED_TOKENS_RIGHTTIP"] = "Manage item watch"
 L["Top"] = true
 L["Total"] = true
 L["Trade Containers Location"] = true
@@ -108,6 +113,7 @@ L["Visiting a Vendor"] = true
 L["Visiting the Auction House"] = true
 L["Visiting the Bank"] = true
 L["Visiting the Mail Box"] = true
+L["Watch Frame"] = true
 
 
 --[===[@debug@
@@ -132,6 +138,9 @@ L['COD'] = true
 L['Equip'] = true
 L['Global search'] = true
 
+L['Move up'] = true
+L['Move down'] = true
+
 L.TOOLTIP_CHANGE_PLAYER = 'View another character\'s items.'
 L.TOOLTIP_RETURN_TO_SELF = 'Return to the current character.'
 L.TOOLTIP_HIDE_BAG_FRAME = 'Hide bags list'
@@ -143,7 +152,9 @@ L.TOOLTIP_TOGGLE_EQUIP = 'Open equip'
 L.TOOLTIP_TOGGLE_GLOBAL_SEARCH = 'Global search'
 L.TOOLTIP_TOGGLE_OTHER_FRAME = 'Open other bags'
 L.TOOLTIP_PURCHASE_BANK_SLOT = 'Purchase bank slot'
-L.TOOLTIP_WATCHED_TOKENS = 'Change watched tokens'
+L.TOOLTIP_WATCHED_TOKENS_LEFTTIP = 'Drag item to here to add watch'
+L.TOOLTIP_WATCHED_TOKENS_RIGHTTIP = 'Manage item watch'
+L.TOOLTIP_WATCHED_TOKENS_ONLY_IN_BAG = 'Only count in backpack'
 L.TOOLTIP_SHOW_BAG = 'Show bag'
 L.TOOLTIP_HIDE_BAG = 'Hide bag'
 L.TOOLTIP_SEARCH_TOGGLE = 'Search bags'
@@ -175,7 +186,7 @@ L['Less than one day'] = true
 L['Less than %s days'] = true
 
 L['Features'] = true
-L['Token Frame'] = true
+L['Watch Frame'] = true
 L['Bag Frame'] = true
 
 L['No record'] = true

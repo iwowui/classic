@@ -1,6 +1,6 @@
 
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.56 (1st April 2020)
+	-- 	Leatrix Maps 1.13.57 (8th April 2020)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.56"
+	LeaMapsLC["AddonVer"] = "1.13.57"
 	LeaMapsLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -992,7 +992,7 @@
 					{"TravelH", 31.6, 29.1, L["Zeppelin to"] .. " " .. L["Undercity"] .. ", " .. L["Tirisfal Glades"], nil, fHTex, nil, nil},
 				},
 				--[[Swamp of Sorrows]] [1435] = {
-					{"Dungeon", 69.9, 53.6, L["Temple of Atal'Hakkar"], L["Dungeon"], dnTex, 50, 56},
+					{"Dungeon", 69.9, 53.6, L["Temple of Atal'Hakkar"], L["Dungeon"], dnTex, 50, 60},
 					{"FlightH", 46.1, 54.8, L["Stonard"] .. ", " .. L["Swamp of Sorrows"], nil, tHTex, nil, nil},
 				},
 				--[[Westfall]] [1436] = {
