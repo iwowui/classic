@@ -1865,8 +1865,16 @@ function ItemRack.ToggleHidden(id)
 end
 
 --[[ Key bindings ]]
-
+local ircb = CreateFrame("Frame");
 function ItemRack.SetSetBindings()
+	if InCombatLockdown() then
+		ircb:RegisterEvent("PLAYER_REGEN_ENABLED");
+		ircb:SetScript("OnEvent", function(self, event)
+			ItemRack.SetSetBindings();
+			ircb:UnregisterEvent("PLAYER_REGEN_ENABLED");
+		end)
+		return;
+	end
 	local buttonName,button
 	for i in pairs(ItemRackUser.Sets) do
 		if ItemRackUser.Sets[i].key then

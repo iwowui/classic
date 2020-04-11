@@ -61,6 +61,10 @@ L["Conflict with the addon TradeSkillMaster"] = "与TradeSkillMaster插件冲突
 L["Copy"] = "复制"
 L["Could not find bag space for"] = "背包无可用空格"
 L["craftable"] = "可制造"
+--[[Translation missing --]]
+L["CRAFTBUTTONSDESC"] = "Include Craft buttons in frame"
+--[[Translation missing --]]
+L["CRAFTBUTTONSNAME"] = "Include Craft buttons"
 L["Crafted By"] = "可制造"
 L["Create"] = "制造"
 L["Create All"] = "全部制造"
@@ -243,6 +247,10 @@ L["This merchant sells reagents you need!"] = "这个商人出售你所需的材
 L["TOOLTIPSCALEDESC"] = "Scales the recipe list, detail item and reagent tooltips"
 L["Total Cost:"] = "总计花费:"
 L["Total spent"] = "总计"
+--[[Translation missing --]]
+L["TRADEBUTTONSDESC"] = "Include TradeSkill buttons in frame"
+--[[Translation missing --]]
+L["TRADEBUTTONSNAME"] = "Include TradeSkill buttons"
 L["Trained"] = "训练师"
 L["TRANSPARAENCYDESC"] = "商业技能窗口透明度"
 L["Transparency"] = "透明度"

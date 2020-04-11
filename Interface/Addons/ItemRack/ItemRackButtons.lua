@@ -15,7 +15,16 @@ ItemRack.LockedButtons = {} -- buttons locked (desaturated)
 
 ItemRack.NewAnchor = nil
 
+local ircb = CreateFrame("Frame");
 function ItemRack.InitButtons()
+	if InCombatLockdown() then
+		ircb:RegisterEvent("PLAYER_REGEN_ENABLED");
+		ircb:SetScript("OnEvent", function(self, event)
+			ItemRack.InitButtons();
+			ircb:UnregisterEvent("PLAYER_REGEN_ENABLED");
+		end)
+		return;
+	end
 	ItemRackUser.Buttons = ItemRackUser.Buttons or {}
 
 	ItemRack.oldPaperDollItemSlotButton_OnModifiedClick = PaperDollItemSlotButton_OnModifiedClick

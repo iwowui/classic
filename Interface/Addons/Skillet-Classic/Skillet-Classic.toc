@@ -7,7 +7,7 @@
 ## Notes-zhTW: 擴展預設製作介面，使之顯示更多的資訊，並提供過濾功能等
 ## X-Repple: 专业
 ## Author: bsmorgan
-## Version: 1.13
+## Version: 1.14
 ## X-Category: Tradeskill
 ## X-License GPL v3 or later
 ## X-RelSite-WoWI: 25287
@@ -72,6 +72,7 @@ Plugins\BootyBayGazette.lua
 Plugins\MissingTradeSkillsList.lua
 Plugins\AuctionDB.lua
 Plugins\Auctioneer.lua
+Plugins\AuctionLite.lua
 #### Addons not ported to Classic
 ## Plugins\AckisRecipeList.lua
 ## Plugins\TradeSkillInfo.lua

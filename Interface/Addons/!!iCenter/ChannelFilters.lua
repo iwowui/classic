@@ -1,34 +1,50 @@
-﻿local function ChannelFiltersDB(default)
+﻿local cfilterlistdefault = {
+    trade = {"专业", "带做", "代做", "代工", "加工", "手工", "现货", "要的M", "要的密", "有的M", "有的密", "出的M", "出的密", "卖的M", "卖的密", "出售", "求购", "无限收", "长期", "一组", "每组", "组收", "邮寄", "U寄", "付费", "大量", "带价", "代价", "欢乐豆", "大米", "小米", "收米", "出米", "支付", "微信", "VX", "ZFB", "马云", "双马", "偷税", "逃税", "草药", "采矿", "剥皮", "炼金", "工程", "锻造", "附魔", "FM", "裁缝", "制皮"},
+    gather = {"宁神花", "银叶草", "地根草", "魔皇草", "石南草", "雨燕草", "荆棘藻", "跌打草", "野钢花", "活根草", "枯叶草", "金棘草", "紫莲花", "卡德加的胡须", "冬刺草", "火焰花", "野葡萄藤", "太阳草", "盲目草", "幽灵菇", "格罗姆之血", "阿尔萨斯之泪", "瘟疫花", "黄金参", "山鼠草", "梦叶草", "冰盖草", "黑莲花", "血藤", "铜矿", "铜锭", "锡矿", "锡锭", "银矿", "银锭", "铁矿", "铁锭", "金矿", "金锭", "钢锭", "奥术水晶", "源质矿", "源质锭", "萨弗隆铁"},
+    battle = {"战场", "国家", "奥山", "战歌", "阿拉希", "PVP", "荣誉"},
+    d10 = {"怒焰", "NY", "矿井", "死矿", "SK", "SW", "哀嚎", "AH"},
+    d20 = {"影牙", "YY", "黑暗深渊", "监狱", "JY", "诺莫瑞根", "NMRG", "矮子本", "矮人本", "矮人副本", "矮子副本", "沼泽", "ZZ"},
+    d30 = {"血色", "XS", "图书馆", "军械库", "武器库", "教堂", "墓地", "高地", "GD", "奥达曼", "ADM"},
+    d40 = {"玛拉顿", "MLD", "祖尔法拉克", "ZUL", "神庙", "黑石深渊"},
+    d50 = {"斯坦", "十字", "DK", "STSM", "通灵", "TL", "黑石塔", "黑上", "黑下", "厄运", "牵马", "摸马", "黑龙的威胁", "救元帅"},
+    d60 = {"祖尔格拉布", "祖格", "ZUG", "ZG", "安其拉", "AQL", "神殿", "TAQ", "废墟", "FX", "熔火之心", "MC", "黑龙", "黑翼", "BWL", "纳克", "NAXX"},
+    other = {"买号", "卖号", "代刷", "带刷", "代打", "带打", "金一次", "G一次", "经验", "自由拾取", "位面", "老板", "私聊", "托管", "极速", "站桩", "躺尸", "地板", "老牌", "皇冠", "好评", "金币", "拉人", "飞机", "航班", "航线", "航空", "深渊", "祖尔", "来的M", "来的密"},
+    symbol = {"`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "[", "]", "{", "}", "<", ">", ":", ",", ";", ".", "|", "?", "：", "，", "；", "。", "『", "』", "☆", "★", "○", "●", "◇", "◆", "□", "■", "△", "▲", "　"}
+}
+
+local function ChannelFiltersDB(default)
     if not cfilter or default == true then cfilter = true end
     if not cfilterall or default == true then cfilterall = false end
 
     if not cfilters or default == true then cfilters = {} end
     if not cfilters["white"] or default == true then cfilters["white"] = true end
     if not cfilters["black"] or default == true then cfilters["black"] = true end
-    if not cfilters["symbol"] or default == true then cfilters["symbol"] = true end
     if not cfilters["trade"] or default == true then cfilters["trade"] = true end
-    if not cfilters["battle"] or default == true then cfilters["battle"] = false end
+    if not cfilters["gather"] or default == true then cfilters["gather"] = true end
+    if not cfilters["battle"] or default == true then cfilters["battle"] = true end
     if not cfilters["d10"] or default == true then cfilters["d10"] = false end
     if not cfilters["d20"] or default == true then cfilters["d20"] = false end
     if not cfilters["d30"] or default == true then cfilters["d30"] = false end
     if not cfilters["d40"] or default == true then cfilters["d40"] = false end
     if not cfilters["d50"] or default == true then cfilters["d50"] = false end
     if not cfilters["d60"] or default == true then cfilters["d60"] = false end
-    if not cfilters["diy"] or default == true then cfilters["diy"] = false end
+    if not cfilters["other"] or default == true then cfilters["other"] = false end
+    if not cfilters["symbol"] or default == true then cfilters["symbol"] = true end
 
     if not cfilterlist or default == true then cfilterlist = {} end
     if not cfilterlist["white"] then cfilterlist["white"] = {} end
     if not cfilterlist["black"] then cfilterlist["black"] = {} end
-    if not cfilterlist["symbol"] or default == true then cfilterlist["symbol"] = {"`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "[", "]", "{", "}", "<", ">", ",", ".", "|", "?", "：", "，", "。"} end
-    if not cfilterlist["trade"] or default == true then cfilterlist["trade"] = {"专业", "带做", "代做", "加工", "手工", "现货", "要的M", "有的M", "出售", "求购", "无限收", "长期", "一组", "每组", "组收", "邮寄", "U寄", "付费", "大量", "带价", "代价", "欢乐豆", "大米", "小米", "收米", "出米", "支付", "微信", "VX", "ZFB", "拉人", "飞机", "航班", "航线", "航空", "附魔", "FM", "偷税", "逃税", "买号", "卖号"} end
-    if not cfilterlist["battle"] or default == true then cfilterlist["battle"] = {"战场", "国家", "奥山", "战歌", "阿拉希", "PVP", "荣誉"} end
-    if not cfilterlist["d10"] or default == true then cfilterlist["d10"] = {"怒焰", "NY", "矿井", "死矿", "SK", "哀嚎", "AH"} end
-    if not cfilterlist["d20"] or default == true then cfilterlist["d20"] = {"影牙", "YY", "黑暗深渊", "监狱", "JY", "诺莫瑞根", "NMRG", "矮子本", "矮人本", "矮人副本", "矮子副本", "沼泽", "ZZ"} end
-    if not cfilterlist["d30"] or default == true then cfilterlist["d30"] = {"血色", "XS", "图书馆", "军械库", "武器库", "教堂", "墓地", "高地", "GD", "奥达曼", "ADM"} end
-    if not cfilterlist["d40"] or default == true then cfilterlist["d40"] = {"玛拉顿", "MLD", "祖尔法拉克", "ZUL", "神庙", "黑石深渊"} end
-    if not cfilterlist["d50"] or default == true then cfilterlist["d50"] = {"斯坦", "十字", "DK", "STSM", "通灵", "TL", "黑石塔", "黑上", "黑下", "厄运", "牵马"} end
-    if not cfilterlist["d60"] or default == true then cfilterlist["d60"] = {"祖尔格拉布", "祖格", "ZUG", "ZG", "安其拉", "AQL", "神殿", "TAQ", "废墟", "FX", "熔火之心", "MC", "黑龙", "黑翼", "BWL", "纳克", "NAXX"} end
-    if not cfilterlist["diy"] or default == true then cfilterlist["diy"] = {"代刷", "带刷", "G一次", "经验", "自由拾取", "深渊", "祖尔", "位面", "老板", "私聊"} end
+    if not cfilterlist["trade"] or default == true then cfilterlist["trade"] = cfilterlistdefault["trade"] end
+    if not cfilterlist["gather"] or default == true then cfilterlist["gather"] = cfilterlistdefault["gather"] end
+    if not cfilterlist["battle"] or default == true then cfilterlist["battle"] = cfilterlistdefault["battle"] end
+    if not cfilterlist["d10"] or default == true then cfilterlist["d10"] = cfilterlistdefault["d10"] end
+    if not cfilterlist["d20"] or default == true then cfilterlist["d20"] = cfilterlistdefault["d20"] end
+    if not cfilterlist["d30"] or default == true then cfilterlist["d30"] = cfilterlistdefault["d30"] end
+    if not cfilterlist["d40"] or default == true then cfilterlist["d40"] = cfilterlistdefault["d40"] end
+    if not cfilterlist["d50"] or default == true then cfilterlist["d50"] = cfilterlistdefault["d50"] end
+    if not cfilterlist["d60"] or default == true then cfilterlist["d60"] = cfilterlistdefault["d60"] end
+    if not cfilterlist["other"] or default == true then cfilterlist["other"] = cfilterlistdefault["other"] end
+    if not cfilterlist["symbol"] or default == true then cfilterlist["symbol"] = cfilterlistdefault["symbol"] end
 end
 
 local cff = CreateFrame("Frame");
@@ -81,6 +97,8 @@ local function ChannelFiltersShow()
     ChannelFiltersFrame.enableall:SetChecked(cfilterall);
     ChannelFiltersFrame.blacklisttradeeditbox:SetText(listtostring("trade"));
     ChannelFiltersFrame.blacklisttrade:SetChecked(cfilters["trade"]);
+    ChannelFiltersFrame.blacklistgathereditbox:SetText(listtostring("gather"));
+    ChannelFiltersFrame.blacklistgather:SetChecked(cfilters["gather"]);
     ChannelFiltersFrame.blacklistbattleeditbox:SetText(listtostring("battle"));
     ChannelFiltersFrame.blacklistbattle:SetChecked(cfilters["battle"]);
     ChannelFiltersFrame.blacklist10editbox:SetText(listtostring("d10"));
@@ -95,8 +113,8 @@ local function ChannelFiltersShow()
     ChannelFiltersFrame.blacklist50:SetChecked(cfilters["d50"]);
     ChannelFiltersFrame.blacklist60editbox:SetText(listtostring("d60"));
     ChannelFiltersFrame.blacklist60:SetChecked(cfilters["d60"]);
-    ChannelFiltersFrame.blacklistdiyeditbox:SetText(listtostring("diy"));
-    ChannelFiltersFrame.blacklistdiy:SetChecked(cfilters["diy"]);
+    ChannelFiltersFrame.blacklistothereditbox:SetText(listtostring("other"));
+    ChannelFiltersFrame.blacklistother:SetChecked(cfilters["other"]);
     ChannelFiltersFrame.blacklistsymboleditbox:SetText(listtostring("symbol"));
     ChannelFiltersFrame.blacklistsymbol:SetChecked(cfilters["symbol"]);
 end
@@ -179,7 +197,7 @@ end
 
 --settings
 local cf = CreateFrame("Frame", "ChannelFiltersFrame", UIParent);
-cf:SetSize(390, 485);
+cf:SetSize(390, 515);
 cf:ClearAllPoints();
 cf:SetPoint("CENTER");
 cf:SetClampedToScreen(true);
@@ -287,7 +305,17 @@ cf.whitelisteditbox:SetScript("OnShow", function(self)
 end)
 cf.whitelisteditbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("white"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["white"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
 cf.whitelisteditbox:SetScript("OnLeave", function()
@@ -335,7 +363,17 @@ cf.blacklisteditbox:SetScript("OnShow", function(self)
 end)
 cf.blacklisteditbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("black"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["black"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
 cf.blacklisteditbox:SetScript("OnLeave", function()
@@ -379,17 +417,81 @@ cf.blacklisttradeeditbox:SetScript("OnShow", function(self)
 end)
 cf.blacklisttradeeditbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("trade"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["trade"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
 cf.blacklisttradeeditbox:SetScript("OnLeave", function()
     GameTooltip:Hide();
 end)
 
+--blacklist gather
+cf.blacklistgather = CreateFrame("CheckButton", nil, cf, "InterfaceOptionsCheckButtonTemplate");
+cf.blacklistgather:ClearAllPoints();
+cf.blacklistgather:SetPoint("TOPLEFT", cf.blacklisttrade, "TOPLEFT", 0, -30);
+cf.blacklistgather:SetHitRectInsets(0, -40, 0, 0);
+cf.blacklistgather.Text:SetText("采集");
+cf.blacklistgather.Text:SetTextColor(1, 0.82, 0);
+cf.blacklistgather:SetScript("OnShow", function(self)
+    self:SetChecked(cfilters["gather"]);
+end)
+cf.blacklistgather:SetScript("OnClick", function(self)
+    cfilters["gather"] = not cfilters["gather"];
+    self:SetChecked(cfilters["gather"]);
+end)
+--blacklist gather editbox
+cf.blacklistgathereditbox = CreateFrame("EditBox", nil, cf, "InputBoxTemplate");
+cf.blacklistgathereditbox:ClearAllPoints();
+cf.blacklistgathereditbox:SetPoint("LEFT", cf.blacklistgather, "RIGHT", 44, 1);
+cf.blacklistgathereditbox:SetWidth(285);
+cf.blacklistgathereditbox:SetHeight(25);
+cf.blacklistgathereditbox:SetAutoFocus(false);
+cf.blacklistgathereditbox:ClearFocus();
+cf.blacklistgathereditbox:SetScript("OnEnterPressed", function(self)
+    savelist(self, "gather");
+end)
+cf.blacklistgathereditbox:SetScript("OnEscapePressed", function(self)
+    savelist(self, "gather");
+end)
+cf.blacklistgathereditbox:SetScript("OnEditFocusLost", function(self)
+    savelist(self, "gather");
+    self:SetText(listtostring("gather"));
+end)
+cf.blacklistgathereditbox:SetScript("OnShow", function(self)
+    self:SetText(listtostring("gather"));
+end)
+cf.blacklistgathereditbox:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_TOP");
+    local text = "";
+    for k, v in ipairs(cfilterlist["gather"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
+    GameTooltip:Show();
+end)
+cf.blacklistgathereditbox:SetScript("OnLeave", function()
+    GameTooltip:Hide();
+end)
+
 --blacklist battle
 cf.blacklistbattle = CreateFrame("CheckButton", nil, cf, "InterfaceOptionsCheckButtonTemplate");
 cf.blacklistbattle:ClearAllPoints();
-cf.blacklistbattle:SetPoint("TOPLEFT", cf.blacklisttrade, "TOPLEFT", 0, -30);
+cf.blacklistbattle:SetPoint("TOPLEFT", cf.blacklistgather, "TOPLEFT", 0, -30);
 cf.blacklistbattle:SetHitRectInsets(0, -40, 0, 0);
 cf.blacklistbattle.Text:SetText("战场");
 cf.blacklistbattle.Text:SetTextColor(1, 0.82, 0);
@@ -423,7 +525,17 @@ cf.blacklistbattleeditbox:SetScript("OnShow", function(self)
 end)
 cf.blacklistbattleeditbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("battle"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["battle"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
 cf.blacklistbattleeditbox:SetScript("OnLeave", function()
@@ -467,7 +579,17 @@ cf.blacklist10editbox:SetScript("OnShow", function(self)
 end)
 cf.blacklist10editbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("d10"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["d10"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
 cf.blacklist10editbox:SetScript("OnLeave", function()
@@ -511,7 +633,17 @@ cf.blacklist20editbox:SetScript("OnShow", function(self)
 end)
 cf.blacklist20editbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("d20"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["d10"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
 cf.blacklist20editbox:SetScript("OnLeave", function()
@@ -555,7 +687,17 @@ cf.blacklist30editbox:SetScript("OnShow", function(self)
 end)
 cf.blacklist30editbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("d30"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["d30"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
 cf.blacklist30editbox:SetScript("OnLeave", function()
@@ -599,7 +741,17 @@ cf.blacklist40editbox:SetScript("OnShow", function(self)
 end)
 cf.blacklist40editbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("d40"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["d40"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
 cf.blacklist40editbox:SetScript("OnLeave", function()
@@ -643,7 +795,17 @@ cf.blacklist50editbox:SetScript("OnShow", function(self)
 end)
 cf.blacklist50editbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("d50"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["d50"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
 cf.blacklist50editbox:SetScript("OnLeave", function()
@@ -687,61 +849,81 @@ cf.blacklist60editbox:SetScript("OnShow", function(self)
 end)
 cf.blacklist60editbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("d60"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["d60"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
 cf.blacklist60editbox:SetScript("OnLeave", function()
     GameTooltip:Hide();
 end)
 
---blacklist diy
-cf.blacklistdiy = CreateFrame("CheckButton", nil, cf, "InterfaceOptionsCheckButtonTemplate");
-cf.blacklistdiy:ClearAllPoints();
-cf.blacklistdiy:SetPoint("TOPLEFT", cf.blacklist60, "TOPLEFT", 0, -30);
-cf.blacklistdiy:SetHitRectInsets(0, -40, 0, 0);
-cf.blacklistdiy.Text:SetText("额外");
-cf.blacklistdiy.Text:SetTextColor(1, 0.82, 0);
-cf.blacklistdiy:SetScript("OnShow", function(self)
-    self:SetChecked(cfilters["diy"]);
+--blacklist other
+cf.blacklistother = CreateFrame("CheckButton", nil, cf, "InterfaceOptionsCheckButtonTemplate");
+cf.blacklistother:ClearAllPoints();
+cf.blacklistother:SetPoint("TOPLEFT", cf.blacklist60, "TOPLEFT", 0, -30);
+cf.blacklistother:SetHitRectInsets(0, -40, 0, 0);
+cf.blacklistother.Text:SetText("额外");
+cf.blacklistother.Text:SetTextColor(1, 0.82, 0);
+cf.blacklistother:SetScript("OnShow", function(self)
+    self:SetChecked(cfilters["other"]);
 end)
-cf.blacklistdiy:SetScript("OnClick", function(self)
-    cfilters["diy"] = not cfilters["diy"];
-    self:SetChecked(cfilters["diy"]);
+cf.blacklistother:SetScript("OnClick", function(self)
+    cfilters["other"] = not cfilters["other"];
+    self:SetChecked(cfilters["other"]);
 end)
---blacklist diy editbox
-cf.blacklistdiyeditbox = CreateFrame("EditBox", nil, cf, "InputBoxTemplate");
-cf.blacklistdiyeditbox:ClearAllPoints();
-cf.blacklistdiyeditbox:SetPoint("LEFT", cf.blacklistdiy, "RIGHT", 44, 1);
-cf.blacklistdiyeditbox:SetWidth(285);
-cf.blacklistdiyeditbox:SetHeight(25);
-cf.blacklistdiyeditbox:SetAutoFocus(false);
-cf.blacklistdiyeditbox:ClearFocus();
-cf.blacklistdiyeditbox:SetScript("OnEnterPressed", function(self)
-    savelist(self, "diy");
+--blacklist other editbox
+cf.blacklistothereditbox = CreateFrame("EditBox", nil, cf, "InputBoxTemplate");
+cf.blacklistothereditbox:ClearAllPoints();
+cf.blacklistothereditbox:SetPoint("LEFT", cf.blacklistother, "RIGHT", 44, 1);
+cf.blacklistothereditbox:SetWidth(285);
+cf.blacklistothereditbox:SetHeight(25);
+cf.blacklistothereditbox:SetAutoFocus(false);
+cf.blacklistothereditbox:ClearFocus();
+cf.blacklistothereditbox:SetScript("OnEnterPressed", function(self)
+    savelist(self, "other");
 end)
-cf.blacklistdiyeditbox:SetScript("OnEscapePressed", function(self)
-    savelist(self, "diy");
+cf.blacklistothereditbox:SetScript("OnEscapePressed", function(self)
+    savelist(self, "other");
 end)
-cf.blacklistdiyeditbox:SetScript("OnEditFocusLost", function(self)
-    savelist(self, "diy");
-    self:SetText(listtostring("diy"));
+cf.blacklistothereditbox:SetScript("OnEditFocusLost", function(self)
+    savelist(self, "other");
+    self:SetText(listtostring("other"));
 end)
-cf.blacklistdiyeditbox:SetScript("OnShow", function(self)
-    self:SetText(listtostring("diy"));
+cf.blacklistothereditbox:SetScript("OnShow", function(self)
+    self:SetText(listtostring("other"));
 end)
-cf.blacklistdiyeditbox:SetScript("OnEnter", function(self)
+cf.blacklistothereditbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("diy"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["other"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 5 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
-cf.blacklistdiyeditbox:SetScript("OnLeave", function()
+cf.blacklistothereditbox:SetScript("OnLeave", function()
     GameTooltip:Hide();
 end)
 
 --blacklist symbol
 cf.blacklistsymbol = CreateFrame("CheckButton", nil, cf, "InterfaceOptionsCheckButtonTemplate");
 cf.blacklistsymbol:ClearAllPoints();
-cf.blacklistsymbol:SetPoint("TOPLEFT", cf.blacklistdiy, "TOPLEFT", 0, -30);
+cf.blacklistsymbol:SetPoint("TOPLEFT", cf.blacklistother, "TOPLEFT", 0, -30);
 cf.blacklistsymbol:SetHitRectInsets(0, -40, 0, 0);
 cf.blacklistsymbol.Text:SetText("字符");
 cf.blacklistsymbol.Text:SetTextColor(1, 0.82, 0);
@@ -783,7 +965,17 @@ cf.blacklistsymboleditbox:SetScript("OnShow", function(self)
 end)
 cf.blacklistsymboleditbox:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_TOP");
-    GameTooltip:AddLine(listtostring("symbol"));
+    local text = "";
+    for k, v in ipairs(cfilterlist["symbol"]) do
+        text = text == "" and v or text .. "  " .. v
+        if k % 10 == 0 then
+            GameTooltip:AddLine(text);
+            text = "";
+        end
+    end
+    if text ~= "" then 
+        GameTooltip:AddLine(text);
+    end
     GameTooltip:Show();
 end)
 cf.blacklistsymboleditbox:SetScript("OnLeave", function()
