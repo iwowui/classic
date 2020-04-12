@@ -32,6 +32,8 @@ local strupper = string.upper
 local tinsert  = table.insert
 local strsplit = strsplit
 
+local setfix = 1
+
 --静态值属性
 local function SetStaticValue(stats, value, ...)
     if (not stats.static) then stats.static = {} end
@@ -95,6 +97,7 @@ local function GetStats(text, r, g, b, stats, link)
     local v, v1, v2, txt, txt1, txt2
     --套装
     if strfind(text, "%(%d/%d%)") or strfind(text, "（%d/%d）") then
+        setfix = strmatch(text, "%((%d)/") or strmatch(text, "（(%d)/")
         return SetSuitValue(stats, text, select(3, strfind(link or "","(|c%x+)|Hitem:.-|h|r")) or "|cffffffff")
     end
     --灰色属性不统计
@@ -138,7 +141,7 @@ local function GetStats(text, r, g, b, stats, link)
     --描述属性
     for _, p in ipairs(patterns.extra) do
 		if strfind(text, p.pattern) then
-            v = strmatch(text, p.pattern)
+            v = strmatch(text, p.pattern)/setfix
             SetStaticValue(stats, v, strsplit("|",p.key))
             return
         end
@@ -251,11 +254,13 @@ function lib:GetUnitItemStats(unit, stats)
             unittip:SetInventoryItem(unit, i)
             link = GetInventoryItemLink(unit,i) or select(2, unittip:GetItem())
             n, f = unittip:NumLines(), unittip:GetName()
+            setfix = 1
             for j = 2, n do
                 text = _G[f.."TextLeft" .. j]:GetText() or ""
                 r, g, b = _G[f.."TextLeft" .. j]:GetTextColor()
                 GetStats(text, r, g, b, stats, link)
             end
+            setfix = 1
         end
     end
     return stats

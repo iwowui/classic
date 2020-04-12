@@ -1,4 +1,5 @@
-﻿local emmm = {};
+﻿local iwowuidb = {};
+local emmm = {};
 local sync = false;
 
 local function whoareyou(name, db, remove)
@@ -36,20 +37,18 @@ local function OnEvent(self, event, ...)
             local name, realm = UnitName("target");
             if not realm or realm == "" then realm = GetRealmName() end
             local fullname = name .. "-" .. realm;
-            if whoareyou(fullname, iwowuidb) then
-                -- TargetFrame.borderTexture:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-Rare");
-            elseif sync and not whoareyou(fullname, emmm) then
+            if sync and not whoareyou(fullname, emmm) then
                 table.insert(emmm, fullname);
                 C_ChatInfo.SendAddonMessage("iwowui", fullname, "WHISPER", fullname);
+            -- elseif whoareyou(fullname, iwowuidb) then
+            --     TargetFrame.borderTexture:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-Rare");
             end
         end
     elseif event == "PLAYER_LOGIN" then
         sync = C_ChatInfo.RegisterAddonMessagePrefix("iwowui");
     elseif event == "ADDON_LOADED" then
         local name = ...;
-        if name == "!!iCenter" then
-            if not iwowuidb then iwowuidb = {} end
-        elseif name == "TinyTooltip" then
+        if name == "TinyTooltip" then
             LibStub:GetLibrary("LibEvent.7000"):attachTrigger("tooltip:unit", function(self, tip, unit)
                 if UnitIsPlayer(unit) and UnitIsFriend(unit, "player") then
                     local name, realm = UnitName(unit);
@@ -60,6 +59,8 @@ local function OnEvent(self, event, ...)
                     end
                 end
             end)
+        -- elseif name == "!!iCenter" then
+        --     if not iwowuidb then iwowuidb = {} end
         end
     end
 end
