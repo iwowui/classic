@@ -1550,6 +1550,7 @@ function UnitFramesPlus_PartyMemberFrame_UpdateMember(self)
         self:Hide();
     end
     PartyMemberFrame_UpdatePet(self);
+    PartyMemberFrame_UpdateLeader(self);
     PartyMemberFrame_UpdatePvPStatus(self);
     RefreshDebuffs(self, "party"..id, nil, nil, true);
     PartyMemberFrame_UpdateVoiceStatus(self);
