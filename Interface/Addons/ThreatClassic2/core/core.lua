@@ -74,6 +74,7 @@ local LSM = LibStub("LibSharedMedia-3.0")
 -- Register some media
 LSM:Register("sound", "You Will Die!", [[Sound\Creature\CThun\CThunYouWillDie.ogg]])
 LSM:Register("font", "NotoSans SemiCondensedBold", [[Interface\AddOns\ThreatClassic2\media\NotoSans-SemiCondensedBold.ttf]])
+LSM:Register("font", "Standard Text Font", _G.STANDARD_TEXT_FONT) -- register so it's usable as a default in config
 
 local SoundChannels = {
 	["Master"] = L.soundChannel_master,
@@ -247,7 +248,6 @@ function TC2:UpdateThreatBars()
 		local data = self.threatData[i]
 		local bar = self.bars[i]
 		if data and data.threatValue > 0 then
-			if bar == self.bars[1] then data.scaledPercent = 100 end -- temporary?
 			bar.name:SetText(UnitName(data.unit) or UNKNOWN)
 			bar.val:SetText(NumFormat(data.threatValue))
 			bar.perc:SetText(floor(data.scaledPercent).."%")
@@ -368,7 +368,7 @@ function TC2:CheckWarning(isTanking, threatPercent)
 	if threatPercent >= threshold and lastWarnPercent < threshold then
 		lastWarnPercent = threatPercent
 		if C.warnings.sound then PlaySoundFile(LSM:Fetch("sound", C.warnings.soundFile), C.warnings.soundChannel) end
-		self:FlashScreen()
+		if C.warnings.flash then self:FlashScreen() end
 	-- percentage is below threshold -> reset lastWarnPercent
 	elseif threatPercent < threshold and lastWarnPercent > threshold then
 		lastWarnPercent = threatPercent
@@ -1381,9 +1381,9 @@ TC2.configTable = {
 			type = "group",
 			name = L.warnings,
 			args = {
-				visual = {
+				flash = {
 					order = 2,
-					name = L.warnings_visual,
+					name = L.warnings_flash,
 					type = "toggle",
 					width = "full",
 				},

@@ -9,7 +9,7 @@ local defaultFont = "NotoSans SemiCondensedBold"
 -- Adjust fonts for CJK
 local locale = GetLocale()
 if locale == "koKR" or locale == "zhCN" or locale == "zhTW" then
-	defaultFont = "Friz Quadrata TT"
+	defaultFont = "Standard Text Font"
 end
 
 
@@ -89,7 +89,7 @@ TC2.defaultConfig.font = {
 
 -- warning settings
 TC2.defaultConfig.warnings = {
-	visual				= false,								-- enable screen flash
+	flash				= false,								-- enable screen flash
 	sound				= false,								-- enable sound
 	threshold			= 80,									-- alert threshold (of normalized percentage 0-100)
 	soundFile			= "You Will Die!",
