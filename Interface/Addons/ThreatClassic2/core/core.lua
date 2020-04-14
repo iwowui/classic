@@ -32,6 +32,7 @@ local UnitAffectingCombat	= _G.UnitAffectingCombat
 local UnitClass				= _G.UnitClass
 local UnitExists			= _G.UnitExists
 local UnitIsFriend			= _G.UnitIsFriend
+local UnitCanAssist			= _G.UnitCanAssist
 local UnitIsPlayer			= _G.UnitIsPlayer
 local UnitName				= _G.UnitName
 local UnitReaction			= _G.UnitReaction
@@ -39,6 +40,8 @@ local UnitIsUnit 			= _G.UnitIsUnit
 
 local lastCheckStatusTime 	= 0
 local callCheckStatus		= false
+
+local lastWarnPercent		=  0
 
 local FACTION_BAR_COLORS	= _G.FACTION_BAR_COLORS
 local RAID_CLASS_COLORS		= (_G.CUSTOM_CLASS_COLORS or _G.RAID_CLASS_COLORS)
@@ -66,6 +69,18 @@ C_Timer.After(3,
     end
   end
 )
+
+local LSM = LibStub("LibSharedMedia-3.0")
+-- Register some media
+LSM:Register("sound", "You Will Die!", [[Sound\Creature\CThun\CThunYouWillDie.ogg]])
+LSM:Register("font", "NotoSans SemiCondensedBold", [[Interface\AddOns\ThreatClassic2\media\NotoSans-SemiCondensedBold.ttf]])
+
+local SoundChannels = {
+	["Master"] = L.soundChannel_master,
+	["SFX"] =  L.soundChannel_sfx,
+	["Ambience"] =  L.soundChannel_ambience,
+	["Music"] = L.soundChannel_music
+}
 
 local ThreatLib = TC2.classic and LibStub:GetLibrary("LibThreatClassic2")
 assert(ThreatLib, "ThreatClassic2 requires LibThreatClassic2")
@@ -123,7 +138,7 @@ end
 
 local function CreateFS(parent)
 	local fs = parent:CreateFontString(nil, "ARTWORK")
-	fs:SetFont(C.font.family, C.font.size, C.font.style)
+	fs:SetFont(LSM:Fetch("font", C.font.name), C.font.size, C.font.style)
 	return fs
 end
 
@@ -253,7 +268,7 @@ end
 local function CheckVisibility()
 	local instanceType = select(2, GetInstanceInfo())
 	local hide = C.general.hideAlways or
-		(C.general.hideOOC and not InCombatLockdown()) or 
+		(C.general.hideOOC and not UnitAffectingCombat("player")) or
 		(C.general.hideSolo and TC2.numGroupMembers == 0) or 
 		(C.general.hideInPVP and (instanceType == "arena" or instanceType == "pvp")) or
 		(C.general.hideOpenWorld and instanceType == "none")
@@ -267,9 +282,13 @@ end
 
 local function UpdateThreatData(unit)
 	if not UnitExists(unit) then return end
-	local _, _, scaledPercent, _, threatValue = UnitDetailedThreatSituation(unit, TC2.playerTarget)
+	local isTanking, _, scaledPercent, _, threatValue = UnitDetailedThreatSituation(unit, TC2.playerTarget)
 	if threatValue and threatValue < 0 then
 		threatValue = threatValue + 410065408
+	end
+	-- check for warnings
+	if unit == "player" and scaledPercent then
+		TC2:CheckWarning(isTanking, scaledPercent)
 	end
 	tinsert(TC2.threatData, {
 		unit			= unit,
@@ -279,9 +298,9 @@ local function UpdateThreatData(unit)
 end
 
 local function UpdatePlayerTarget()
-	if UnitExists("target") and not UnitIsFriend("player", "target") then
+	if UnitExists("target") and (not UnitIsFriend("player", "target") or ((UnitReaction("player", "target") or 0) <= 4 and not UnitCanAssist("player", "target"))) then
 		TC2.playerTarget = "target"
-	elseif UnitExists("targettarget") and not UnitIsFriend("player", "targettarget") then
+	elseif UnitExists("targettarget") and (not UnitIsFriend("player", "targettarget") or ((UnitReaction("player", "targettarget") or 0) <= 4 and not UnitCanAssist("player", "targettarget"))) then
 		TC2.playerTarget = "targettarget"
 	else
 		TC2.playerTarget = "target"
@@ -295,7 +314,7 @@ local function CheckStatus()
 
 	CheckVisibility()
 
-	if UnitExists(TC2.playerTarget) then -- and UnitAffectingCombat(TC2.playerTarget) then
+	if UnitExists(TC2.playerTarget) then
 		-- wipe
 		wipe(TC2.threatData)
 
@@ -342,6 +361,59 @@ local function ThreatUpdated(event, unitGUID, targetGUID, threat)
 	end
 end
 
+function TC2:CheckWarning(isTanking, threatPercent)
+	if isTanking then return end
+	-- percentage is now above threshold and was below threshold before
+	local threshold = C.warnings.threshold
+	if threatPercent >= threshold and lastWarnPercent < threshold then
+		lastWarnPercent = threatPercent
+		if C.warnings.sound then PlaySoundFile(LSM:Fetch("sound", C.warnings.soundFile), C.warnings.soundChannel) end
+		self:FlashScreen()
+	-- percentage is below threshold -> reset lastWarnPercent
+	elseif threatPercent < threshold and lastWarnPercent > threshold then
+		lastWarnPercent = threatPercent
+	end
+end
+
+
+function TC2:FlashScreen()
+	if not self.FlashFrame then
+		local flasher = CreateFrame("Frame", "Tc2FlashFrame")
+		flasher:SetToplevel(true)
+		flasher:SetFrameStrata("FULLSCREEN_DIALOG")
+		flasher:SetAllPoints(UIParent)
+		flasher:EnableMouse(false)
+		flasher:Hide()
+		flasher.texture = flasher:CreateTexture(nil, "BACKGROUND")
+		flasher.texture:SetTexture("Interface\\FullScreenTextures\\LowHealth")
+		flasher.texture:SetAllPoints(UIParent)
+		flasher.texture:SetBlendMode("ADD")
+		flasher:SetScript("OnShow", function(self)
+			self.elapsed = 0
+			self:SetAlpha(0)
+		end)
+		flasher:SetScript("OnUpdate", function(self, elapsed)
+			elapsed = self.elapsed + elapsed
+			if elapsed < 2.6 then
+				local alpha = elapsed % 1.3
+				if alpha < 0.15 then
+					self:SetAlpha(alpha / 0.15)
+				elseif alpha < 0.9 then
+					self:SetAlpha(1 - (alpha - 0.15) / 0.6)
+				else
+					self:SetAlpha(0)
+				end
+			else
+				self:Hide()
+			end
+			self.elapsed = elapsed
+		end)
+		self.FlashFrame = flasher
+	end
+
+	self.FlashFrame:Show()
+end
+
 -----------------------------
 -- UPDATE FRAME
 -----------------------------
@@ -351,14 +423,18 @@ local function SetPosition(f)
 end
 
 local function OnDragStart(f)
-	f = f:GetParent()
-	f:StartMoving()
+	if not C.frame.locked then
+		f = f:GetParent()
+		f:StartMoving()
+	end
 end
 
 local function OnDragStop(f)
-	f = f:GetParent()
-	f:StopMovingOrSizing()
-	SetPosition(f)
+	if not C.frame.locked then
+		f = f:GetParent()
+		f:StopMovingOrSizing()
+		SetPosition(f)
+	end
 end
 
 local function UpdateSize(f)
@@ -397,7 +473,7 @@ local function OnMouseUp(f)
 end
 
 local function UpdateFont(fs)
-	fs:SetFont(C.font.family, C.font.size, C.font.style)
+	fs:SetFont(LSM:Fetch("font", C.font.name), C.font.size, C.font.style)
 	fs:SetVertexColor(unpack(C.font.color))
 	fs:SetShadowOffset(C.font.shadow and 1 or 0, C.font.shadow and -1 or 0)
 end
@@ -503,7 +579,7 @@ end
 -- TEST MODE
 -----------------------------
 function TC2:TestMode()
-	if InCombatLockdown() then return end
+	if UnitAffectingCombat("player") then return end
 
 	C.frame.test = true
 	wipe(TC2.threatData)
@@ -705,6 +781,8 @@ end
 
 function TC2:PLAYER_TARGET_CHANGED(...)
 	UpdatePlayerTarget()
+	-- reset last warning on target change
+	lastWarnPercent = 0
 
 	C.frame.test = false
 	CheckStatus()
@@ -725,15 +803,14 @@ end
 
 function TC2:PLAYER_REGEN_DISABLED(...)
 	UpdatePlayerTarget() -- for friendly mobs that turn hostile like vaelastrasz
+	lastWarnPercent = 0
 	C.frame.test = false
-	ThreatLib.RegisterCallback(self, "ThreatUpdated", ThreatUpdated)
 	CheckStatus()
 end
 
 function TC2:PLAYER_REGEN_ENABLED(...)
 	-- collectgarbage()
 	C.frame.test = false
-	ThreatLib.UnregisterCallback(self, "ThreatUpdated", ThreatUpdated)
 	CheckStatus()
 end
 
@@ -756,11 +833,6 @@ function TC2:PLAYER_LOGIN()
 	-- Adjust C.bar.count if it exceed the frame height
 	local maxBarCount = floor(C.frame.height / (C.bar.height + C.bar.padding - 1))
 	if C.bar.count > maxBarCount then C.bar.count = maxBarCount end
-
-	-- Adjust fonts for CJK
-	if self.locale == "koKR" or self.locale == "zhCN" or self.locale == "zhTW" then
-		C.font.family = _G.STANDARD_TEXT_FONT
-	end
 
 	self:SetupUnits()
 	self:SetupFrame()
@@ -900,7 +972,7 @@ function TC2:SetupConfig()
 	self.config = {}
 	self.config.general = ACD:AddToBlizOptions(TC2.addonName, TC2.addonName, nil, "general")
 	self.config.appearance = ACD:AddToBlizOptions(TC2.addonName, L.appearance, TC2.addonName, "appearance")
-	-- self.config.warnings = ACD:AddToBlizOptions(TC2.addonName, L.warnings, TC2.addonName, "warnings")
+	self.config.warnings = ACD:AddToBlizOptions(TC2.addonName, L.warnings, TC2.addonName, "warnings")
 	self.config.version = ACD:AddToBlizOptions(TC2.addonName, L.version, TC2.addonName, "version")
 end
 
@@ -1258,7 +1330,6 @@ TC2.configTable = {
 					type = "group",
 					inline = true,
 					args = {
-						-- name
 						size = {
 							order = 2,
 							name = L.font_size,
@@ -1278,8 +1349,15 @@ TC2.configTable = {
 							},
 							style = "dropdown",
 						},
-						shadow = {
+						name = {
 							order = 4,
+							name = L.font_name,
+							type = "select",
+							dialogControl = 'LSM30_Font',
+							values = AceGUIWidgetLSMlists.font,
+						},
+						shadow = {
+							order = 5,
 							name = L.font_shadow,
 							type = "toggle",
 							width = "full",
@@ -1298,49 +1376,49 @@ TC2.configTable = {
 				},
 			},
 		},
-		--[[
 		warnings = {
 			order = 3,
 			type = "group",
 			name = L.warnings,
 			args = {
 				visual = {
-					order = 1,
+					order = 2,
 					name = L.warnings_visual,
 					type = "toggle",
 					width = "full",
 				},
-				sounds = {
-					order = 2,
-					name = L.warnings_sounds,
-					type = "toggle",
-					width = "full",
-				},
 				threshold = {
-					order = 3,
+					order = 1,
 					name = L.warnings_threshold,
 					type = "range",
 					min = 50,
 					max = 100,
 					step = 1,
-					bigStep = 10,
+					bigStep = 5,
 					-- get / set
 				},
-				warningFile = {
+				sound = {
 					order = 4,
-					name = L.sound_warningFile,
+					name = L.warnings_sound,
 					type = "toggle",
 					width = "full",
 				},
-				pulledFile = {
+				soundFile = {
+					type = "select", dialogControl = 'LSM30_Sound',
 					order = 5,
-					name = L.sound_pulledFile,
-					type = "toggle",
-					width = "full",
+					name = L.warnings_soundFile,
+					values = AceGUIWidgetLSMlists.sound,
+					disabled = function() return not C.warnings.sound end,
+				},
+				soundChannel = {
+					type = "select",
+					order = 6,
+					name = L.warnings_soundChannel,
+					values = SoundChannels,
+					disabled = function() return not C.warnings.sound end,
 				},
 			},
 		},
-		--]]
 		version = {
 			order = 4,
 			type = "group",

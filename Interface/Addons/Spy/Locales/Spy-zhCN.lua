@@ -62,8 +62,12 @@ L["The Salty Sailor Tavern"] = "水手之家旅店"
 L["Shattrath City"] = "沙塔斯城"
 L["Area 52"] = "52区"
 L["Dalaran"] = "达拉然"
+L["Dalaran (Northrend)"] = "达拉然（诺森德）"
 L["Bogpaddle"] = "沼桨镇"
 L["The Vindicaar"] = "维迪卡尔"
+L["Krasus' Landing"] = "克拉苏斯平台"
+L["The Violet Gate"] = "紫罗兰之门"
+L["Magni's Encampment"] = "麦格尼的营地"
  
 -- Display
 L["DisplayOptions"] = "显示"

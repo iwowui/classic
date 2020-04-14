@@ -75,15 +75,15 @@ L.bar_alpha				= "條透明度"
 L.bar_colorMod			= "顏色調節"
 
 L.font					= "字體"
-L.font_family			= "名字"
+L.font_name			= "名字"
 L.font_size				= "大小"
 L.font_style			= "風格"
 L.font_shadow			= "字體陰影"
 
 L.warnings				= "警報"
 L.warnings_visual		= "啟用全可視螢幕警報."
-L.warnings_sounds		= "啟用聲音."
+L.warnings_sound		= "啟用聲音."
 L.warnings_threshold	= "警報仇恨閾值 (0-100%)."
 
-L.sound_warningFile		= "警報音效檔."
+L.warnings_soundFile		= "警報音效檔."
 L.sound_pulledFile		= "獲得仇恨警報的音效檔."
