@@ -390,6 +390,49 @@ if title ~= nil then
 	end
 end
 
+local _, title = GetAddOnInfo("Accountant_Classic");
+if title ~= nil then
+	if GetLocale() == "zhCN" then
+		FF_NameAccountant_Classic	= "个人会计";
+		FF_DescAccountant_Classic	= "追踪每个角色的所有收入与支出状况";
+	elseif GetLocale() == "zhTW" then
+		FF_NameAccountant_Classic	= "個人會計";
+		FF_DescAccountant_Classic	= "追蹤每個角色的所有收入與支出狀況";
+	else
+		FF_NameAccountant_Classic	= "Accountant_Classic";
+		FF_DescAccountant_Classic	= "A basic tool to track your monetary incomings and outgoings within WoW.";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "Accountant_Classic";
+				tab= "data";
+				name= FF_NameAccountant_Classic;
+				subtext= "Accountant_Classic";
+				tooltip = FF_DescAccountant_Classic;
+				icon= "Interface\\AddOns\\Accountant_Classic\\Images\\AccountantClassicButton-Up";
+				callback= function(button)
+					if not IsAddOnLoaded("Accountant_Classic") then
+						LoadAddOn("Accountant_Classic");
+					end
+					if button == "LeftButton" then
+						AccountantClassic_ButtonOnClick();
+					elseif button == "RightButton" then
+						LibStub("AceAddon-3.0"):GetAddon("Accountant_Classic"):OpenOptions();
+					end
+				end;
+				test = function()
+					if not IsAddOnLoaded("Accountant_Classic") and not IsAddOnLoadOnDemand("Accountant_Classic") then
+						return false;
+					else
+						return true;
+					end
+				end;
+			}
+		);
+	end
+end
+
 local _, title = GetAddOnInfo("Archy");
 if title ~= nil then
 	if GetLocale() == "zhCN" then

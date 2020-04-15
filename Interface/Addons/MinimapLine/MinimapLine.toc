@@ -1,0 +1,11 @@
+## Interface: 11304
+## Title: MinimapLine
+## Notes: Draws a line extending from the player arrow on the minimap
+## Title-zhCN: |CFFFF8000辅助|R 小地图指示线
+## Notes-zhCN: 以指示线的方式在小地图中展示人物方向
+## Title-zhTW: |CFFFF8000輔助|R 小地圖指示線
+## Notes-zhTW: 以指示線的方式在小地圖中展示人物方向
+## X-Repple: 辅助
+## Author: Semlar
+## Version: 8.3.0.1
+MinimapLine.lua

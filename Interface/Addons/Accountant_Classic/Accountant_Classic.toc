@@ -1,0 +1,29 @@
+## Interface: 11304
+## Title: Accountant Classic
+## Title-zhCN: |CFFFF8000辅助|R 个人会计
+## Title-zhTW: |CFFFF8000輔助|R 個人會計
+## Notes: A basic tool to track your monetary incomings and outgoings within WoW.
+## Notes-zhCN: |cff00CC33追踪每个角色的所有收入与支出状况，并可显示当日小计、当周小计、以及自有记录起的总计。并可显示所有角色的总金额。|r
+## Notes-zhTW: |cff00CC33追蹤每個角色的所有收入與支出狀況，並可顯示當日小計、當週小計、以及自有記錄起的總計，並可顯示所有角色的總金額。|r
+## X-Repple: 辅助
+## Author: arith
+## Version: v2.11.08.11302
+## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3, LibDBIcon-1.0, LibDialog-1.0, !LibUIDropDownMenu
+## SavedVariables: Accountant_ClassicSaveData, Accountant_ClassicDB, Accountant_Classic_NewDB, Accountant_ClassicZoneDB
+## X-Credits: Sabaki, Shadow, Rophy
+## X-Date: 2019-09-05T16:28:16Z
+## X-Donate: https://pledgie.com/campaigns/13746
+## X-Website: http://mods.curse.com/addons/wow/accountant-classic
+## X-License: GPLv2
+## X-Category: Information
+## X-Localizations: enUS, zhCN, zhTW
+
+Libs\Libs.xml
+Locale\Locales.xml
+Core\Constants.lua
+
+Core\Core.lua
+Core\Template.xml
+Core\Core.xml
+Core\MoneyFrame.lua
+Core\Config.lua
