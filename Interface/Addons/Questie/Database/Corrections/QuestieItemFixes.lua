@@ -31,6 +31,9 @@ function QuestieItemFixes:Load()
             [QuestieDB.itemKeys.npcDrops] = {239},
             [QuestieDB.itemKeys.objectDrops] = {},
         },
+        [1524] = {
+            [QuestieDB.itemKeys.npcDrops] = {667,669,670,672,696,780,781,782,783,784,1059,1061,1062},
+        },
         [1529] = {
             [QuestieDB.itemKeys.npcDrops] = {},
         },
@@ -78,6 +81,12 @@ function QuestieItemFixes:Load()
             [QuestieDB.itemKeys.name] = "Flagon of Dwarven Honeymead",
             [QuestieDB.itemKeys.npcDrops] = {1464},
         },
+        [2837] = {
+            [QuestieDB.itemKeys.name] = "Thurman's Letter",
+            [QuestieDB.itemKeys.relatedQuests] = {361},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
         [2856] = {
             [QuestieDB.itemKeys.npcDrops] = {426,430,446,580}, -- Remove rare mob #903
         },
@@ -93,8 +102,44 @@ function QuestieItemFixes:Load()
         [2997] = {
             [QuestieDB.itemKeys.npcDrops] = {},
         },
+        [3016] = {
+            [QuestieDB.itemKeys.name] = "Gunther's Spellbook",
+            [QuestieDB.itemKeys.relatedQuests] = {405},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [3017] = {
+            [QuestieDB.itemKeys.name] = "Sevren's Orders",
+            [QuestieDB.itemKeys.relatedQuests] = {405},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [3081] = {
+            [QuestieDB.itemKeys.name] = "Nether Gem",
+            [QuestieDB.itemKeys.relatedQuests] = {405},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [3035] = {
+            [QuestieDB.itemKeys.name] = "Laced Pumpkin",
+            [QuestieDB.itemKeys.relatedQuests] = {407},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [3165] = {
+            [QuestieDB.itemKeys.name] = "Quinn's Potion",
+            [QuestieDB.itemKeys.relatedQuests] = {430},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
         [3173] = {
             [QuestieDB.itemKeys.npcDrops] = {2163,2164,1188,1189,1186,2165,1797,1778},
+        },
+        [3238] = {
+            [QuestieDB.itemKeys.name] = "Johaan's Findings",
+            [QuestieDB.itemKeys.relatedQuests] = {407},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
         },
         [3340] = {
             [QuestieDB.itemKeys.npcDrops] = {},
@@ -126,9 +171,21 @@ function QuestieItemFixes:Load()
             [QuestieDB.itemKeys.npcDrops] = {1302,1303},
             [QuestieDB.itemKeys.objectDrops] = {},
         },
+        [3460] = {
+            [QuestieDB.itemKeys.name] = "Johaan's Special Drink",
+            [QuestieDB.itemKeys.relatedQuests] = {492},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
         [3508] = {
             [QuestieDB.itemKeys.name] = "Mudsnout Mixture",
             [QuestieDB.itemKeys.relatedQuests] = {515},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [3252] = {
+            [QuestieDB.itemKeys.name] = "Deathstalker Report",
+            [QuestieDB.itemKeys.relatedQuests] = {449},
             [QuestieDB.itemKeys.npcDrops] = {},
             [QuestieDB.itemKeys.objectDrops] = {},
         },
@@ -160,6 +217,12 @@ function QuestieItemFixes:Load()
         [4371] = {
             [QuestieDB.itemKeys.npcDrops] = {3495,5519,5175,}, -- #1476
         },
+        [4502] = {
+            [QuestieDB.itemKeys.name] = "Sample Elven Gem",
+            [QuestieDB.itemKeys.relatedQuests] = {669},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
         [4589] = {
             [QuestieDB.itemKeys.npcDrops] = {2347,2651,2657,2658,2659},
         },
@@ -181,6 +244,12 @@ function QuestieItemFixes:Load()
             [QuestieDB.itemKeys.npcDrops] = {},
             [QuestieDB.itemKeys.objectDrops] = {2689},
         },
+        [4494] = {
+            [QuestieDB.itemKeys.name] = "Seahorn's Sealed Letter",
+            [QuestieDB.itemKeys.relatedQuests] = {670},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
         [4904] = {
             [QuestieDB.itemKeys.name] = "Venomtail Antidote",
             [QuestieDB.itemKeys.relatedQuests] = {812},
@@ -195,6 +264,24 @@ function QuestieItemFixes:Load()
         },
         [5056] = {
             [QuestieDB.itemKeys.objectDrops] = {1619,3726,1618,3724,1620,3727},
+        },
+        [5068] = {
+            [QuestieDB.itemKeys.name] = "Dried Seeds",
+            [QuestieDB.itemKeys.relatedQuests] = {877},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [5080] = {
+            [QuestieDB.itemKeys.name] = "Gazlowe's Ledger",
+            [QuestieDB.itemKeys.relatedQuests] = {890,892},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [5088] = {
+            [QuestieDB.itemKeys.name] = "Control Console Operating Manual",
+            [QuestieDB.itemKeys.relatedQuests] = {894},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
         },
         [5184] = {
             [QuestieDB.itemKeys.name] = "Filled Crystal Phial",
@@ -269,19 +356,43 @@ function QuestieItemFixes:Load()
         [5798] = {
             [QuestieDB.itemKeys.objectDrops] = {19868,19869,19870,19871,19872,19873},
         },
+        [5804] = {
+            [QuestieDB.itemKeys.name] = "Goblin Rumors",
+            [QuestieDB.itemKeys.relatedQuests] = {1117},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
         [5868] = {
             [QuestieDB.itemKeys.name] = "Filled Etched Phial",
             [QuestieDB.itemKeys.relatedQuests] = {1195},
             [QuestieDB.itemKeys.npcDrops] = {},
             [QuestieDB.itemKeys.objectDrops] = {20806},
         },
+        [6016] = {
+            [QuestieDB.itemKeys.name] = "Wolf Heart Sample",
+            [QuestieDB.itemKeys.relatedQuests] = {1429},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
         [6175] = {
             [QuestieDB.itemKeys.objectDrops] = {30854,30855,30856},
+        },
+        [6193] = {
+            [QuestieDB.itemKeys.name] = "Bundle of Atal'ai Artifacts",
+            [QuestieDB.itemKeys.relatedQuests] = {1429},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
         },
         [6435] = {
             [QuestieDB.itemKeys.name] = "Infused Burning Gem",
             [QuestieDB.itemKeys.relatedQuests] = {1435},
             [QuestieDB.itemKeys.npcDrops] = {4663,4664,4665,4666,4667,4668,4705,13019},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [6462] = {
+            [QuestieDB.itemKeys.name] = "Secure Crate",
+            [QuestieDB.itemKeys.relatedQuests] = {1492},
+            [QuestieDB.itemKeys.npcDrops] = {},
             [QuestieDB.itemKeys.objectDrops] = {},
         },
         [7134] = { -- #1163
@@ -317,6 +428,12 @@ function QuestieItemFixes:Load()
         [7269] = { -- #1097
             [QuestieDB.itemKeys.name] = "Deino's Flask",
             [QuestieDB.itemKeys.relatedQuests] = {1944},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [7628] = {
+            [QuestieDB.itemKeys.name] = "Nondescript Letter",
+            [QuestieDB.itemKeys.relatedQuests] = {8},
             [QuestieDB.itemKeys.npcDrops] = {},
             [QuestieDB.itemKeys.objectDrops] = {},
         },
@@ -361,6 +478,9 @@ function QuestieItemFixes:Load()
         },
         [7923] = {
             [QuestieDB.itemKeys.npcDrops] = {7051},
+        },
+        [7972] = {
+            [QuestieDB.itemKeys.npcDrops] = {1488,1489,1783,1784,1785,1787,1788,1789,1791,1793,1794,1795,1796,1802,1804,1805,3094,4472,4474,4475,6116,6117,7370,7523,7524,7864,8523,8524,8525,8526,8527,8528,8529,8530,8531,8532,8538,8539,8540,8541,8542,8543,8545,10500,10580,10816,11873,12262,12263,12377,12378,12379,12380},
         },
         [8072] = {
             [QuestieDB.itemKeys.name] = "Silixiz's Tower Key",
@@ -441,6 +561,12 @@ function QuestieItemFixes:Load()
             [QuestieDB.itemKeys.npcDrops] = {},
             [QuestieDB.itemKeys.objectDrops] = {},
         },
+        [9574] = {
+            [QuestieDB.itemKeys.name] = "Glyphic Scroll",
+            [QuestieDB.itemKeys.relatedQuests] = {3098},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
         [9593] = { -- #1184
             [QuestieDB.itemKeys.name] = "Treant Muisek",
             [QuestieDB.itemKeys.relatedQuests] = {3126},
@@ -469,6 +595,18 @@ function QuestieItemFixes:Load()
             [QuestieDB.itemKeys.name] = "Mountain Giant Muisek",
             [QuestieDB.itemKeys.relatedQuests] = {3127},
             [QuestieDB.itemKeys.npcDrops] = {5357,5358,14604,14640},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [10283] = {
+            [QuestieDB.itemKeys.name] = "Wolf Heart Samples",
+            [QuestieDB.itemKeys.relatedQuests] = {1359},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [10327] = {
+            [QuestieDB.itemKeys.name] = "Horn of Echeyakee",
+            [QuestieDB.itemKeys.relatedQuests] = {881},
+            [QuestieDB.itemKeys.npcDrops] = {},
             [QuestieDB.itemKeys.objectDrops] = {},
         },
         [10575] = {
@@ -707,6 +845,18 @@ function QuestieItemFixes:Load()
         [15874] = {
             [QuestieDB.itemKeys.objectDrops] = {177784},
         },
+        [16209] = {
+            [QuestieDB.itemKeys.name] = "Podrig's Order",
+            [QuestieDB.itemKeys.relatedQuests] = {6321,6323},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
+        [16210] = {
+            [QuestieDB.itemKeys.name] = "Gordon's Crate",
+            [QuestieDB.itemKeys.relatedQuests] = {6321,6323},
+            [QuestieDB.itemKeys.npcDrops] = {},
+            [QuestieDB.itemKeys.objectDrops] = {},
+        },
         [16642] = {
             [QuestieDB.itemKeys.name] = "Shredder Operating Manual - Chapter 1",
             [QuestieDB.itemKeys.relatedQuests] = {6504},
@@ -904,6 +1054,31 @@ end
 
 _AddMissingItemIDs = function()
     local missingItemIDs = {
+        5080,
+        10327,
+        5088,
+        5068,
+        6016,
+        6462,
+        10283,
+        16210,
+        16209,
+        3520,
+        3165,
+        3081,
+        3252,
+        3016,
+        3460,
+        3238,
+        3017,
+        2837,
+        5804,
+        3035,
+        7628,
+        9574,
+        4494,
+        6193,
+        4502,
         1262,
         1939,
         1941,

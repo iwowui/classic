@@ -31,7 +31,6 @@ end
 
 local _DEBUG = true
 
-
 local _ipairs = ipairs --> lua api
 local _table_sort = table.sort --> lua api
 local _cstr = string.format --> lua api
@@ -106,6 +105,7 @@ local function CreatePluginFrames (data)
 	local player
 	
 	--> OnEvent Table
+	--when an event happens on Details and it triggers a callback on registered details events on this plugin
 	function ThreatMeter:OnDetailsEvent (event, ...)
 	
 		if (event == "DETAILS_STARTED") then
@@ -115,6 +115,7 @@ local function CreatePluginFrames (data)
 			ThreatMeter.Actived = false
 			ThreatMeter:Cancel()
 		
+		--the window hosting tiny threat is shown is shown
 		elseif (event == "SHOW") then
 		
 			instance = ThreatMeter:GetInstance (ThreatMeter.instance_id)
@@ -131,6 +132,7 @@ local function CreatePluginFrames (data)
 			ThreatMeter.Actived = false
 
 			if (ThreatMeter:IsInCombat() or UnitAffectingCombat ("player")) then
+				--check if the plugin is already initialized
 				if (not ThreatMeter.initialized) then
 					return
 				end
@@ -180,12 +182,14 @@ local function CreatePluginFrames (data)
 	ThreatMeterFrame:SetWidth (300)
 	ThreatMeterFrame:SetHeight (100)
 	
+	--instance is the window showing the plugin
 	function ThreatMeter:UpdateContainers()
-		for _, row in _ipairs (ThreatMeter.Rows) do 
+		for _, row in _ipairs (ThreatMeter.Rows) do
 			row:SetContainer (instance.baseframe)
 		end
 	end
 	
+	--rows are the bars showing the threat
 	function ThreatMeter:UpdateRows()
 		for _, row in _ipairs (ThreatMeter.Rows) do
 			row.width = ThreatMeter.RowWidth
@@ -198,6 +202,7 @@ local function CreatePluginFrames (data)
 		end
 	end
 
+	--if two player has the same amount of threat
 	function ThreatMeter:GetNameOrder (playerName)
 		local name = string.upper (playerName .. "zz")
 		local byte1 = math.abs (string.byte (name, 2)-91)/1000000
@@ -215,6 +220,7 @@ local function CreatePluginFrames (data)
 		["NONE"] = {0.3125, 0.59375, 0.328125, 0.625}
 	}
 
+
 	function ThreatMeter.UpdateWindowTitle (newTitle)
 		local windowInstance = ThreatMeter:GetPluginInstance()
 		if (windowInstance and windowInstance.menu_attribute_string) then
@@ -222,7 +228,6 @@ local function CreatePluginFrames (data)
 				windowInstance.menu_attribute_string.text = "Tiny Threat"
 
 			else
-				--windowInstance.menu_attribute_string.text = newTitle
 				windowInstance.menu_attribute_string:SetTextTruncated (newTitle, windowInstance.baseframe:GetWidth() - 60)
 			end
 		end
@@ -271,16 +276,21 @@ local function CreatePluginFrames (data)
 		end
 	end
 
+	--when the size of the window has changed
 	function ThreatMeter:SizeChanged()
 
+		--instance = details! window holding the plugin
 		local instance = ThreatMeter:GetPluginInstance()
 	
+		--set the size of the plugin frame to be equal as the window
 		local w, h = instance.baseframe:GetSize()
 		ThreatMeterFrame:SetWidth (w)
 		ThreatMeterFrame:SetHeight (h)
 		
+		--calculate how tall is each bar
 		local rowHeight = instance and instance.row_info.height or 20
 
+		--this is the amount of bars the window can show
 		ThreatMeter.CanShow = math.floor ( h / (rowHeight + 1))
 		for i = #ThreatMeter.Rows+1, ThreatMeter.CanShow do
 			ThreatMeter:NewRow (i)
@@ -288,6 +298,7 @@ local function CreatePluginFrames (data)
 
 		ThreatMeter.ShownRows = {}
 		
+		--show the bars
 		for i = 1, ThreatMeter.CanShow do
 			ThreatMeter.ShownRows [#ThreatMeter.ShownRows + 1] = ThreatMeter.Rows[i]
 			if (_detalhes.in_combat) then
@@ -296,6 +307,7 @@ local function CreatePluginFrames (data)
 			ThreatMeter.Rows[i].width = w - 5
 		end
 		
+		--hide the rest of the bars which couldn't fit in the window
 		for i = #ThreatMeter.ShownRows + 1, #ThreatMeter.Rows do
 			ThreatMeter.Rows [i]:Hide()
 		end
@@ -304,6 +316,7 @@ local function CreatePluginFrames (data)
 	
 	local SharedMedia = LibStub:GetLibrary ("LibSharedMedia-3.0")
 
+	--update row info getting information from details options
 	function ThreatMeter:RefreshRow (row)
 	
 		local instance = ThreatMeter:GetPluginInstance()
@@ -322,8 +335,6 @@ local function CreatePluginFrames (data)
 			row:ClearAllPoints()
 			row:SetPoint ("topleft", ThreatMeterFrame, "topleft", 1, rowHeight)
 			row:SetPoint ("topright", ThreatMeterFrame, "topright", -1, rowHeight)
-
-			--row.width = instance.baseframe:GetWidth()-5
 		end
 	end
 	
@@ -340,6 +351,7 @@ local function CreatePluginFrames (data)
 		end
 	end
 	
+	--creates a new bar
 	function ThreatMeter:NewRow (i)
 
 		local instance = ThreatMeter:GetPluginInstance()
@@ -365,6 +377,7 @@ local function CreatePluginFrames (data)
 		return newrow
 	end
 	
+	--sort threat DESC
 	local sort = function (table1, table2)
 		if (table1[2] > table2[2]) then
 			return true
@@ -373,6 +386,7 @@ local function CreatePluginFrames (data)
 		end
 	end
 
+	--update the threat of each player
 	local Threater = function()
 
 		local options = ThreatMeter.options
@@ -697,6 +711,11 @@ local function CreatePluginFrames (data)
 			target = NewTarget
 			ThreatMeter.UpdateWindowTitle (NewTarget)
 			Threater()
+
+		elseif (NewTarget and _UnitIsFriend ("player", "target") and not _UnitIsFriend ("player", "targettarget")) then
+			target = _UnitName("playertargettarget")
+			ThreatMeter.UpdateWindowTitle (target)
+			Threater()
 		else
 			ThreatMeter.UpdateWindowTitle (false)
 			ThreatMeter:HideBars()
@@ -875,6 +894,7 @@ local loadPlugin = function()
 			ThreatMeterFrame:RegisterEvent ("PLAYER_TARGET_CHANGED")
 			ThreatMeterFrame:RegisterEvent ("PLAYER_REGEN_DISABLED")
 			ThreatMeterFrame:RegisterEvent ("PLAYER_REGEN_ENABLED")
+			ThreatMeterFrame:RegisterUnitEvent("UNIT_TARGET", "target")
 
 			--> Saved data
 			ThreatMeter.saveddata = saveddata or {}
@@ -932,6 +952,9 @@ end
 function ThreatMeter:OnEvent (_, event, ...)
 
 	if (event == "PLAYER_TARGET_CHANGED") then
+		ThreatMeter:TargetChanged()
+
+	elseif ( event == "UNIT_TARGET" ) then
 		ThreatMeter:TargetChanged()
 	
 	elseif (event == "PLAYER_REGEN_DISABLED") then

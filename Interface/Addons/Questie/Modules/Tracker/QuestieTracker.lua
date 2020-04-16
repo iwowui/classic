@@ -301,7 +301,7 @@ end
 function QuestieTracker:MoveDurabilityFrame()
     if Questie.db.global.trackerEnabled and Questie.db.global.stickyDurabilityFrame and DurabilityFrame:IsShown() then -- todo: check if frames are actually on top of eachother (user might have tracker at the other side of the screen)
         DurabilityFrame:ClearAllPoints()
-        DurabilityFrame:SetPoint("RIGHT", _QuestieTracker.baseFrame, "LEFT", 0, 0)
+        DurabilityFrame:SetPoint("RIGHT", _QuestieTracker.baseFrame, "TOPLEFT", 0, -30)
     end
 end
 
@@ -754,7 +754,6 @@ function QuestieTracker:Update()
                 end
             end
         end
-        QuestieQuest:UpdateHiddenNotes()
     end
 
     if hasQuest then
@@ -781,7 +780,7 @@ function _QuestieTracker:GetNextItemButton()
 end
 
 function _QuestieTracker:StartFadeTicker()
-    if not _QuestieTracker.FadeTicker then
+    if not _QuestieTracker.FadeTicker and QuestieTracker.started then
         _QuestieTracker.FadeTicker = C_Timer.NewTicker(0.02, function()
             if _QuestieTracker.FadeTickerDirection then
                 if _QuestieTracker.FadeTickerValue < 0.3 then
@@ -950,11 +949,11 @@ function QuestieTracker:HookBaseTracker()
         local baseQLTB_OnClick = QuestLogTitleButton_OnClick
         QuestLogTitleButton_OnClick = function(self, button) -- I wanted to use hooksecurefunc but this needs to be a pre-hook to work properly unfortunately
             if (not self) or self.isHeader or not IsShiftKeyDown() then baseQLTB_OnClick(self, button) return end
-            local lineIndex = self:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame);
-            if GetNumQuestLeaderBoards(lineIndex) == 0 and not IsQuestWatched(lineIndex) then -- only call if we actually want to fix this quest (normal quests already call AQW_insert)
-                _AQW_Insert(lineIndex, QUEST_WATCH_NO_EXPIRE)
+            local questLogLineIndex = self:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame);
+            if GetNumQuestLeaderBoards(questLogLineIndex) == 0 and not IsQuestWatched(questLogLineIndex) then -- only call if we actually want to fix this quest (normal quests already call AQW_insert)
+                _AQW_Insert(questLogLineIndex, QUEST_WATCH_NO_EXPIRE)
                 QuestWatch_Update()
-                QuestLog_SetSelection(lineIndex)
+                QuestLog_SetSelection(questLogLineIndex)
                 QuestLog_Update()
             else
                 baseQLTB_OnClick(self, button)

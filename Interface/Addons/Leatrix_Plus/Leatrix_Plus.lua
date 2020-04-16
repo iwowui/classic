@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.57 (8th April 2020)
+-- 	Leatrix Plus 1.13.58 (15th April 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 --	Version
-	LeaPlusLC["AddonVer"] = "1.13.57"
+	LeaPlusLC["AddonVer"] = "1.13.58"
 	LeaPlusLC["RestartReq"] = nil
 
 --	If client restart is required and has not been done, show warning and quit
@@ -472,16 +472,6 @@
 			LpEvt:RegisterEvent("PARTY_INVITE_REQUEST");
 		else
 			LpEvt:UnregisterEvent("PARTY_INVITE_REQUEST");
-		end
-
-		----------------------------------------------------------------------
-		--	Release in PvP
-		----------------------------------------------------------------------
-
-		if LeaPlusLC["AutoReleasePvP"] == "On" then
-			LpEvt:RegisterEvent("PLAYER_DEAD");
-		else
-			LpEvt:UnregisterEvent("PLAYER_DEAD");
 		end
 
 		----------------------------------------------------------------------
@@ -2338,6 +2328,27 @@
 ----------------------------------------------------------------------
 
 	function LeaPlusLC:Player()
+
+		----------------------------------------------------------------------
+		-- Automatically release in battlegrounds
+		----------------------------------------------------------------------
+
+		do
+
+			hooksecurefunc("StaticPopup_Show", function(sType)
+				if sType and sType == "DEATH" and LeaPlusLC["AutoReleasePvP"] == "On" then
+					if C_DeathInfo.GetSelfResurrectOptions() and #C_DeathInfo.GetSelfResurrectOptions() > 0 then return end
+					local InstStat, InstType = IsInInstance()
+					if InstStat and InstType == "pvp" then
+						local dialog = StaticPopup_Visible("DEATH")
+						if dialog then
+							StaticPopup_OnClick(_G[dialog], 1)
+						end
+					end
+				end
+			end)
+
+		end
 
 		----------------------------------------------------------------------
 		--	Class icon portraits
@@ -6938,26 +6949,6 @@
 		if event == "MAIL_LOCK_SEND_ITEMS" then
 			RespondMailLockSendItem(arg1, true)
 			return
-		end
-
-		----------------------------------------------------------------------
-		-- Automatically release in battlegrounds
-		----------------------------------------------------------------------
-
-		if event == "PLAYER_DEAD" then
-
-			-- If player has ability to self-resurrect (soulstone, reincarnation, etc), do nothing and quit
-			if C_DeathInfo.GetSelfResurrectOptions() and #C_DeathInfo.GetSelfResurrectOptions() > 0 then return end
-
-			-- Resurrect if player is in a battleground
-			local InstStat, InstType = IsInInstance()
-			if InstStat and InstType == "pvp" then
-				RepopMe()
-				return
-			end
-
-			return
-
 		end
 
 		----------------------------------------------------------------------

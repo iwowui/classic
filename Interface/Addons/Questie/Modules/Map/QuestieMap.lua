@@ -55,7 +55,6 @@ local tremove = table.remove;
 local tunpack = unpack;
 
 
-QUESTIE_CLUSTER_DISTANCE = 70; -- smaller numbers = more icons on the map
 QuestieMap.drawTimer = nil;
 QuestieMap.fadeLogicTimerShown = nil;
 
@@ -122,48 +121,16 @@ function QuestieMap:ResetManualFrames()
     end
 end
 
--- Rescale a single icon
----@param frameRef string|IconFrame @The global name/iconRef of the icon frame, e.g. "QuestieFrame1"
-local function rescaleIcon(frameRef, modifier)
-    local zoomModifier = modifier or 1;
-    local frame = frameRef;
-    if(type(frameRef) == "string") then
-        frame = _G[frameRef];
-    end
-    if frame and frame.data then
-        if(frame.data.GetIconScale) then
-            frame.data.IconScale = frame.data:GetIconScale();
-            local scale = nil
-            if(frame.miniMapIcon) then
-                scale = 16 * (frame.data.IconScale or 1) * (Questie.db.global.globalMiniMapScale or 0.7);
-            else
-                scale = 16 * (frame.data.IconScale or 1) * (Questie.db.global.globalScale or 0.7);
-            end
-
-            if(frame.miniMapIcon) then
-                zoomModifier = 1;
-            end
-
-            if scale > 1 then
-                --frame:SetScale(zoomModifier)
-                frame:SetSize(scale*zoomModifier, scale*zoomModifier);
-            end
-        else
-            Questie:Error("A frame is lacking the GetIconScale function for resizing!", frame.data.Id);
-        end
-    end
-end
-
 -- Rescale all the icons
 function QuestieMap:RescaleIcons(modifier)
     for _, framelist in pairs(QuestieMap.questIdFrames) do
         for _, frameName in pairs(framelist) do
-            rescaleIcon(frameName, modifier)
+            QuestieMap.utils:RecaleIcon(frameName, modifier)
         end
     end
     for _, framelist in pairs(QuestieMap.manualFrames) do
         for _, frameName in ipairs(framelist) do
-            rescaleIcon(frameName, modifier)
+            QuestieMap.utils:RecaleIcon(frameName, modifier)
         end
     end
 end
@@ -175,7 +142,6 @@ function QuestieMap:InitializeQueue()
     Questie:Debug(DEBUG_DEVELOP, "[QuestieMap] Starting draw queue timer!")
     QuestieMap.drawTimer = C_Timer.NewTicker(0.008, QuestieMap.ProcessQueue)
     QuestieMap.fadeLogicTimerShown = C_Timer.NewTicker(0.3, QuestieMap.ProcessShownMinimapIcons);
-
 end
 
 
@@ -204,10 +170,7 @@ function HBDPins.worldmapProvider:OnMapChanged()
     end
     for pin in HBDPins.worldmapProvider:GetMap():EnumeratePinsByTemplate("HereBeDragonsPinsTemplateQuestie") do
         local frame = pin.icon;
-        rescaleIcon(frame, scaling)
-        if (frame.data and (frame.data.Icon == ICON_TYPE_AVAILABLE or frame.data.Icon == ICON_TYPE_REPEATABLE or frame.data.Icon == ICON_TYPE_COMPLETE)) then
-            QuestieMap.utils:SetDrawOrder(frame);
-        end
+        QuestieMap.utils:RecaleIcon(frame, scaling)
     end
 end
 
@@ -233,20 +196,20 @@ end
 
 
 function QuestieMap:ProcessQueue()
-    if(#mapDrawQueue ~= 0 or #minimapDrawQueue ~= 0) then
+    if next(mapDrawQueue) ~= nil or next(minimapDrawQueue) ~= nil then
         for i = 1, math.min(10, math.max(#mapDrawQueue, #minimapDrawQueue)) do
             local mapDrawCall = tremove(mapDrawQueue, 1);
             if(mapDrawCall) then
+                local frame = mapDrawCall[2];
                 HBDPins:AddWorldMapIconMap(tunpack(mapDrawCall));
+                QuestieMap.utils:SetDrawOrder(frame);
             end
             local minimapDrawCall = tremove(minimapDrawQueue, 1);
             if(minimapDrawCall) then
                 local frame = minimapDrawCall[2];
                 HBDPins:AddMinimapIconMap(tunpack(minimapDrawCall));
 
-                if (frame.data and (frame.data.Icon == ICON_TYPE_AVAILABLE or frame.data.Icon == ICON_TYPE_REPEATABLE or frame.data.Icon == ICON_TYPE_COMPLETE)) then
-                    QuestieMap.utils:SetDrawOrder(frame);
-                end
+                QuestieMap.utils:SetDrawOrder(frame);
             end
         end
     end

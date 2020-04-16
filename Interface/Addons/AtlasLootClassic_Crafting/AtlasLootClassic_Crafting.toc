@@ -1,6 +1,6 @@
 ## Interface: 11304
 ## Author: Lag
-## Version: v1.4.8
+## Version: v1.5.0
 ## Dependencies: AtlasLootClassic
 ## LoadOnDemand: 1
 
@@ -8,8 +8,8 @@
 ## Notes: AtlasLoot loot tables of Crafting Items
 ## Title-zhCN: |CFFFF8000地图|R 掉落查询 |cFF0099FF[专业制作]|r
 ## Title-zhTW: |CFFFF8000地圖|R 掉落查詢 |cFF0099FF[專業製作]|r
-## Notes-zhCN: AtlasLoot专业制作物品列表
-## Notes-zhTW: AtlasLoot 專業技能物品資料庫
+## Notes-zhCN: 专业制作物品列表
+## Notes-zhTW: 專業技能物品資料庫
 ## X-Repple: 地图
 
 ## X-Category: Map

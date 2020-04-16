@@ -602,6 +602,46 @@ if title ~= nil then
 	end
 end
 
+local _, title = GetAddOnInfo("tdBag2");
+if title ~= nil then
+	if GetLocale() == "zhCN" then
+		FF_NametdBag2	= "背包设定";
+		FF_DesctdBag2	= "设定背包整合的各种参数";
+	elseif GetLocale() == "zhTW" then
+		FF_NametdBag2	= "背包設定";
+		FF_DesctdBag2	= "設定背包整合的各種參數";
+	else
+		FF_NametdBag2	= "tdBag2 Options";
+		FF_DesctdBag2	= "tdBag2 Options";
+	end
+	if (EarthFeature_AddButton) then
+		EarthFeature_AddButton(
+			{
+				id = "tdBag2";
+				tab= "ui";
+				name = FF_NametdBag2;
+				subtext = "tdBag2";
+				tooltip = FF_DesctdBag2;
+				icon = "Interface\\Icons\\INV_Misc_Bag_08";
+				callback= function(button)
+					if not IsAddOnLoaded("tdBag2") then
+						LoadAddOn("tdBag2");
+					end
+					InterfaceOptionsFrame_OpenToCategory("tdBag2");
+					InterfaceOptionsFrame_OpenToCategory("tdBag2");
+				end;
+				test = function()
+					if not IsAddOnLoaded("tdBag2") and not IsAddOnLoadOnDemand("tdBag2") then
+						return false;
+					else
+						return true;
+					end
+				end;
+			}
+		);
+	end
+end
+
 local _, title = GetAddOnInfo("BankItems");
 if title ~= nil then
 	if GetLocale() == "zhCN" then

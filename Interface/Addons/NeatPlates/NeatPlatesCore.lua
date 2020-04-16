@@ -350,6 +350,19 @@ do
 	end
 
 
+	-- Poll for threat update
+	local function PolledThreat()
+		ForEachPlate(function(plate)
+			local unit = plate.extended.unit
+			local unitid = PlatesVisible[plate]
+			if not unitid then return end
+
+			local threatValue = UnitThreatSituation("player", unitid) or 0
+			if(unit.threatValue ~= threatValue) then SetUpdateMe(plate) end
+		end)
+	end
+
+	local threatTicker = C_Timer.NewTicker(0.1, PolledThreat)
 end
 
 ---------------------------------------------------------------------------------------------------------------------
@@ -831,7 +844,6 @@ do
 			UpdateIndicator_CustomScaleText()
 	end
 
-
 end		-- End of Nameplate/Unit Events
 
 
@@ -1014,9 +1026,9 @@ do
 					visual.customtext:SetTextColor(r or 1, g or 1, b or 1, a or 1)
 				else visual.customtext:SetText("") end
 			end
-
-			UpdateIndicator_UnitColor()
+			UpdateIndicator_UnitColor()		-- Keep within this block as we need to check if 'unit.health' exists
 		end
+
 	end
 
 
@@ -1792,13 +1804,21 @@ function NeatPlates.OverrideOutline(enable) OverrideOutline = enable; end
 
 function NeatPlates.UpdateNameplateSize() UpdateNameplateSize() end
 
-function NeatPlates.THREAT_UPDATE(...)
-	local guid = select(3, ...)
-	local plate = PlatesByGUID[guid] or IsEmulatedFrame(guid)
-	if(Debug['threat'] and plate) then checkLastThreatUpdate(UnitGUID(plate.extended.unit.unitid)) end
+-- Also updates at intervals as a precaution, refer to 'PolledThreat'
+--function NeatPlates.THREAT_UPDATE(...)
+--	local guid = select(3, ...)
+--	local plate = PlatesByGUID[guid] or IsEmulatedFrame(guid)
+--	if not plate then return end
 
-	if plate then OnHealthUpdate(plate) end
-end
+--	local unit = plate.extended.unit
+--	local unitid = PlatesVisible[plate]
+--	if not unitid then return end
+
+--	if(Debug['threat'] and plate) then checkLastThreatUpdate(guid) end
+
+--	local threatValue = UnitThreatSituation("player", unitid) or 0
+--	if(unit.threatValue ~= threatValue) then OnHealthUpdate(plate) end
+--end
 
 -- Old and needing deleting - Just here to avoid errors
 function NeatPlates:EnableFadeIn() EnableFadeIn = true; end
