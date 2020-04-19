@@ -1,8 +1,9 @@
-﻿--[[ TrinketMenu 5.0.0 ]]--
+﻿--[[ TrinketMenu Classic ]]--
 
 TrinketMenu = { }
 
 local _G, math, tonumber, string, type, pairs, ipairs, table, select = _G, math, tonumber, string, type, pairs, ipairs, table, select
+local Masque = LibStub("Masque", true) -- Load Masque if available
 
 -- localized strings required to support engineering bags
 TrinketMenu.BAG = "Bag" -- 7th return of GetItemInfo on a normal bag
@@ -57,7 +58,7 @@ end
 
 --[[ Misc Variables ]]--
 
-TrinketMenu_Version = "5.0.4"
+TrinketMenu_Version = GetAddOnMetadata( 'TrinketMenu', 'Version' ) -- Grab version from toc to avoid having to update every time
 BINDING_HEADER_TRINKETMENU = "TrinketMenu"
 setglobal("BINDING_NAME_CLICK TrinketMenu_Trinket0:LeftButton", "Use Top Trinket")
 setglobal("BINDING_NAME_CLICK TrinketMenu_Trinket1:LeftButton", "Use Bottom Trinket")
@@ -239,6 +240,17 @@ end
 
 function TrinketMenu.Initialize()
 	local options = TrinketMenuOptions
+	-- Set TrinketMenu Skin
+	if (Masque and not TrinketMenu.MasqueGroup) then
+		local group = Masque:Group("TrinketMenu")
+		TrinketMenu.MasqueGroup = group
+		group:AddButton(TrinketMenu_Trinket0)
+		group:AddButton(TrinketMenu_Trinket1)
+		for i = 1, 30 do
+			_G["TrinketMenu_Menu"..i]:SetFrameLevel(2)
+			group:AddButton(_G["TrinketMenu_Menu"..i])
+		end
+	end
 	options.KeepDocked = options.KeepDocked or "ON" -- new option for 2.1
 	options.Notify = options.Notify or "OFF" -- 2.1
 	options.DisableToggle = options.DisableToggle or "OFF" -- new option for 2.2
@@ -321,7 +333,26 @@ end
 
 -- returns true if the player is really dead or ghost, not merely FD
 function TrinketMenu.IsPlayerReallyDead()
-	return UnitIsDeadOrGhost("player")
+	-- Added hackjob to check for FD debuff (by Nixxen)	
+	FD=false
+    for i=1,40 do 
+        local _,_,_,_,_,_,_,_,_,ID=UnitBuff("player",i);
+		if ID==5384 then
+            FD=true
+        end
+	end
+	if UnitIsDeadOrGhost("player") then
+		if FD then
+			--  print("UnitIsDead and FD is true, return False")
+			return false
+		else
+			-- print("UnitIsDead and FD is false, return true")
+			return true
+		end
+	else 
+		-- print("Alive and FD irrelevant, return False")
+		return false
+	end
 end
 
 function TrinketMenu.ItemInfo(slot)
@@ -591,6 +622,9 @@ function TrinketMenu.TimersFrame_OnUpdate(elapsed)
 			end
 		end
 	end
+	if TrinketMenu.PeriodicQueueCheck then
+		TrinketMenu.PeriodicQueueCheck()
+	end -- Check for auto queue
 end
 
 function TrinketMenu.TimerDebug()
@@ -1099,9 +1133,6 @@ function TrinketMenu.CooldownUpdate()
 		if TrinketMenu_MenuFrame:IsVisible() then
 			TrinketMenu.WriteMenuCooldowns()
 		end
-	end
-	if TrinketMenu.PeriodicQueueCheck then
-		TrinketMenu.PeriodicQueueCheck()
 	end
 end
 

@@ -310,7 +310,6 @@ function TrinketMenu.PeriodicQueueCheck()
 end
 
 -- which = 0 or 1, decides if a trinket should be equipped and equips if so
-local IsClassic = select(4, GetBuildInfo()) < 20000
 function TrinketMenu.ProcessAutoQueue(which)
 	local _, _, id, name = string.find(GetInventoryItemLink("player", 13 + which) or "", "item:(%d+).+%[(.+)%]")
 	if not id then
@@ -322,8 +321,7 @@ function TrinketMenu.ProcessAutoQueue(which)
 	if IsInventoryItemLocked(13 + which) then
 		return
 	end -- leave if slot being swapped
-	-- if UnitCastingInfo("player") then
-    if CastingInfo() then
+	if CastingInfo() or ChannelInfo() then
 		return
 	end -- leave if player is casting
 	if TrinketMenu.PausedQueue[which] then
@@ -332,20 +330,9 @@ function TrinketMenu.ProcessAutoQueue(which)
 	end
 	local buff = GetItemSpell(id)
 	if buff then
-		if not IsClassic then
-		if UnitAura("player",buff) or (start > 0 and (duration - timeLeft) > 30 and timeLeft < 1) then
+		if AuraUtil.FindAuraByName(buff,"player") or (start > 0 and (duration - timeLeft) > 30 and timeLeft < 1) then
 			icon:SetDesaturated(true)
 			return
-			end
-		else
-			for i=1, 40 do
-				local _, _, _, _, _, _, _, _, _, spellId = UnitAura("player", i)
-				if not spellId then return end
-				if spellId == id or (start > 0 and (duration - timeLeft) > 30 and timeLeft < 1) then
-					icon:SetDesaturated(true)
-					return
-				end
-			end
 		end
 	end
 	if TrinketMenuQueue.Stats[id] then
