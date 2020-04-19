@@ -46,7 +46,7 @@ function zTab:OnDragStart()
 		end
 	end
 
-	if zCastBar then zCastBar:SetShowTexture(true) end
+	if zBar3.bars["zCastBar"] and zCastBar then zCastBar:SetShowTexture(true) end
 end
 
 -- darg stop

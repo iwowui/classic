@@ -1195,7 +1195,8 @@ function UnitFramesPlus_PartyPosition()
 end
 
 function UnitFramesPlus_PartyMemberPositionSet()
-    if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["buff"] == 1 then
+    -- if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["buff"] == 1 then
+    if UnitFramesPlusDB["party"]["buff"] == 1 then
         for id = 2, 4, 1 do
             local lowid = id - 1;
             _G["PartyMemberFrame"..id]:ClearAllPoints();

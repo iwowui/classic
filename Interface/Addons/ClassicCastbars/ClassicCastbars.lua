@@ -44,13 +44,10 @@ local castTimeIncreases = namespace.castTimeIncreases
 local pushbackBlacklist = namespace.pushbackBlacklist
 local unaffectedCastModsSpells = namespace.unaffectedCastModsSpells
 local uninterruptibleList = namespace.uninterruptibleList
+local castModifiers = namespace.castModifiers
 
 local BARKSKIN = GetSpellInfo(22812)
 local FOCUSED_CASTING = GetSpellInfo(14743)
-local NATURES_GRACE = GetSpellInfo(16886)
-local MIND_QUICKENING = GetSpellInfo(23723)
-local BLINDING_LIGHT = GetSpellInfo(23733)
-local BERSERKING = GetSpellInfo(20554)
 local DIVINE_SHIELD = GetSpellInfo(642)
 local DIVINE_PROTECTION = GetSpellInfo(498)
 
@@ -65,56 +62,63 @@ function addon:GetUnitType(unitID)
     return unit
 end
 
-function addon:CheckCastModifier(unitID, cast)
+function addon:CheckCastModifiers(unitID, cast)
     if not cast then return end
     if unitID == "focus" then return end
     if cast.unitGUID == self.PLAYER_GUID then return end -- modifiers already taken into account with CastingInfo()
     if unaffectedCastModsSpells[cast.spellID] then return end
 
     -- Debuffs
-    if not cast.isChanneled and not cast.hasCastSlowModified and not cast.skipCastSlowModifier then
+    if not cast.isChanneled and not cast.hasCastSlowModified then
         for i = 1, 16 do
             local _, _, _, _, _, _, _, _, _, spellID = UnitAura(unitID, i, "HARMFUL")
             if not spellID then break end -- no more debuffs
 
             local slow = castTimeIncreases[spellID]
             if slow then -- note: multiple slows stack
-                cast.endTime = cast.timeStart + (cast.endTime - cast.timeStart) * ((slow / 100) + 1)
-                cast.hasCastSlowModified = true
+                local continue = true
+                if cast.spellID == 20904 then -- hack for Aimed Shot
+                    if spellID ~= 89 and spellID ~= 19365 and spellID ~= 17331 then
+                        -- dont continue if the modifier doesnt modify RANGED attacks
+                        continue = false
+                    end
+                end
+
+                if continue then
+                    cast.endTime = cast.timeStart + (cast.endTime - cast.timeStart) * ((slow / 100) + 1)
+                    cast.hasCastSlowModified = true
+                end
             end
         end
     end
 
     -- Buffs
     local libCD = LibStub and LibStub("LibClassicDurations", true)
-    if libCD and not libCD.enableEnemyBuffTracking then
-        libCD.enableEnemyBuffTracking = true
-    end
     for i = 1, 32 do
-        local name
-        if not libCD then
-            name = UnitAura(unitID, i, "HELPFUL")
-        else
-            -- if LibClassicDurations happens to be loaded by some other addon, use it to get enemy buff data
-            name = libCD.UnitAuraDirect(unitID, i, "HELPFUL")
-        end
+        local name = libCD and libCD.UnitAuraDirect(unitID, i, "HELPFUL") or not libCD and UnitAura(unitID, i, "HELPFUL")
         if not name then break end -- no more buffs
 
-        -- TODO: gotta check how speed is calculated when e.g both Curse of Tongues and Berserking is applied
-        if name == BARKSKIN and not cast.hasBarkskinModifier then
-            cast.endTime = cast.endTime + 1
-            cast.hasBarkskinModifier = true
-        elseif name == NATURES_GRACE and not cast.hasNaturesGraceModifier and not cast.isChanneled then
-            cast.endTime = cast.endTime - 0.5
-            cast.hasNaturesGraceModifier = true
-        elseif (name == MIND_QUICKENING or name == BLINDING_LIGHT) and not cast.hasSpeedModifier and not cast.isChanneled then
-            cast.endTime = cast.endTime - ((cast.endTime - cast.timeStart) * 33 / 100)
-            cast.hasSpeedModifier = true
-        elseif name == BERSERKING and not cast.hasBerserkingModifier and not cast.isChanneled then -- put this seperate as it can stack with other modifiers
-            cast.endTime = cast.endTime - ((cast.endTime - cast.timeStart) * 0.1)
-            cast.hasBerserkingModifier = true
-        elseif name == FOCUSED_CASTING then
-            cast.hasFocusedCastingModifier = true
+        local modifier = castModifiers[name]
+        if modifier and not cast.activeModifiers[name] then
+            local continue = true
+            if modifier.condition then
+                continue = modifier.condition(cast)
+            end
+
+            if continue then
+                cast.activeModifiers[name] = true
+
+                if modifier.percentage then
+                    cast.endTime = cast.endTime - ((cast.endTime - cast.timeStart) * modifier.value / 100)
+                else
+                    cast.endTime = cast.endTime + modifier.value
+                end
+            end
+        end
+
+        -- Special cases
+        if name == FOCUSED_CASTING or name == BARKSKIN then
+            cast.hasPushbackImmuneModifier = true
         elseif (name == DIVINE_PROTECTION or name == DIVINE_SHIELD) and not cast.isUninterruptible then
             cast.origIsUninterruptibleValue = cast.isUninterruptible
             cast.isUninterruptible = true
@@ -135,7 +139,7 @@ function addon:StartCast(unitGUID, unitID)
     if not castbar then return end
 
     castbar._data = cast -- set ref to current cast data
-    self:CheckCastModifier(unitID, cast)
+    self:CheckCastModifiers(unitID, cast)
     self:DisplayCastbar(castbar, unitID)
 end
 
@@ -197,12 +201,8 @@ function addon:StoreCast(unitGUID, spellName, spellID, iconTexturePath, castTime
     -- just nil previous values to avoid overhead of wiping table
     cast.origIsUninterruptibleValue = nil
     cast.hasCastSlowModified = nil
-    cast.hasBarkskinModifier = nil
-    cast.hasNaturesGraceModifier = nil
-    cast.hasFocusedCastingModifier = nil
-    cast.hasSpeedModifier = nil
-    cast.hasBerserkingModifier = nil
-    cast.skipCastSlowModifier = nil
+    cast.hasPushbackImmuneModifier = nil
+    cast.activeModifiers = {}
     cast.pushbackValue = nil
     cast.isInterrupted = nil
     cast.isCastComplete = nil
@@ -232,7 +232,7 @@ end
 
 function addon:CastPushback(unitGUID)
     local cast = activeTimers[unitGUID]
-    if not cast or cast.hasBarkskinModifier or cast.hasFocusedCastingModifier then return end
+    if not cast or cast.hasPushbackImmuneModifier then return end
     if pushbackBlacklist[cast.spellName] then return end
 
     if not cast.isChanneled then
@@ -368,7 +368,11 @@ function addon:PLAYER_LOGIN()
     elseif ClassicCastbarsDB.version == "12" then
         ClassicCastbarsDB.player = nil
     elseif ClassicCastbarsDB.version == "18" or ClassicCastbarsDB.version == "19" then
-        ClassicCastbarsDB.npcCastUninterruptibleCache = nil
+        ClassicCastbarsDB.npcCastUninterruptibleCache = {}
+    end
+
+    if ClassicCastbarsDB.npcCastUninterruptibleCache["11830"..GetSpellInfo(6063)] then
+        ClassicCastbarsDB.npcCastUninterruptibleCache["11830"..GetSpellInfo(6063)] = nil
     end
 
     -- Copy any settings from defaults if they don't exist in current profile
@@ -395,6 +399,11 @@ function addon:PLAYER_LOGIN()
 
     if self.db.player.enabled then
         self:SkinPlayerCastbar()
+    end
+
+    local libCD = LibStub and LibStub("LibClassicDurations", true)
+    if libCD and not libCD.enableEnemyBuffTracking then
+        libCD.enableEnemyBuffTracking = true
     end
 
     npcCastUninterruptibleCache = self.db.npcCastUninterruptibleCache -- set local ref for faster access
@@ -485,6 +494,7 @@ local playerInterrupts = namespace.playerInterrupts
 local ARCANE_MISSILES = GetSpellInfo(5143)
 local ARCANE_MISSILE = GetSpellInfo(7268)
 local BLESSING_OF_PROTECTION = GetSpellInfo(1022)
+local ANTI_MAGIC_SHIELD = GetSpellInfo(24021)
 
 function addon:COMBAT_LOG_EVENT_UNFILTERED()
     local _, eventType, _, srcGUID, srcName, srcFlags, _, dstGUID, _, dstFlags, _, _, spellName, _, missType = CombatLogGetCurrentEventInfo()
@@ -547,7 +557,7 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED()
                 local cachedTime = npcCastTimeCache[srcName .. spellName]
                 if not cachedTime then
                     local cast = activeTimers[srcGUID]
-                    if not cast or (cast and not cast.hasCastSlowModified and not cast.hasSpeedModifier and not cast.hasBerserkingModifier) then
+                    if not cast or (cast and not cast.hasCastSlowModified and not next(cast.activeModifiers)) then
                         local restoredStartTime = npcCastTimeCacheStart[srcGUID]
                         if restoredStartTime then
                             local castTime = (GetTime() - restoredStartTime) * 1000
@@ -586,8 +596,9 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED()
                 activeTimers[dstGUID].isFailed = true
                 return self:DeleteCast(dstGUID)
             elseif castTimeIncreases[spellName] then
-                -- Note: cast modifiers doesnt modify already active casts, only the next time the player casts
-                activeTimers[dstGUID].skipCastSlowModifier = true
+                -- cast modifiers doesnt modify already active casts, only the next time the player casts.
+                -- So we force set this to true here to prevent modifying current cast
+                activeTimers[dstGUID].hasCastSlowModified = true
             end
         end
     elseif eventType == "SPELL_AURA_REMOVED" then
@@ -623,7 +634,7 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED()
             local cast = activeTimers[dstGUID]
             if cast then
                 if stopCastOnDamageList[cast.spellName] then
-                    activeTimers[dstGUID].isFailed = true
+                    cast.isFailed = true
                     return self:DeleteCast(dstGUID)
                 end
 
@@ -651,7 +662,7 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED()
                         if buffCacheHit then
                             for i = 1, #buffCacheHit do
                                 local spell = buffCacheHit[i].name
-                                if spell == DIVINE_SHIELD or spell == DIVINE_PROTECTION or spell == BLESSING_OF_PROTECTION then
+                                if spell == DIVINE_SHIELD or spell == DIVINE_PROTECTION or spell == BLESSING_OF_PROTECTION or spell == ANTI_MAGIC_SHIELD then
                                     return
                                 end
                             end
