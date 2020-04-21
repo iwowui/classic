@@ -402,6 +402,10 @@ function UnitFramesPlus_PartyPortrait()
         for id = 1, MAX_PARTY_MEMBERS, 1 do
             if UnitExists("party"..id) then
                 _G["PartyMemberFrame"..id.."Portrait"]:Show();
+            else
+                if _G["PartyMemberFrame"..id.."Portrait"]:IsShown() then
+                    _G["PartyMemberFrame"..id.."Portrait"]:Hide();
+                end
             end
             _G["UFP_Party3DPortrait"..id]:Hide();
             _G["UFP_PartyClassPortrait"..id]:Hide();

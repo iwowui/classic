@@ -4,8 +4,8 @@ local RegEvent = ADDONSELF.regevent
 local BattleZoneHelper = ADDONSELF.BattleZoneHelper
 local RegisterKeyChangedCallback = ADDONSELF.RegisterKeyChangedCallback 
 
-local f = CreateFrame("Frame", nil, UIWidgetTopCenterContainerFrame)
-f:SetAllPoints()
+local f = CreateFrame("Frame")
+f:SetAllPoints(UIWidgetTopCenterContainerFrame)
 
 do
     local av = CreateFrame("Frame", nil, f)
@@ -295,7 +295,7 @@ RegEvent("UPDATE_BATTLEFIELD_SCORE", function()
             end
         end
 
-        f.num:SetPoint("TOPLEFT", r, -15, 0)    
+        f.num:SetPoint("TOPLEFT", r, -15, 2)    
         f.num:Show()
     end    
 end)
@@ -440,7 +440,7 @@ RegEvent("ADDON_LOADED", function()
             t:SetScript("OnDragStart", dragStart)
             t:SetScript("OnDragStop", dragStop)
 
-            local l = t:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+            local l = t:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
             l:SetPoint("TOPLEFT", num, 0, -7)
             f.num.alliance = l
             -- l:SetText("10")
@@ -465,7 +465,7 @@ RegEvent("ADDON_LOADED", function()
             t:SetScript("OnDragStart", dragStart)
             t:SetScript("OnDragStop", dragStop)
 
-            local l = t:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+            local l = t:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
             l:SetPoint("TOPLEFT", num, 0, -30)
             f.num.horde = l
             -- l:SetText("20")
