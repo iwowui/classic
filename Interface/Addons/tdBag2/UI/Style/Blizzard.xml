@@ -1,6 +1,10 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
     <Frame name="tdBag2BaseFrameTemplate" inherits="PortraitFrameTemplate" hidden="true" toplevel="true" movable="true" enableMouse="true" frameStrata="MEDIUM" clampedToScreen="true" virtual="true">
+        <KeyValues>
+            <KeyValue key="fixedWidth" value="24" type="number"/>
+            <KeyValue key="fixedHeight" value="78" type="number"/>
+        </KeyValues>
         <Layers>
             <Layer level="BORDER" textureSubLevel="1">
                 <MaskTexture parentKey="CircleMask" file="Interface\CharacterFrame\TempPortraitAlphaMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
@@ -57,13 +61,12 @@
                 </Anchors>
             </EditBox>
         </Frames>
-        <Scripts>
-            <OnLoad>
-                self.fixedHeight = 78
-            </OnLoad>
-        </Scripts>
     </Frame>
     <Frame name="tdBag2FrameTemplate" inherits="tdBag2BaseFrameTemplate" virtual="true">
+        <KeyValues>
+            <KeyValue key="fixedWidth" value="24" type="number"/>
+            <KeyValue key="fixedHeight" value="100" type="number"/>
+        </KeyValues>
         <Layers>
             <Layer level="BORDER" textureSubLevel="1">
                 <Texture parentKey="BtnCornerLeft" inherits="UI-Frame-BtnCornerLeft">
@@ -172,7 +175,6 @@
         </Frames>
         <Scripts>
             <OnLoad>
-                self.fixedHeight = 100
                 self.Inset:SetPoint('BOTTOMRIGHT', -6, 26)
             </OnLoad>
         </Scripts>
@@ -333,8 +335,8 @@
         <Frames>
             <Slider parentKey="ScrollBar" hidden="true" inherits="UIPanelStretchableArtScrollBarTemplate">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="6" y="-16"/>
-                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="6" y="16"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-14" y="-12"/>
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-14" y="11"/>
                 </Anchors>
             </Slider>
         </Frames>

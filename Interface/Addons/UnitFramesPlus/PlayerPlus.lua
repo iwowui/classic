@@ -90,6 +90,7 @@ function UnitFramesPlus_PlayerDragon()
         UFP_PlayerTexture = "Interface\\TargetingFrame\\UI-TargetingFrame";
     end
     PlayerFrameTexture:SetTexture(UFP_PlayerTexture);
+    PlayerFrameTexture:SetAllPoints();
 
     --设置扩展框素材与头像素材一致
     if UnitFramesPlusDB["player"]["extrabar"] == 1 then

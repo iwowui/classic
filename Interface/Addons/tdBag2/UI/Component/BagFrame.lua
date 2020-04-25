@@ -17,6 +17,8 @@ local ns = select(2, ...)
 ---@field protected meta tdBag2FrameMeta
 local BagFrame = ns.Addon:NewClass('UI.BagFrame', 'Frame')
 BagFrame.SPACING = 3
+BagFrame.BAG_TEMPLATE = 'tdBag2BagTemplate'
+BagFrame.KEYRING_TEMPLATE = 'tdBag2KeyringTemplate'
 
 ---@param meta tdBag2FrameMeta
 function BagFrame:Constructor(_, meta)
@@ -35,7 +37,7 @@ function BagFrame:Update()
     local width, height = 0, 0
 
     for i, bag in ipairs(self.meta.bags) do
-        local template = ns.IsKeyring(bag) and 'tdBag2KeyringTemplate' or 'tdBag2BagTemplate'
+        local template = ns.IsKeyring(bag) and self.KEYRING_TEMPLATE or self.BAG_TEMPLATE
         button = ns.UI.Bag:Bind(CreateFrame('Button', nil, self, template), self.meta, bag)
         if i == 1 then
             button:SetPoint('LEFT')

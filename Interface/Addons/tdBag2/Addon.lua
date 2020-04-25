@@ -65,6 +65,7 @@ _G.BINDING_NAME_TDBAG2_TOGGLE_GLOBAL_SEARCH = L.TOOLTIP_TOGGLE_GLOBAL_SEARCH
 ---@field lockFrame boolean
 ---@field emptyAlpha number
 ---@field remainLimit number
+---@field style string
 ---@field searches string[]
 
 ---@class tdBag2WatchData
@@ -74,6 +75,10 @@ _G.BINDING_NAME_TDBAG2_TOGGLE_GLOBAL_SEARCH = L.TOOLTIP_TOGGLE_GLOBAL_SEARCH
 ---@class tdBag2CharacterProfile
 ---@field watches tdBag2WatchData[]
 ---@field hiddenBags table<number, boolean>
+
+---@class tdBag2StyleData
+---@field overrides table<string, table<string, any>>
+---@field hooks table<string, table<string, function>>
 
 ---@class UI
 ---@field Frame tdBag2Frame
@@ -96,8 +101,12 @@ ns.UI = {}
 ns.Search = LibStub('LibItemSearch-1.2')
 ns.Unfit = LibStub('Unfit-1.0')
 
+---@alias tdBag2Frames table<string, tdBag2ContainerFrame>
+
 ---@class Addon
----@field private frames table<string, tdBag2ContainerFrame>
+---@field private frames tdBag2Frames
+---@field private styles table<string, tdBag2StyleData>
+---@field private styleName string
 local Addon = LibStub('AceAddon-3.0'):NewAddon('tdBag2', 'LibClass-2.0', 'AceHook-3.0', 'AceEvent-3.0')
 ns.Addon = Addon
 _G.tdBag2 = Addon
@@ -105,8 +114,11 @@ _G.tdBag2 = Addon
 Addon.BAG_ID = BAG_ID
 
 function Addon:OnInitialize()
+    self.styles = {}
     self.frames = {}
+
     self:SetupBankHider()
+    self:SetupDefaultStyles()
 
     self:RegisterMessage('FOREVER_LOADED')
 end
@@ -115,6 +127,7 @@ function Addon:OnEnable()
     ns.PLAYER, ns.REALM = UnitFullName('player')
 
     self:SetupDatabase()
+    self:SetupCurrentStyle()
     self:SetupDefaultOptions()
     self:CleanDeprecatedOptions()
 
@@ -148,6 +161,41 @@ function Addon:OnProfileChanged()
     self:UpdateAllManaged()
     self:UpdateAllPosition()
     self:UpdateAll()
+end
+
+function Addon:SetupCurrentStyle()
+    local style
+    for _, styleName in ipairs{self.db.profile.style, ns.DEFAULT_STYLE} do
+        style = self.styles[styleName]
+        if style then
+            self.styleName = styleName
+            break
+        end
+    end
+
+    if self.styleName ~= self.db.profile.style then
+        self.styleInProfileLosed = self.db.profile.style
+    end
+
+    if style.overrides then
+        for className, overrides in pairs(style.overrides) do
+            local class = ns.UI[className]
+
+            for k, v in pairs(overrides) do
+                class[k] = v
+            end
+        end
+    end
+
+    if style.hooks then
+        for className, hooks in pairs(style.hooks) do
+            local class = ns.UI[className]
+
+            for k, v in pairs(hooks) do
+                ns.Hook(class, k, v)
+            end
+        end
+    end
 end
 
 function Addon:SetupDatabase()
@@ -451,4 +499,12 @@ function Addon:RegisterPluginButton(opts)
     if self.RefreshPluginOptions then
         self:RefreshPluginOptions()
     end
+end
+
+function Addon:RegisterStyle(styleName, style)
+    self.styles[styleName] = style
+end
+
+function Addon:GetCurrentStyle()
+    return self.styles[self.styleName]
 end

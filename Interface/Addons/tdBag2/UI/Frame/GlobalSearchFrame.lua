@@ -26,8 +26,13 @@ function GlobalSearchFrame:Constructor()
     self.meta.owner = ns.GLOBAL_SEARCH_OWNER
     self.lockOwner = true
 
-    self.OwnerSelector:Hide()
-    self.portrait:SetTexture(self.meta.icon)
+    if self.OwnerSelector then
+        self.OwnerSelector:Hide()
+    end
+
+    if self.portrait then
+        self.portrait:SetTexture(self.meta.icon)
+    end
 
     ns.UI.GlobalSearchBox:Bind(self.SearchBox)
 end

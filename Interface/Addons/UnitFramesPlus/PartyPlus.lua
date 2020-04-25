@@ -29,7 +29,7 @@ function UnitFramesPlus_PartyOriginSet()
     if UnitFramesPlusDB["party"]["origin"] == 1 then
         if tonumber(GetCVar("useCompactPartyFrames")) == 1 then
             SetCVar("useCompactPartyFrames", "0");
-            local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
+            local state = IsAddOnLoaded("Blizzard_CompactRaidFrames");
             if state == true then
                 _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate2Players:Disable();
                 _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate3Players:Disable();
@@ -40,7 +40,7 @@ function UnitFramesPlus_PartyOriginSet()
     else
         if tonumber(GetCVar("useCompactPartyFrames")) ~= 1 then
             SetCVar("useCompactPartyFrames", "1");
-            local state = IsAddOnLoaded("Blizzard_CompactRaidFrames")
+            local state = IsAddOnLoaded("Blizzard_CompactRaidFrames");
             if state == true then
                 _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate2Players:Disable();
                 _G["CompactUnitFrameProfiles"].optionsFrame.autoActivate3Players:Disable();
@@ -122,7 +122,7 @@ function UnitFramesPlus_PartyLevel()
             _G["UFP_PartyLevel"..id]:RegisterUnitEvent("UNIT_LEVEL", "party"..id);
             _G["UFP_PartyLevel"..id]:SetScript("OnEvent", function(self, event, ...)
                 -- if tonumber(GetCVar("useCompactPartyFrames")) ~= 1 then
-                    UnitFramesPlus_PartyLevelDisplayUpdate(id)
+                    UnitFramesPlus_PartyLevelDisplayUpdate(id);
                 -- end
             end)
         else
@@ -302,7 +302,7 @@ for id = 1, MAX_PARTY_MEMBERS, 1 do
     Party3DPortrait:SetHeight(29);
     Party3DPortrait:SetFrameLevel(1);
     Party3DPortrait:ClearAllPoints();
-    Party3DPortrait:SetPoint("TOPLEFT", _G["PartyMemberFrame"..id], "TOPLEFT", 11, -12)
+    Party3DPortrait:SetPoint("TOPLEFT", _G["PartyMemberFrame"..id], "TOPLEFT", 11, -12);
     Party3DPortrait:Hide();
     Party3DPortrait.Background = Party3DPortrait:CreateTexture("UFP_Party3DPortraitBG"..id, "BACKGROUND");
     Party3DPortrait.Background:SetTexture("Interface\\AddOns\\UnitFramesPlus\\Portrait3D");
@@ -402,10 +402,10 @@ function UnitFramesPlus_PartyPortrait()
         for id = 1, MAX_PARTY_MEMBERS, 1 do
             if UnitExists("party"..id) then
                 _G["PartyMemberFrame"..id.."Portrait"]:Show();
-            else
-                if _G["PartyMemberFrame"..id.."Portrait"]:IsShown() then
-                    _G["PartyMemberFrame"..id.."Portrait"]:Hide();
-                end
+            -- else
+            --     if _G["PartyMemberFrame"..id.."Portrait"]:IsVisible() then
+            --         _G["PartyMemberFrame"..id.."Portrait"]:Hide();
+            --     end
             end
             _G["UFP_Party3DPortrait"..id]:Hide();
             _G["UFP_PartyClassPortrait"..id]:Hide();
@@ -512,10 +512,10 @@ function UnitFramesPlus_PartyHealthPct()
                     if event == "UNIT_HEALTH_FREQUENT" then
                         UnitFramesPlus_PartyHealthPctDisplayUpdate(id);
                     elseif event == "UNIT_POWER_FREQUENT" then
-                        UnitFramesPlus_PartyPowerDisplayUpdate(id)
+                        UnitFramesPlus_PartyPowerDisplayUpdate(id);
                     else
                         UnitFramesPlus_PartyHealthPctDisplayUpdate(id);
-                        UnitFramesPlus_PartyPowerDisplayUpdate(id)
+                        UnitFramesPlus_PartyPowerDisplayUpdate(id);
                     end
             end)
         else
@@ -540,8 +540,8 @@ function UnitFramesPlus_PartyHealthPctDisplayUpdate(id)
         if UnitFramesPlusDB["party"]["bartext"] == 1 and not UnitIsDead("party"..id) then
             local CurHPfix, MaxHPfix = UnitFramesPlus_GetValueFix(UnitHealth("party"..id), UnitHealthMax("party"..id), UnitFramesPlusDB["party"]["hpmpunit"], UnitFramesPlusDB["party"]["unittype"]);
             -- local CurManafix, MaxManafix = UnitFramesPlus_GetValueFix(UnitPower("party"..id), UnitPowerMax("party"..id), UnitFramesPlusDB["party"]["hpmpunit"], UnitFramesPlusDB["party"]["unittype"]);
-            HPText = CurHPfix.."/"..MaxHPfix
-            -- MPText = CurManafix.."/"..MaxManafix
+            HPText = CurHPfix.."/"..MaxHPfix;
+            -- MPText = CurManafix.."/"..MaxManafix;
         end
 
         if UnitFramesPlusDB["party"]["hp"] == 1 then
@@ -575,7 +575,7 @@ function UnitFramesPlus_PartyPowerDisplayUpdate(id)
     if UnitExists("party"..id) and UnitFramesPlusDB["party"]["origin"] == 1 then
         if UnitFramesPlusDB["party"]["bartext"] == 1 and not UnitIsDead("party"..id) then
             local CurManafix, MaxManafix = UnitFramesPlus_GetValueFix(UnitPower("party"..id), UnitPowerMax("party"..id), UnitFramesPlusDB["party"]["hpmpunit"], UnitFramesPlusDB["party"]["unittype"]);
-            MPText = CurManafix.."/"..MaxManafix
+            MPText = CurManafix.."/"..MaxManafix;
         end
     end
     _G["PartyMemberFrame"..id.."ManaBarText"]:SetText(MPText);
@@ -947,25 +947,25 @@ function UnitFramesPlus_PartyBuff()
     pb:SetScript("OnUpdate", function(self, elapsed)
         self.timer = (self.timer or 0) + elapsed;
         if self.timer >= 0.1 then
-            UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
+            UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate();
             self.timer = 0;
         end
     end)
     if UnitFramesPlusDB["party"]["origin"] == 1 and UnitFramesPlusDB["party"]["buff"] == 1 then
         for id = 1, MAX_PARTY_MEMBERS, 1 do
-            _G["UFP_PartyMemberFrame"..id.."Debuff1"]:ClearAllPoints()
+            _G["UFP_PartyMemberFrame"..id.."Debuff1"]:ClearAllPoints();
             _G["UFP_PartyMemberFrame"..id.."Debuff1"]:SetPoint("BOTTOMLEFT", _G["PartyMemberFrame"..id], "TOPRIGHT", -8, 4);
         end
         -- pb:SetScript("OnUpdate", function(self, elapsed)
         --     self.timer = (self.timer or 0) + elapsed;
         --     if self.timer >= 0.1 then
-        --         UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
+        --         UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate();
         --         self.timer = 0;
         --     end
         -- end)
     else
         for id = 1, MAX_PARTY_MEMBERS, 1 do
-            _G["UFP_PartyMemberFrame"..id.."Debuff1"]:ClearAllPoints()
+            _G["UFP_PartyMemberFrame"..id.."Debuff1"]:ClearAllPoints();
             _G["UFP_PartyMemberFrame"..id.."Debuff1"]:SetPoint("TOPLEFT", _G["PartyMemberFrame"..id], "TOPLEFT", 48, -32);
             for j = 1, UFP_MAX_PARTY_BUFFS, 1 do
                 _G["UFP_PartyMemberFrame"..id.."Buff"..j]:SetAlpha(0);
@@ -997,7 +997,7 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                     -- local r, g, b = 0, 1, 0;
 
                     local _, icon, _, _, duration, expirationTime, caster, _, _, spellId = UnitBuff("party"..id, j, filter);
-                    if icon then
+                    if icon and (GetDisplayedAllyFrames() == nil or GetDisplayedAllyFrames() == "party" or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or (UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] ~= 1)))) then
                         _G["UFP_PartyMemberFrame"..id.."Buff"..j].Icon:SetTexture(icon);
                         alpha = 1;
 
@@ -1005,10 +1005,10 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                             cdalpha = 1;
 
                             if UnitFramesPlusDB["global"]["builtincd"] == 1 and UFPClassicDurations then
-                                local durationNew, expirationTimeNew = UFPClassicDurations:GetAuraDurationByUnit("party"..id, spellId, caster)
+                                local durationNew, expirationTimeNew = UFPClassicDurations:GetAuraDurationByUnit("party"..id, spellId, caster);
                                 if duration == 0 and durationNew then
-                                    duration = durationNew
-                                    expirationTime = expirationTimeNew
+                                    duration = durationNew;
+                                    expirationTime = expirationTimeNew;
                                 end
 
                                 if UnitFramesPlusDB["global"]["cdtext"] == 1 and expirationTime and expirationTime ~= 0 and duration > 0 then
@@ -1056,7 +1056,7 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                 -- local r, g, b = 0, 1, 0;
 
                 local _, icon, count, _, duration, expirationTime, caster, _, _, spellId = UnitDebuff("party"..id, j, filter);
-                if icon then
+                if icon and (GetDisplayedAllyFrames() == nil or GetDisplayedAllyFrames() == "party" or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or (UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] ~= 1)))) then
                     _G["UFP_PartyMemberFrame"..id.."Debuff"..j].Icon:SetTexture(icon);
                     alpha = 1;
                     if count > 1 then
@@ -1067,10 +1067,10 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                         cdalpha = 1;
 
                         if UnitFramesPlusDB["global"]["builtincd"] == 1 and UFPClassicDurations then
-                            local durationNew, expirationTimeNew = UFPClassicDurations:GetAuraDurationByUnit("party"..id, spellId, caster)
+                            local durationNew, expirationTimeNew = UFPClassicDurations:GetAuraDurationByUnit("party"..id, spellId, caster);
                             if duration == 0 and durationNew then
-                                duration = durationNew
-                                expirationTime = expirationTimeNew
+                                duration = durationNew;
+                                expirationTime = expirationTimeNew;
                             end
 
                             if UnitFramesPlusDB["global"]["cdtext"] == 1 and expirationTime and expirationTime ~= 0 and duration > 0 then
@@ -1129,10 +1129,10 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
             --             cdalpha = 1;
 
             --             if UnitFramesPlusDB["global"]["builtincd"] == 1 and UFPClassicDurations then
-            --                 local durationNew, expirationTimeNew = UFPClassicDurations:GetAuraDurationByUnit("party"..id, spellId, caster)
+            --                 local durationNew, expirationTimeNew = UFPClassicDurations:GetAuraDurationByUnit("party"..id, spellId, caster);
             --                 if duration == 0 and durationNew then
-            --                     duration = durationNew
-            --                     expirationTime = expirationTimeNew
+            --                     duration = durationNew;
+            --                     expirationTime = expirationTimeNew;
             --                 end
 
             --                 if UnitFramesPlusDB["global"]["cdtext"] == 1 and expirationTime and expirationTime ~= 0 and duration > 0 then
@@ -1369,7 +1369,7 @@ local UFPHider = CreateFrame("Frame", "UFPHider");
 UFPHider:Hide();
 function UnitFramesPlus_PartyShowHideSet()
     local parent = PartyMemberFrame1:GetParent():GetName();
-    if UnitFramesPlusDB["party"]["origin"] ~= 1 or GetDisplayedAllyFrames() == nil or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or UnitFramesPlusDB["party"]["always"] ~= 1)) then
+    if UnitFramesPlusDB["party"]["origin"] ~= 1 or GetDisplayedAllyFrames() == nil or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or (UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] ~= 1))) then
         if parent == nil or parent == "UIParent" then
             for id = 1, MAX_PARTY_MEMBERS, 1 do
                 _G["PartyMemberFrame"..id]:SetParent(UFPHider);
@@ -1386,7 +1386,7 @@ function UnitFramesPlus_PartyShowHideSet()
     end
 
     local pparent = _G["PartyMemberFrame"..id.."PetFrame"]:GetParent():GetName();
-    if UnitFramesPlusDB["party"]["origin"] ~= 1 or GetDisplayedAllyFrames() == nil or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or UnitFramesPlusDB["party"]["always"] ~= 1)) or UnitFramesPlusDB["party"]["pet"] ~= 1 then
+    if UnitFramesPlusDB["party"]["origin"] ~= 1 or GetDisplayedAllyFrames() == nil or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or (UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] ~= 1))) or UnitFramesPlusDB["party"]["pet"] ~= 1 then
         if pparent == nil or pparent == "PartyMemberFrame"..id then
             for id = 1, MAX_PARTY_MEMBERS, 1 do
                 _G["PartyMemberFrame"..id.."PetFrame"]:SetParent(UFPHider);
@@ -1470,7 +1470,7 @@ end
 -- Interface/FrameXML/RaidFrame.lua
 local _RaidOptionsFrame_UpdatePartyFrames = RaidOptionsFrame_UpdatePartyFrames;
 function UnitFramesPlus_RaidOptionsFrame_UpdatePartyFrames()
-    if GetDisplayedAllyFrames() == nil or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or UnitFramesPlusDB["party"]["always"] ~= 1)) then
+    if GetDisplayedAllyFrames() == nil or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or (UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] ~= 1))) then
         HidePartyFrame();
     else
         HidePartyFrame();
@@ -1971,7 +1971,7 @@ end)
 hooksecurefunc("PartyMemberHealthCheck", function(self, value)
     -- if UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] == 1 then
         local id = self:GetParent():GetID();
-        if not UnitExists("party"..id) then
+        if not UnitExists("party"..id) or GetDisplayedAllyFrames() == nil or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or (UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] ~= 1))) then
             _G["PartyMemberFrame"..id.."Portrait"]:SetAlpha(0);
         end
     -- end

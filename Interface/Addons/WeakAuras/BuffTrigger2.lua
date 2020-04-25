@@ -898,7 +898,7 @@ local function TriggerInfoApplies(triggerInfo, unit)
     return false
   end
 
-  if triggerInfo.groupSubType == "party" then
+  if triggerInfo.unit == "group" and triggerInfo.groupSubType == "party" then
     if IsInRaid() then
       -- Filter our player/party# while in raid and keep only raid units that are correct
       if unit:sub(1,4) ~= "raid" or not UnitInSubgroupOrPlayer(unit) then
@@ -912,11 +912,11 @@ local function TriggerInfoApplies(triggerInfo, unit)
   end
 
   -- Filter our player/party# while in raid
-  if (triggerInfo.groupSubType == "group" and IsInRaid() and unit:sub(1,4) ~= "raid") then
+  if (triggerInfo.unit == "group" and triggerInfo.groupSubType == "group" and IsInRaid() and unit:sub(1,4) ~= "raid") then
     return false
   end
 
-  if triggerInfo.groupSubType == "raid" and unit:sub(1,4) ~= "raid" then
+  if triggerInfo.unit == "group" and triggerInfo.groupSubType == "raid" and unit:sub(1,4) ~= "raid" then
     return false
   end
 
@@ -1197,6 +1197,22 @@ local function CleanUpOutdatedMatchData(time, unit, filter)
              matchDataChanged[id][triggernum] = true
            end
          end
+      end
+    end
+  end
+end
+
+local function CleanUpMatchDataForUnit(unit, filter)
+  -- Figure out if any matchData is outdated
+  if matchData[unit] and matchData[unit][filter] then
+    for index, data in pairs(matchData[unit][filter]) do
+      matchData[unit][filter][index] = nil
+      for id, triggerData in pairs(data.auras) do
+       for triggernum in pairs(triggerData) do
+         matchDataByTrigger[id][triggernum][unit][index] = nil
+         matchDataChanged[id] = matchDataChanged[id] or {}
+         matchDataChanged[id][triggernum] = true
+       end
       end
     end
   end
@@ -1485,34 +1501,54 @@ local function EventHandler(frame, event, arg1, arg2, ...)
   WeakAuras.StartProfileSystem("bufftrigger2")
 
   local deactivatedTriggerInfos = {}
+  local unitsToRemove = {}
 
   local time = GetTime()
   if event == "PLAYER_TARGET_CHANGED" then
     ScanGroupUnit(time, matchDataChanged, nil, "target")
+    if not UnitExistsFixed("target") then
+      tinsert(unitsToRemove, "target")
+    end
   elseif event == "PLAYER_FOCUS_CHANGED" then
     ScanGroupUnit(time, matchDataChanged, nil, "focus")
+    if not UnitExistsFixed("focus") then
+      tinsert(unitsToRemove, "focus")
+    end
   elseif event == "UNIT_PET" then
     ScanGroupUnit(time, matchDataChanged, nil, "pet")
+    if not UnitExistsFixed("pet") then
+      tinsert(unitsToRemove, "pet")
+    end
   elseif event == "NAME_PLATE_UNIT_ADDED" then
     nameplateExists[arg1] = true
     RecheckActiveForUnitType("nameplate", arg1, deactivatedTriggerInfos)
   elseif event == "NAME_PLATE_UNIT_REMOVED" then
     nameplateExists[arg1] = false
     RecheckActiveForUnitType("nameplate", arg1, deactivatedTriggerInfos)
+    tinsert(unitsToRemove, arg1)
   elseif event == "ENCOUNTER_START" or event == "ENCOUNTER_END" or event == "INSTANCE_ENCOUNTER_ENGAGE_UNIT" then
     local unitsToCheck = {}
     for unit in GetAllUnits("boss", true) do
-      RecheckActiveForUnitType("boss", unit, unitsToCheck, deactivatedTriggerInfos)
+      RecheckActiveForUnitType("boss", unit, deactivatedTriggerInfos)
+      if not UnitExistsFixed(unit) then
+        tinsert(unitsToRemove, unit)
+      end
     end
   elseif event =="ARENA_OPPONENT_UPDATE" then
     local unitsToCheck = {}
     for unit in GetAllUnits("arena", true) do
       RecheckActiveForUnitType("arena", unit, deactivatedTriggerInfos)
+      if not UnitExistsFixed(unit) then
+        tinsert(unitsToRemove, unit)
+      end
     end
   elseif event == "GROUP_ROSTER_UPDATE" then
     local unitsToCheck = {}
     for unit in GetAllUnits("group", true) do
       RecheckActiveForUnitType("group", unit, deactivatedTriggerInfos)
+      if not UnitExistsFixed(unit) then
+        tinsert(unitsToRemove, unit)
+      end
     end
   elseif event == "UNIT_ENTERED_VEHICLE" or event == "UNIT_EXITED_VEHICLE" then
     if arg1 == "player" then
@@ -1523,10 +1559,19 @@ local function EventHandler(frame, event, arg1, arg2, ...)
   elseif event == "PLAYER_ENTERING_WORLD" then
     for unit in pairs(matchData) do
       ScanUnit(time, unit)
+      if not UnitExistsFixed(unit) then
+        tinsert(unitsToRemove, unit)
+      end
     end
   end
 
   DeactivateScanFuncs(deactivatedTriggerInfos)
+
+  for i, unit in ipairs(unitsToRemove) do
+    CleanUpMatchDataForUnit(unit, "HELPFUL")
+    CleanUpMatchDataForUnit(unit, "HARMFUL")
+    matchDataUpToDate[unit] = nil
+  end
 
   WeakAuras.StopProfileSystem("bufftrigger2")
 end
@@ -2891,7 +2936,7 @@ local function HandleCombatLog(scanFuncsName, scanFuncsSpellId, filter, event, s
         pendingTracks[destGUID] = true
       end
       if updatedSpellId then
-        for index, triggerInfo in ipairs(scanFuncsSpellId[spellId]) do
+        for triggerInfo in pairs(scanFuncsSpellId[spellId]) do
           if MatchesTriggerInfoMulti(triggerInfo, sourceGUID) then
             ReferenceMatchDataMulti(matchDataMulti[destGUID][spellId][sourceGUID], triggerInfo.id, triggerInfo.triggernum, destGUID)
           end
@@ -2907,7 +2952,7 @@ local function HandleCombatLog(scanFuncsName, scanFuncsSpellId, filter, event, s
         pendingTracks[destGUID] = true
       end
       if updatedName then
-        for index, triggerInfo in ipairs(scanFuncsName[spellName]) do
+        for triggerInfo in pairs(scanFuncsName[spellName]) do
           if MatchesTriggerInfoMulti(triggerInfo, sourceGUID) then
             ReferenceMatchDataMulti(matchDataMulti[destGUID][spellName][sourceGUID], triggerInfo.id, triggerInfo.triggernum, destGUID)
           end

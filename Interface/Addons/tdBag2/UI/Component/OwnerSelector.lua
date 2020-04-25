@@ -30,11 +30,10 @@ local Cache = ns.Cache
 ---@class tdBag2OwnerSelector: tdBag2MenuButton
 ---@field private meta tdBag2FrameMeta
 local OwnerSelector = ns.Addon:NewClass('UI.OwnerSelector', ns.UI.MenuButton)
-OwnerSelector.menuOffset = {xOffset = 8}
 
 function OwnerSelector:Constructor(_, meta)
     self.meta = meta
-    self.portrait = self.meta.frame.portrait
+    self.portrait = self.meta.frame.portrait or self.texture
     self:SetScript('OnClick', self.OnClick)
     self:SetScript('OnEnter', self.OnEnter)
     self:SetScript('OnLeave', self.OnLeave)

@@ -29,6 +29,7 @@ local ns = select(2, ...)
 ---@field protected TitleFrame tdBag2TitleFrame
 ---@field protected Container tdBag2Container
 local Frame = ns.Addon:NewClass('UI.Frame', 'Frame')
+Frame.TEMPLATE = 'tdBag2BaseFrameTemplate'
 
 function Frame:Constructor(_, bagId)
     self.meta = ns.FrameMeta:New(bagId, self)
@@ -45,12 +46,13 @@ function Frame:Constructor(_, bagId)
 end
 
 function Frame:Create(bagId)
-    return self:Bind(CreateFrame('Frame', nil, UIParent, 'tdBag2BaseFrameTemplate'), bagId)
+    return self:Bind(CreateFrame('Frame', nil, UIParent, self.TEMPLATE), bagId)
 end
 
 function Frame:OnShow()
     PlaySound(862) -- SOUNDKIT.IG_BACKPACK_OPEN
     self:RegisterFrameEvent('MANAGED_TOGGLED', 'UpdateManaged')
+    self:UpdateBorder()
 end
 
 function Frame:OnHide()
@@ -63,6 +65,9 @@ function Frame:OnHide()
 end
 
 Frame.OnSizeChanged = ns.Spawned(UpdateUIPanelPositions)
+
+function Frame:UpdateBorder()
+end
 
 function Frame:UpdatePosition()
     if not self.meta.profile.managed then
@@ -127,5 +132,6 @@ function Frame:UpdateSpecial()
 end
 
 function Frame:UpdateSize()
-    return self:SetSize(self.Container:GetRealWidth() + 24, self.Container:GetRealHeight() + self.fixedHeight)
+    return self:SetSize(self.Container:GetRealWidth() + self.fixedWidth,
+                        self.Container:GetRealHeight() + self.fixedHeight)
 end

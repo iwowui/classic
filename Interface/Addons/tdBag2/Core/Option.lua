@@ -21,6 +21,7 @@ local BAG_ARGS = { --
     [ns.BAG_ID.BAG] = {},
     [ns.BAG_ID.BANK] = {},
 }
+local STYLES = {}
 
 function Addon:SetupOptionFrame()
     local order = 0
@@ -53,6 +54,10 @@ function Addon:SetupOptionFrame()
         return {type = 'header', order = orderGen(), name = name}
     end
 
+    local function line()
+        return header('')
+    end
+
     local function desc(name)
         return {
             type = 'description',
@@ -66,6 +71,19 @@ function Addon:SetupOptionFrame()
         }
     end
 
+    local function warning(name)
+        return {
+            type = 'description',
+            order = orderGen(),
+            name = '|cffff0000' .. name .. '|r',
+            fontSize = 'medium',
+            image = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
+            imageWidth = 32,
+            imageHeight = 32,
+            -- imageCoords = {.2, .8, .2, .8},
+        }
+    end
+
     local function separator()
         return {type = 'description', order = orderGen(), name = '\n', fontSize = 'medium'}
     end
@@ -75,13 +93,18 @@ function Addon:SetupOptionFrame()
             type = 'select',
             name = name,
             order = orderGen(),
-            values = {},
-            sorting = {},
         }
 
-        for i, v in ipairs(values) do
-            opts.values[v.value] = v.name
-            opts.sorting[i] = v.value
+        if type(values) == 'function' then
+            opts.values = values
+        else
+            opts.values = {}
+            opts.sorting = {}
+
+            for i, v in ipairs(values) do
+                opts.values[v.value] = v.name
+                opts.sorting[i] = v.value
+            end
         end
         return opts
     end
@@ -217,7 +240,29 @@ function Addon:SetupOptionFrame()
                     self.db:ResetProfile()
                 end,
             },
-            header1 = {type = 'header', name = '', order = orderGen()},
+            header1 = line(),
+            reload = {
+                type = 'group',
+                name = RELOADUI,
+                inline = true,
+                order = orderGen(),
+                hidden = function()
+                    return
+                        not (self.styleName ~= self.db.profile.style and next(self.frames) and self.db.profile.style ~=
+                            self.styleInProfileLosed)
+                end,
+                args = {
+                    reloadtext = warning(L['Need to reload UI to make some settings take effect']),
+                    reload = {
+                        type = 'execute',
+                        name = RELOADUI,
+                        order = orderGen(),
+                        func = function()
+                            C_UI.Reload()
+                        end,
+                    },
+                },
+            },
             globalTitle = treeTitle(L['Global Settings']),
             general = treeItem(GENERAL, {
                 desc = desc(L.DESC_GENERAL),
@@ -225,6 +270,13 @@ function Addon:SetupOptionFrame()
                 lockFrame = fullToggle(L['Lock Frames']),
                 tipCount = fullToggle(L['Show Item Count in Tooltip']),
                 appearanceHeader = header(L['Appearance']),
+                style = drop(L['Bag Style'], function()
+                    local values = {}
+                    for styleName in pairs(self.styles) do
+                        values[styleName] = styleName
+                    end
+                    return values
+                end),
                 iconJunk = fullToggle(L['Show Junk Icon']),
                 iconQuestStarter = fullToggle(L['Show Quest Starter Icon']),
                 textOffline = fullToggle(L['Show Offline Text in Bag\'s Title']),
