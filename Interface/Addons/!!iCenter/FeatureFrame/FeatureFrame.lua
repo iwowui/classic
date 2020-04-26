@@ -233,6 +233,12 @@ StaticPopupDialogs["FeatureFrame_EnableAddon"] = {
 	button2 = NO,
 	OnAccept = function(self, data)
 		EnableAddOn(data);
+		for i = 1, GetNumAddOns() do
+			local dep = GetAddOnDependencies(i);
+			if dep and dep == data then
+				EnableAddOn(i);
+			end
+		end
 		ReloadUI();
 	end,
 	whileDead = 1, hideOnEscape = 1, showAlert = 1

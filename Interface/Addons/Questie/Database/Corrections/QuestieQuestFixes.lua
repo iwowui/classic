@@ -191,6 +191,9 @@ function QuestieQuestFixes:Load()
         [579] = {
             [QuestieDB.questKeys.parentQuest] = 578,
         },
+        [594] = {
+            [QuestieDB.questKeys.startedBy] = {nil,{2560,},{4098,},},
+        },
         [598] = {
             [QuestieDB.questKeys.preQuestSingle] = {},
             [QuestieDB.questKeys.preQuestGroup] = {596,629,}
@@ -831,7 +834,7 @@ function QuestieQuestFixes:Load()
             [QuestieDB.questKeys.preQuestSingle] = {4267},
         },
         [4494] = {
-            [QuestieDB.questKeys.preQuestSingle] = {82,7732},
+            [QuestieDB.questKeys.preQuestSingle] = {32,7732},
         },
         [4496] = {
             [QuestieDB.questKeys.preQuestSingle] = {4493,4494},
@@ -1355,7 +1358,11 @@ function QuestieQuestFixes:Load()
             [QuestieDB.questKeys.requiredRaces] = 77,
         },
         [8150] = { -- bad race data
+            [QuestieDB.questKeys.exclusiveTo] = {2851},
             [QuestieDB.questKeys.requiredRaces] = 178,
+        },
+        [8251] = {
+            [QuestieDB.questKeys.preQuestSingle] = {},
         },
         [8166] = {
             [QuestieDB.questKeys.specialFlags] = 0,
@@ -1375,8 +1382,38 @@ function QuestieQuestFixes:Load()
         [8171] = {
             [QuestieDB.questKeys.specialFlags] = 0,
         },
+        [8184] = {
+            [QuestieDB.questKeys.requiredClasses] = 1,
+        },
+        [8185] = {
+            [QuestieDB.questKeys.requiredClasses] = 2,
+        },
+        [8186] = {
+            [QuestieDB.questKeys.requiredClasses] = 8,
+        },
+        [8187] = {
+            [QuestieDB.questKeys.requiredClasses] = 4,
+        },
+        [8188] = {
+            [QuestieDB.questKeys.requiredClasses] = 64,
+        },
+        [8189] = {
+            [QuestieDB.questKeys.requiredClasses] = 128,
+        },
+        [8190] = {
+            [QuestieDB.questKeys.requiredClasses] = 256,
+        },
+        [8191] = {
+            [QuestieDB.questKeys.requiredClasses] = 16,
+        },
+        [8192] = {
+            [QuestieDB.questKeys.requiredClasses] = 1024,
+        },
         [8271] = {
             [QuestieDB.questKeys.requiredRaces] = 77,
+        },
+        [8240] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Destroy any Hakkari Bijou", {[33]={{13.4,15.1},},},},
         },
         [8272] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 178,
@@ -1392,6 +1429,9 @@ function QuestieQuestFixes:Load()
         },
         [8296] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 178,
+        },
+        [8314] = {
+            [QuestieDB.questKeys.specialFlags] = nil, -- #1870
         },
         [8368] = {
             [QuestieDB.questKeys.exclusiveTo] = {8426,8427,8428,8429,8430},

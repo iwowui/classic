@@ -78,6 +78,7 @@ switch:SetScript("OnEvent", function(self, event, ...)
             if not ExtraConfiguration["maxcamera"] then ExtraConfiguration["maxcamera"] = 1; end
             if not ExtraConfiguration["antiafk"] then ExtraConfiguration["antiafk"] = 0; end
             if not ExtraConfiguration["antilogout"] then ExtraConfiguration["antilogout"] = 0; end
+            if not ExtraConfiguration["details"] then ExtraConfiguration["details"] = 1; end
             Switch_OptionPanel_OnShow();
             switch:UnregisterEvent("ADDON_LOADED");
         end
@@ -95,6 +96,9 @@ switch:SetScript("OnEvent", function(self, event, ...)
         AntiCrab();
         BlueShaman();
         AntiAFKLogout();
+        if Details and ExtraConfiguration["details"] == 1 then
+            Details.disable_talent_feature = true;
+        end
         switch:UnregisterEvent("VARIABLES_LOADED");
     elseif event == "PLAYER_ENTERING_WORLD" then
         MaxCameraDistance();

@@ -1,0 +1,26 @@
+## Interface: 11304
+## Title: alaTalentEmu
+## SavedVariablesPerCharacter: 
+## SavedVariables: alaTalentEmuSV
+## Notes: alaTalentEmu
+## Dependencies: 
+## OptionalDependencies: 
+## LoadOnDemand: 0
+## DefaultState: enabled
+## Author: |cff00ff00ALA|r @ |cffff0000163UI|r
+## Author-zhCN: |cff00ff00ALA|r @ |cffff0000网易有爱|r
+## Author-zhTW: |cff00ff00ALA|r @ |cffff0000网易有爱|r
+## Version: 113r.200408
+
+alaTalentEmu.xml
+
+
+
+
+## Title-zhCN: |CFFFF8000辅助|R 天赋模拟器 alaTalentEmu
+## Notes-zhCN: 天赋模拟器，可以模拟天赋、导出代码、导入代码、观察其他玩家天赋、应用模拟器天赋等。
+## Title-zhTW: |CFFFF8000輔助|R 天賦模擬器 alaTalentEmu
+## Notes-zhTW: 天賦模擬器，可以模擬天賦、匯出代碼、導入代碼、觀察其他玩家天賦、應用模擬器天賦等。
+## X-Repple: 辅助
+## X-Vendor: NetEase
+## X-163UI-Version: 20191024172635

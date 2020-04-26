@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.58 (15th April 2020)
+-- 	Leatrix Plus 1.13.59 (22nd April 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 --	Version
-	LeaPlusLC["AddonVer"] = "1.13.58"
+	LeaPlusLC["AddonVer"] = "1.13.59"
 	LeaPlusLC["RestartReq"] = nil
 
 --	If client restart is required and has not been done, show warning and quit
@@ -4421,14 +4421,7 @@
 		if LeaPlusLC["RecentChatWindow"] == "On" then
 
 			-- Create recent chat frame (not parenting to UIParent due to editbox scaling issue)
-			local editFrame = CreateFrame("ScrollFrame", nil, nil, "InputScrollFrameTemplate")
-
-			-- Toggle frame with UIParent
-			local hideUI = false
-			local function HideRecentChatFrame() if editFrame:IsShown() then hideUI = true editFrame:Hide() end	end
-			local function ShowRecentChatFrame() if hideUI and not PetBattleFrame:IsShown() then editFrame:Show() hideUI = false end end
-			hooksecurefunc(UIParent, "Hide", HideRecentChatFrame)
-			hooksecurefunc(UIParent, "Show", ShowRecentChatFrame)
+			local editFrame = CreateFrame("ScrollFrame", nil, UIParent, "InputScrollFrameTemplate")
 
 			-- Set frame parameters
 			editFrame:ClearAllPoints()
@@ -4456,6 +4449,7 @@
 			editBox:SetAltArrowKeyMode(false)
 			editBox:SetTextInsets(4, 4, 4, 4)
 			editBox:SetWidth(editFrame:GetWidth() - 30)
+			editBox:SetFont(editBox:GetFont(), 16)
 
 			-- Close frame with right-click of editframe or editbox
 			local function CloseRecentChatWindow()
@@ -4496,11 +4490,33 @@
 				if NumMsg > 128 then StartMsg = NumMsg - 127 end
 				local totalMsgCount = 0
 				for iMsg = StartMsg, NumMsg do
-					local chatMessage = chtfrm:GetMessageInfo(iMsg)
+					local chatMessage, r, g, b, chatTypeID = chtfrm:GetMessageInfo(iMsg)
 					if chatMessage then
-						--chatMessage = gsub(chatMessage, "|T.-|t", "") -- Remove textures
-						--chatMessage = gsub(chatMessage, "{.-}", "") -- Remove ellipsis
+
+						-- Handle Battle.net
+						if string.match(chatMessage, "k:(%d+):(%d+):BN_WHISPER:") then
+							local id = tonumber(string.match(chatMessage, "k:(%d+):%d+:BN_WHISPER:"))
+							local totalBNFriends = BNGetNumFriends()
+							for friendIndex = 1, totalBNFriends do
+								local presenceID, name, tag = BNGetFriendInfo(friendIndex)
+								if id == presenceID then
+									tag = strsplit("#", tag)
+									chatMessage =  gsub(chatMessage, "|HBNplayer:.*:.*:.*:BN_WHISPER:.*:", "[" .. tag .. "]:")
+								end
+							end
+						end
+
+						-- Handle colors
+						if r and g and b and chatTypeID then
+							local colorCode = RGBToColorCode(r, g, b)
+							chatMessage = string.gsub(chatMessage, "|r", "|r" .. colorCode) -- Links
+							chatMessage = colorCode .. chatMessage
+						end
+
+						chatMessage = gsub(chatMessage, "|T.-|t", "") -- Remove textures
+						chatMessage = gsub(chatMessage, "{.-}", "") -- Remove ellipsis
 						editBox:Insert(chatMessage .. "|n")
+
 					end
 					totalMsgCount = totalMsgCount + 1
 				end
