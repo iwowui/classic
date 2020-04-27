@@ -67,7 +67,7 @@ end
 local switch = CreateFrame('Frame');
 switch:RegisterEvent("ADDON_LOADED");
 switch:RegisterEvent("VARIABLES_LOADED");
-switch:RegisterEvent("PLAYER_ENTERING_WORLD");
+switch:RegisterEvent("PLAYER_LOGIN");
 switch:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local name = ...;
@@ -100,8 +100,9 @@ switch:SetScript("OnEvent", function(self, event, ...)
             Details.disable_talent_feature = true;
         end
         switch:UnregisterEvent("VARIABLES_LOADED");
-    elseif event == "PLAYER_ENTERING_WORLD" then
+    elseif event == "PLAYER_LOGIN" then
         MaxCameraDistance();
+        switch:UnregisterEvent("PLAYER_LOGIN");
     end
 end)
 
@@ -239,19 +240,6 @@ InterfaceOptionsFrameAddOns:SetScript("OnMouseWheel", function(self, delta)
     end
 end)
 
--- --自动回收内存
--- local eventcount = 0
--- local recovery = CreateFrame("Frame")
--- recovery:RegisterAllEvents()
--- recovery:SetScript("OnEvent", function(self, event)
--- 	eventcount = eventcount + 1
--- 	if InCombatLockdown() then return end
--- 	if eventcount > 6000 or event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_REGEN_ENABLED" then
--- 		collectgarbage("collect")
--- 		eventcount = 0
--- 	end
--- end)
-
 -- --新职业颜色
 -- if GetLocale() == "zhCN" then
 --     LOCALIZED_CLASS_NAMES_MALE["DEATHKNIGHT"] = "死亡骑士"
@@ -375,3 +363,70 @@ do
         end
     end)
 end
+
+-- InspectFrame TalentButton for alaTalentEmu
+local function CreateInspectTalentButton()
+    if (not InspectTalentButton) then
+        InspectTalentButton = CreateFrame("Button", "InspectTalentButton", InspectFrame, "OptionsButtonTemplate");
+        InspectTalentButton:ClearAllPoints();
+        InspectTalentButton:SetPoint("TOPRIGHT", InspectFrame, "TOPRIGHT", -42, -42);
+        InspectTalentButton:SetWidth(55);
+        InspectTalentButton:SetHeight(25);
+        InspectTalentButton:SetText(TALENT);
+        InspectTalentButton:SetScript("OnClick", function()
+            local name, realm = UnitName("target");
+            if name and name ~= "" then
+                if not realm or realm == "" then realm = UnitName("player") end
+                __ala_meta__.emu.Emu_Query(name, realm);
+            end
+        end)
+    end
+end
+
+local tb = CreateFrame("Frame");
+tb:RegisterEvent("ADDON_LOADED")
+tb:SetScript("OnEvent", function(self, event, ...)
+    if event == "ADDON_LOADED" then
+        local addon = ...;
+        if addon == "Blizzard_InspectUI" then
+            if IsAddOnLoaded("alaTalentEmu") then
+                CreateInspectTalentButton();
+            end
+            tb:UnregisterEvent("ADDON_LOADED");
+        end
+    end
+end)
+
+-- fix raidframe
+function Fix_RaidFrame_OnClick()
+    if InCombatLockdown() then
+        fr:RegisterEvent("PLAYER_REGEN_ENABLED");
+        return;
+    end
+
+    if RaidFrame and type(RaidFrame) == "table" and type(RaidFrame.SetScript) == "function" then
+        local id;
+        for id = 1, 40 do
+            local button = _G["RaidGroupButton"..id];
+            if type(button) == "table" and button.unit then
+                button:SetAttribute("type", "target");
+                button:SetAttribute("unit", button.unit);
+            end
+        end
+    end
+end
+
+local fr = CreateFrame("Frame");
+fr:RegisterEvent("ADDON_LOADED")
+fr:SetScript("OnEvent", function(self, event, ...)
+    if event == "ADDON_LOADED" then
+        local addon = ...;
+        if addon == "Blizzard_RaidUI" then
+            Fix_RaidFrame_OnClick();
+            fr:UnregisterEvent("ADDON_LOADED");
+        end
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        Fix_RaidFrame_OnClick();
+        fr:UnregisterEvent("PLAYER_REGEN_ENABLED");
+    end
+end)
