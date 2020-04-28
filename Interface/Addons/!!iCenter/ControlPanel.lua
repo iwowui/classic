@@ -367,7 +367,7 @@ if title ~= nil then
 				name= FF_NameTradeLog;
 				subtext= "TradeLog";
 				tooltip = FF_DescTradeLog;
-				icon= "Interface\\GossipFrame\\BankerGossipIcon";
+				icon= "Interface\\Icons\\INV_Scroll_07";
 				callback= function(button)
 					if not IsAddOnLoaded("TradeLog") then
 						LoadAddOn("TradeLog");
@@ -410,7 +410,7 @@ if title ~= nil then
 				name= FF_NameAccountant_Classic;
 				subtext= "Accountant_Classic";
 				tooltip = FF_DescAccountant_Classic;
-				icon= "Interface\\AddOns\\Accountant_Classic\\Images\\AccountantClassicButton-Up";
+				icon= "Interface\\Icons\\INV_Misc_Book_11";
 				callback= function(button)
 					if not IsAddOnLoaded("Accountant_Classic") then
 						LoadAddOn("Accountant_Classic");
@@ -1338,6 +1338,45 @@ if title ~= nil then
 				end;
 				test = function()
 					if not IsAddOnLoaded("DBM-Core") and not IsAddOnLoadOnDemand("DBM-Core") then
+						return false;
+					else
+						return true;
+					end
+				end;
+			}
+		);
+	end
+end
+
+local _, title = GetAddOnInfo("RaidLedger");
+if title ~= nil then
+	if GetLocale() == "zhCN" then
+		FF_NameRaidLedger	= "金团账本";
+		FF_DescRaidLedger	= "帮你在金团中记账";
+	elseif GetLocale() == "zhTW" then
+		FF_NameRaidLedger	= "金團賬本";
+		FF_DescRaidLedger	= "幫你在金團中記賬";
+	else
+		FF_NameRaidLedger	= "RaidLedger";
+		FF_DescRaidLedger	= "A ledger for GDKP/gold run raid";
+	end
+	if ( EarthFeature_AddButton ) then
+		EarthFeature_AddButton(
+			{
+				id= "RaidLedger";
+				tab= "group";
+				name= FF_NameRaidLedger;
+				subtext= "RaidLedger";
+				tooltip = FF_DescRaidLedger;
+				icon= "Interface\\Icons\\INV_Misc_Coin_01";
+				callback= function(button)
+					if not IsAddOnLoaded("RaidLedger") then
+						LoadAddOn("RaidLedger");
+					end
+					SlashCmdList["RAIDLEDGER"]("");
+				end;
+				test = function()
+					if not IsAddOnLoaded("RaidLedger") and not IsAddOnLoadOnDemand("RaidLedger") then
 						return false;
 					else
 						return true;
