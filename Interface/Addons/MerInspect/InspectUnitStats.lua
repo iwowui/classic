@@ -134,14 +134,14 @@ local function DefaultItemStatsFrame(frame, unit)
                 -- if (inspectStats.static[k] or playerStats.static[k]) and not string.find(k, "Resistance") then
                 -- if inspectStats.static[v] and not string.find(v, "Resistance") then
                 if inspectStats.static[v] or (uclass == pclass and playerStats.static[v]) then
-                    if string.find(v, "Crit") or string.find(v, "Hit") or v == "Dodge" or v == "Block" or v == "Parry" then
-                        if inspectStats.static[v] and inspectStats.static[v].value then
-                            inspectStats.static[v].value = inspectStats.static[v].value.."%"
-                        end
-                        if playerStats.static[v] and playerStats.static[v].value then
-                            playerStats.static[v].value = playerStats.static[v].value.."%"
-                        end
-                    end
+                    -- if string.find(v, "Crit") or string.find(v, "Hit") or v == "Dodge" or v == "Block" or v == "Parry" then
+                    --     if inspectStats.static[v] and inspectStats.static[v].value then
+                    --         inspectStats.static[v].value = inspectStats.static[v].value.."%"
+                    --     end
+                    --     if playerStats.static[v] and playerStats.static[v].value then
+                    --         playerStats.static[v].value = playerStats.static[v].value.."%"
+                    --     end
+                    -- end
                     frame.statsFrame2["stat"..index].Label:SetText(LibItemStatsLocale[v])
                     frame.statsFrame2["stat"..index].Label:SetFont(ChatFontNormal:GetFont());
                     frame.statsFrame2["stat"..index].Value:SetText(inspectStats.static[v] and inspectStats.static[v].value or "-")

@@ -89,6 +89,18 @@ local function CalculateStatLogic(unit, stats)
     end
     --step2 换算%
 
+    --step3 添加%
+    for i = 1, #LibItemStatsName["FULL"] do
+        local v = LibItemStatsName["FULL"][i]
+        if stats.static[v] then
+            if string.find(v, "Crit") or string.find(v, "Hit") or v == "Dodge" or v == "Block" or v == "Parry" then
+                if stats.static[v] and stats.static[v].value then
+                    stats.static[v].value = stats.static[v].value.."%"
+                end
+            end
+        end
+    end
+
     return stats
 end
 

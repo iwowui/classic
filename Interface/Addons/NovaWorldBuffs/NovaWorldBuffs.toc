@@ -1,0 +1,14 @@
+﻿## Interface: 11304
+## Title: Nova World Buffs
+## Notes: World buff timers and pre warnings.
+## Title-zhCN: |CFFFF8000辅助|R 世界Buff冷却计时
+## Title-zhTW: |CFFFF8000輔助|R 世界Buff冷却计时
+## X-Repple: 辅助
+## Author: Novaspark-Arugal OCE
+## Version: 1.42
+## SavedVariables: NWBdatabase
+
+embeds.xml
+Locale\Locales.xml
+NovaWorldBuffs.lua
+Options.lua

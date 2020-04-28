@@ -346,14 +346,27 @@ LibEvent:attachTrigger("TogglePlayerStatsFrame", function(self, frame, bool, for
         if (LibItemStats:IsSupported()) then
             local stats = LibItemStats:GetUnitStats("player")
             stats.ilevel = LibItemInfo:GetUnitItemLevel("player")
-            PlayerStatsFrame:SetStats(stats):Show()
-            if (frame.inspectFrame and frame.inspectFrame:IsShown()) then
-                PlayerStatsFrame:SetPoint("TOPLEFT", frame.inspectFrame, "TOPRIGHT", 1, 0)
-            elseif (not frame:GetName()) then
-                PlayerStatsFrame:SetPoint("TOPLEFT", frame, "TOPRIGHT", 1, 0)
-            else
-                PlayerStatsFrame:SetPoint("TOPLEFT", frame, "TOPRIGHT", -32, -14)
-            end
+            C_Timer.After(0.05, function()
+                if (CharacterFrame:IsVisible()) then
+                    stats = LibItemStats:GetUnitStats("player")
+                    stats.ilevel = LibItemInfo:GetUnitItemLevel("player")
+                end
+            end)
+            C_Timer.After(0.1, function()
+                if (CharacterFrame:IsVisible()) then
+                    stats = LibItemStats:GetUnitStats("player")
+                    stats.ilevel = LibItemInfo:GetUnitItemLevel("player")
+                    
+                    PlayerStatsFrame:SetStats(stats):Show()
+                    if (frame.inspectFrame and frame.inspectFrame:IsShown()) then
+                        PlayerStatsFrame:SetPoint("TOPLEFT", frame.inspectFrame, "TOPRIGHT", 1, 0)
+                    elseif (not frame:GetName()) then
+                        PlayerStatsFrame:SetPoint("TOPLEFT", frame, "TOPRIGHT", 1, 0)
+                    else
+                        PlayerStatsFrame:SetPoint("TOPLEFT", frame, "TOPRIGHT", -32, -14)
+                    end
+                end
+            end)
         end
     end
 end)
