@@ -111,7 +111,7 @@ L["dmf"] = "Darkmoon Faire"; --Darkmoon Faire
 L["noTimer"] = "No timer"; --No timer
 L["noCurrentTimer"] = "No current timer"; --No current timer
 L["noActiveTimers"] = "No active timers";	--No active timers
-L["newBuffCanBeDropped"] = "A new %s buff can be dropped now"
+L["newBuffCanBeDropped"] = "A new %s buff can be dropped now";
 L["buffResetsIn"] = "%s resets in %s";
 L["rendFirstYellMsg"] = "Rend will drop in 6 seconds.";
 L["onyxiaFirstYellMsg"] = "Onyxia will drop in 14 seconds.";
@@ -182,9 +182,9 @@ L["North-West of Irontree Woods"] = "North-West of Irontree Woods";
 L["South of Irontree Woods"] = "South of Irontree Woods";
 
 
-
-L["cityMapLayerMsgHorde"] = "Timers for %s\nTarget any NPC in Orgrimmar\nto update your layer after changing zones.|r";
-L["cityMapLayerMsgAlliance"] = "Timers for %s\nTarget any NPC in Stormwind\nto update your layer after changing zones.|r";
-L["noLayerYetHorde"] = "You have not targeted a NPC since logging in.\nPlease target any NPC in Orgrimmar\nto find your current layer timers.";
-L["noLayerYetAlliance"] = "You have not targeted a NPC since logging in.\nPlease target any NPC in Stormwind\nto find your current layer timers.";
+L["worldMapBuffsMsg"] = "Type /buffs to view all your\ncharacters current world buffs.";
+L["cityMapLayerMsgHorde"] = "Currently on %s\nTarget any NPC in Orgrimmar\nto update your layer after changing zones.|r";
+L["cityMapLayerMsgAlliance"] = "Currently on %s\nTarget any NPC in Stormwind\nto update your layer after changing zones.|r";
+L["noLayerYetHorde"] = "Please target any NPC in Orgrimmar\nto find your current layer.";
+L["noLayerYetAlliance"] = "Please target any NPC in Stormwind\nto find your current layer.";
 L["Reset Data"] = "Reset Data"; --A button to Reset buffs window data.

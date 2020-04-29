@@ -75,10 +75,10 @@ L["onyxiaNpcKilledHorde"] = "伦萨克死亡了。 (奥妮克希亚 buff NPC)。
 L["onyxiaNpcKilledAlliance"] = "玛丁雷少校死亡了。(奥妮克希亚 buff NPC)。";
 L["nefarianNpcKilledHorde"] = "萨鲁法尔大王死亡了。 (奈法利安 buff NPC)。";
 L["nefarianNpcKilledAlliance"] = "艾法希比元帅死亡了。(奈法利安 buff NPC)。";
-L["onyxiaNpcKilledHordeWithTimer"] = "奥妮克希亚 NPC (伦萨克) 已经被击杀了 %s 时间， 之后没有任何buff记录。";
-L["NefarianNpcKilledHordeWithTimer"] = "奈法利安 NPC (萨鲁法尔大王)已经被击杀了 %s 时间， 之后没有任何buff记录。";
-L["onyxiaNpcKilledAllianceWithTimer"] = "奥妮克希亚 buff NPC (玛丁雷少校) 已经被击杀了 %s 时间， 之后没有任何buff记录。";
-L["NefarianNpcKilledAllianceWithTimer"] = "奈法利安 buff NPC (艾法希比元帅)已经被击杀了 %s 时间， 之后没有任何buff记录。";
+L["onyxiaNpcKilledHordeWithTimer"] = "奥妮克希亚 NPC (伦萨克) 已经被击杀了 %s ， 之后没有任何buff记录。";
+L["NefarianNpcKilledHordeWithTimer"] = "奈法利安 NPC (萨鲁法尔大王)已经被击杀了 %s ， 之后没有任何buff记录。";
+L["onyxiaNpcKilledAllianceWithTimer"] = "奥妮克希亚 buff NPC (玛丁雷少校) 已经被击杀了 %s ， 之后没有任何buff记录。";
+L["NefarianNpcKilledAllianceWithTimer"] = "奈法利安 buff NPC (艾法希比元帅)已经被击杀了 %s ， 之后没有任何buff记录。";
 L["anyNpcKilledAllianceWithTimer"] = "NPC 在 %s 以前被击杀了"; --Map timers tooltip msg.
 
 
@@ -95,12 +95,12 @@ L["Sayge's Dark Fortune of Strength"] = "塞格的黑暗塔罗牌：力量";
 L["Sayge's Dark Fortune of Armor"] = "塞格的黑暗塔罗牌：护甲";
 L["Sayge's Dark Fortune of Resistance"] = "塞格的黑暗塔罗牌：抗性";
 L["Sayge's Dark Fortune of Damage"] = "塞格的黑暗塔罗牌：伤害";
-L["dmfBuffCooldownMsg"] = "你的暗夜马戏团 buff 冷却剩余时间 %s 。";
-L["dmfBuffReady"] = "你的暗夜马戏团 buff 冷却剩余时间已就绪。"; --These 2 buff msgs are slightly different for a reason.
-L["dmfBuffReset"] = "你的暗夜马戏团 buff 冷却剩余时间已重置。"; --These 2 buff msgs are slightly different for a reason.
-L["dmfBuffDropped"] = "暗夜马戏团 buff %s 已获得, 输入/buffs来查看该buff在4小时游戏时间的冷却剩余。";
-L["dmfSpawns"] = "暗夜马戏团将刷新于 %s (%s)。";
-L["dmfEnds"] = "暗夜马戏团已刷新, 将于 %s (%s) 后结束。";
+L["dmfBuffCooldownMsg"] = "你的暗月马戏团 buff 冷却剩余时间 %s 。";
+L["dmfBuffReady"] = "你的暗月马戏团 buff 冷却剩余时间已就绪。"; --These 2 buff msgs are slightly different for a reason.
+L["dmfBuffReset"] = "你的暗月马戏团 buff 冷却剩余时间已重置。"; --These 2 buff msgs are slightly different for a reason.
+L["dmfBuffDropped"] = "暗月马戏团 buff %s 已获得, 输入/buffs来查看该buff在4小时游戏时间的冷却剩余。";
+L["dmfSpawns"] = "暗月马戏团将刷新于 %s后(%s)。";
+L["dmfEnds"] = "暗月马戏团已刷新, 将于 %s后(%s)结束。";
 L["mulgore"] = "莫高雷";
 L["elwynnForest"] = "艾尔文森林";
 				
@@ -108,19 +108,19 @@ L["elwynnForest"] = "艾尔文森林";
 ---Output Strings---
 ---==============---
 
-L["rend"] = "大酋长雷德·黑手"; --Rend Blackhand
+L["rend"] = "雷德·黑手"; --Rend Blackhand
 L["onyxia"] = "奥妮克希亚"; --Onyxia
 L["nefarian"] = "奈法利安"; --Nefarian
-L["dmf"] = "暗夜马戏团"; --Darkmoon Faire
+L["dmf"] = "暗月马戏团"; --Darkmoon Faire
 L["noTimer"] = "没有计时"; --No timer
 L["noCurrentTimer"] = "没有当前计时"; --No current timer
 L["noActiveTimers"] = "没有激活计时";	--No active timers
 L["newBuffCanBeDropped"] = "一个新的 %s buff 现在可以取得"
-L["buffResetsIn"] = "%s 重置在 %s";
-L["rendFirstYellMsg"] = "大酋长雷德·黑手Buff将在 6 秒后释放。";
+L["buffResetsIn"] = "%s 重置于 %s后.";
+L["rendFirstYellMsg"] = "雷德·黑手Buff将在 6 秒后释放。";
 L["onyxiaFirstYellMsg"] = "奥妮克希亚Buff将在 14 秒后释放。";
 L["nefarianFirstYellMsg"] = "奈法利安Buff 15 秒后释放。";
-L["rendBuffDropped"] = "酋长的祝福Buff (大酋长雷德·黑手) 已经释放。";
+L["rendBuffDropped"] = "酋长的祝福 (雷德·黑手) 已经释放。";
 L["onyxiaBuffDropped"] = "屠龙者的咆哮（奥妮克希亚）Buff 已经释放。";
 L["nefarianBuffDropped"] = "屠龙者的咆哮（奈法利安）Buff 15 秒后释放。";
 L["onyxiaNpcKilledHorde"] = "伦萨克死亡了。 (奥妮克希亚 buff NPC)。";
@@ -173,9 +173,9 @@ L["Resist Fire"] = "抵抗火焰"; -- LBRS fire resist buff.
 L["Blessing of Blackfathom"] = "黑暗深渊的祝福";
 
 L["zan"] = "赞达拉";
-L["zanFirstYellMsg"] = "赞达拉Buff 将于 30 秒后释放。";
+L["zanFirstYellMsg"] = "赞达拉Buff 将于 30秒 后释放。";
 L["zanBuffDropped"] = "赞达拉之魂Buff (哈卡) 已经释放。";
-L["singleSongflowerMsg"] = "轻歌花在 %s 将刷新于 %s.";
+L["singleSongflowerMsg"] = "轻歌花在 %s 将刷新于 %s后。";
 L["spawn"] = "刷新"; --Used in Felwood map marker tooltip (03:46pm spawn).
 
 L["Irontree Woods"] = "铁木森林";
@@ -186,8 +186,9 @@ L["North-West of Irontree Woods"] = "铁木森林西北部";
 L["South of Irontree Woods"] = "铁木森林南部";
 
 
-L["cityMapLayerMsgHorde"] = "显示计时器 %s\n选中奥格瑞玛的任何NPC\n以更新位面在切换地区后.|r";
-L["cityMapLayerMsgAlliance"] = "显示计时器 %s\n选中暴风城的任何NPC\n以更新位面在切换地区后.|r";
-L["noLayerYetHorde"] = "在登录游戏后你还没有选中任何NPC.\n请选中奥格瑞玛的任何NPC\n来找到你当前位面的计时器.";
-L["noLayerYetAlliance"] = "在登录游戏后你还没有选中任何NPC.\n请选中暴风城的任何NPC\n来找到你当前位面的计时器.";
+
+L["cityMapLayerMsgHorde"] = "当前在 %s\n选定奥格瑞玛的任何NPC\n以便更新你的分层信息。|r";
+L["cityMapLayerMsgAlliance"] = "当前在 %s\n选定暴风城的任何NPC\n以便更新你的分层信息。|r";
+L["noLayerYetHorde"] = "请选定奥格瑞玛的任何NPC\n确认你当前所在的分层。";
+L["noLayerYetAlliance"] = "请选定暴风城的任何NPC\n确认你当前所在的分层。";
 L["Reset Data"] = "重置数据"; --A button to Reset buffs window data.

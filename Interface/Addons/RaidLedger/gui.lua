@@ -275,6 +275,8 @@ function GUI:Init()
         end
 
         do
+            local tooltip = self.itemtooltip
+
             local itemTexture = bf:CreateTexture()
             itemTexture:SetTexCoord(0, 1, 0, 1)
             itemTexture:Show()
@@ -282,6 +284,7 @@ function GUI:Init()
             itemTexture:SetWidth(30)
             itemTexture:SetHeight(30)            
             itemTexture:SetTexture(134400)
+
 
             bf.itemTexture = itemTexture
 
@@ -293,13 +296,26 @@ function GUI:Init()
             local itemtext = CreateFrame("Button", nil, bf);
             itemtext.text = itemtext:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 
-            itemtext.text:SetPoint("LEFT", itemtext, "LEFT", 0, 0);
-            itemtext:SetPoint('LEFT', itemTexture, "RIGHT", 5, 0)
-            itemtext:SetSize(400, 30)
+            itemtext.text:SetPoint("LEFT", itemtext, "LEFT", 45, 0);
+            itemtext:SetPoint('LEFT', itemTexture, "RIGHT", -40, 0)
+            itemtext:SetSize(30, 30)
             itemtext:EnableMouse(true)
             itemtext:RegisterForClicks("AnyUp")
             itemtext:SetScript("OnClick", function()
                 ChatEdit_InsertLink(itemtext.link)
+            end)
+
+            itemtext:SetScript("OnEnter", function()
+                if itemtext.link then
+                    tooltip:SetOwner(itemtext, "ANCHOR_CURSOR")
+                    tooltip:SetHyperlink(itemtext.link)
+                    tooltip:Show()
+                end
+            end)
+
+            itemtext:SetScript("OnLeave", function()
+                tooltip:Hide()
+                tooltip:SetOwner(itemtext, "ANCHOR_NONE")
             end)
 
             bf.SetItem = function(item, count)
@@ -315,6 +331,8 @@ function GUI:Init()
                 if itemLink then
                     itemtext.link = itemLink
                     itemtext.text:SetText(itemLink)
+                    itemtext:SetWidth(itemtext.text:GetStringWidth() + 45)
+
                 else
                     itemtext.link = nil
                     itemtext.text:SetText(item)
@@ -334,10 +352,10 @@ function GUI:Init()
             s:SetOrientation('HORIZONTAL')
             s:SetHeight(14)
             s:SetWidth(160)
-            s:SetMinMaxValues(5, 30)
+            s:SetMinMaxValues(5, 60)
             s:SetValueStep(1)
             s.Low:SetText(SecondsToTime(5))
-            s.High:SetText(SecondsToTime(30))
+            s.High:SetText(SecondsToTime(60))
     
             local l = s:CreateFontString(nil, "OVERLAY", "GameFontNormal")
             l:SetPoint("RIGHT", s, "LEFT", -20, 1)
@@ -349,7 +367,7 @@ function GUI:Init()
                 s.Text:SetText(SecondsToTime(value))
             end)
 
-            s:SetValue(10)
+            s:SetValue(20)
 
             bf.countdown = s
         end
@@ -359,10 +377,11 @@ function GUI:Init()
             s:SetOrientation('HORIZONTAL')
             s:SetHeight(14)
             s:SetWidth(160)
-            s:SetMinMaxValues(50, 1000)
-            s:SetValueStep(1)
+            s:SetMinMaxValues(50, 10000)
+            s:SetValueStep(50)
+            s:SetObeyStepOnDrag(true)
             s.Low:SetText(GOLD_AMOUNT_TEXTURE_STRING:format(50))
-            s.High:SetText(GOLD_AMOUNT_TEXTURE_STRING:format(1000))
+            s.High:SetText(GOLD_AMOUNT_TEXTURE_STRING:format(10000))
     
             local l = s:CreateFontString(nil, "OVERLAY", "GameFontNormal")
             l:SetPoint("RIGHT", s, "LEFT", -20, 1)
@@ -453,10 +472,11 @@ function GUI:Init()
                     s:SetOrientation('HORIZONTAL')
                     s:SetHeight(14)
                     s:SetWidth(160)
-                    s:SetMinMaxValues(50, 1000)
-                    s:SetValueStep(1)
-                    s.Low:SetText(GOLD_AMOUNT_TEXTURE_STRING:format(50))
-                    s.High:SetText(GOLD_AMOUNT_TEXTURE_STRING:format(1000))
+                    s:SetMinMaxValues(10, 500)
+                    s:SetValueStep(10)
+                    s:SetObeyStepOnDrag(true)
+                    s.Low:SetText(GOLD_AMOUNT_TEXTURE_STRING:format(10))
+                    s.High:SetText(GOLD_AMOUNT_TEXTURE_STRING:format(500))
             
                     local l = s:CreateFontString(nil, "OVERLAY", "GameFontNormal")
                     l:SetPoint("RIGHT", s, "LEFT", -20, 1)
@@ -547,6 +567,14 @@ function GUI:Init()
                 return bid
             end
 
+            local SendRaidMessage = function(text)
+                if UnitIsGroupLeader('player') or UnitIsGroupAssistant('player') then
+                    SendChatMessage(text, "RAID_WARNING")
+                else
+                    SendChatMessage(text, "RAID")
+                end
+            end
+
             local evt = function(text, playerName)
                 if not ctx then
                     return
@@ -566,9 +594,9 @@ function GUI:Init()
                     ctx.currentprice = ask * 10000
                     ctx.countdown = bf.countdown:GetValue()
 
-                    SendChatMessage(L["Bid accept"] .. " " .. item .. " " .. L["Current price"] .. " " .. GetMoneyStringL(ctx.currentprice), "RAID")
+                    SendRaidMessage(L["Bid accept"] .. " " .. item .. " " .. L["Current price"] .. " " .. GetMoneyStringL(ctx.currentprice) .. " " .. L["Bid price"] .. " " .. GetMoneyStringL(bidprice()))
                 else
-                    SendChatMessage(L["Bid denied"] .. " " .. item .. " " .. L["Must bid higher than"] .. " " .. GetMoneyStringL(bid), "RAID")
+                    SendRaidMessage(L["Bid denied"] .. " " .. item .. " " .. L["Must bid higher than"] .. " " .. GetMoneyStringL(bid * 10000))
                 end
                 
             end
@@ -576,69 +604,129 @@ function GUI:Init()
             RegEvent("CHAT_MSG_RAID_LEADER", evt)
             RegEvent("CHAT_MSG_RAID", evt)
 
-            local b = CreateFrame("Button", nil, bf, "GameMenuButtonTemplate")
-            b:SetWidth(100)
-            b:SetHeight(25)
-            b:SetPoint("BOTTOMRIGHT", -40, 15)
-            b:SetText(START)
-            b:SetScript("OnClick", function() 
-                if ctx then
-                    bf.CancelBid()
-                    return
-                end
-
-                local mode, inc = bf.GetBidMode()
-                ctx = {
-                    entry = bf.curEntry,
-                    currentprice = bf.startprice:GetValue() * 10000,
-                    currentwinner = nil,
-                    mode = mode,
-                    inc = inc,
-                    countdown = bf.countdown:GetValue(),
-                }
-                b:SetText(CANCEL .. "(" .. ctx.countdown .. ")")
-
-                local item = currentitem()
-
-                SendChatMessage(L["Start bid"] .. " " .. item .. " " .. L["Starting price"] .. " " .. GetMoneyStringL(ctx.currentprice), "RAID")
-
-                ctx.timer = C_Timer.NewTicker(1, function()
-                    ctx.countdown = ctx.countdown - 1
-
-                    b:SetText(CANCEL .. "(" .. ctx.countdown .. ")")
-
-                    if ctx.countdown <= 0 then
-                        ctx.timer:Cancel()
-                        b:SetText(START)
-
-                        if ctx.currentwinner then
-                            SendChatMessage(item .. " " .. L["Hammer Price"] .. " " .. GetMoneyStringL(ctx.currentprice) .. " " .. L["Winner"] .. " " .. ctx.currentwinner, "RAID")
-                            ctx.entry["beneficiary"] = ctx.currentwinner
-                            ctx.entry["cost"] = ctx.currentprice / 10000
-                            ctx.entry["lock"] = true
-                            GUI:UpdateLootTableFromDatabase()
-                        else
-                            SendChatMessage(item .. " " .. L["is bought in"], "RAID")
+            local moretimebtn
+            local lesstimebtn
+            do
+                local b = CreateFrame("Button", nil, bf, "GameMenuButtonTemplate")
+                b:SetWidth(40)
+                b:SetHeight(25)
+                b:SetPoint("BOTTOMRIGHT", -140, 15)
+                b:SetText("-5s")
+                b:Hide()
+                b:SetScript("OnClick", function()
+                    if ctx then
+                        if ctx.countdown <= 5 then
+                            return
+                        elseif ctx.countdown < 10 then
+                            ctx.countdown = 5
+                        elseif ctx.countdown >= 10 then
+                            ctx.countdown = ctx.countdown - 5 
                         end
+                    end
+                    bf.UpdateButtonCountdown()
+                end)
+                lesstimebtn = b
+            end
 
-                        ctx = nil
+            do
+                local b = CreateFrame("Button", nil, bf, "GameMenuButtonTemplate")
+                b:SetWidth(40)
+                b:SetHeight(25)
+                b:SetPoint("BOTTOMRIGHT", -180, 15)
+                b:SetText("+5s")
+                b:Hide()
+                b:SetScript("OnClick", function()
+                    if ctx then
+                        ctx.countdown = ctx.countdown + 5 
+                    end
+                    bf.UpdateButtonCountdown()
+                end)
+                moretimebtn = b
+            end
 
+            do
+                local b = CreateFrame("Button", nil, bf, "GameMenuButtonTemplate")
+                b:SetWidth(100)
+                b:SetHeight(25)
+                b:SetPoint("BOTTOMRIGHT", -40, 15)
+                b:SetText(START)
+                b:SetScript("OnClick", function() 
+                    if ctx then
+                        bf.CancelBid()
                         return
                     end
 
-                    SendChatMessage(item .. " " .. L["Current price"] .. " " .. GetMoneyStringL(ctx.currentprice) .. " " .. L["Bid price"] .. " ".. GetMoneyStringL(bidprice()) .. " " .. L["Time left"] .. " " .. (SECOND_ONELETTER_ABBR:format(ctx.countdown)) , "RAID")
-                end)
-            end)
+                    local mode, inc = bf.GetBidMode()
+                    ctx = {
+                        entry = bf.curEntry,
+                        currentprice = bf.startprice:GetValue() * 10000,
+                        currentwinner = nil,
+                        mode = mode,
+                        inc = inc,
+                        countdown = bf.countdown:GetValue(),
+                    }
+                    bf.UpdateButtonCountdown()
 
-            bf.CancelBid = function()
-                if ctx then
-                    ctx.timer:Cancel()
-                    SendChatMessage(L["Bid canceled"], "RAID")
-                    b:SetText(START)
+                    local item = currentitem()
+
+                    SendRaidMessage(L["Start bid"] .. " " .. item .. " " .. L["Starting price"] .. " " .. GetMoneyStringL(ctx.currentprice))
+
+                    ctx.timer = C_Timer.NewTicker(1, function()
+                        ctx.countdown = ctx.countdown - 1
+
+                        bf.UpdateButtonCountdown()
+
+                        if ctx.countdown <= 0 then
+                            ctx.timer:Cancel()
+
+                            if ctx.currentwinner then
+                                SendRaidMessage(item .. " " .. L["Hammer Price"] .. " " .. GetMoneyStringL(ctx.currentprice) .. " " .. L["Winner"] .. " " .. ctx.currentwinner)
+                                ctx.entry["beneficiary"] = ctx.currentwinner
+                                ctx.entry["cost"] = ctx.currentprice / 10000
+                                ctx.entry["lock"] = true
+                                GUI:UpdateLootTableFromDatabase()
+                            else
+                                SendRaidMessage(item .. " " .. L["is bought in"])
+                            end
+
+                            ctx = nil
+                            bf.UpdateButtonCountdown()
+
+                            return
+                        end
+
+                        if ctx.countdown <= 5 or (ctx.countdown % 5 == 0) then
+                            SendRaidMessage(item .. " " .. L["Current price"] .. " " .. GetMoneyStringL(ctx.currentprice) .. " " .. L["Bid price"] .. " ".. GetMoneyStringL(bidprice()) .. " " .. L["Time left"] .. " " .. (SECOND_ONELETTER_ABBR:format(ctx.countdown)))
+                        end
+                    end)
+                end)
+
+                bf.CancelBid = function()
+                    if ctx then
+                        ctx.timer:Cancel()
+                        SendRaidMessage(L["Bid canceled"], "RAID")
+                    end
+
+                    ctx = nil
+                    bf.UpdateButtonCountdown()
                 end
 
-                ctx = nil
+                bf.UpdateButtonCountdown = function()
+                    if ctx then
+                        b:SetText(CANCEL .. "(" .. GREEN_FONT_COLOR:WrapTextInColorCode(ctx.countdown) .. ")")
+                        moretimebtn:Show()
+                        lesstimebtn:Show()
+                    else
+                        b:SetText(START)
+                        moretimebtn:Hide()
+                        lesstimebtn:Hide()
+                    end
+                end
             end
+
+
+
+
         end
 
         bf:Hide()
@@ -1105,6 +1193,10 @@ function GUI:Init()
                 cellFrame.textBox:SetAutoFocus(false)
                 cellFrame.textBox:SetScript("OnEscapePressed", cellFrame.textBox.ClearFocus)
                 popOnFocus(cellFrame.textBox)
+
+                if entry["lock"] then
+                    cellFrame.textBox:Disable()
+                end
             end
 
             cellFrame.textBox:Hide()
@@ -1174,6 +1266,10 @@ function GUI:Init()
                 cellFrame.textBox:SetScript("OnEscapePressed", cellFrame.textBox.ClearFocus)
                 AutoCompleteEditBox_SetAutoCompleteSource(cellFrame.textBox, autoCompleteRaidRoster)
                 popOnFocus(cellFrame.textBox)
+
+                if entry["lock"] then
+                    cellFrame.textBox:Disable()
+                end                
             end
 
             if not cellFrame.bidButton then
@@ -1252,6 +1348,10 @@ function GUI:Init()
                 cellFrame.textBox:SetAutoFocus(false)
                 cellFrame.textBox:SetMaxLetters(10)
                 cellFrame.textBox:SetScript("OnChar", mustnumber)
+
+                if entry["lock"] then
+                    cellFrame.textBox:Disable()
+                end
             end
             cellFrame.textBox:SetText(tostring(entry["cost"] or 0))
 
@@ -1466,6 +1566,7 @@ function GUI:Init()
         local lootLogFrame = self.lootLogFrame
         local exportEditbox = self.exportEditbox
         local countEdit = self.countEdit
+        local hidelockedCheck = self.hidelockedCheck
 
         local b = CreateFrame("Button", nil, f, "GameMenuButtonTemplate")
         b:SetWidth(120)
@@ -1476,11 +1577,13 @@ function GUI:Init()
             if exportEditbox:GetParent():IsShown() then
                 lootLogFrame:Show()
                 countEdit:Show()
+                hidelockedCheck:Show()
                 exportEditbox:GetParent():Hide()
                 b:SetText(L["Export as text"])
             else
-                countEdit:Hide()
                 lootLogFrame:Hide()
+                countEdit:Hide()
+                hidelockedCheck:Hide()
                 exportEditbox:GetParent():Show()
                 b:SetText(L["Close text export"])
             end
