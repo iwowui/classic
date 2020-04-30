@@ -49,7 +49,7 @@ local height = 16;
 local interval = 0;
 local v_to_border = 8;
 local h_to_border = 8;
-local menu = CreateFrame("Button", nil, DropDownList1);
+local menu = CreateFrame("BUTTON", nil, DropDownList1);
 menu:SetFrameStrata("FULLSCREEN_DIALOG");
 menu:SetClampedToScreen(false);
 menu:Show();
@@ -91,7 +91,7 @@ local function dropMenuButtonOnClick(self)
 	which = nil;
 end
 function func.create(menu, id, x, y)
-	local button = CreateFrame("Button", nil, menu);
+	local button = CreateFrame("BUTTON", nil, menu);
 	--button:SetFrameStrata("FULLSCREEN_DIALOG");
 	button:SetHeight(height);
 	--button:SetNormalTexture("Interface\\Buttons\\UI-StopButton");

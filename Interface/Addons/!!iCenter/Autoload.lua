@@ -38,6 +38,10 @@ local function LoadAddons()
 		if (loadable == "DEMAND_LOADED") and (not IsAddOnLoaded("YaHT")) then
 			LoadAddOn("YaHT");
 		end
+		local _, _, _, _, loadable = GetAddOnInfo("TranqRotate");
+		if (loadable == "DEMAND_LOADED") and (not IsAddOnLoaded("TranqRotate")) then
+			LoadAddOn("TranqRotate");
+		end
 	end
 
 	if (class == "MAGE") then

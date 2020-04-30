@@ -1,0 +1,40 @@
+## Interface: 11304
+## Title: TranqRotate |cff00aa001.2.0|r
+## Notes: A tranqshot rotation assistant
+## Title-zhCN: |CFF8000FF职业|R 猎人 宁神通告
+## Notes-zhCN: 在猎人使用宁神射击时进行全队通告
+## Title-zhTW: |CFF8000FF職業|R 獵人 甯神通告
+## Notes-zhTW: 在獵人使用甯神射擊時進行全隊通告
+## X-Repple: 职业
+## LoadOnDemand: 1
+## Author: Slivo
+## Version: 1.2.0
+## SavedVariables: TranqRotateDb
+## OptionalDeps: Ace3
+
+#@no-lib-strip@
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+libs\AceDB-3.0\AceDB-3.0.xml
+libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+libs\AceGUI-3.0\AceGUI-3.0.xml
+libs\AceConfig-3.0\AceConfig-3.0.xml
+libs\AceComm-3.0\AceComm-3.0.xml
+libs\AceSerializer-3.0\AceSerializer-3.0.xml
+#@end-no-lib-strip@
+
+locales\enUS.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+src\tranqRotate.lua
+src\events.lua
+src\rotation.lua
+src\constants.lua
+src\frames.lua
+src\gui.lua
+src\dragdrop.lua
+src\comms.lua
+src\defaults.lua
+src\settings.lua
+src\utils.lua

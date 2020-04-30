@@ -4,31 +4,33 @@
 	数据来源于wowhead网页源代码
 	Please Keep WOW Addon open-source & Reduce barriers for others.
 	复用代码请在显著位置标注来源【ALA@网易有爱】
-	不欢迎加密和乱码发布的整合包、插件作者、插件修改者
+	请勿加密、乱码、删除空格tab换行符、设置加载依赖
 --]]--
 ----------------------------------------------------------------------------------------------------
 local ADDON, NS = ...;
 _G.__ala_meta__ = _G.__ala_meta__ or {  };
+local _G = _G;
 
 do
 	local _G = _G;
-	setfenv(1,
-		setmetatable({  },
-			{
-				__index = _G,
-				__newindex = function(t, key, value)
-					rawset(t, key, value);
-					print("ate assign global", key, value);
-					return value;
-				end,
-			}
-		)
-	);
+	if NS.__fenv == nil then
+		NS.__fenv = setmetatable({  },
+				{
+					__index = _G,
+					__newindex = function(t, key, value)
+						rawset(t, key, value);
+						print("ate assign global", key, value);
+						return value;
+					end,
+				}
+			);
+	end
+	setfenv(1, NS.__fenv);
 end
 
 local L = NS.L;
-if not L then return;end
-local curPhase = 3;
+if not L then return; end
+local curPhase = 4;
 ----------------------------------------------------------------------------------------------------upvalue
 	----------------------------------------------------------------------------------------------------LUA
 	local math, table, string, bit = math, table, string, bit;
@@ -43,7 +45,6 @@ local curPhase = 3;
 	local ipairs, pairs, sort, tContains, tinsert, tremove, wipe = ipairs, pairs, sort, tContains, tinsert, tremove, wipe;
 	-- local gcinfo, foreach, foreachi, getn = gcinfo, foreach, foreachi, getn;	-- Deprecated
 	----------------------------------------------------------------------------------------------------GAME
-	local _G = _G;
 	local print = print;
 	local GetTime = GetTime;
 	local CreateFrame = CreateFrame;
@@ -385,7 +386,7 @@ local curPhase = 3;
 		--\124cff71d5ff\124Hspell:355\124h[嘲讽]\124h\124r
 		name = name or GetSpellInfo(id);
 		if name then
-			if alac_hyperLink and alac_hyperLink() then
+			if __ala_meta__.chat and __ala_meta__.chat.alac_hyperLink and __ala_meta__.chat.alac_hyperLink() then
 				return "\124cff71d5ff\124Hspell:" .. id .. "\124h[" .. name .. "]\124h\124r";
 			else
 				return name;
@@ -487,7 +488,7 @@ local emu = {
 emu.playerFullName_Len = strlen(emu.playerFullName);
 
 __ala_meta__.emu = emu;
-local _EventHandler = CreateFrame("Frame", nil, UIParent);	-- NAME .. "EventVehicle"
+local _EventHandler = CreateFrame("FRAME", nil, UIParent);	-- NAME .. "EventVehicle"
 _EventHandler:SetScript("OnEvent", function(self, event, ...) return emu[event](...); end);
 
 local config = 
@@ -2968,7 +2969,7 @@ do	-- equipmentFrame
 		end
 	end
 	function emu.CreateEquipmentFrame(mainFrame)
-		local equipmentFrame = CreateFrame("Frame", nil, mainFrame);
+		local equipmentFrame = CreateFrame("FRAME", nil, mainFrame);
 		equipmentFrame:SetWidth(ui_style.equipmentFrameXSize);
 		equipmentFrame:SetHeight(mainFrame:GetHeight());
 		equipmentFrame:SetPoint("RIGHT", mainFrame, "LEFT", 0, 0);
@@ -2982,13 +2983,13 @@ do	-- equipmentFrame
 			equipmentFrame:SetBackdropColor(unpack(ui_style.equipmentFrameBackdropColor_blz));
 			equipmentFrame:SetBackdropBorderColor(unpack(ui_style.equipmentFrameBackdropBorderColor_blz));
 		end
-		local equipmentContainer = CreateFrame("Frame", nil, equipmentFrame);
+		local equipmentContainer = CreateFrame("FRAME", nil, equipmentFrame);
 		equipmentContainer:SetPoint("CENTER");
 		equipmentContainer:SetSize(ui_style.equipmentFrameXSize, ui_style.equipmentContainerYSize);
 		equipmentContainer:Show();
 		local slots = {  };
 		for slot = 0, 19 do
-			local icon = CreateFrame("Button", nil, equipmentContainer);
+			local icon = CreateFrame("BUTTON", nil, equipmentContainer);
 			icon:SetSize(ui_style.equipmentFrameButtonSize, ui_style.equipmentFrameButtonSize);
 			icon:Show();
 
@@ -3126,7 +3127,7 @@ do	-- spellTabFrame
 		end
 	end
 	local function funcToCreateButton(parent, index, buttonHeight)
-		local button = CreateFrame("Button", nil, parent);
+		local button = CreateFrame("BUTTON", nil, parent);
 		button:SetHeight(buttonHeight);
 		button:SetBackdrop(ui_style.spellTabFrameButtonBackdrop);
 		button:SetBackdropColor(unpack(ui_style.spellTabFrameButtonBackdropColor));
@@ -3172,7 +3173,7 @@ do	-- spellTabFrame
 		end
 	end
 	function emu.CreateSpellTabFrame(mainFrame)
-		local spellTabFrame = CreateFrame("Frame", nil, mainFrame);	-- mainFrame:GetName() .. "SpellTab"
+		local spellTabFrame = CreateFrame("FRAME", nil, mainFrame);	-- mainFrame:GetName() .. "SpellTab"
 		spellTabFrame:SetPoint("LEFT", mainFrame, "RIGHT", 0, 0);
 		spellTabFrame:SetWidth(ui_style.spellTabFrameWidth);
 		if config.win_style == 'ala' then
@@ -3191,7 +3192,7 @@ do	-- spellTabFrame
 		scroll:SetPoint("TOPRIGHT", - ui_style.spellTabFrameXToBorder, - ui_style.spellTabFrameYToBottom);
 		spellTabFrame.scroll = scroll;
 
-		local searchEdit = CreateFrame("EditBox", nil, spellTabFrame);
+		local searchEdit = CreateFrame("EDITBOX", nil, spellTabFrame);
 		searchEdit:SetSize(ui_style.spellTabFrameWidth - 2 * ui_style.spellTabFrameXToBorder - 36, 16);
 		searchEdit:SetFont(GameFontHighlight:GetFont(), 10, "OUTLINE");
 		searchEdit:SetAutoFocus(false);
@@ -3213,13 +3214,13 @@ do	-- spellTabFrame
 		searchEditNote:SetPoint("LEFT", 4, 0);
 		searchEditNote:SetText(L.Search);
 		searchEditNote:Show();
-		local searchCancel = CreateFrame("Button", nil, searchEdit);
+		local searchCancel = CreateFrame("BUTTON", nil, searchEdit);
 		searchCancel:SetSize(16, 16);
 		searchCancel:SetPoint("RIGHT", searchEdit);
 		searchCancel:SetScript("OnClick", function(self) searchEdit:SetText(""); searchEdit:ClearFocus(); end);
 		searchCancel:Hide();
 		searchCancel:SetNormalTexture("interface\\petbattles\\deadpeticon")
-		local searchEditOK = CreateFrame("Button", nil, spellTabFrame);
+		local searchEditOK = CreateFrame("BUTTON", nil, spellTabFrame);
 		searchEditOK:SetSize(32, 16);
 		searchEditOK:SetPoint("LEFT", searchEdit, "RIGHT", 4, 0);
 		searchEditOK:SetScript("OnClick", function(self) searchEdit:ClearFocus(); end);
@@ -3264,7 +3265,7 @@ do	-- spellTabFrame
 		spellTabFrame.searchEdit = searchEdit;
 		spellTabFrame.searchEditOK = searchEditOK;
 
-		local showAllSpell = CreateFrame("CheckButton", nil, spellTabFrame, "OptionsBaseCheckButtonTemplate");
+		local showAllSpell = CreateFrame("CHECKBUTTON", nil, spellTabFrame, "OptionsBaseCheckButtonTemplate");
 		showAllSpell:SetSize(16, 16);
 		showAllSpell:SetHitRectInsets(0, 0, 0, 0);
 		showAllSpell:ClearAllPoints();
@@ -3282,7 +3283,7 @@ do	-- spellTabFrame
 		showAllSpell.fontString = showAllSpellFontString;
 		showAllSpellFontString:SetPoint("RIGHT", showAllSpell, "LEFT", 0, 0);
 
-		local close = CreateFrame("Button", nil, spellTabFrame);
+		local close = CreateFrame("BUTTON", nil, spellTabFrame);
 		close:SetSize(32, 16);
 		close:SetPoint("BOTTOMLEFT", 4, 6);
 		close:SetScript("OnClick", function(self) emu.Emu_ToggleSpellTab(spellTabFrame:GetParent()); end);
@@ -3318,7 +3319,7 @@ do	-- tooltipFrame
 		tooltipFrame.tooltip2:Hide();
 	end
 	function emu.CreateTooltipFrame()
-		local tooltipFrame = CreateFrame("Frame", nil, UIParent);
+		local tooltipFrame = CreateFrame("FRAME", nil, UIParent);
 		tooltipFrame:SetSize(1, 1);
 		tooltipFrame:SetFrameStrata("FULLSCREEN");
 		tooltipFrame:SetClampedToScreen(true);
@@ -3332,7 +3333,7 @@ do	-- tooltipFrame
 		fontString1h1:SetPoint("TOPLEFT", 6, -6);
 		local fontString1h2 = tooltipFrame:CreateFontString(nil, "ARTWORK", "GameTooltipHeaderText");
 		fontString1h2:SetPoint("TOPRIGHT", -6, -6);
-		local tooltip1 = CreateFrame("GameTooltip", "emu_tooltip1" .. (time() + 1) .. random(1000000, 10000000), UIParent, "GameTooltipTemplate");
+		local tooltip1 = CreateFrame("GAMETOOLTIP", "emu_tooltip1" .. (time() + 1) .. random(1000000, 10000000), UIParent, "GameTooltipTemplate");
 		tooltip1:SetPoint("TOPLEFT", fontString1h1, "BOTTOMLEFT", 0, 6);
 
 		local fontString1f1 = tooltipFrame:CreateFontString(nil, "ARTWORK", "GameTooltipText");
@@ -3342,7 +3343,7 @@ do	-- tooltipFrame
 
 		local fontString2h1 = tooltipFrame:CreateFontString(nil, "ARTWORK", "GameTooltipHeaderText");
 		fontString2h1:SetPoint("TOPLEFT", fontString1f1, "BOTTOMLEFT", -12, -4);
-		local tooltip2 = CreateFrame("GameTooltip", "emu_tooltip2" .. (time() + 100) .. random(1000000, 10000000), UIParent, "GameTooltipTemplate");
+		local tooltip2 = CreateFrame("GAMETOOLTIP", "emu_tooltip2" .. (time() + 100) .. random(1000000, 10000000), UIParent, "GameTooltipTemplate");
 		tooltip2:SetPoint("TOPLEFT", fontString2h1, "BOTTOMLEFT", 0, 6);
 
 		local fontString2f1 = tooltipFrame:CreateFontString(nil, "ARTWORK", "GameTooltipText");
@@ -3414,7 +3415,7 @@ do	-- talentFrame
 		end
 	end
 	function emu.CreateTalentIcon(talentFrame, id)
-		local icon = CreateFrame("Button", nil, talentFrame);	-- talentFrame:GetName() .. "TalentIcon" .. id
+		local icon = CreateFrame("BUTTON", nil, talentFrame);	-- talentFrame:GetName() .. "TalentIcon" .. id
 		icon:SetSize(ui_style.talentIconSize, ui_style.talentIconSize);
 
 		icon:Hide();
@@ -3506,7 +3507,7 @@ do	-- talentFrame
 		local talentFrames = {  };
 
 		for specIndex = 1, 3 do
-			local talentFrame = CreateFrame("Frame", nil, mainFrame);	-- mainFrame:GetName() .. "TalentFrame" .. specIndex
+			local talentFrame = CreateFrame("FRAME", nil, mainFrame);	-- mainFrame:GetName() .. "TalentFrame" .. specIndex
 			talentFrame:SetSize(ui_style.talentFrameXSizeSingle, ui_style.talentFrameYSize);
 
 			talentFrame:Show();
@@ -3586,7 +3587,7 @@ do	-- talentFrame
 			resetButtonBg:SetVertexColor(TEXTURE_SET.TALENT_RESET_BG_COLOR[1], TEXTURE_SET.TALENT_RESET_BG_COLOR[2], TEXTURE_SET.TALENT_RESET_BG_COLOR[3], TEXTURE_SET.TALENT_RESET_BG_COLOR[4]);
 			talentFrame.resetButtonBg = resetButtonBg;
 
-			local resetButton = CreateFrame("Button", nil, talentFrame);
+			local resetButton = CreateFrame("BUTTON", nil, talentFrame);
 			resetButton:SetSize(ui_style.controlButtonSize, ui_style.controlButtonSize);
 			resetButton:SetPoint("CENTER", resetButtonBg);
 			resetButton:SetHighlightTexture(TEXTURE_SET.TALENT_RESET_HIGHLIGHT);
@@ -4037,7 +4038,7 @@ do	-- mainFrame sub objects
 
 		--<header>
 		do
-			local readOnlyButton = CreateFrame("Button", nil, mainFrame);
+			local readOnlyButton = CreateFrame("BUTTON", nil, mainFrame);
 			readOnlyButton:SetSize(ui_style.controlButtonSize, ui_style.controlButtonSize);
 			readOnlyButton:SetNormalTexture(TEXTURE_SET.LOCK);
 			readOnlyButton:GetNormalTexture():SetVertexColor(TEXTURE_SET.LOCK_UNLOCKED_COLOR[1], TEXTURE_SET.LOCK_UNLOCKED_COLOR[2], TEXTURE_SET.LOCK_UNLOCKED_COLOR[3], TEXTURE_SET.LOCK_UNLOCKED_COLOR[4]);
@@ -4053,7 +4054,7 @@ do	-- mainFrame sub objects
 			readOnlyButton.information = L.readOnlyButton;
 			objects.readOnlyButton = readOnlyButton;
 
-			local closeButton = CreateFrame("Button", nil, mainFrame);
+			local closeButton = CreateFrame("BUTTON", nil, mainFrame);
 			closeButton:SetSize(ui_style.controlButtonSize, ui_style.controlButtonSize);
 			closeButton:SetNormalTexture(TEXTURE_SET.CLOSE);
 			closeButton:GetNormalTexture():SetTexCoord(TEXTURE_SET.CLOSE_COORD[1], TEXTURE_SET.CLOSE_COORD[2], TEXTURE_SET.CLOSE_COORD[3], TEXTURE_SET.CLOSE_COORD[4]);
@@ -4085,7 +4086,7 @@ do	-- mainFrame sub objects
 			pack_label:Hide();
 			objects.pack_label = pack_label;
 
-			local resetToEmu = CreateFrame("Button", nil, mainFrame);
+			local resetToEmu = CreateFrame("BUTTON", nil, mainFrame);
 			resetToEmu:SetSize(ui_style.controlButtonSize, ui_style.controlButtonSize);
 			resetToEmu:SetNormalTexture(TEXTURE_SET.CLOSE);
 			resetToEmu:GetNormalTexture():SetTexCoord(TEXTURE_SET.CLOSE_COORD[1], TEXTURE_SET.CLOSE_COORD[2], TEXTURE_SET.CLOSE_COORD[3], TEXTURE_SET.CLOSE_COORD[4]);
@@ -4100,7 +4101,7 @@ do	-- mainFrame sub objects
 			resetToEmu.information = L.resetToEmu;
 			objects.resetToEmu = resetToEmu;
 
-			local resetToSetButton = CreateFrame("Button", nil, mainFrame);
+			local resetToSetButton = CreateFrame("BUTTON", nil, mainFrame);
 			resetToSetButton:SetSize(ui_style.controlButtonSize, ui_style.controlButtonSize);
 			resetToSetButton:SetNormalTexture(TEXTURE_SET.RESET);
 			resetToSetButton:GetNormalTexture():SetTexCoord(TEXTURE_SET.RESET_COORD[1], TEXTURE_SET.RESET_COORD[2], TEXTURE_SET.RESET_COORD[3], TEXTURE_SET.RESET_COORD[4]);
@@ -4120,7 +4121,7 @@ do	-- mainFrame sub objects
 		--<footer>
 		do
 			do	-- control
-				local resetAllButton = CreateFrame("Button", nil, mainFrame);
+				local resetAllButton = CreateFrame("BUTTON", nil, mainFrame);
 				resetAllButton:SetSize(ui_style.controlButtonSize, ui_style.controlButtonSize);
 				resetAllButton:SetNormalTexture(TEXTURE_SET.RESET);
 				resetAllButton:GetNormalTexture():SetTexCoord(TEXTURE_SET.RESET_COORD[1], TEXTURE_SET.RESET_COORD[2], TEXTURE_SET.RESET_COORD[3], TEXTURE_SET.RESET_COORD[4]);
@@ -4184,13 +4185,13 @@ do	-- mainFrame sub objects
 			end
 
 			do	-- spec
-				local specButtonsBar = CreateFrame("Frame", nil, mainFrame);
+				local specButtonsBar = CreateFrame("FRAME", nil, mainFrame);
 				specButtonsBar:SetPoint("CENTER", mainFrame, "BOTTOM", 0, ui_style.mainFrameFooterYSize + ui_style.talentFrameFooterYSize * 0.5);
 				specButtonsBar:SetSize(ui_style.specTabButtonWidth * 3 + ui_style.specTabButtonGap * 2, ui_style.specTabButtonHeight);
 				mainFrame.specButtonsBar = specButtonsBar;
 				local specButtons = {  };
 				for specIndex = 1, 3 do
-					local specButton = CreateFrame("Button", nil, specButtonsBar);
+					local specButton = CreateFrame("BUTTON", nil, specButtonsBar);
 					specButton:SetSize(ui_style.specTabButtonWidth, ui_style.specTabButtonHeight);
 					specButton:SetNormalTexture(TEXTURE_SET.UNK);
 					specButton:GetNormalTexture():SetTexCoord(ui_style.specTabButtonTexCoord[1], ui_style.specTabButtonTexCoord[2], ui_style.specTabButtonTexCoord[3], ui_style.specTabButtonTexCoord[4]);
@@ -4232,7 +4233,7 @@ do	-- mainFrame sub objects
 
 		--<side>
 		do
-			local side_anchor = CreateFrame("Frame", nil, mainFrame);
+			local side_anchor = CreateFrame("FRAME", nil, mainFrame);
 			side_anchor:SetWidth(1);
 			mainFrame.side_anchor = side_anchor;
 			side_anchor:SetPoint("TOPLEFT", mainFrame, "TOPRIGHT", 2, 0);
@@ -4241,7 +4242,7 @@ do	-- mainFrame sub objects
 				local classButtons = {  };--_indexToClass
 				for index = 1, #_indexToClass do
 					local class = _indexToClass[index];
-					local classButton = CreateFrame("Button", nil, side_anchor);
+					local classButton = CreateFrame("BUTTON", nil, side_anchor);
 					classButton:SetSize(ui_style.tabButtonSize, ui_style.tabButtonSize);
 					classButton:SetNormalTexture(TEXTURE_SET.CLASS);
 					classButton:SetPushedTexture(TEXTURE_SET.CLASS);
@@ -4282,7 +4283,7 @@ do	-- mainFrame sub objects
 			end
 
 			do	-- control
-				-- local inspectTargetButton = CreateFrame("Button", nil, mainFrame);
+				-- local inspectTargetButton = CreateFrame("BUTTON", nil, mainFrame);
 				-- inspectTargetButton:SetSize(ui_style.tabButtonSize, ui_style.tabButtonSize);
 				-- inspectTargetButton:SetNormalTexture(TEXTURE_SET.INSPECT);
 				-- inspectTargetButton:GetNormalTexture():SetVertexColor(TEXTURE_SET.INSPECT_COLOR[1], TEXTURE_SET.INSPECT_COLOR[2], TEXTURE_SET.INSPECT_COLOR[3], TEXTURE_SET.INSPECT_COLOR[4]);
@@ -4297,7 +4298,7 @@ do	-- mainFrame sub objects
 				-- inspectTargetButton.information = L.inspectTargetButton;
 				-- mainFrame.objects.inspectTargetButton = inspectTargetButton;
 
-				local spellTabButton = CreateFrame("Button", nil, mainFrame);
+				local spellTabButton = CreateFrame("BUTTON", nil, mainFrame);
 				spellTabButton:SetSize(ui_style.tabButtonSize, ui_style.tabButtonSize);
 				spellTabButton:SetNormalTexture(TEXTURE_SET.SPELLTAB);
 				spellTabButton:GetNormalTexture():SetTexCoord(TEXTURE_SET.SPELLTAB_COORD[1], TEXTURE_SET.SPELLTAB_COORD[2], TEXTURE_SET.SPELLTAB_COORD[3], TEXTURE_SET.SPELLTAB_COORD[4]);
@@ -4313,7 +4314,7 @@ do	-- mainFrame sub objects
 				spellTabButton.information = L.spellTabButton;
 				mainFrame.objects.spellTabButton = spellTabButton;
 
-				local applyTalentsButton = CreateFrame("Button", nil, mainFrame);
+				local applyTalentsButton = CreateFrame("BUTTON", nil, mainFrame);
 				applyTalentsButton:SetSize(ui_style.tabButtonSize, ui_style.tabButtonSize);
 				applyTalentsButton:SetNormalTexture(TEXTURE_SET.APPLY);
 				applyTalentsButton:SetPushedTexture(TEXTURE_SET.APPLY);
@@ -4329,7 +4330,7 @@ do	-- mainFrame sub objects
 				applyTalentsButton.information = L.applyTalentsButton;
 				mainFrame.objects.applyTalentsButton = applyTalentsButton;
 
-				local importButton = CreateFrame("Button", nil, mainFrame);
+				local importButton = CreateFrame("BUTTON", nil, mainFrame);
 				importButton:SetSize(ui_style.tabButtonSize, ui_style.tabButtonSize);
 				importButton:SetNormalTexture(TEXTURE_SET.IMPORT);
 				importButton:GetNormalTexture():SetTexCoord(TEXTURE_SET.IMPORT_COORD[1], TEXTURE_SET.IMPORT_COORD[2], TEXTURE_SET.IMPORT_COORD[3], TEXTURE_SET.IMPORT_COORD[4]);
@@ -4346,7 +4347,7 @@ do	-- mainFrame sub objects
 				importButton.information = L.importButton;
 				mainFrame.objects.importButton = importButton;
 
-				local exportButton = CreateFrame("Button", nil, mainFrame);
+				local exportButton = CreateFrame("BUTTON", nil, mainFrame);
 				exportButton:SetSize(ui_style.tabButtonSize, ui_style.tabButtonSize);
 				exportButton:SetNormalTexture(TEXTURE_SET.EXPORT);
 				exportButton:GetNormalTexture():SetTexCoord(TEXTURE_SET.EXPORT_COORD[1], TEXTURE_SET.EXPORT_COORD[2], TEXTURE_SET.EXPORT_COORD[3], TEXTURE_SET.EXPORT_COORD[4]);
@@ -4363,7 +4364,7 @@ do	-- mainFrame sub objects
 				exportButton.information = L.exportButton;
 				mainFrame.objects.exportButton = exportButton;
 
-				local saveButton = CreateFrame("Button", nil, mainFrame);
+				local saveButton = CreateFrame("BUTTON", nil, mainFrame);
 				saveButton:SetSize(ui_style.tabButtonSize, ui_style.tabButtonSize);
 				saveButton:SetNormalTexture(TEXTURE_SET.SAVE);
 				saveButton:SetPushedTexture(TEXTURE_SET.SAVE);
@@ -4378,7 +4379,7 @@ do	-- mainFrame sub objects
 				saveButton.information = L.saveButton;
 				mainFrame.objects.saveButton = saveButton;
 
-				local sendButton = CreateFrame("Button", nil, mainFrame);
+				local sendButton = CreateFrame("BUTTON", nil, mainFrame);
 				sendButton:SetSize(ui_style.tabButtonSize, ui_style.tabButtonSize);
 				sendButton:SetNormalTexture(TEXTURE_SET.SEND);
 				sendButton:SetPushedTexture(TEXTURE_SET.SEND);
@@ -4393,7 +4394,7 @@ do	-- mainFrame sub objects
 				sendButton.information = L.sendButton;
 				mainFrame.objects.sendButton = sendButton;
 
-				local editBox = CreateFrame("EditBox", nil, mainFrame);
+				local editBox = CreateFrame("EDITBOX", nil, mainFrame);
 				editBox:SetSize(ui_style.editBoxXSize, ui_style.editBoxYSize);
 				editBox:SetFontObject(GameFontHighlightSmall);
 				editBox:SetAutoFocus(false);
@@ -4415,7 +4416,7 @@ do	-- mainFrame sub objects
 				editBox.texture = texture;
 				mainFrame.objects.editBox = editBox;
 
-				local editBoxOKButton = CreateFrame("Button", nil, editBox);
+				local editBoxOKButton = CreateFrame("BUTTON", nil, editBox);
 				editBoxOKButton:SetSize(ui_style.editBoxYSize, ui_style.editBoxYSize);
 				editBoxOKButton:SetNormalTexture(TEXTURE_SET.EDIT_OK);
 				editBoxOKButton:SetPushedTexture(TEXTURE_SET.EDIT_OK);
@@ -4431,7 +4432,7 @@ do	-- mainFrame sub objects
 			end
 
 			do	-- left
-				local equipmentButton = CreateFrame("Button", nil, mainFrame);
+				local equipmentButton = CreateFrame("BUTTON", nil, mainFrame);
 				equipmentButton:SetSize(ui_style.tabButtonSize, ui_style.tabButtonSize);
 				equipmentButton:SetNormalTexture(TEXTURE_SET.EQUIPMENT_TEXTURE);
 				equipmentButton:GetNormalTexture():SetTexCoord(TEXTURE_SET.EQUIPMENT_TEXTURE_COORD[1], TEXTURE_SET.EQUIPMENT_TEXTURE_COORD[2], TEXTURE_SET.EQUIPMENT_TEXTURE_COORD[3], TEXTURE_SET.EQUIPMENT_TEXTURE_COORD[4]);
@@ -4481,7 +4482,7 @@ do	-- mainFrame
 	local temp_id = 0;
 	function emu.CreateMainFrame()
 		temp_id = temp_id + 1;
-		local mainFrame = CreateFrame("Frame", nil, UIParent);
+		local mainFrame = CreateFrame("FRAME", nil, UIParent);
 		mainFrame.id = temp_id;
 
 		mainFrame:SetPoint("CENTER");
@@ -4878,24 +4879,21 @@ do	-- SLASH and _G
 	end
 	--_G["EMUNS"] = NS;
 
-	local ATEMU = {  };
-	_G.ATEMU = ATEMU;
-	_G.atemu = ATEMU;
-	_G.EMU = ATEMU;
-	_G.Emu = ATEMU;
-	ATEMU.ExportCode = function(...)
+	local ALATEMU = {  };
+	_G.ALATEMU = ALATEMU;
+	ALATEMU.ExportCode = function(...)
 		return emu.Emu_Export(...)
 	end
-	ATEMU.ImportCode = function(code)
+	ALATEMU.ImportCode = function(code)
 		return emu.Emu_Import(code);
 	end
-	ATEMU.Create = function(class, data, level, readOnly, name, style, ...)
+	ALATEMU.Create = function(class, data, level, readOnly, name, style, ...)
 		return emu.Emu_Create(nil, class, data, level, readOnly, name, style, ...);
 	end
-	ATEMU.Destroy = function(winId)
+	ALATEMU.Destroy = function(winId)
 		emu.hideMainFrame(winId);
 	end
-	ATEMU.Query = function(unit)
+	ALATEMU.Query = function(unit)
 		unit = unit or 'target';
 		local name, realm = UnitName(unit);
 		if name then
@@ -4905,10 +4903,10 @@ do	-- SLASH and _G
 			emu.Emu_Query(name, realm);
 		end
 	end
-	ATEMU.SetStyle = function(style)
+	ALATEMU.SetStyle = function(style)
 		config.style = style;
 	end
-	ATEMU.QueryRawInfoFromDB = function(spellId, class, specIndex)
+	ALATEMU.QueryRawInfoFromDB = function(spellId, class, specIndex)
 		spellId = tonumber(spellId);
 		if not spellId then
 			return nil;
@@ -4978,14 +4976,14 @@ do	-- SLASH and _G
 		end
 		return nil;
 	end
-	ATEMU.QueryInfoFromDB = function(spellId, class, specIndex)
-		local class, specIndex, specId, id, row, col, rank = ATEMU.QueryRawInfoFromDB(spellId, class, specIndex);
+	ALATEMU.QueryInfoFromDB = function(spellId, class, specIndex)
+		local class, specIndex, specId, id, row, col, rank = ALATEMU.QueryRawInfoFromDB(spellId, class, specIndex);
 		if class then
 			return class, L.DATA[class], specIndex, L.DATA[specId], id, row, col, rank;
 		end
 		return nil;
 	end
-	ATEMU.QueryIdFromDB = function(class, specIndex, id, level)
+	ALATEMU.QueryIdFromDB = function(class, specIndex, id, level)
 		if class and specIndex and id then
 			class = class and strlower(class) or nil;
 			if class then
@@ -5119,7 +5117,7 @@ do	-- button_on_unitFrame
 		if not unitFrameName or unitFrameName == "" then
 			unitFrameName = "UNK" .. temp_unkFrame_id;
 		end
-		local unitFrameButton = CreateFrame("Button", nil, UIParent);	-- NAME .. unitFrameName .. "Button"
+		local unitFrameButton = CreateFrame("BUTTON", nil, UIParent);	-- NAME .. unitFrameName .. "Button"
 		unitFrameButton:SetSize(60, 60);
 		unitFrameButton:Show();
 		unitFrameButton:SetAlpha(0.0);
@@ -5168,7 +5166,7 @@ do	-- button_on_unitFrame
 				end
 			end
 		end);
-		unitFrameButton:SetScript("OnClick", function(self) ATEMU.Query(self.unitFrame.unit); end);
+		unitFrameButton:SetScript("OnClick", function(self) ALATEMU.Query(self.unitFrame.unit); end);
 		unitFrameButton.unitFrame = unitFrame;
 	end
 
@@ -5181,7 +5179,7 @@ do	--
 		if IsShiftKeyDown() then
 			local specIndex, id = PanelTemplates_GetSelectedTab(TalentFrame), self:GetID();
 			local name, iconTexture, tier, column, rank, maxRank, isExceptional, available = GetTalentInfo(specIndex, id);
-			local sId = ATEMU.QueryIdFromDB(emu.playerClass_Lower, specIndex, id, rank);
+			local sId = ALATEMU.QueryIdFromDB(emu.playerClass_Lower, specIndex, id, rank);
 			local link = _GetSpellLink(sId, name);
 			if link then
 				local editBox = ChatEdit_ChooseBoxForSend();
@@ -5208,7 +5206,7 @@ do	--
 			end
 
 			if TalentFrame then
-				local button = CreateFrame("Button", nil, TalentFrame, "UIPanelButtonTemplate");
+				local button = CreateFrame("BUTTON", nil, TalentFrame, "UIPanelButtonTemplate");
 				button:SetSize(80, 20);
 				button:SetPoint("RIGHT", TalentFrameCloseButton, "LEFT", -2, 0);
 				button:SetText(L.TalentFrameCallButtonFontString);
@@ -5223,7 +5221,7 @@ do	--
 		end
 	end
 
-	local f = CreateFrame("Frame");
+	local f = CreateFrame("FRAME");
 	f:RegisterEvent("ADDON_LOADED");
 	f:SetScript("OnEvent", onEvent);
 
@@ -5234,7 +5232,7 @@ end
 ----------------------------------------------------------------------------------------------------Tooltip
 do	-- tooltip
 	local function func_HookGTT(self, spellId)
-		local eClass, class, specIndex, spec, id, row, col, rank = ATEMU.QueryInfoFromDB(spellId);
+		local eClass, class, specIndex, spec, id, row, col, rank = ALATEMU.QueryInfoFromDB(spellId);
 		if eClass then
 			local classColorTable = RAID_CLASS_COLORS[strupper(eClass)];
 			self:AddDoubleLine(L.DATA.talent, class .. "-" .. spec .. " R" .. (row + 1) .. "-C" .. (col + 1) .. "-L" .. rank, 1.0, 1.0, 1.0, classColorTable.r, classColorTable.g, classColorTable.b);
@@ -5291,7 +5289,7 @@ end
 
 do	-- dev
 	function emu.dev(mainFrame)
-		-- local frame = CreateFrame("frame");
+		-- local frame = CreateFrame("FRAME");
 		-- frame:SetWidth(10);
 		-- frame:SetPoint("TOPRIGHT", mainFrame, "TOPLEFT");
 		-- frame:SetPoint("BOTTOMRIGHT", mainFrame, "BOTTOMLEFT");
@@ -5355,7 +5353,7 @@ do	-- dev
 			print("Packed: \124cffff0000none\124r")
 		end
 	end
-	function _G.emu_set_config(key, value)
+	function emu.emu_set_config(key, value)
 		--[[
 			singleFrame = true,
 			style = 1,
@@ -5472,7 +5470,7 @@ do	-- dev
 	end
 	local _, tag = BNGetInfo();
 	if tag == 'alex#516722' or tag == '单酒窝#51637' then
-		emu_set_config("inspect_pack", true);
+		emu.emu_set_config("inspect_pack", true);
 		_G.EMU_EX_QUERY_GUILD = emu.EX_QUERY_GUILD;
 		_G.EMU_EX_QUERY_GROUP = emu.EX_QUERY_GROUP;
 	end
@@ -5498,4 +5496,8 @@ do	-- dev
 	--	Payload	none
 end
 
--- emu_set_config("show_equipment", true);		-- experimental, default disabled
+if select(2, GetAddOnInfo('\33\33\33\49\54\51\85\73\33\33\33')) then
+	_G._163_ALAEMU_SETCONFIG = emu.emu_set_config;
+end
+
+-- emu.emu_set_config("show_equipment", true);		-- experimental, default disabled
