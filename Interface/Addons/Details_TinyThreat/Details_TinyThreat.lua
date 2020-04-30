@@ -597,10 +597,8 @@ local function CreatePluginFrames (data)
 				local myPercentToAggro = myThreat / aggro * 100
 				
 				local r, g = ThreatMeter:percent_color (myPercentToAggro)
-				--local r, g = myPercentToAggro / 100, (100-myPercentToAggro) / 100
 				pullRow:SetColor (r, g, 0)
 				pullRow._icon:SetTexture ([[Interface\PVPFrame\Icon-Combat]])
-				--pullRow._icon:SetVertexColor (r, g, 0)
 				pullRow._icon:SetTexCoord (0, 1, 0, 1)
 				
 				pullRow:Show()

@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.59 (22nd April 2020)
+-- 	Leatrix Plus 1.13.60 (29th April 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 --	Version
-	LeaPlusLC["AddonVer"] = "1.13.59"
+	LeaPlusLC["AddonVer"] = "1.13.60"
 	LeaPlusLC["RestartReq"] = nil
 
 --	If client restart is required and has not been done, show warning and quit
@@ -1021,16 +1021,6 @@
 							or npcID == "15522" -- Sergeant Umala (Thick Leather Collector)
 							or npcID == "15515" -- Skinner Jamani (Heavy Leather Collector)
 							or npcID == "15532" -- Stoneguard Clayhoof (Runecloth Bandage Collector)
-							-- Alliance Cloth Quartermasters
-							or npcID == "14724" -- Bubulo Acerbus (Ironforge)
-							or npcID == "14722" -- Clavicus Knavingham (Stormwind)
-							or npcID == "14723" -- Mistina Steelshield (Ironforge)
-							or npcID == "14725" -- Raedon Duskstriker (Darnassus)
-							-- Horde Cloth Quartermasters
-							or npcID == "14729" -- Ralston Farnsley (Undercity)
-							or npcID == "14728" -- Rumstag Proudstrider (Thunder Bluff)
-							or npcID == "14726" -- Rashona Straglash (Orgrimmar)
-							or npcID == "14727" -- Vehena (Orgrimmar)
 							-- Alliance Commendations
 							or npcID == "15764" -- Officer Ironbeard (Ironforge Commendations)
 							or npcID == "15762" -- Officer Lunalight (Darnassus Commendations)
@@ -1041,9 +1031,6 @@
 							or npcID == "15765" -- Officer Redblade (Orgrimmar Commendations)
 							or npcID == "15767" -- Officer Thunderstrider (Thunder Bluff Commendations)
 							or npcID == "15761" -- Officer Vu'Shalay (Darkspear Commendations)
-							-- Battlemasters
-							or npcID == "15351" -- Alliance Brigadier General (Mark of Honor)
-							or npcID == "15350" -- Horde Warbringer (Mark of Honor)
 							-- Battlegrounds (Alliance)
 							or npcID == "13442" -- Arch Druid Renferal (Storm Crystal, Alterac Valley)
 							-- Battlegrounds (Horde)
@@ -1087,6 +1074,48 @@
 				local goldRequiredAmount = GetQuestMoneyToGet()
 				if goldRequiredAmount and goldRequiredAmount > 0 then
 					return true
+				end
+			end
+
+			-- Function to check if quest title has requirements met
+			local function DoesQuestHaveRequirementsMet(title)
+				if title and title ~= "" then
+
+					if not title then
+
+					-- Battlemasters
+					elseif title == L["Concerted Efforts"] then
+						-- Requires 3 Alterac Valley Mark of Honor, 3 Arathi Basin Mark of Honor, 3 Warsong Gulch Mark of Honor (must be before other Mark of Honor quests)
+						if GetItemCount(20560) >= 3 and GetItemCount(20559) >= 3 and GetItemCount(20558) >= 3 then return true end
+					elseif title == L["Remember Alterac Valley!"] then
+						-- Requires 3 Alterac Valley Mark of Honor
+						if GetItemCount(20560) >= 3 then return true end
+					elseif title == L["Claiming Arathi Basin"] then
+						-- Requires 3 Arathi Basin Mark of Honor
+						if GetItemCount(20559) >= 3 then return true end
+					elseif title == L["Fight for Warsong Gulch"] then
+						-- Requires 3 Warsong Gulch Mark of Honor
+						if GetItemCount(20558) >= 3 then return true end
+
+					-- Cloth quartermasters
+					elseif title == L["A Donation of Wool"] then
+						-- Requires 60 Wool Cloth
+						if GetItemCount(2592) >= 60 then return true end
+					elseif title == L["A Donation of Silk"] then
+						-- Requires 60 Silk Cloth
+						if GetItemCount(4306) >= 60 then return true end
+					elseif title == L["A Donation of Mageweave"] then
+						-- Requires 60 Mageweave
+						if GetItemCount(4338) >= 60 then return true end
+					elseif title == L["A Donation of Runecloth"] then
+						-- Requires 60 Runecloth
+						if GetItemCount(14047) >= 60 then return true end
+					elseif title == L["Additional Runecloth"] then
+						-- Requires 20 Runecloth
+						if GetItemCount(14047) >= 20 then return true end
+
+					else return true
+					end
 				end
 			end
 
@@ -1226,7 +1255,7 @@
 							-- Select gossip available quests
 							for i = 1, GetNumGossipAvailableQuests() do
 								local title, level, isTrivial, isDaily, isRepeatable, isLegendary, isIgnored = select(i * 7 - 6, GetGossipAvailableQuests())
-								if title then
+								if title and DoesQuestHaveRequirementsMet(title) then
 									return SelectGossipAvailableQuest(i)
 								end
 							end
@@ -4420,7 +4449,7 @@
 
 		if LeaPlusLC["RecentChatWindow"] == "On" then
 
-			-- Create recent chat frame (not parenting to UIParent due to editbox scaling issue)
+			-- Create recent chat frame
 			local editFrame = CreateFrame("ScrollFrame", nil, UIParent, "InputScrollFrameTemplate")
 
 			-- Set frame parameters
@@ -8009,12 +8038,13 @@
 			elseif str == "quest" then
 				-- Show quest completed status
 				if arg1 and arg1 ~= "" then
-					if tonumber(arg1) then
+					if tonumber(arg1) and tonumber(arg1) < 999999999 then
 						local questCompleted = IsQuestFlaggedCompleted(arg1)
+						local questTitle = C_QuestLog.GetQuestInfo(arg1) or L["Unknown"]
 						if questCompleted then
-							LeaPlusLC:Print(arg1 .. ": " .. L["Quest completed."])
+							LeaPlusLC:Print(questTitle .. " (" .. arg1 .. "):" .. "|cffffffff " .. L["Completed."])
 						else
-							LeaPlusLC:Print(arg1 .. ": " .. L["Quest not completed."])
+							LeaPlusLC:Print(questTitle .. " (" .. arg1 .. "):" .. "|cffffffff " .. L["Not completed."])
 						end
 					else
 						LeaPlusLC:Print("Invalid quest ID.")

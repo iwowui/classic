@@ -997,7 +997,7 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                     -- local r, g, b = 0, 1, 0;
 
                     local _, icon, _, _, duration, expirationTime, caster, _, _, spellId = UnitBuff("party"..id, j, filter);
-                    if icon and (GetDisplayedAllyFrames() == nil or GetDisplayedAllyFrames() == "party" or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or (UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] ~= 1)))) then
+                    if icon and (GetDisplayedAllyFrames() == "party" or (GetDisplayedAllyFrames() == "raid" and UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] == 1)) then
                         _G["UFP_PartyMemberFrame"..id.."Buff"..j].Icon:SetTexture(icon);
                         alpha = 1;
 
@@ -1056,7 +1056,7 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                 -- local r, g, b = 0, 1, 0;
 
                 local _, icon, count, _, duration, expirationTime, caster, _, _, spellId = UnitDebuff("party"..id, j, filter);
-                if icon and (GetDisplayedAllyFrames() == nil or GetDisplayedAllyFrames() == "party" or (GetDisplayedAllyFrames() == "raid" and (UnitFramesPlusDB["party"]["hideraid"] ~= 1 or (UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] ~= 1)))) then
+                if icon and (GetDisplayedAllyFrames() == "party" or (GetDisplayedAllyFrames() == "raid" and UnitFramesPlusDB["party"]["hideraid"] == 1 and UnitFramesPlusDB["party"]["always"] == 1)) then
                     _G["UFP_PartyMemberFrame"..id.."Debuff"..j].Icon:SetTexture(icon);
                     alpha = 1;
                     if count > 1 then
