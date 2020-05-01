@@ -38,6 +38,9 @@ local UnitName				= _G.UnitName
 local UnitReaction			= _G.UnitReaction
 local UnitIsUnit 			= _G.UnitIsUnit
 
+local screenWidth			= floor(GetScreenWidth())
+local screenHeight			= floor(GetScreenHeight())
+
 local lastCheckStatusTime 	= 0
 local callCheckStatus		= false
 
@@ -75,6 +78,8 @@ local LSM = LibStub("LibSharedMedia-3.0")
 LSM:Register("sound", "You Will Die!", [[Sound\Creature\CThun\CThunYouWillDie.ogg]])
 LSM:Register("font", "NotoSans SemiCondensedBold", [[Interface\AddOns\ThreatClassic2\media\NotoSans-SemiCondensedBold.ttf]])
 LSM:Register("font", "Standard Text Font", _G.STANDARD_TEXT_FONT) -- register so it's usable as a default in config
+LSM:Register("statusbar", "TC2 Default", [[Interface\ChatFrame\ChatFrameBackground]]) -- register so it's usable as a default in config
+
 
 local SoundChannels = {
 	["Master"] = L.soundChannel_master,
@@ -97,19 +102,22 @@ end or _G.UnitDetailedThreatSituation
 -----------------------------
 -- FUNCTIONS
 -----------------------------
-local function CopyDefaults(t1, t2)
-	if type(t1) ~= "table" then return {} end
-	if type(t2) ~= "table" then t2 = {} end
+-- migrate from character specific settings to new profile database
+local function CopyLegacySettings(oldSettings, newSettings)
+	if type(oldSettings) ~= "table" then return newSettings end
 
-	for k, v in pairs(t1) do
-		if type(v) == "table" then
-			t2[k] = CopyDefaults(v, t2[k])
-		elseif type(v) ~= type(t2[k]) then
-			t2[k] = v
+	for k, v in pairs(oldSettings) do
+		-- only keep settings that exist in new db
+		if newSettings[k] ~= nil then
+			if type(v) == "table" then
+				newSettings[k] = CopyLegacySettings(v, newSettings[k])
+			else
+				newSettings[k] = v
+			end
 		end
 	end
 
-	return t2
+	return newSettings
 end
 
 local function CreateBackdrop(parent, cfg)
@@ -170,7 +178,7 @@ local function CreateStatusBar(parent, header)
 end
 
 local function Compare(a, b)
-	return a.scaledPercent > b.scaledPercent
+	return a.threatPercent > b.threatPercent
 end
 
 local function NumFormat(v)
@@ -220,19 +228,37 @@ local function TruncateString(str, i, ellipsis)
 	end
 end
 
-local function GetColor(unit)
+local function DefaultUnitColor(unit)
+	if UnitIsPlayer(unit) then
+		colorUnit = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+	else
+		colorUnit = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
+	end
+	colorUnit = {colorUnit.r, colorUnit.g, colorUnit.b, C.bar.alpha}
+	return colorUnit
+end
+
+local function GetColor(unit, isTanking)
 	if unit then
 		local colorUnit = {}
 		
-		if C.playerBarCustomColor.enabled and UnitIsUnit(unit, "player") then
-			return C.playerBarCustomColor.color
-		elseif UnitIsPlayer(unit) then
-			colorUnit = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+		if UnitIsUnit(unit, "player") then
+			if C.customBarColors.playerEnabled then
+				return C.customBarColors.playerColor
+			elseif isTanking and C.customBarColors.activeTankEnabled then
+				return C.customBarColors.activeTankColor
+			else
+				return DefaultUnitColor(unit)
+			end
 		else
-			colorUnit = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
+			if isTanking and C.customBarColors.activeTankEnabled then
+				return C.customBarColors.activeTankColor
+			elseif C.customBarColors.otherUnitEnabled then
+				return C.customBarColors.otherUnitColor
+			else
+				return DefaultUnitColor(unit)
+			end
 		end
-		colorUnit = {colorUnit.r, colorUnit.g, colorUnit.b, C.bar.alpha}
-		return colorUnit
 	else
 		return TC2.colorFallback
 	end
@@ -241,18 +267,21 @@ end
 function TC2:UpdateThreatBars()
 	-- sort the threat table
 	sort(self.threatData, Compare)
-
+	local playerIncluded = false
 	-- update view
 	for i = 1, C.bar.count do
 		-- get values out of table
 		local data = self.threatData[i]
 		local bar = self.bars[i]
 		if data and data.threatValue > 0 then
+			if UnitIsUnit(data.unit, "player") then
+				playerIncluded = true
+			end
 			bar.name:SetText(UnitName(data.unit) or UNKNOWN)
 			bar.val:SetText(NumFormat(data.threatValue))
-			bar.perc:SetText(floor(data.scaledPercent).."%")
-			bar:SetValue(data.scaledPercent)
-			local color = GetColor(data.unit)
+			bar.perc:SetText(floor(data.threatPercent).."%")
+			bar:SetValue(data.threatPercent)
+			local color = GetColor(data.unit, data.isTanking)
 			bar:SetStatusBarColor(unpack(color))
 			bar.bg:SetVertexColor(color[1] * C.bar.colorMod, color[2] * C.bar.colorMod, color[3] * C.bar.colorMod, C.bar.alpha)
 			bar.backdrop:SetBackdropColor(unpack(C.backdrop.bgColor))
@@ -261,6 +290,28 @@ function TC2:UpdateThreatBars()
 			bar:Show()
 		else
 			bar:Hide()
+		end
+	end
+	-- overwrite last bar if player wasn't included above
+	if not playerIncluded then
+		for _, data in pairs(self.threatData) do
+			if data and UnitIsUnit(data.unit, "player") then
+				if data.threatValue > 0 then
+					local bar = self.bars[C.bar.count]
+					bar.name:SetText(UnitName(data.unit) or UNKNOWN)
+					bar.val:SetText(NumFormat(data.threatValue))
+					bar.perc:SetText(floor(data.threatPercent).."%")
+					bar:SetValue(data.threatPercent)
+					local color = GetColor(data.unit, data.isTanking)
+					bar:SetStatusBarColor(unpack(color))
+					bar.bg:SetVertexColor(color[1] * C.bar.colorMod, color[2] * C.bar.colorMod, color[3] * C.bar.colorMod, C.bar.alpha)
+					bar.backdrop:SetBackdropColor(unpack(C.backdrop.bgColor))
+					bar.backdrop:SetBackdropBorderColor(unpack(C.backdrop.edgeColor))
+
+					bar:Show()
+					break
+				end
+			end
 		end
 	end
 end
@@ -282,18 +333,22 @@ end
 
 local function UpdateThreatData(unit)
 	if not UnitExists(unit) then return end
-	local isTanking, _, scaledPercent, _, threatValue = UnitDetailedThreatSituation(unit, TC2.playerTarget)
+	local isTanking, _, threatPercent, rawThreatPercent, threatValue = UnitDetailedThreatSituation(unit, TC2.playerTarget)
 	if threatValue and threatValue < 0 then
 		threatValue = threatValue + 410065408
 	end
 	-- check for warnings
-	if unit == "player" and scaledPercent then
-		TC2:CheckWarning(isTanking, scaledPercent)
+	if unit == "player" and threatPercent then
+		TC2:CheckWarning(isTanking, threatPercent)
+	end
+	if C.general.rawPercent then
+		threatPercent = rawThreatPercent
 	end
 	tinsert(TC2.threatData, {
 		unit			= unit,
-		scaledPercent	= scaledPercent or 0,
+		threatPercent	= threatPercent or 0,
 		threatValue		= threatValue or 0,
+		isTanking		= isTanking or false,
 	})
 end
 
@@ -362,7 +417,11 @@ local function ThreatUpdated(event, unitGUID, targetGUID, threat)
 end
 
 function TC2:CheckWarning(isTanking, threatPercent)
-	if isTanking then return end
+	if isTanking then
+		-- so we don't warn when losing aggro.
+		lastWarnPercent = threatPercent
+		return
+	end
 	-- percentage is now above threshold and was below threshold before
 	local threshold = C.warnings.threshold
 	if threatPercent >= threshold and lastWarnPercent < threshold then
@@ -419,7 +478,7 @@ end
 -----------------------------
 local function SetPosition(f)
 	local a1, _, a2, x, y = f:GetPoint()
-	C.frame.position = {a1, "UIParent", a2, x, y}
+	C.frame.position = {"TOPLEFT", "UIParent", "TOPLEFT", x, y}
 end
 
 local function OnDragStart(f)
@@ -432,8 +491,11 @@ end
 local function OnDragStop(f)
 	if not C.frame.locked then
 		f = f:GetParent()
-		f:StopMovingOrSizing()
+		-- make sure to call before StopMovingOrSizing, or frame anchors will be broken
+		-- see https://wowwiki.fandom.com/wiki/API_Frame_StartMoving
 		SetPosition(f)
+		f:StopMovingOrSizing()
+		
 	end
 end
 
@@ -441,9 +503,7 @@ local function UpdateSize(f)
 	C.frame.width = f:GetWidth() - 2
 	C.frame.height = f:GetHeight()
 
-	local maxBarCount = floor(C.frame.height / (C.bar.height + C.bar.padding)) + 1
-	-- if C.bar.count > maxBarCount then C.bar.count = maxBarCount end
-	C.bar.count = maxBarCount
+	C.bar.count = floor(C.frame.height / (C.bar.height + C.bar.padding - 1))
 
 	for i = 1, 40 do
 		if i <= C.bar.count and TC2.threatData[i] then
@@ -456,16 +516,18 @@ local function UpdateSize(f)
 	TC2:UpdateFrame()
 end
 
-local function OnMouseDown(f)
+local function OnResizeStart(f)
+	TC2.frame.header:SetMovable(false)
 	f = f:GetParent()
-	f:SetMinResize(64, 64)
+	f:SetMinResize(64, C.bar.height)
 	f:SetMaxResize(512, 1024)
 	TC2.sizing = true
 	f:SetScript("OnSizeChanged", UpdateSize)
 	f:StartSizing()
 end
 
-local function OnMouseUp(f)
+local function OnResizeStop(f)
+	TC2.frame.header:SetMovable(true)
 	f = f:GetParent()
 	TC2.sizing = false
 	f:SetScript("OnSizeChanged", nil)
@@ -498,8 +560,8 @@ function TC2:UpdateFrame()
 		frame.resize:EnableMouse(true)
 		frame.resize:SetMovable(true)
 		frame.resize:RegisterForDrag("LeftButton")
-		frame.resize:SetScript("OnDragStart", OnMouseDown)
-		frame.resize:SetScript("OnDragStop", OnMouseUp)
+		frame.resize:SetScript("OnDragStart", OnResizeStart)
+		frame.resize:SetScript("OnDragStop", OnResizeStop)
 
 		frame.header:SetMovable(true)
 		frame.header:SetClampedToScreen(true)
@@ -521,7 +583,7 @@ function TC2:UpdateFrame()
 	-- Header
 	if C.frame.headerShow then
 		frame.header:SetSize(C.frame.width + 2, C.bar.height)
-		frame.header:SetStatusBarTexture(C.bar.texture)
+		frame.header:SetStatusBarTexture(LSM:Fetch("statusbar", C.bar.texture))
 
 		frame.header:SetPoint("TOPLEFT", frame, 0, C.bar.height - 1)
 		frame.header:SetStatusBarColor(unpack(C.frame.headerColor))
@@ -555,10 +617,11 @@ function TC2:UpdateBars()
 			bar:SetPoint("TOP", self.bars[i - 1], "BOTTOM", 0, -C.bar.padding + 1)
 		end
 		bar:SetSize(C.frame.width + 2, C.bar.height)
-		bar:SetStatusBarTexture(C.bar.texture)
+
+		bar:SetStatusBarTexture(LSM:Fetch("statusbar", C.bar.texture))
 
 		-- BG
-		bar.bg:SetTexture(C.bar.texture)
+		bar.bg:SetTexture(LSM:Fetch("statusbar", C.bar.texture))
 		-- Name
 		bar.name:SetPoint("LEFT", bar, 4, 0)
 		UpdateFont(bar.name)
@@ -573,6 +636,7 @@ function TC2:UpdateBars()
 		-- Adjust Name
 		bar.name:SetPoint("RIGHT", bar.val, "LEFT", -10, 0) -- right point of name is left point of value
 	end
+	TC2:UpdateThreatBars()
 end
 
 -----------------------------
@@ -586,7 +650,7 @@ function TC2:TestMode()
 	for i = 1, C.bar.count do
 		self.threatData[i] = {
 			unit = self.playerName,
-			scaledPercent = i / C.bar.count * 100,
+			threatPercent = i / C.bar.count * 100,
 			threatValue = i * 1e4,
 		}
 		tinsert(self.bars, i)
@@ -765,7 +829,7 @@ TC2.frame:SetScript("OnEvent", function(self, event, ...)
 	return TC2[event] and TC2[event](TC2, event, ...)
 end)
 TC2.frame:SetScript("OnUpdate", function(self, elapsed)
-	if callCheckStatus and GetTime() > lastCheckStatusTime + 0.2 then
+	if callCheckStatus and GetTime() > lastCheckStatusTime + C.general.updateFreq then
 		CheckStatus()
 	end
 end)
@@ -820,19 +884,26 @@ function TC2:UNIT_THREAT_LIST_UPDATE(...)
 end
 
 function TC2:PLAYER_LOGIN()
-	-- C_ChatInfo.RegisterAddonMessagePrefix("TC2Ver")
 
-	TC2_Options = TC2_Options or {}
-	C = CopyDefaults(self.defaultConfig, TC2_Options)
-
-	-- Minimum of 1 Row
-	if not C.bar.count or C.bar.count < 1 then
-		C.bar.count = 1
+	-- creates by default character specific profile, when 3rd argument is obmitted
+	self.db = LibStub("AceDB-3.0"):New("ThreatClassic2DB", self.defaultConfig)
+	-- check if per character settings still exist. If yes copy over to db
+	if TC2_Options then
+		print("ThreatClassic2 copying old config to new character profile.")
+		if TC2_Options.bar and TC2_Options.bar.texture then
+			-- remove old non LSM texture
+			TC2_Options.bar.texture = nil
+		end
+		self.db.profile = CopyLegacySettings(TC2_Options, self.db.profile)
+		TC2_Options = nil
 	end
+	C = self.db.profile
 
-	-- Adjust C.bar.count if it exceed the frame height
-	local maxBarCount = floor(C.frame.height / (C.bar.height + C.bar.padding - 1))
-	if C.bar.count > maxBarCount then C.bar.count = maxBarCount end
+	self.db.RegisterCallback(self, "OnProfileChanged", "RefreshProfile")
+	self.db.RegisterCallback(self, "OnProfileCopied", "RefreshProfile")
+	self.db.RegisterCallback(self, "OnProfileReset", "RefreshProfile")
+
+	C.bar.count = floor(C.frame.height / (C.bar.height + C.bar.padding - 1))
 
 	self:SetupUnits()
 	self:SetupFrame()
@@ -966,6 +1037,7 @@ end
 -- CONFIG
 -----------------------------
 function TC2:SetupConfig()
+	self.configTable.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(TC2.addonName, self.configTable)
 
 	local ACD = LibStub("AceConfigDialog-3.0")
@@ -974,6 +1046,12 @@ function TC2:SetupConfig()
 	self.config.appearance = ACD:AddToBlizOptions(TC2.addonName, L.appearance, TC2.addonName, "appearance")
 	self.config.warnings = ACD:AddToBlizOptions(TC2.addonName, L.warnings, TC2.addonName, "warnings")
 	self.config.version = ACD:AddToBlizOptions(TC2.addonName, L.version, TC2.addonName, "version")
+	self.config.profiles = ACD:AddToBlizOptions(TC2.addonName, L.profiles, TC2.addonName, "profiles")
+end
+
+function TC2:RefreshProfile()
+	C = self.db.profile
+	TC2:UpdateFrame()
 end
 
 TC2.configTable = {
@@ -999,6 +1077,21 @@ TC2.configTable = {
 					name = L.general_welcome,
 					type = "toggle",
 					width = "full",
+				},
+				rawPercent = {
+					order = 3,
+					name = L.general_rawPercent,
+					type = "toggle",
+					width = "full",
+				},
+				updateFreq = {
+					order = 4,
+					name = L.general_updateFreq,
+					type = "range",
+					width = "double",
+					min = 0.05,
+					max = 1,
+					step = 0.05,
 				},
 				--[[
 				minimap = {
@@ -1135,7 +1228,6 @@ TC2.configTable = {
 			end,
 			set = function(info, value)
 				C[info[2]][info[3]] = value
-				C.frame.height = ((C.bar.height + C.bar.padding - 1) * C.bar.count) - C.bar.padding
 				TC2:UpdateFrame()
 			end,
 			args = {
@@ -1184,6 +1276,76 @@ TC2.configTable = {
 							order = 4,
 							name = L.frame_headerShow,
 							type = "toggle",
+						},
+						framePosition = {
+							order = 5,
+							name = L.frame_position,
+							type = "group",
+							inline = true,
+							args = {
+								width = {
+									order = 3,
+									name = L.frame_width,
+									type = "range",
+									min = 64,
+									max = 1024,
+									step = 1,
+									get = function(info)
+										return C[info[2]][info[4]]
+									end,
+									set = function(info, value)
+										C[info[2]][info[4]] = value
+										C.bar.count = floor(C.frame.height / (C.bar.height + C.bar.padding - 1))
+										TC2:UpdateFrame()
+									end,
+								},
+								height = {
+									order = 4,
+									name = L.frame_height,
+									type = "range",
+									min = 10,
+									max = 1024,
+									step = 1,
+									get = function(info)
+										return C[info[2]][info[4]]
+									end,
+									set = function(info, value)
+										C[info[2]][info[4]] = value
+										C.bar.count = floor(C.frame.height / (C.bar.height + C.bar.padding - 1))
+										TC2:UpdateFrame()
+									end,
+								},
+								xOffset = {
+									order = 5,
+									name = L.frame_xOffset,
+									type = "range",
+									min = 0,
+									max = screenWidth,
+									step = 1,
+									get = function(info)
+										return C[info[2]].position[4]
+									end,
+									set = function(info, value)
+										C[info[2]].position[4] = value
+										TC2:UpdateFrame()
+									end,
+								},
+								yOffset = {
+									order = 5,
+									name = L.frame_yOffset,
+									type = "range",
+									min = -screenHeight,
+									max = 0,
+									step = 1,
+									get = function(info)
+										return C[info[2]].position[5]
+									end,
+									set = function(info, value)
+										C[info[2]].position[5] = value
+										TC2:UpdateFrame()
+									end,
+								},
+							},
 						},
 						scale = {
 							order = 5,
@@ -1241,26 +1403,6 @@ TC2.configTable = {
 					type = "group",
 					inline = true,
 					args = {
-						count = {
-							order = 1,
-							name = L.bar_count,
-							type = "range",
-							min = 1,
-							max = 40,
-							step = 1,
-							set = function(info, value)
-								local prev = C[info[2]][info[3]]
-								C[info[2]][info[3]] = value
-								if prev > value then
-									for i = value + 1, prev do
-										TC2.bars[i]:Hide()
-									end
-								end
-								C.frame.height = ((C.bar.height + C.bar.padding - 1) * C.bar.count) - C.bar.padding
-								TC2:UpdateFrame()
-							end,
-						},
-						-- growth direction
 						height = {
 							order = 3,
 							name = L.bar_height,
@@ -1277,27 +1419,46 @@ TC2.configTable = {
 							max = 16,
 							step = 1,
 						},
-						
-						-- marker
-						-- texture
-						-- custom color / class color
-						-- alpha (for when using class colors)
-						-- color / colormod
+						alpha = {
+							order = 5,
+							name = L.bar_alpha,
+							type = "range",
+							min = 0,
+							max = 1,
+							step = 0.01,
+						},
+						texture = {
+							order = 6,
+							name = L.bar_texture,
+							type = "select",
+							dialogControl = 'LSM30_Statusbar',
+							values = AceGUIWidgetLSMlists.statusbar,
+						}
 					},
 				},
-				playerBarCustomColor = {
+				customBarColors = {
 					order = 3,
-					name = L.playerBarCustomColor,
+					name = L.customBarColors,
 					type = "group",
 					inline = true,
 					args = {
-						enabled = {
+						playerEnabled = {
 							order = 1,
-							name = L.playerBarCustomColor_enabled,
+							name = L.customBarColorsPlayer_enabled,
 							type = "toggle",
 						},
-						barColor = {
+						activeTankEnabled = {
 							order = 2,
+							name = L.customBarColorsActiveTank_enabled,
+							type = "toggle",
+						},
+						otherUnitEnabled = {
+							order = 3,
+							name = L.customBarColorsOtherUnit_enabled,
+							type = "toggle",
+						},
+						colors = {
+							order = 4,
 							name = L.color,
 							type = "group",
 							inline = false,
@@ -1312,11 +1473,22 @@ TC2.configTable = {
 								cfg[4] = a
 								TC2:UpdateFrame()
 							end,
-							
 							args = {
-								color = {
+								playerColor = {
 									order = 1,
-									name = L.playerBarCustomColor_color,
+									name = L.customBarColorsPlayer_color,
+									type = "color",
+									hasAlpha = true,
+								},
+								activeTankColor = {
+									order = 2,
+									name = L.customBarColorsActiveTank_color,
+									type = "color",
+									hasAlpha = true,
+								},
+								otherUnitColor = {
+									order = 3,
+									name = L.customBarColorsOtherUnit_color,
 									type = "color",
 									hasAlpha = true,
 								},
@@ -1369,8 +1541,7 @@ TC2.configTable = {
 					name = L.reset,
 					type = "execute",
 					func = function(info, value)
-						TC2_Options = {}
-						C = CopyDefaults(TC2.defaultConfig, TC2_Options)
+						self.db.profile = TC2.defaultConfig
 						TC2:UpdateFrame()
 					end,
 				},
@@ -1391,6 +1562,7 @@ TC2.configTable = {
 					order = 1,
 					name = L.warnings_threshold,
 					type = "range",
+					width = "double",
 					min = 50,
 					max = 100,
 					step = 1,
@@ -1475,14 +1647,14 @@ SlashCmdList["TC2_SLASHCMD"] = function(arg)
 		else
 			print("Debug disabled.")
 		end
-	elseif arg == "runSolo" then
+	elseif arg == "runsolo" then
 		ThreatLib.alwaysRunOnSolo = not ThreatLib.alwaysRunOnSolo
 		if ThreatLib.alwaysRunOnSolo then
 			print("LibThreatClassic2 solo mode enabled.")
 		else
 			print("LibThreatClassic2 solo mode disabled.")
 		end
-	elseif arg == "logThreat" then
+	elseif arg == "logthreat" then
 		ThreatLib.LogThreat = not ThreatLib.LogThreat
 		if ThreatLib.LogThreat then
 			print("LibThreatClassic2 logThreat enabled.")

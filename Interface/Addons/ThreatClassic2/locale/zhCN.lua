@@ -71,7 +71,7 @@ L.bar_marker			= "你在条中为红色"
 L.bar_texture			= "纹理"
 L.bar_classColor		= "使用职业颜色"
 L.bar_defaultColor		= "自定义颜色"
-L.bar_alpha				= "条透明度"
+L.bar_alpha				= "条透明度 (default colors)"
 L.bar_colorMod			= "颜色调节"
 
 L.font					= "字体"
@@ -82,7 +82,7 @@ L.font_shadow			= "字体阴影"
 
 L.warnings				= "警报"
 L.warnings_sound		= "启用声音."
-L.warnings_threshold	= "警报仇恨阈值 (0-100%)."
+L.warnings_threshold	= "警报仇恨阈值 (100% = aggro)."
 
 L.warnings_soundFile		= "警报声音文件."
 L.sound_pulledFile		= "获得仇恨警报的声音文件."
