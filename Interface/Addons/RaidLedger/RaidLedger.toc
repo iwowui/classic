@@ -8,8 +8,10 @@
 ## X-Repple: 辅助
 ## SavedVariablesPerCharacter: RaidLedgerDatabase
 ## Author: Boshi Lian(farmer1992@gmail.com)
-## Version: v1.6.7
+## Version: v1.6.8
 
+lib\LibDBIcon-1.0\LibDBIcon-1.0\lib.xml
+lib\LibDBIcon-1.0\embeds.xml
 lib\lib-st\Core.lua
 lib\LibDeformat-3.0\LibDeformat-3.0.lua
 

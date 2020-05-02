@@ -673,8 +673,9 @@ function GUI:Init()
                     ctx.currentwinner = playerName
                     ctx.currentprice = ask * 10000
                     ctx.countdown = bf.countdown:GetValue()
-
-                    SendRaidMessage(L["Bid accept"] .. " " .. item .. " " .. L["Current price"] .. " " .. GetMoneyStringL(ctx.currentprice) .. " " .. L["Bid price"] .. " " .. GetMoneyStringL(bidprice()) .. " ".. (ctx.pause and "" or L["Time left"] .. " " .. (SECOND_ONELETTER_ABBR:format(ctx.countdown))))
+                    
+                    -- L["Bid price"]
+                    SendRaidMessage(L["Bid accept"] .. " " .. item .. " " .. L["Current price"] .. " >>" .. GetMoneyStringL(ctx.currentprice) .. "<< ".. (ctx.pause and "" or L["Time left"] .. " " .. (SECOND_ONELETTER_ABBR:format(ctx.countdown))))
                 else
                     SendRaidMessage(L["Bid denied"] .. " " .. item .. " " .. L["Must bid higher than"] .. " " .. GetMoneyStringL(bid * 10000))
                 end
@@ -788,7 +789,7 @@ function GUI:Init()
 
                     local item = currentitem()
 
-                    SendRaidMessage(L["Start bid"] .. " " .. item .. " " .. L["Starting price"] .. " " .. GetMoneyStringL(ctx.currentprice) .. " " .. (ctx.pause and "" or L["Time left"] .. " " .. (SECOND_ONELETTER_ABBR:format(ctx.countdown))))
+                    SendRaidMessage(L["Start bid"] .. " " .. item .. " " .. L["Starting price"] .. " >>" .. GetMoneyStringL(ctx.currentprice) .. "<< " .. (ctx.pause and "" or L["Time left"] .. " " .. (SECOND_ONELETTER_ABBR:format(ctx.countdown))))
 
                     ctx.timer = C_Timer.NewTicker(1, function()
                         if ctx.pause then
@@ -803,7 +804,7 @@ function GUI:Init()
                             ctx.timer:Cancel()
 
                             if ctx.currentwinner then
-                                SendRaidMessage(item .. " " .. L["Hammer Price"] .. " " .. GetMoneyStringL(ctx.currentprice) .. " " .. L["Winner"] .. " " .. ctx.currentwinner)
+                                SendRaidMessage(item .. " " .. L["Hammer Price"] .. " >>" .. GetMoneyStringL(ctx.currentprice) .. "<< " .. L["Winner"] .. " " .. ctx.currentwinner)
                                 ctx.entry["beneficiary"] = ctx.currentwinner
                                 ctx.entry["cost"] = ctx.currentprice / 10000
                                 ctx.entry["lock"] = true
@@ -824,7 +825,7 @@ function GUI:Init()
                         sendalert = sendalert or (ctx.countdown % 30 == 0)
 
                         if sendalert then
-                            SendRaidMessage(item .. " " .. L["Current price"] .. " " .. GetMoneyStringL(ctx.currentprice) .. " " .. L["Bid price"] .. " ".. GetMoneyStringL(bidprice()) .. " " .. L["Time left"] .. " " .. (SECOND_ONELETTER_ABBR:format(ctx.countdown)))
+                            SendRaidMessage(item .. " " .. L["Current price"] .. " >>" .. GetMoneyStringL(ctx.currentprice) .. "<< " .. L["Time left"] .. " " .. (SECOND_ONELETTER_ABBR:format(ctx.countdown)))
                         end
                     end)
                 end)
@@ -1750,21 +1751,6 @@ RegEvent("ADDON_LOADED", function()
     -- raid frame handler
 
     do
-        if _G.RaidFrame then
-            local b = CreateFrame("Button", nil, _G.RaidFrame, "UIPanelButtonTemplate")
-            b:SetWidth(100)
-            b:SetHeight(20)
-            b:SetPoint("TOPRIGHT", -25, 0)
-            b:SetText(L["Raid Ledger"])
-            b:SetScript("OnClick", function()
-                if GUI.mainframe:IsShown() then
-                    GUI.mainframe:Hide()
-                else
-                    GUI.mainframe:Show()
-                end
-            end)
-        end
-
         local hooked = false
 
         hooksecurefunc("RaidFrame_LoadUI", function()
