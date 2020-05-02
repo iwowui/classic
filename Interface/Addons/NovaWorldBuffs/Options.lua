@@ -153,6 +153,15 @@ NWB.options = {
 			get = "getShowAllAlts",
 			set = "setShowAllAlts",
 		},
+		flashMinimized = {
+			type = "toggle",
+			name = "Flash Minimized",
+			desc = "Flash the wow client when you have it minimized and a buff is about to drop? Flashes when  minute left on timer "
+					.. "and when a head is handed in a few seconds before buff drops.",
+			order = 17,
+			get = "getFlashMinimized",
+			set = "setFlashMinimized",
+		},
 		logonHeader = {
 			type = "header",
 			name = "Logon Messages",
@@ -658,9 +667,16 @@ function NWB:loadSpecificOptions()
 			type = "toggle",
 			name = "Show Minimap Layer",
 			desc = "Show the little frame on the minimap with your current layer while in a capital city?";
-			order = 19,
+			order = 18,
 			get = "getMinimapLayerFrame",
 			set = "setMinimapLayerFrame",
+		};
+		NWB.options.args["minimapLayerFrameReset"] = {
+				type = "execute",
+				name = "Reset Minimap Layer",
+				desc = "Reset minimap layer frame back to default position (hold shift to drag the minimap frame).",
+				func = "resetMinimapLayerFrame",
+				order = 19,
 		};
 	end
 end
@@ -748,7 +764,6 @@ NWB.optionDefaults = {
 		printNef = true,
 		printZan = true,
 		iceBuffTime = 1800, --Debug.
-		resetSongflowers = true, --reset songflowers one time.
 		logonRend = true,
 		logonOny = true,
 		logonNef = true,
@@ -756,7 +771,7 @@ NWB.optionDefaults = {
 		logonDmfBuffCooldown = true,
 		showDmfBuffWb = true,
 		showAllAlts = false,
-		
+		flashMinimized = true,
 		filterYells = false,
 		filterDrops = false,
 		filterTimers = false,
@@ -962,6 +977,11 @@ function NWB:resetColors(info, r, g, b, a)
 	NWB.chatColor = "|cff" .. NWB:RGBToHex(self.db.global.chatColorR, self.db.global.chatColorG, self.db.global.chatColorB);
 end
 
+--Reset colors.
+function NWB:resetMinimapLayerFrame(info)
+	MinimapLayerFrame:ClearAllPoints();
+	MinimapLayerFrame:SetPoint("BOTTOM", Minimap, 2, 4);
+end
 --Colorize chat prefix in all chat channels.
 function NWB:setColorizePrefixLinks(info, value)
 	self.db.global.colorizePrefixLinks = value;
@@ -978,6 +998,15 @@ end
 
 function NWB:getShowAllAlts(info)
 	return self.db.global.showAllAlts;
+end
+
+--Show all alts in the buffs window.
+function NWB:setFlashMinimized(info, value)
+	self.db.global.flashMinimized = value;
+end
+
+function NWB:getFlashMinimized(info)
+	return self.db.global.flashMinimized;
 end
 
 --Chat 30 minute warning.

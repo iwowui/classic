@@ -1,6 +1,13 @@
 ﻿--变量
 local id = 1;
 local _G = _G;
+local pairs = pairs;
+local select = select;
+local UnitClass = UnitClass;
+local UnitIsVisible = UnitIsVisible;
+local IsInInstance = IsInInstance;
+local GetSpellInfo = GetSpellInfo;
+local IsSpellInRange = IsSpellInRange;
 
 -- --BOSS生命值百分比
 -- for id = 1, MAX_BOSS_FRAMES, 1 do

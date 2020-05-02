@@ -78,7 +78,7 @@ function Addon:GetDBDefaults()
 					-- text display conditions
 					-- how big something must be to display cooldown text
 					-- this is a percentage of the size of an action button
-					minSize = 0.5,
+					minSize = 0.0,
 
 					-- how long a cooldown (in seconds) must be to display text
 					minDuration = 2,

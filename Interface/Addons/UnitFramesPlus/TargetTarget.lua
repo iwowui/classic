@@ -1,3 +1,27 @@
+--变量
+local floor = math.floor;
+local select = select;
+local UnitExists = UnitExists;
+local UnitName = UnitName;
+local UnitClass = UnitClass;
+local UnitIsPlayer = UnitIsPlayer;
+local UnitIsEnemy = UnitIsEnemy;
+local UnitIsFriend = UnitIsFriend;
+local UnitHealth = UnitHealth;
+local UnitHealthMax = UnitHealthMax;
+local UnitPower = UnitPower;
+local UnitPowerMax = UnitPowerMax;
+local UnitPowerType = UnitPowerType;
+local UnitDebuff = UnitDebuff;
+local GetTime = GetTime;
+local IsShiftKeyDown = IsShiftKeyDown;
+local InCombatLockdown = InCombatLockdown;
+local RegisterUnitWatch = RegisterUnitWatch;
+local SetPortraitTexture = SetPortraitTexture;
+local CooldownFrame_Set = CooldownFrame_Set;
+local CooldownFrame_Clear = CooldownFrame_Clear;
+local hooksecurefunc = hooksecurefunc;
+
 --ToT
 local ToTFrame = CreateFrame("Button", "UFP_ToTFrame", TargetFrame, "SecureUnitButtonTemplate, SecureHandlerAttributeTemplate");
 ToTFrame:SetFrameLevel(8);
@@ -128,7 +152,7 @@ function UnitFramesPlus_TargetTargetDisplayUpdate()
             ToTFrame.HealthBar:SetValue(UnitHealth("targettarget") / UnitHealthMax("targettarget") * 100);
             local ToTPctText = "";
             if UnitFramesPlusDB["targettarget"]["hppct"] == 1 then
-                ToTPctText = math.floor(UnitHealth("targettarget") / UnitHealthMax("targettarget") * 100).."%";
+                ToTPctText = floor(UnitHealth("targettarget") / UnitHealthMax("targettarget") * 100).."%";
             end
             ToTFrame.HPPct:SetText(ToTPctText);
         else
@@ -168,7 +192,7 @@ function UnitFramesPlus_TargetTargetClassPortraitDisplayUpdate()
             ToTFrame.Portrait:Hide();
             ToTFrame.ClassPortrait:Show();
         end
-        local IconCoord = CLASS_ICON_TCOORDS[select(2,UnitClass("targettarget"))]
+        local IconCoord = CLASS_ICON_TCOORDS[select(2, UnitClass("targettarget"))];
         if IconCoord then
             ToTFrame.ClassPortrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles");
             ToTFrame.ClassPortrait:SetTexCoord(unpack(IconCoord));
@@ -380,13 +404,13 @@ function UnitFramesPlus_OptionsFrame_TargetTargetDebuffDisplayUpdate()
                             local timeleft = expirationTime - GetTime();
                             if timeleft >= 0 then
                                 if timeleft < 60 then
-                                    timetext = math.floor(timeleft+1);
+                                    timetext = floor(timeleft+1);
                                     -- textalpha = 1 - timeleft/200;
                                     -- r, g, b = UnitFramesPlus_GetRGB(timeleft, 60);
                                 elseif timeleft <= 1800 then
-                                    timetext = math.floor(timeleft/60+1).."m";
+                                    timetext = floor(timeleft/60+1).."m";
                                 else
-                                    timetext = math.floor(timeleft/3600+1).."h";
+                                    timetext = floor(timeleft/3600+1).."h";
                                 end
                             end
                         end

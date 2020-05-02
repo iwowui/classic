@@ -1,5 +1,23 @@
 ﻿--Based on LibClassicMobHealth-1.0
 --TODO: realm name support
+local match = string.match;
+local floor = math.floor;
+local tonumber = tonumber;
+local tostring = tostring;
+local strsplit = strsplit;
+local ipairs = ipairs;
+local pairs = pairs;
+local next = next;
+local UnitGUID = UnitGUID;
+local UnitName = UnitName;
+local UnitLevel = UnitLevel;
+local UnitHealth = UnitHealth;
+local UnitHealthMax = UnitHealthMax;
+local UnitCanAttack = UnitCanAttack;
+local UnitIsFriend = UnitIsFriend;
+local UnitIsPlayer = UnitIsPlayer;
+local UnitIsDead = UnitIsDead;
+local UnitPlayerControlled = UnitPlayerControlled;
 
 local ADDONNAME = ...;
 local MAJOR_VERSION = 1;
@@ -27,7 +45,7 @@ local MobUnitTypes = {
 --Extracts CreatureID from GUID (Mobs only)
 local function GetCreatureIDFromGUID(guid)
     if not guid then return end
-    local utype, creatureid = string.match(guid, "^(.-)%-0%-%d+%-%d+%-%d+%-(%d+)%-%x+$");
+    local utype, creatureid = match(guid, "^(.-)%-0%-%d+%-%d+%-%d+%-(%d+)%-%x+$");
     --Return CreatureID if mob
     return (utype and MobUnitTypes[utype]) and (creatureid and tonumber(creatureid));
 end
@@ -363,7 +381,7 @@ function UnitFramesPlus_GetUnitMaxHP(unit)
     if guid then
         local value = guessAtMaxHealth(guid, level, kind);
         if value then
-            return math.floor(value + 0.5), true;
+            return floor(value + 0.5), true;
         else
             return max, false;
         end
@@ -401,7 +419,7 @@ function UnitFramesPlus_GetUnitCurrentHP(unit)
     if guid then
         local value = guessAtMaxHealth(guid, level, kind);
         if value then
-            return math.floor(current/max * value + 0.5), true;
+            return floor(current/max * value + 0.5), true;
         else
             return current, false;
         end
@@ -439,7 +457,7 @@ function UnitFramesPlus_GetUnitHealth(unit)
     if guid then
         local value = guessAtMaxHealth(guid, level, kind);
         if value then
-            return math.floor(current/max * value + 0.5), math.floor(value + 0.5), true;
+            return floor(current/max * value + 0.5), floor(value + 0.5), true;
         else
             return current, max, false;
         end

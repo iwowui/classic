@@ -1,6 +1,59 @@
 ﻿--变量
 local id = 1;
 local _G = _G;
+local select = select;
+local tonumber = tonumber;
+local floor = math.floor;
+local UnitExists = UnitExists;
+local UnitName = UnitName;
+local UnitLevel = UnitLevel;
+local UnitClass = UnitClass;
+local UnitHealth = UnitHealth;
+local UnitHealthMax = UnitHealthMax;
+local UnitPower = UnitPower;
+local UnitPowerMax = UnitPowerMax;
+local UnitIsDead = UnitIsDead;
+local UnitIsGhost = UnitIsGhost;
+local UnitIsConnected = UnitIsConnected;
+local UnitIsVisible = UnitIsVisible;
+local UnitInParty = UnitInParty;
+local UnitInOtherParty = UnitInOtherParty;
+local UnitAffectingCombat = UnitAffectingCombat;
+local UnitBuff = UnitBuff;
+local UnitDebuff = UnitDebuff;
+local CooldownFrame_Set = CooldownFrame_Set;
+local CooldownFrame_Clear = CooldownFrame_Clear;
+local GetDisplayedAllyFrames = GetDisplayedAllyFrames;
+local GetTime = GetTime;
+local GetCVar = GetCVar;
+local SetCVar = SetCVar;
+local IsAddOnLoaded = IsAddOnLoaded;
+local IsShiftKeyDown = IsShiftKeyDown;
+local InCombatLockdown = InCombatLockdown;
+local RegisterUnitWatch = RegisterUnitWatch;
+local hooksecurefunc = hooksecurefunc;
+local CombatFeedback_Initialize = CombatFeedback_Initialize;
+local CombatFeedback_OnCombatEvent = CombatFeedback_OnCombatEvent;
+local UnitFrame_UpdateTooltip = UnitFrame_UpdateTooltip;
+local RaidOptionsFrame_UpdatePartyFrames = RaidOptionsFrame_UpdatePartyFrames;
+local HidePartyFrame = HidePartyFrame;
+local ShowPartyFrame = ShowPartyFrame;
+local UnitFrame_Update = UnitFrame_Update;
+local RefreshDebuffs = RefreshDebuffs;
+local SetDesaturation = SetDesaturation;
+local UpdatePartyMemberBackground = UpdatePartyMemberBackground;
+local PartyMemberFrame_RefreshPetDebuffs = PartyMemberFrame_RefreshPetDebuffs;
+local PartyMemberFrame_UpdateLeader = PartyMemberFrame_UpdateLeader;
+local PartyMemberFrame_UpdatePvPStatus = PartyMemberFrame_UpdatePvPStatus;
+local PartyMemberFrame_UpdateVoiceStatus = PartyMemberFrame_UpdateVoiceStatus;
+local PartyMemberFrame_UpdateReadyCheck = PartyMemberFrame_UpdateReadyCheck;
+local PartyMemberFrame_UpdateNotPresentIcon = PartyMemberFrame_UpdateNotPresentIcon;
+local PartyMemberFrame_ToPlayerArt = PartyMemberFrame_ToPlayerArt;
+local CompactRaidFrameManager_UpdateShown = CompactRaidFrameManager_UpdateShown;
+local CompactRaidFrameManager_UpdateContainerLockVisibility = CompactRaidFrameManager_UpdateContainerLockVisibility;
+local BlizzardOptionsPanel_CheckButton_Enable = BlizzardOptionsPanel_CheckButton_Enable;
+local BlizzardOptionsPanel_CheckButton_Disable = BlizzardOptionsPanel_CheckButton_Disable;
+local StaticPopup_Show = StaticPopup_Show;
 
 --状态数值
 for id = 1, MAX_PARTY_MEMBERS, 1 do
@@ -455,7 +508,7 @@ function UnitFramesPlus_PartyPortraitDisplayUpdate(id)
                 end
             end
         elseif UnitFramesPlusDB["party"]["portraittype"] == 2 then
-            local IconCoord = CLASS_ICON_TCOORDS[select(2,UnitClass("party"..id))]
+            local IconCoord = CLASS_ICON_TCOORDS[select(2, UnitClass("party"..id))];
             if IconCoord then
                 _G["UFP_PartyClassPortrait"..id]:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles");
                 _G["UFP_PartyClassPortrait"..id]:SetTexCoord(unpack(IconCoord));
@@ -548,7 +601,7 @@ function UnitFramesPlus_PartyHealthPctDisplayUpdate(id)
             local MaxHP = UnitHealthMax("party"..id);
             if MaxHP > 0 then
                 if UnitFramesPlusDB["party"]["hppct"] == 1 then
-                    PctText = math.floor(100*CurHP/MaxHP).."%";
+                    PctText = floor(100*CurHP/MaxHP).."%";
                 else
                     PctText = CurHP.."/"..MaxHP;
                 end
@@ -1015,13 +1068,13 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                                     local timeleft = expirationTime - GetTime();
                                     if timeleft >= 0 then
                                         if timeleft < 60 then
-                                            timetext = math.floor(timeleft+1);
+                                            timetext = floor(timeleft+1);
                                             -- textalpha = 1 - timeleft/200;
                                             -- r, g, b = UnitFramesPlus_GetRGB(timeleft, 60);
                                         elseif timeleft <= 1800 then
-                                            timetext = math.floor(timeleft/60+1).."m";
+                                            timetext = floor(timeleft/60+1).."m";
                                         else
-                                            timetext = math.floor(timeleft/3600+1).."h";
+                                            timetext = floor(timeleft/3600+1).."h";
                                         end
                                     end
                                 end
@@ -1077,13 +1130,13 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
                                 local timeleft = expirationTime - GetTime();
                                 if timeleft >= 0 then
                                     if timeleft < 60 then
-                                        timetext = math.floor(timeleft+1);
+                                        timetext = floor(timeleft+1);
                                         -- textalpha = 1 - timeleft/200;
                                         -- r, g, b = UnitFramesPlus_GetRGB(timeleft, 60);
                                     elseif timeleft <= 1800 then
-                                        timetext = math.floor(timeleft/60+1).."m";
+                                        timetext = floor(timeleft/60+1).."m";
                                     else
-                                        timetext = math.floor(timeleft/3600+1).."h";
+                                        timetext = floor(timeleft/3600+1).."h";
                                     end
                                 end
                             end
@@ -1139,13 +1192,13 @@ function UnitFramesPlus_OptionsFrame_PartyBuffDisplayUpdate()
             --                     local timeleft = expirationTime - GetTime();
             --                     if timeleft >= 0 then
             --                         if timeleft < 60 then
-            --                             timetext = math.floor(timeleft+1);
+            --                             timetext = floor(timeleft+1);
             --                             -- textalpha = 1 - timeleft/200;
             --                             -- r, g, b = UnitFramesPlus_GetRGB(timeleft, 60);
             --                         elseif timeleft <= 1800 then
-            --                             timetext = math.floor(timeleft/60+1).."m";
+            --                             timetext = floor(timeleft/60+1).."m";
             --                         else
-            --                             timetext = math.floor(timeleft/3600+1).."h";
+            --                             timetext = floor(timeleft/3600+1).."h";
             --                         end
             --                     end
             --                 end

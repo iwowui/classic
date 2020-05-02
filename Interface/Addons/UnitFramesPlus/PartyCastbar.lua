@@ -1,6 +1,11 @@
 ﻿--变量
 local id = 1;
 local _G = _G;
+local RaiseFrameLevel = RaiseFrameLevel;
+local CastingBarFrame_OnLoad = CastingBarFrame_OnLoad;
+local CastingBarFrame_OnEvent = CastingBarFrame_OnEvent;
+local CastingBarFrame_OnUpdate = CastingBarFrame_OnUpdate;
+local CastingBarFrame_OnShow = CastingBarFrame_OnShow;
 
 --队友施法条
 for id = 1, 4, 1 do

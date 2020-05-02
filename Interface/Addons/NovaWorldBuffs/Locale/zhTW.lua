@@ -52,14 +52,14 @@ L["Revel in his rallying cry"] = "為他的勝利而狂歡吧";
 ---NPC's killed---
 ---============---
 
-L["onyxiaNpcKilledHorde"] = "倫薩克已經被殺了!(黑妹頭 buff NPC).";
-L["onyxiaNpcKilledAlliance"] = "瑪丁雷少校已經被殺了! (黑妹頭 buff NPC).";
-L["nefarianNpcKilledHorde"] = "薩魯法爾大王已經被殺了! (奈法頭 buff NPC).";
-L["nefarianNpcKilledAlliance"] = "艾法希比元帥已經被殺了! (奈法頭 buff NPC).";
-L["onyxiaNpcKilledHordeWithTimer"] = "黑妹頭NPC (倫薩克) 已經被殺了 %s 時間，之後沒有任何buff紀錄。";
-L["NefarianNpcKilledHordeWithTimer"] = "奈法頭NPC (薩魯法爾) 以經被殺了 %s 時間，之後沒有任何buff紀錄。";
-L["onyxiaNpcKilledAllianceWithTimer"] = "黑妹頭NPC (瑪丁雷) 已經被殺了 %s 時間，之後沒有任何buff紀錄。";
-L["NefarianNpcKilledAllianceWithTimer"] = "奈法頭NPC (艾法希比) 以經被殺了 %s 時間，之後沒有任何buff紀錄。";
+L["onyxiaNpcKilledHorde"] = "倫薩克已經被殺了!(奧妮克西婭增益NPC ).";
+L["onyxiaNpcKilledAlliance"] = "瑪丁雷少校已經被殺了! (奧妮克西婭增益NPC).";
+L["nefarianNpcKilledHorde"] = "薩魯法爾大王已經被殺了! (奈法利安增益NPC ).";
+L["nefarianNpcKilledAlliance"] = "艾法希比元帥已經被殺了! (奈法利安增益NPC ).";
+L["onyxiaNpcKilledHordeWithTimer"] = "奧妮克西婭增益NPC (倫薩克) 已經被殺了 %s 時間，之後沒有任何增益紀錄。";
+L["NefarianNpcKilledHordeWithTimer"] = "奈法利安增益NPC (薩魯法爾) 以經被殺了 %s 時間，之後沒有任何增益紀錄。";
+L["onyxiaNpcKilledAllianceWithTimer"] = "奧妮克西婭增益NPC (瑪丁雷) 已經被殺了 %s 時間，之後沒有任何增益紀錄。";
+L["NefarianNpcKilledAllianceWithTimer"] = "奈法利安增益NPC (艾法希比) 以經被殺了 %s 時間，之後沒有任何增益紀錄。";
 L["anyNpcKilledAllianceWithTimer"] = "在 %s 以前被殺了"; --Map timers tooltip msg.
 
 ---========---
@@ -67,7 +67,7 @@ L["anyNpcKilledAllianceWithTimer"] = "在 %s 以前被殺了"; --Map timers tool
 ---========---
 
 --Alliance Onyxia buff NPC.
-L["Major Mattingly"] = "瑪丁雷";
+L["Major Mattingly"] = "瑪丁雷少校";
 --Alliance Onyxia buff NPC first yell string (part of his first yell msg before before buff).
 L["history has been made"] = "暴風城的城民和盟友們";
 --Alliance Onyxia buff NPC second yell string (part of his second yell msg before before buff).
@@ -75,7 +75,7 @@ L["Onyxia, hangs from the arches"] = "看看強大的聯盟吧";
 
 
 --Alliance Nefarian buff NPC.
-L["Field Marshal Afrasiabi"] = "艾法希比";
+L["Field Marshal Afrasiabi"] = "艾法希比元帥";
 --Alliance Nefarian buff NPC first yell string (part of his first yell msg before before buff).
 L["the Lord of Blackrock is slain"] = "聯盟的人民們";
 --Alliance Nefarian buff NPC second yell string (part of his second yell msg before before buff).
@@ -114,10 +114,10 @@ L["noTimer"] = "未取得"; --No timer (used only in map timer frames)
 L["noCurrentTimer"] = "未取得"; --No current timer
 L["noActiveTimers"] = "未啟動";	--No active timers
 L["newBuffCanBeDropped"] = "一個新的 %s buff現在可以取得";
-L["buffResetsIn"] = "%s 重製在 %s";
+L["buffResetsIn"] = "%s 重置在 %s";
 L["rendFirstYellMsg"] = "酋長祝福的閃電，將在6秒後施放。";
-L["onyxiaFirstYellMsg"] = "黑妹頭已插，閃電將在14秒後施放。";
-L["nefarianFirstYellMsg"] = "奈法頭已插，閃電將在15秒後施放。";
+L["onyxiaFirstYellMsg"] = "奧妮克西婭的頭顱已插，閃電將在14秒後施放。";
+L["nefarianFirstYellMsg"] = "奈法利安的頭顱已插，閃電將在15秒後施放。";
 L["rendBuffDropped"] = "酋長的祝福(雷德) 已經施放。";
 L["onyxiaBuffDropped"] = "屠龍者的咆哮 (奧妮克西婭) 已經施放。";
 L["nefarianBuffDropped"] = "屠龍者的咆哮 (奈法利安) 已經施放。";
@@ -145,8 +145,8 @@ L["secondShort"] = "秒"; --Used in short timers like 1m30s (single letter only,
 L["minuteShort"] = "分"; --Used in short timers like 1m30s (single letter only, usually the first letter of minutes).
 L["hourShort"] = "時"; --Used in short timers like 1h30m (single letter only, usually the first letter of hours).
 L["dayShort"] = "天"; --Used in short timers like 1d8h (single letter only, usually the first letter of days).
-L["startsIn"] = "在 %s 開始"; --"Starts in 1hour".
-L["endsIn"] = "在 %s 結束"; --"Ends in 1hour".
+L["startsIn"] = "在 %s 後開始"; --"Starts in 1hour".
+L["endsIn"] = "在 %s 後結束"; --"Ends in 1hour".
 L["versionOutOfDate"] = "你的<Nova World Buffs>插件已經過期了，請上https://www.curseforge.com/wow/addons/nova-world-buffs 更新，或通過twitch客戶端更新。";
 L["Your Current World Buffs"] = "你現有的世界buff";
 L["Options"] = " 選項";
@@ -177,3 +177,10 @@ L["Bloodvenom Falls"] = "血毒瀑布";
 L["Jaedenar"] = "加德納爾";
 L["North-West of Irontree Woods"] = "鐵木森林西北邊";
 L["South of Irontree Woods"] = "鐵木森林南邊";
+
+L["worldMapBuffsMsg"] = "輸入 /buffs 可以看到你\n所有角色的世界增益。";
+L["cityMapLayerMsgHorde"] = "正確 %s\n選取奧格馬的任何NPC\n用來在傳換區域後更新鏡像。|r";
+L["cityMapLayerMsgAlliance"] = "正確 %s\n選取暴風城的任何NPC\n用來在傳換區域後更新鏡像。|r";
+L["noLayerYetHorde"] = "請點選奧格馬的任何NPC\n去找到你的鏡像。";
+L["noLayerYetAlliance"] = "請點選暴風城的任何NPC\n去找到你的鏡像。";
+L["Reset Data"] = "重置資料"; --A button to Reset buffs window data.

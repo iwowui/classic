@@ -1,4 +1,21 @@
-﻿--默认设置
+﻿--变量
+local print = print;
+local floor = math.floor;
+local tonumber = tonumber;
+local type = type;
+local pairs = pairs;
+local UnitName = UnitName;
+local IsAddOnLoaded = IsAddOnLoaded;
+local GetLocale = GetLocale;
+local GetAddOnMetadata = GetAddOnMetadata;
+local GetAddOnEnableState = GetAddOnEnableState;
+local EnableAddOn = EnableAddOn;
+local LoadAddOn = LoadAddOn;
+local ReloadUI = ReloadUI;
+local InterfaceOptionsFrame_OpenToCategory = InterfaceOptionsFrame_OpenToCategory;
+local hooksecurefunc = hooksecurefunc;
+
+--默认设置
 UnitFramesPlusDefaultDB = {
     global = {
         movable = 1,        --Shift拖动头像
@@ -399,7 +416,7 @@ SLASH_UnitFramesPlus2 = "/ufp";
 
 function UnitFramesPlus_GetRGB(minv, maxv, reverse)
     local r, g, b = 0, 1, 0;
-    local pct = math.floor(100*minv/maxv)/100;
+    local pct = floor(100*minv/maxv)/100;
     if pct > 0.5 then
         r = (1.0-pct)*2;
         g = 1.0;
@@ -437,31 +454,31 @@ function UnitFramesPlus_GetValueFix(valueCurr, valueMax, valueunit, unittype)
             unitsmall = "萬";
         end
         if valueCurr >= 1000000000000 then
-            valueCurrfix = (math.floor(valueCurr/100000000000)/10)..unitsuper;
+            valueCurrfix = (floor(valueCurr/100000000000)/10)..unitsuper;
         elseif valueCurr >= 100000000 then
-            valueCurrfix = (math.floor(valueCurr/10000000)/10)..unitbig;
+            valueCurrfix = (floor(valueCurr/10000000)/10)..unitbig;
         elseif valueCurr >= 10000 then
-            valueCurrfix = (math.floor(valueCurr/1000)/10)..unitsmall;
+            valueCurrfix = (floor(valueCurr/1000)/10)..unitsmall;
         else
             valueCurrfix = valueCurr;
         end
 
         if valueMax >= 1000000000000 then
-            valueMaxfix = (math.floor(valueMax/100000000000)/10)..unitsuper;
+            valueMaxfix = (floor(valueMax/100000000000)/10)..unitsuper;
         elseif valueMax >= 100000000 then
-            valueMaxfix = (math.floor(valueMax/10000000)/10)..unitbig;
+            valueMaxfix = (floor(valueMax/10000000)/10)..unitbig;
         elseif valueMax >= 10000 then
-            valueMaxfix = (math.floor(valueMax/1000)/10)..unitsmall;
+            valueMaxfix = (floor(valueMax/1000)/10)..unitsmall;
         else
             valueMaxfix = valueMax;
         end
 
         if valueLoss >= 1000000000000 then
-            valueLossfix = (math.floor(valueLoss/100000000000)/10)..unitsuper;
+            valueLossfix = (floor(valueLoss/100000000000)/10)..unitsuper;
         elseif valueLoss >= 100000000 then
-            valueLossfix = (math.floor(valueLoss/10000000)/10)..unitbig;
+            valueLossfix = (floor(valueLoss/10000000)/10)..unitbig;
         elseif valueMax >= 10000 then
-            valueLossfix = (math.floor(valueLoss/1000)/10)..unitsmall;
+            valueLossfix = (floor(valueLoss/1000)/10)..unitsmall;
         else
             valueLossfix = valueLoss;
         end
@@ -470,31 +487,31 @@ function UnitFramesPlus_GetValueFix(valueCurr, valueMax, valueunit, unittype)
         unitbig = "M";
         unitsmall = "K";
         if valueCurr >= 1000000000 then
-            valueCurrfix = (math.floor(valueCurr/100000000)/10)..unitsuper;
+            valueCurrfix = (floor(valueCurr/100000000)/10)..unitsuper;
         elseif valueCurr >= 1000000 then
-            valueCurrfix = (math.floor(valueCurr/100000)/10)..unitbig;
+            valueCurrfix = (floor(valueCurr/100000)/10)..unitbig;
         elseif valueCurr >= 1000 then
-            valueCurrfix = (math.floor(valueCurr/100)/10)..unitsmall;
+            valueCurrfix = (floor(valueCurr/100)/10)..unitsmall;
         else
             valueCurrfix = valueCurr;
         end
 
         if valueMax >= 1000000000 then
-            valueMaxfix = (math.floor(valueMax/100000000)/10)..unitsuper;
+            valueMaxfix = (floor(valueMax/100000000)/10)..unitsuper;
         elseif valueMax >= 1000000 then
-            valueMaxfix = (math.floor(valueMax/100000)/10)..unitbig;
+            valueMaxfix = (floor(valueMax/100000)/10)..unitbig;
         elseif valueMax >= 1000 then
-            valueMaxfix = (math.floor(valueMax/100)/10)..unitsmall;
+            valueMaxfix = (floor(valueMax/100)/10)..unitsmall;
         else
             valueMaxfix = valueMax;
         end
 
         if valueLoss >= 1000000000 then
-            valueLossfix = (math.floor(valueLoss/100000000)/10)..unitsuper;
+            valueLossfix = (floor(valueLoss/100000000)/10)..unitsuper;
         elseif valueLoss >= 1000000 then
-            valueLossfix = (math.floor(valueLoss/100000)/10)..unitbig;
+            valueLossfix = (floor(valueLoss/100000)/10)..unitbig;
         elseif valueMax >= 1000 then
-            valueLossfix = (math.floor(valueLoss/100)/10)..unitsmall;
+            valueLossfix = (floor(valueLoss/100)/10)..unitsmall;
         else
             valueLossfix = valueLoss;
         end

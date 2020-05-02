@@ -1,4 +1,48 @@
-﻿--非战斗状态中允许shift+左键拖动目标头像
+﻿--变量
+local select = select;
+local floor = math.floor;
+local tonumber = tonumber;
+local GetCVar = GetCVar;
+local SetCVar = SetCVar;
+local UnitExists = UnitExists;
+local UnitName = UnitName;
+local UnitRace = UnitRace;
+local UnitClass = UnitClass;
+local UnitIsEnemy = UnitIsEnemy;
+local UnitIsPlayer = UnitIsPlayer;
+local UnitHealth = UnitHealth;
+local UnitHealthMax = UnitHealthMax;
+local UnitIsDead = UnitIsDead;
+local UnitPower = UnitPower;
+local UnitPowerMax = UnitPowerMax;
+local UnitPowerType = UnitPowerType;
+local UnitBuff = UnitBuff;
+local UnitDebuff = UnitDebuff;
+local UnitIsGhost = UnitIsGhost;
+local UnitIsVisible = UnitIsVisible;
+local UnitIsConnected = UnitIsConnected;
+local UnitCreatureType = UnitCreatureType;
+local UnitClassification = UnitClassification;
+local UnitIsSameServer = UnitIsSameServer;
+local UnitIsUnit = UnitIsUnit;
+local IsShiftKeyDown = IsShiftKeyDown;
+local InCombatLockdown = InCombatLockdown;
+local CheckInteractDistance = CheckInteractDistance;
+local InspectUnit = InspectUnit;
+local InitiateTrade = InitiateTrade;
+local ChatFrame_SendTell = ChatFrame_SendTell;
+local FollowUnit = FollowUnit;
+local CombatFeedback_OnCombatEvent = CombatFeedback_OnCombatEvent;
+local CombatFeedback_OnUpdate = CombatFeedback_OnUpdate;
+local IsAddOnLoaded = IsAddOnLoaded;
+local CooldownFrame_Set = CooldownFrame_Set;
+local CooldownFrame_Clear = CooldownFrame_Clear;
+local GetTime = GetTime;
+local UnitIsOwnerOrControllerOfUnit = UnitIsOwnerOrControllerOfUnit;
+local updateFunc = updateFunc;
+local hooksecurefunc = hooksecurefunc;
+
+--非战斗状态中允许shift+左键拖动目标头像
 function UnitFramesPlus_TargetPositionSet()
     if UnitFramesPlusVar["target"]["moved"] == 0 then
         TargetFrame:ClearAllPoints();
@@ -154,7 +198,7 @@ function UnitFramesPlus_TargetThreatDisplayUpdate()
                 TargetThreat:SetAlpha(0);
             end
             if UnitFramesPlusDB["target"]["threattext"] == 1 then
-                TargetThreatText:SetText(math.floor(threat).."%");
+                TargetThreatText:SetText(floor(threat).."%");
                 TargetThreatText:SetTextColor(r, g, b);
             else
                 TargetThreatText:SetText("");
@@ -228,7 +272,7 @@ function UnitFramesPlus_TargetHPValueDisplayUpdate()
     local BarText = "";
 
     if MaxHP > 0 then
-        PctText = math.floor(100*CurHP/MaxHP).."%";
+        PctText = floor(100*CurHP/MaxHP).."%";
     end
 
     if UnitFramesPlusDB["target"]["bartext"] == 1 and not UnitIsDead("target") then
@@ -280,7 +324,7 @@ function UnitFramesPlus_TargetMPValueDisplayUpdate()
 
     if powerType == 0 then
         if MaxMP > 0 then
-            PctText = math.floor(100*CurMP/MaxMP).."%";
+            PctText = floor(100*CurMP/MaxMP).."%";
         end
     else
         PctText = CurMP;
@@ -585,7 +629,7 @@ end
 function UnitFramesPlus_TargetClassIconDisplayUpdate()
     if UnitFramesPlusDB["target"]["classicon"] == 1 then
         if UnitIsPlayer("target") then
-            local IconCoord = CLASS_ICON_TCOORDS[select(2,UnitClass("target"))];
+            local IconCoord = CLASS_ICON_TCOORDS[select(2, UnitClass("target"))];
             if IconCoord then
                 ClassIcon.Icon:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles");
                 ClassIcon.Icon:SetTexCoord(unpack(IconCoord));
@@ -826,13 +870,13 @@ function UnitFramesPlus_TargetCooldownTextDisplayUpdate()
                         local timeleft = expirationTime - GetTime();
                         if timeleft >= 0 then
                             if timeleft < 60 then
-                                timetext = math.floor(timeleft+1);
+                                timetext = floor(timeleft+1);
                                 -- textalpha = 1 - timeleft/200;
                                 -- r, g, b = UnitFramesPlus_GetRGB(timeleft, 60);
                             elseif timeleft <= 1800 then
-                                timetext = math.floor(timeleft/60+1).."m";
+                                timetext = floor(timeleft/60+1).."m";
                             else
-                                timetext = math.floor(timeleft/3600+1).."h";
+                                timetext = floor(timeleft/3600+1).."h";
                             end
                         end
                     end
@@ -884,13 +928,13 @@ function UnitFramesPlus_TargetCooldownTextDisplayUpdate()
                             local timeleft = expirationTime - GetTime();
                             if timeleft >= 0 then
                                 if timeleft < 60 then
-                                    timetext = math.floor(timeleft+1);
+                                    timetext = floor(timeleft+1);
                                     -- textalpha = 1 - timeleft/200;
                                     -- r, g, b = UnitFramesPlus_GetRGB(timeleft, 60);
                                 elseif timeleft <= 1800 then
-                                    timetext = math.floor(timeleft/60+1).."m";
+                                    timetext = floor(timeleft/60+1).."m";
                                 else
-                                    timetext = math.floor(timeleft/3600+1).."h";
+                                    timetext = floor(timeleft/3600+1).."h";
                                 end
                             end
                         end
@@ -1155,7 +1199,7 @@ function UnitFramesPlus_TargetPortraitDisplayUpdate()
             if Target3DPortrait:IsShown() then
                 Target3DPortrait:Hide();
             end
-            local IconCoord = CLASS_ICON_TCOORDS[select(2,UnitClass("target"))]
+            local IconCoord = CLASS_ICON_TCOORDS[select(2, UnitClass("target"))];
             if IconCoord then
                 TargetClassPortrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles");
                 TargetClassPortrait:SetTexCoord(unpack(IconCoord));

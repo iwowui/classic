@@ -1,3 +1,24 @@
+--变量
+local select = select;
+local floor = math.floor;
+local UnitExists = UnitExists;
+local UnitClass = UnitClass;
+local UnitIsGhost = UnitIsGhost;
+local UnitIsDead = UnitIsDead;
+local UnitHealth = UnitHealth;
+local UnitHealthMax = UnitHealthMax;
+local UnitPower = UnitPower;
+local UnitPowerMax = UnitPowerMax;
+local UnitPowerType = UnitPowerType;
+local IsInInstance = IsInInstance;
+local IsShiftKeyDown = IsShiftKeyDown;
+local InCombatLockdown = InCombatLockdown;
+local PlayerFrame_SetLocked = PlayerFrame_SetLocked;
+local GetBestMapForUnit = C_Map.GetBestMapForUnit;
+local GetPlayerMapPosition = C_Map.GetPlayerMapPosition;
+local GameTooltip_AddNewbieTip = GameTooltip_AddNewbieTip;
+local hooksecurefunc = hooksecurefunc;
+
 --非战斗状态中允许shift+左键拖动玩家头像
 local function UnitFramesPlus_PlayerShiftDrag()
     PlayerFrame:SetScript("OnMouseDown", function(self, elapsed)
@@ -220,7 +241,7 @@ function UnitFramesPlus_PlayerHPValueDisplayUpdate()
     local PlayerExtHPText = "";
 
     if MaxHP > 0 then
-        PctText = math.floor(100*CurHP/MaxHP).."%";
+        PctText = floor(100*CurHP/MaxHP).."%";
     end
 
     if UnitFramesPlusDB["player"]["extrabar"] == 1 or UnitFramesPlusDB["player"]["hpmp"] == 1 then
@@ -294,9 +315,9 @@ function UnitFramesPlus_PlayerCoordinateDisplayUpdate()
         return;
     end
     local x, y = 0, 0
-    local MapID = C_Map.GetBestMapForUnit("player");
+    local MapID = GetBestMapForUnit("player");
     if MapID then
-        local MapPosObject = C_Map.GetPlayerMapPosition(MapID, "player");
+        local MapPosObject = GetPlayerMapPosition(MapID, "player");
         if MapPosObject then
             x, y = MapPosObject:GetXY()
         end
@@ -305,10 +326,10 @@ function UnitFramesPlus_PlayerCoordinateDisplayUpdate()
         PlayerHPMPPct.Pct:SetText(format("(%.0f, %.0f)", x*100, y*100));
     else
         if WorldMapFrame:IsShown() == false then
-            MapID = C_Map.GetBestMapForUnit("player");
+            MapID = GetBestMapForUnit("player");
             if MapID then
                 WorldMapFrame:SetMapID(MapID)
-                MapPosObject = C_Map.GetPlayerMapPosition(MapID, "player");
+                MapPosObject = GetPlayerMapPosition(MapID, "player");
                 if MapPosObject then 
                     x, y = MapPosObject:GetXY()
                 end
@@ -348,7 +369,7 @@ function UnitFramesPlus_PlayerMPValueDisplayUpdate()
 
     if powerType == 0 then
         if MaxMP > 0 then
-            PctText = math.floor(100*CurMP/MaxMP).."%";
+            PctText = floor(100*CurMP/MaxMP).."%";
         end
     else
         PctText = CurMP;
@@ -559,7 +580,7 @@ function UnitFramesPlus_PlayerPortraitDisplayUpdate()
             Player3DPortrait:SetLight(true, false, 0, 0, 0, 1.0, 1, 1, 1);
         end
     elseif UnitFramesPlusDB["player"]["portraittype"] == 2 then
-        local IconCoord = CLASS_ICON_TCOORDS[select(2,UnitClass("player"))];
+        local IconCoord = CLASS_ICON_TCOORDS[select(2, UnitClass("player"))];
         if IconCoord then
             PlayerClassPortrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles");
             PlayerClassPortrait:SetTexCoord(unpack(IconCoord));

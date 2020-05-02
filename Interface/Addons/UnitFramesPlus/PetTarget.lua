@@ -1,4 +1,21 @@
-﻿--宠物目标
+﻿--变量
+local select = select;
+local floor = math.floor;
+local UnitExists = UnitExists;
+local UnitClass = UnitClass;
+local UnitName = UnitName;
+local UnitHealth = UnitHealth;
+local UnitHealthMax = UnitHealthMax;
+local UnitPower = UnitPower;
+local UnitPowerMax = UnitPowerMax;
+local UnitPowerType = UnitPowerType;
+local SetPortraitTexture = SetPortraitTexture;
+local IsShiftKeyDown = IsShiftKeyDown;
+local InCombatLockdown = InCombatLockdown;
+local RegisterUnitWatch = RegisterUnitWatch;
+local hooksecurefunc = hooksecurefunc;
+
+--宠物目标
 local ToPetFrameBase = CreateFrame("Button", "UFP_ToPetFrameBase", PetFrame);
 ToPetFrameBase:SetFrameLevel(1);
 ToPetFrameBase:SetWidth(96);
@@ -92,7 +109,7 @@ function UnitFramesPlus_PetTarget()
                         ToPetFrame.HealthBar:SetValue(UnitHealth("pettarget") / UnitHealthMax("pettarget") * 100);
                         local ToPetPctText = "";
                         if UnitFramesPlusDB["pet"]["hppct"] == 1 then
-                            ToPetPctText = math.floor(UnitHealth("pettarget") / UnitHealthMax("pettarget") * 100).."%";
+                            ToPetPctText = floor(UnitHealth("pettarget") / UnitHealthMax("pettarget") * 100).."%";
                         end
                         ToPetFrame.HPPct:SetText(ToPetPctText);
                     else

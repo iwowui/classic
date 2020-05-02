@@ -48,7 +48,7 @@ function NWB:OnInitialize()
 	self:createDmfMarkers();
 	self:resetSongFlowers();
 	self:resetLayerData();
-	NWB:removeOldLayers();
+	self:removeOldLayers();
 end
 
 --Set font used in fontstrings on frames.
@@ -361,9 +361,15 @@ function NWB:createDataLayered(distribution)
 	if (UnitInBattleground("player") and distribution ~= "GUILD") then
 		return data;
 	end
-	data.layers = {};
+	--data.layers = {};
 	for layer, v in NWB:pairsByKeys(NWB.data.layers) do
 		if (NWB.data.layers[layer].rendTimer > (GetServerTime() - NWB.db.global.rendRespawnTime)) then
+			--Only create layers table if we have valid timers so we don't waste addon bandwidth with useless data.
+			--This was always done on non-layered realms but wasn't working right on layered realms, now it is.
+			--The data table is checked for empty when sending comms.
+			if (not data.layers) then
+				data.layers = {};
+			end
 			if (not data.layers[layer]) then
 				data.layers[layer] = {};
 			end
@@ -372,8 +378,14 @@ function NWB:createDataLayered(distribution)
 			data.layers[layer]['rendYell'] = NWB.data.layers[layer].rendYell;
 			data.layers[layer]['rendYell2'] = NWB.data.layers[layer].rendYell2;
 			data.layers[layer]['rendSource'] = NWB.data.layers[layer].rendSource;
+			if (NWB.data.layers[layer].GUID) then
+				data.layers[layer]['GUID'] = NWB.data.layers[layer].GUID;
+			end
 		end
 		if (NWB.data.layers[layer].onyTimer > (GetServerTime() - NWB.db.global.onyRespawnTime)) then
+			if (not data.layers) then
+				data.layers = {};
+			end
 			if (not data.layers[layer]) then
 				data.layers[layer] = {};
 			end
@@ -382,8 +394,14 @@ function NWB:createDataLayered(distribution)
 			data.layers[layer]['onyYell'] = NWB.data.layers[layer].onyYell;
 			data.layers[layer]['onyYell2'] = NWB.data.layers[layer].onyYell2;
 			data.layers[layer]['onySource'] = NWB.data.layers[layer].onySource;
+			if (NWB.data.layers[layer].GUID) then
+				data.layers[layer]['GUID'] = NWB.data.layers[layer].GUID;
+			end
 		end
 		if (NWB.data.layers[layer].nefTimer > (GetServerTime() - NWB.db.global.nefRespawnTime)) then
+			if (not data.layers) then
+				data.layers = {};
+			end
 			if (not data.layers[layer]) then
 				data.layers[layer] = {};
 			end
@@ -392,20 +410,35 @@ function NWB:createDataLayered(distribution)
 			data.layers[layer]['nefYell'] = NWB.data.layers[layer].nefYell;
 			data.layers[layer]['nefYell2'] = NWB.data.layers[layer].nefYell2;
 			data.layers[layer]['nefSource'] = NWB.data.layers[layer].nefSource;
+			if (NWB.data.layers[layer].GUID) then
+				data.layers[layer]['GUID'] = NWB.data.layers[layer].GUID;
+			end
 		end
 		if ((NWB.data.layers[layer].onyNpcDied > NWB.data.layers[layer].onyTimer) and
 				(NWB.data.layers[layer].onyNpcDied > (GetServerTime() - NWB.db.global.onyRespawnTime))) then
+			if (not data.layers) then
+				data.layers = {};
+			end
 			if (not data.layers[layer]) then
 				data.layers[layer] = {};
 			end
 			data.layers[layer]['onyNpcDied'] = NWB.data.layers[layer].onyNpcDied;
+			if (NWB.data.layers[layer].GUID) then
+				data.layers[layer]['GUID'] = NWB.data.layers[layer].GUID;
+			end
 		end
 		if ((NWB.data.layers[layer].nefNpcDied > NWB.data.layers[layer].nefTimer) and
 				(NWB.data.layers[layer].nefNpcDied > (GetServerTime() - NWB.db.global.nefRespawnTime))) then
+			if (not data.layers) then
+				data.layers = {};
+			end
 			if (not data.layers[layer]) then
 				data.layers[layer] = {};
 			end
 			data.layers[layer]['nefNpcDied'] = NWB.data.layers[layer].nefNpcDied;
+			if (NWB.data.layers[layer].GUID) then
+				data.layers[layer]['GUID'] = NWB.data.layers[layer].GUID;
+			end
 		end
 	end
 	for k, v in pairs(NWB.songFlowers) do
@@ -515,6 +548,7 @@ local validKeys = {
 	["dragon3"] = true,
 	["dragon4"] = true,
 	["faction"] = true,
+	["GUID"] = true,
 };
 
 --Add received data to our database.
@@ -535,45 +569,6 @@ function NWB:receivedData(data, sender, distribution)
 		NWB:debug(data);
 		return;
 	end
-	local ignoreList = {
-		--["dbm"] = true,
-	};
-	--Ignore data from out of date version users if we've disabled another addons sync.
-	--[[for k, v in pairs(ignoreList) do
-		if (data["rendSource"] and data["rendSource"] == k) then
-			NWB:debug("ignoring rend data from", sender, k);
-			data['rendTimer'] = nil;
-			data['rendTimerWho'] = nil;
-			data['rendYell'] = nil;
-			data['rendYell2'] = nil;
-			data['rendSource'] = nil;
-		end
-		if (data["onySource"] and data["onySource"] == k) then
-			NWB:debug("ignoring ony data from", sender, k);
-			data['onyTimer'] = nil;
-			data['onyTimerWho'] = nil;
-			data['onyYell'] = nil;
-			data['onyYell2'] = nil;
-			data['onySource'] = nil;
-		end
-		if (data["nefSource"] and data["nefSource"] == k) then
-			NWB:debug("ignoring nef data from", sender, k);
-			data['nefTimer'] = nil;
-			data['nefTimerWho'] = nil;
-			data['nefYell'] = nil;
-			data['nefYell2'] = nil;
-			data['nefSource'] = nil;
-		end
-		if (data["zanSource"] and data["zanSource"] == k) then
-			NWB:debug("ignoring zan data from", sender, k);
-			data['zanTimer'] = nil;
-			data['zanTimerWho'] = nil;
-			data['zanYell'] = nil;
-			data['zanYell2'] = nil;
-			data['zanSource'] = nil;
-		end
-	end]]
-	--NWB:debug(data);
 	if (data["rendTimer"] and (data["rendTimer"] < NWB.data["rendTimer"] or 
 		(data["rendYell"] < (data["rendTimer"] - 120) and data["rendYell2"] < (data["rendTimer"] - 120)))) then
 		--Don't overwrite any data for this timer type if it's an old timer.
@@ -608,78 +603,14 @@ function NWB:receivedData(data, sender, distribution)
 		data['nefYell2'] = nil;
 		data['nefSource'] = nil;
 	end
-	--[[if (data["zanTimer"] and (data["zanTimer"] < NWB.data["zanTimer"] or
-			(data["zanYell"] < (data["zanTimer"] - 120) and data["zanYell2"] < (data["zanTimer"] - 120)))) then
-		if (data["zanYell"] < (data["zanTimer"] - 120) and data["zanYell2"] < (data["zanTimer"] - 120)) then
-			NWB:debug("invalid zan timer from", sender, "npcyell:", data["zanYell"], "buffdropped:", data["zanTimer"]);
-		end
-		data['zanTimer'] = nil;
-		data['zanTimerWho'] = nil;
-		data['zanYell'] = nil;
-		data['zanYell2'] = nil;
-		data['zanSource'] = nil;
-	end]]
-	--Layering is lame.
-	--[[if (NWB.isLayered) then
-		--Don't overwrite any data if this is a realm with layers.
-		if (data["rendTimer"] and NWB.data.rendTimer > (GetServerTime() - NWB.db.global.rendRespawnTime)) then
-			--NWB:debug("ignoring rend timer overwrite", "old:", NWB.data.rendTimer, "new:", data["rendTimer"]);
-			data['rendTimer'] = nil;
-			data['rendTimerWho'] = nil;
-			data['rendYell'] = nil;
-			data['rendYell2'] = nil;
-			data['rendSource'] = nil;
-		end
-		if (data["onyTimer"] and NWB.data.onyTimer > (GetServerTime() - NWB.db.global.onyRespawnTime)) then
-			--NWB:debug("ignoring ony timer overwrite", "old:", NWB.data.onyTimer, "new:", data["onyTimer"]);
-			data['onyTimer'] = nil;
-			data['onyTimerWho'] = nil;
-			data['onyYell'] = nil;
-			data['onyYell2'] = nil;
-			data['onySource'] = nil;
-		end
-		if (data["nefTimer"] and NWB.data.nefTimer > (GetServerTime() - NWB.db.global.nefRespawnTime)) then
-			--NWB:debug("ignoring nef timer overwrite", "old:", NWB.data.nefTimer, "new:", data["nefTimer"]);
-			data['nefTimer'] = nil;
-			data['nefTimerWho'] = nil;
-			data['nefYell'] = nil;
-			data['nefYell2'] = nil;
-			data['nefSource'] = nil;
-		end
-		if (data["zanTimer"] and NWB.data.zanTimer > (GetServerTime() - NWB.db.global.nefRespawnTime)) then
-			data['zanTimer'] = nil;
-			data['zanTimerWho'] = nil;
-			data['zanYell'] = nil;
-			data['zanYell2'] = nil;
-			data['zanSource'] = nil;
-		end
-		for k, v in pairs(data) do
-			if (string.match(k, "flower") or string.match(k, "tuber") or string.match(k, "dragon")) then
-				if (tonumber(v) and NWB.data[k] > (GetServerTime() - 1500)) then
-					--NWB:debug("ignoring flower timer overwrite", k, "old:", NWB.data[k], "new:", v);
-					data[k] = 0;
-				end
-			end
-		end
-	end]]
 	local hasNewData, newFlowerData;
 	--Insert our layered data here.
 	if (NWB.isLayered and data.layers) then
 		--There's a lot of ugly shit in this function trying to quick fix timer bugs for this layered stuff...
 		for layer, vv in NWB:pairsByKeys(data.layers) do
 			if (type(vv) == "table" and next(vv)) then
-				--Temp fix till I work out why sometimes the NPC zoneid is different by a few integers, it's strange....
-				--In testing the zoneid's had the same last and first number, but middle numbers sometimes changed depending on person.
-				--107 and 127 from same NPC by different people, --9914 and 9924 from same NPC by different people.
-				--Ignore new data if it's within close numeric range of an ID we already have.
-				--No 2 valid layers should ever have close together id's?
-				local halt;
 				for localLayer, localV in pairs(NWB.data.layers) do
-					if ((layer > (localLayer - 30)) and (layer < (localLayer + 30)) and localLayer ~= layer) then
-						--NWB:debug("close range layer found old:", localLayer, "new:", layer);
-						halt = true;
-					end
-					--Quick fix for timestamps soometimes syncing between layers.
+					--Quick fix for timestamps sometimes syncing between layers.
 					--I think this may happen when someone is mid layer changing when the boss drops.
 					--They get the buff in new layer but get old layers NPC GUID? Has to be tested.
 					if (vv["rendTimer"] and localV["rendTimer"] and vv["rendTimer"] == localV["rendTimer"]
@@ -716,81 +647,90 @@ function NWB:receivedData(data, sender, distribution)
 				for k, v in pairs(NWB.data.layers) do
 					count = count + 1;
 				end
-				if (not halt and count <= NWB.limitLayerCount) then
+				if (NWB:validateLayer(layer) and count <= NWB.limitLayerCount) then
 					if (not NWB.data.layers[layer]) then
-						NWB:createNewLayer(layer);
+						if (vv['GUID']) then
+							NWB:createNewLayer(layer, vv['GUID']);
+						else
+							NWB:createNewLayer(layer, "other");
+						end
 						--NWB:debug(data.layers);
 					end
-					NWB:validateLayer(layer);
-					--NWB:debug(data);
-					if (vv["rendTimer"] and (vv["rendTimer"] < (GetServerTime() - NWB.db.global.rendRespawnTime) or
-						(vv["rendYell"] < (vv["rendTimer"] - 120) and vv["rendYell2"] < (vv["rendTimer"] - 120)))) then
-						--Don't overwrite any data for this timer type if it's an old timer.
-						if (vv["rendYell"] < (vv["rendTimer"] - 120) and vv["rendYell2"] < (vv["rendTimer"] - 120)) then
-							NWB:debug("invalid rend timer from", sender, "npcyell:", vv["rendYell"], "buffdropped:", vv["rendTimer"]);
+					if (NWB.data.layers[layer]) then
+						NWB:fixLayer(layer);
+						--NWB:debug(data);
+						if (vv["rendTimer"] and (vv["rendTimer"] < (GetServerTime() - NWB.db.global.rendRespawnTime)
+								or not vv["rendYell"] or not vv["rendYell2"]
+								or (vv["rendYell"] < (vv["rendTimer"] - 120) and vv["rendYell2"] < (vv["rendTimer"] - 120)))) then
+							--Don't overwrite any data for this timer type if it's an old timer.
+							--if (vv["rendYell"] < (vv["rendTimer"] - 120) and vv["rendYell2"] < (vv["rendTimer"] - 120)) then
+								NWB:debug("invalid rend timer from", sender, "npcyell:", vv["rendYell"], "npcyell2:", vv["rendYell2"], "buffdropped:", vv["rendTimer"]);
+							--end
+							vv['rendTimer'] = nil;
+							vv['rendTimerWho'] = nil;
+							vv['rendYell'] = nil;
+							vv['rendYell2'] = nil;
+							vv['rendSource'] = nil;
 						end
-						vv['rendTimer'] = nil;
-						vv['rendTimerWho'] = nil;
-						vv['rendYell'] = nil;
-						vv['rendYell2'] = nil;
-						vv['rendSource'] = nil;
-					end
-					if (vv["onyTimer"] and (vv["onyTimer"] < (GetServerTime() - NWB.db.global.onyRespawnTime) or
-							(vv["onyYell"] < (vv["onyTimer"] - 120) and vv["onyYell2"] < (vv["onyTimer"] - 120)))) then
-						if (vv["onyYell"] < (vv["onyTimer"] - 120) and vv["onyYell2"] < (vv["onyTimer"] - 120)) then
-							NWB:debug("invalid ony timer from", sender, "npcyell:", vv["onyYell"], "buffdropped:", vv["onyTimer"]);
+						if (vv["onyTimer"] and (vv["onyTimer"] < (GetServerTime() - NWB.db.global.onyRespawnTime)
+								or not vv["onyYell"] or not vv["onyYell2"]
+								or (vv["onyYell"] < (vv["onyTimer"] - 120) and vv["onyYell2"] < (vv["onyTimer"] - 120)))) then
+							--if (vv["onyYell"] < (vv["onyTimer"] - 120) and vv["onyYell2"] < (vv["onyTimer"] - 120)) then
+								NWB:debug("invalid ony timer from", sender, "npcyell:", vv["onyYell"], "npcyell2:", vv["onyYell2"], "buffdropped:", vv["onyTimer"]);
+							--end
+							vv['onyTimer'] = nil;
+							vv['onyTimerWho'] = nil;
+							vv['onyYell'] = nil;
+							vv['onyYell2'] = nil;
+							vv['onySource'] = nil;
+							vv['onyNpcDied'] = nil;
 						end
-						vv['onyTimer'] = nil;
-						vv['onyTimerWho'] = nil;
-						vv['onyYell'] = nil;
-						vv['onyYell2'] = nil;
-						vv['onySource'] = nil;
-						vv['onyNpcDied'] = nil;
-					end
-					if (vv["nefTimer"] and (vv["nefTimer"] < (GetServerTime() - NWB.db.global.nefRespawnTime) or
-							(vv["nefYell"] < (vv["nefTimer"] - 120) and vv["nefYell2"] < (vv["nefTimer"] - 120)))) then
-						if (vv["nefYell"] < (vv["nefTimer"] - 120) and vv["nefYell2"] < (vv["nefTimer"] - 120)) then
-							NWB:debug("invalid nef timer from", sender, "npcyell:", vv["nefYell"], "buffdropped:", vv["nefTimer"]);
+						if (vv["nefTimer"] and (vv["nefTimer"] < (GetServerTime() - NWB.db.global.nefRespawnTime)
+								or not vv["nefYell"] or not vv["nefYell2"]
+								or (vv["nefYell"] < (vv["nefTimer"] - 120) and vv["nefYell2"] < (vv["nefTimer"] - 120)))) then
+							--if (vv["nefYell"] < (vv["nefTimer"] - 120) and vv["nefYell2"] < (vv["nefTimer"] - 120)) then
+								NWB:debug("invalid nef timer from", sender, "npcyell:", vv["nefYell"], "npcyell2:", vv["nefYell2"], "buffdropped:", vv["nefTimer"]);
+							--end
+							vv['nefTimer'] = nil;
+							vv['nefTimerWho'] = nil;
+							vv['nefYell'] = nil;
+							vv['nefYell2'] = nil;
+							vv['nefSource'] = nil;
+							vv['nefNpcDied'] = nil;
 						end
-						vv['nefTimer'] = nil;
-						vv['nefTimerWho'] = nil;
-						vv['nefYell'] = nil;
-						vv['nefYell2'] = nil;
-						vv['nefSource'] = nil;
-						vv['nefNpcDied'] = nil;
-					end
-					for k, v in pairs(vv) do
-						if ((string.match(k, "flower") and NWB.db.global.syncFlowersAll)
-								or (not NWB.db.global.receiveGuildDataOnly)
-								or (NWB.db.global.receiveGuildDataOnly and distribution == "GUILD")) then
-							if (validKeys[k] and tonumber(v)) then
-								--If data is numeric (a timestamp) then check it's newer than our current timer.
-								if (v ~= nil) then
-									if (not NWB.data.layers[layer][k] or not tonumber(NWB.data.layers[layer][k])) then
-										--Rare bug someone has corrupt data (not sure how and it's never happened to me, but been reported).
-										--This will correct it by resetting thier timestamp to 0.
-										NWB:debug("Local data error:", k, NWB.data[k])
-										NWB.data.layers[layer][k] = 0;
-									end
-									--Make sure the key exists, stop a lua error in old versions if we add a new timer type.
-									if (NWB.data.layers[layer][k] and v ~= 0 and v > NWB.data.layers[layer][k] and NWB:validateTimestamp(v)) then
-										--NWB:debug("new data", sender, distribution, k, v, "old:", NWB.data.layers[layer][k]);
-										if (string.match(k, "flower") and not (distribution == "GUILD" and (GetServerTime() - NWB.data.layers[layer][k]) > 15)) then
-											newFlowerData = true;
+						for k, v in pairs(vv) do
+							if ((string.match(k, "flower") and NWB.db.global.syncFlowersAll)
+									or (not NWB.db.global.receiveGuildDataOnly)
+									or (NWB.db.global.receiveGuildDataOnly and distribution == "GUILD")) then
+								if (validKeys[k] and tonumber(v)) then
+									--If data is numeric (a timestamp) then check it's newer than our current timer.
+									if (v ~= nil) then
+										if (not NWB.data.layers[layer][k] or not tonumber(NWB.data.layers[layer][k])) then
+											--Rare bug someone has corrupt data (not sure how and it's never happened to me, but been reported).
+											--This will correct it by resetting thier timestamp to 0.
+											NWB:debug("Local data error:", k, NWB.data[k])
+											NWB.data.layers[layer][k] = 0;
 										end
-										NWB.data.layers[layer][k] = v;
-										hasNewData = true;
+										--Make sure the key exists, stop a lua error in old versions if we add a new timer type.
+										if (NWB.data.layers[layer][k] and v ~= 0 and v > NWB.data.layers[layer][k] and NWB:validateTimestamp(v)) then
+											--NWB:debug("new data", sender, distribution, k, v, "old:", NWB.data.layers[layer][k]);
+											if (string.match(k, "flower") and not (distribution == "GUILD" and (GetServerTime() - NWB.data.layers[layer][k]) > 15)) then
+												newFlowerData = true;
+											end
+											NWB.data.layers[layer][k] = v;
+											hasNewData = true;
+										end
 									end
-								end
-							elseif (v ~= nil and k ~= "layers") then
-								if (not validKeys[k]) then
-									NWB:debug("Invalid key received:", k, v);
-								end
-								--if (not validKeys[k] and not next(v)) then
-								if (not validKeys[k] and type(v) ~= "table") then
-									NWB:debug("Invalid key received2:", k, v);
-								else
-									NWB.data.layers[layer][k] = v;
+								elseif (v ~= nil and k ~= "layers") then
+									if (not validKeys[k]) then
+										NWB:debug("Invalid key received:", k, v);
+									end
+									--if (not validKeys[k] and not next(v)) then
+									if (not validKeys[k] and type(v) ~= "table") then
+										NWB:debug("Invalid key received2:", k, v);
+									else
+										NWB.data.layers[layer][k] = v;
+									end
 								end
 							end
 						end
@@ -1603,6 +1543,7 @@ function NWB:monsterYell(...)
 			skipStringCheck = true;
 		end
 	end
+	NWB:debugKR(0);
 	local msg, name = ...;
 	if ((name == L["Thrall"] or (name == L["Herald of Thrall"] and (not NWB.isLayered or NWB.faction == "Alliance")))
 			and (string.match(msg, L["Rend Blackhand, has fallen"]) or skipStringCheck)) then
@@ -1613,9 +1554,11 @@ function NWB:monsterYell(...)
 		NWB:sendYell("GUILD", "rend");
 		if  (name == L["Herald of Thrall"] and not NWB.isLayered) then
 			--If it was herald we may we in the barrens but not in crossraods to receive buff, set buff timer.
-			C_Timer.After(5, function()
-				NWB:setRendBuff("self", UnitName("player"));
-			end)
+			if (not NWB.isLayered) then
+				C_Timer.After(5, function()
+					NWB:setRendBuff("self", UnitName("player"));
+				end)
+			end
 		end
 		NWB:debugKR(1);
 	elseif ((name == L["Thrall"] or (name == L["Herald of Thrall"] and (not NWB.isLayered or NWB.faction == "Alliance")))
@@ -1880,26 +1823,28 @@ function NWB:combatLogEventUnfiltered(...)
 			NWB:sendData("YELL"); --Yell is further than npc view range.
 		end
 	elseif (subEvent == "SPELL_AURA_APPLIED" or subEvent == "SPELL_AURA_REFRESH") then
-		local _, _, _, _, zoneID, npcID = strsplit("-", sourceGUID);
+		local unitType, _, _, _, zoneID, npcID = strsplit("-", sourceGUID);
 		zoneID = tonumber(zoneID);
 		if (destName == UnitName("player") and spellName == L["Warchief's Blessing"]) then
 			local expirationTime = NWB:getBuffDuration(L["Warchief's Blessing"], 1);
 			local _, _, zone = NWB.dragonLib:GetPlayerZonePosition();
 			--If layered then you must be in org to set the right layer id, the barrens is disabled.
-			if (expirationTime >= 3599.5 and (zone == 1454 or not NWB.isLayered)) then
-				NWB:setRendBuff("self", UnitName("player"), zoneID);
+			if (expirationTime >= 3599.5 and (zone == 1454 or not NWB.isLayered) and unitType == "Creature") then
+				NWB:setRendBuff("self", UnitName("player"), zoneID, sourceGUID);
 			end
 			NWB:trackNewBuff(spellName, "rend");
-		elseif (destName == UnitName("player") and spellName == L["Spirit of Zandalar"] and (GetServerTime() - lastZanBuffGained) > 0) then
+		elseif (destName == UnitName("player") and spellName == L["Spirit of Zandalar"] and (GetServerTime() - lastZanBuffGained) > 0
+				and unitType == "Creature") then
 			local expirationTime = NWB:getBuffDuration(L["Spirit of Zandalar"], 1);
 			if (expirationTime >= 7199.5) then
-				NWB:setZanBuff("self", UnitName("player"), zoneID);
+				NWB:setZanBuff("self", UnitName("player"), zoneID, sourceGUID);
 				NWB:trackNewBuff(spellName, "zan");
 				--Not sure why this triggers 4 times on PTR, needs more testing once it's on live server but for now we do a 1 second cooldown.
 				lastZanBuffGained = GetServerTime();
 			end
 		elseif ((npcID == "14720" or npcID == "14721") and destName == UnitName("player") and spellName == L["Rallying Cry of the Dragonslayer"]
-				and ((GetServerTime() - NWB.data.nefYell2) < 60 or (GetServerTime() - NWB.data.nefYell) < 60)) then
+				and ((GetServerTime() - NWB.data.nefYell2) < 60 or (GetServerTime() - NWB.data.nefYell) < 60)
+				and unitType == "Creature") then
 			--To tell the difference between nef and ony we check if there a nef npc yell recently, if not then fall back to ony.
 			--1 minute is the buff window after 2nd yell to allow for mass lag.
 			--Doubt any server would drop both heads within 1min of each other.
@@ -1907,17 +1852,18 @@ function NWB:combatLogEventUnfiltered(...)
 			local _, _, zone = NWB.dragonLib:GetPlayerZonePosition();
 			if (expirationTime >= 7199.5) then
 				if ((zone == 1453 or zone == 1454) or not NWB.isLayered) then
-					NWB:setNefBuff("self", UnitName("player"), zoneID);
+					NWB:setNefBuff("self", UnitName("player"), zoneID, sourceGUID);
 				end
 			end
 		elseif ((npcID == "14392" or npcID == "14394")and destName == UnitName("player") and spellName == L["Rallying Cry of the Dragonslayer"]
 				and ((GetServerTime() - NWB.data.onyYell2) < 60 or (GetServerTime() - NWB.data.onyYell) < 60)
-				and ((GetServerTime() - NWB.data.nefYell2) > 60)) then
+				and ((GetServerTime() - NWB.data.nefYell2) > 60)
+				and unitType == "Creature") then
 			local expirationTime = NWB:getBuffDuration(L["Rallying Cry of the Dragonslayer"], 2);
 			local _, _, zone = NWB.dragonLib:GetPlayerZonePosition();
 			if (expirationTime >= 7199.5) then
 				if ((zone == 1453 or zone == 1454) or not NWB.isLayered) then
-					NWB:setOnyBuff("self", UnitName("player"), zoneID);
+					NWB:setOnyBuff("self", UnitName("player"), zoneID, sourceGUID);
 				end
 			end
 		elseif (destName == UnitName("player") and (spellName == L["Sayge's Dark Fortune of Agility"]
@@ -2019,7 +1965,7 @@ function NWB:combatLogEventUnfiltered(...)
 end
 
 local rendLastSet, onyLastSet, nefLastSet, zanLastSet = 0, 0, 0, 0;
-function NWB:setRendBuff(source, sender, zoneID)
+function NWB:setRendBuff(source, sender, zoneID, GUID)
 	--Check if this addon has already set a timer a few seconds before another addon's comm.
 	if (source ~= "self" and (GetServerTime() - NWB.data.rendTimer) < 10) then
 		return;
@@ -2037,14 +1983,16 @@ function NWB:setRendBuff(source, sender, zoneID)
 		end
 		if (count <= NWB.limitLayerCount) then
 			if (not NWB.data.layers[zoneID]) then
-				NWB:createNewLayer(zoneID);
+				NWB:createNewLayer(zoneID, GUID);
 			end
-			NWB:debugKR("rend6");
-			NWB.data.layers[zoneID].rendTimer = GetServerTime();
-			NWB.data.layers[zoneID].rendTimerWho = sender;
-			NWB.data.layers[zoneID].rendSource = source;
-			NWB.data.layers[zoneID].rendYell = NWB.data.rendYell;
-			NWB.data.layers[zoneID].rendYell2 = NWB.data.rendYell2;
+			if (NWB.data.layers[zoneID]) then
+				NWB:debugKR("rend6");
+				NWB.data.layers[zoneID].rendTimer = GetServerTime();
+				NWB.data.layers[zoneID].rendTimerWho = sender;
+				NWB.data.layers[zoneID].rendSource = source;
+				NWB.data.layers[zoneID].rendYell = NWB.data.rendYell;
+				NWB.data.layers[zoneID].rendYell2 = NWB.data.rendYell2;
+			end
 		end
 	end
 	--Keep recording older non layered data for now.
@@ -2082,7 +2030,7 @@ function NWB:setRendBuff(source, sender, zoneID)
 	NWB:debug("zoneid drop", zoneID, count);
 end
 
-function NWB:setZanBuff(source, sender, zoneID)
+function NWB:setZanBuff(source, sender, zoneID, GUID)
 	--Disabled, there is no cooldown, will remove all the zand timer code at a later point.
 	--[[if (not NWB.zand) then
 		return;
@@ -2114,7 +2062,7 @@ function NWB:setZanBuff(source, sender, zoneID)
 	NWB:debug("zoneid drop", zoneID);
 end
 
-function NWB:setOnyBuff(source, sender, zoneID)
+function NWB:setOnyBuff(source, sender, zoneID, GUID)
 	--Ony and nef share a last set cooldown to prevent any bugs with both being set at once.
 	if ((GetServerTime() - nefLastSet) < 20) then
 		return;
@@ -2135,15 +2083,17 @@ function NWB:setOnyBuff(source, sender, zoneID)
 		end
 		if (count <= NWB.limitLayerCount) then
 			if (not NWB.data.layers[zoneID]) then
-				NWB:createNewLayer(zoneID);
+				NWB:createNewLayer(zoneID, GUID);
 			end
-			NWB:debugKR("ony6");
-			NWB.data.layers[zoneID].onyTimer = GetServerTime();
-			NWB.data.layers[zoneID].onyTimerWho = sender;
-			NWB.data.layers[zoneID].onyNpcDied = 0;
-			NWB.data.layers[zoneID].onySource = source;
-			NWB.data.layers[zoneID].onyYell = NWB.data.onyYell;
-			NWB.data.layers[zoneID].onyYell2 = NWB.data.onyYell2;
+			if (NWB.data.layers[zoneID]) then
+				NWB:debugKR("ony6");
+				NWB.data.layers[zoneID].onyTimer = GetServerTime();
+				NWB.data.layers[zoneID].onyTimerWho = sender;
+				NWB.data.layers[zoneID].onyNpcDied = 0;
+				NWB.data.layers[zoneID].onySource = source;
+				NWB.data.layers[zoneID].onyYell = NWB.data.onyYell;
+				NWB.data.layers[zoneID].onyYell2 = NWB.data.onyYell2;
+			end
 		end
 	end
 	NWB.data.onyTimer = GetServerTime();
@@ -2180,7 +2130,7 @@ function NWB:setOnyBuff(source, sender, zoneID)
 	NWB:debug("zoneid drop", zoneID, count);
 end
 
-function NWB:setNefBuff(source, sender, zoneID)
+function NWB:setNefBuff(source, sender, zoneID, GUID)
 	--Ony and nef share a last set cooldown to prevent any bugs with both being set at once.
 	if ((GetServerTime() - onyLastSet) < 20) then
 		return;
@@ -2202,14 +2152,16 @@ function NWB:setNefBuff(source, sender, zoneID)
 		NWB:debugKR("nef6");
 		if (count <= NWB.limitLayerCount) then
 			if (not NWB.data.layers[zoneID]) then
-				NWB:createNewLayer(zoneID);
+				NWB:createNewLayer(zoneID, GUID);
 			end
-			NWB.data.layers[zoneID].nefTimer = GetServerTime();
-			NWB.data.layers[zoneID].nefTimerWho = sender;
-			NWB.data.layers[zoneID].nefNpcDied = 0;
-			NWB.data.layers[zoneID].nefSource = source;
-			NWB.data.layers[zoneID].nefYell = NWB.data.nefYell;
-			NWB.data.layers[zoneID].nefYell2 = NWB.data.nefYell2;
+			if (NWB.data.layers[zoneID]) then
+				NWB.data.layers[zoneID].nefTimer = GetServerTime();
+				NWB.data.layers[zoneID].nefTimerWho = sender;
+				NWB.data.layers[zoneID].nefNpcDied = 0;
+				NWB.data.layers[zoneID].nefSource = source;
+				NWB.data.layers[zoneID].nefYell = NWB.data.nefYell;
+				NWB.data.layers[zoneID].nefYell2 = NWB.data.nefYell2;
+			end
 		end
 	end
 	NWB.data.nefTimer = GetServerTime();
@@ -2525,39 +2477,46 @@ function NWB:timerCleanup()
 				--	NWB:resetWarningTimers("zan", layer);
 				end
 				--Clear warning timers that ended while we were offline or if NPC was killed since last buff.
-				if (NWB.data.layers[layer][v .. "NpcDied"] and NWB.data.layers[layer][v .. "NpcDied"] > (GetServerTime() - NWB.db.global[v .. "RespawnTime"])) then
+				if (NWB.data.layers[layer][v .. "NpcDied"]
+						and NWB.data.layers[layer][v .. "NpcDied"] > (GetServerTime() - NWB.db.global[v .. "RespawnTime"])) then
 					NWB.data.layers[layer][v .. "30"] = nil;
 					NWB.data.layers[layer][v .. "15"] = nil;
 					NWB.data.layers[layer][v .. "10"] = nil;
 					NWB.data.layers[layer][v .. "5"] = nil;
 					NWB.data.layers[layer][v .. "1"] = nil;
 					NWB.data.layers[layer][v .. "0"] = nil;
-				elseif (((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 0) then
+				elseif (NWB.data.layers[layer][v .. "Timer"]
+						and ((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 0) then
 					NWB.data.layers[layer][v .. "30"] = nil;
 					NWB.data.layers[layer][v .. "15"] = nil;
 					NWB.data.layers[layer][v .. "10"] = nil;
 					NWB.data.layers[layer][v .. "5"] = nil;
 					NWB.data.layers[layer][v .. "1"] = nil;
 					NWB.data.layers[layer][v .. "0"] = nil;
-				elseif (((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 60) then
+				elseif (NWB.data.layers[layer][v .. "Timer"]
+						and ((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 60) then
 					NWB.data.layers[layer][v .. "30"] = nil;
 					NWB.data.layers[layer][v .. "15"] = nil;
 					NWB.data.layers[layer][v .. "10"] = nil;
 					NWB.data.layers[layer][v .. "5"] = nil;
 					NWB.data.layers[layer][v .. "1"] = nil;
-				elseif (((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 300) then
+				elseif (NWB.data.layers[layer][v .. "Timer"]
+						and ((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 300) then
 					NWB.data.layers[layer][v .. "30"] = nil;
 					NWB.data.layers[layer][v .. "15"] = nil;
 					NWB.data.layers[layer][v .. "10"] = nil;
 					NWB.data.layers[layer][v .. "5"] = nil;
-				elseif (((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 600) then
+				elseif (NWB.data.layers[layer][v .. "Timer"]
+						and ((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 600) then
 					NWB.data.layers[layer][v .. "30"] = nil;
 					NWB.data.layers[layer][v .. "15"] = nil;
 					NWB.data.layers[layer][v .. "10"] = nil;
-				elseif (((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 900) then
+				elseif (NWB.data.layers[layer][v .. "Timer"]
+						and ((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 900) then
 					NWB.data.layers[layer][v .. "30"] = nil;
 					NWB.data.layers[layer][v .. "15"] = nil;
-				elseif (((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 1800) then
+				elseif (NWB.data.layers[layer][v .. "Timer"]
+						and ((NWB.data.layers[layer][v .. "Timer"] + offset) - GetServerTime()) < 1800) then
 					NWB.data.layers[layer][v .. "30"] = nil;
 				end
 			end
@@ -2663,6 +2622,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 			--Not sure of the reason yet but it could be logging on at exact same time or something? This could fix that.
 			NWB:requestSettings("GUILD");
 			NWB:syncBuffsWithCurrentDuration();
+		end)
+		C_Timer.After(60, function()
+			--Can't work out why sometimes 2 users send same msg in guild chat, someitmes they don't register other as having the addon.
+			--Another temp bug fix just to see if it's an issue with the serialized table data being sent..
+			NWB:sendComm("GUILD", "ping");
 		end)
 	elseif (event == "PLAYER_ENTERING_WORLD") then
 		if (doLogon) then
@@ -2899,9 +2863,11 @@ end
 
 local lastFlash = 0;
 function NWB:startFlash()
-	if (lastFlash < (GetServerTime() - 4)) then
-		FlashClientIcon();
-		lastFlash = GetServerTime();
+	if (NWB.db.global.flashMinimized) then
+		if (lastFlash < (GetServerTime() - 4)) then
+			FlashClientIcon();
+			lastFlash = GetServerTime();
+		end
 	end
 end
 
@@ -4366,10 +4332,15 @@ function NWB:refreshWorldbuffMarkers()
 						NWB.dragonLibPins:RemoveWorldMapIcon(k .. "NWBWorldMap", _G[k .. "NWBWorldMap"]);
 					end
 				end
-				if (NWB.faction == "Alliance" and k == "nef" and count == 1 and NWB.db.global.allianceEnableRend) then
+				if (NWB.faction == "Alliance" and k == "nef" and count == 1 and NWB.db.global.allianceEnableRend
+						--These need more adjusting, if layer 1 timers run out I think the new layer 1 won't have the noLayerFrame attached.
+						--Maybe I'll remove the count check when creating nef frames and just attach one to all layers nef frame.
+						--Anyway it's a kinda rare case issue when the first layer has no timers for over 6 hours.
+						and _G[k .. layer .. "NWBWorldMap"].noLayerFrame) then
 					_G[k .. layer .. "NWBWorldMap"].noLayerFrame:SetPoint("CENTER", _G[k .. layer .. "NWBWorldMap"], "CENTER",  -245, 20);
 					_G[k .. layer .. "NWBWorldMap"].fs2:SetPoint("CENTER", -245, 15);
-				elseif (NWB.faction == "Alliance" and k == "nef" and count == 1) then
+				elseif (NWB.faction == "Alliance" and k == "nef" and count == 1
+						and _G[k .. layer .. "NWBWorldMap"].noLayerFrame) then
 					_G[k .. layer .. "NWBWorldMap"].noLayerFrame:SetPoint("CENTER", _G[k .. layer .. "NWBWorldMap"], "CENTER",  -195, 20);
 					_G[k .. layer .. "NWBWorldMap"].fs2:SetPoint("CENTER", -195, 20);
 				end
@@ -5188,7 +5159,6 @@ NWBlayerFrame.fs3:SetFont(NWB.regionFont, 14);
 NWBlayerFrame.fs3:SetText("|cFFDEDE42Layers may be inaccurate for a few hours after server restarts.\n"
 		.. "Layers will disappear from here 6 hours after having no timers.");
 
-
 local NWBlayerDragFrame = CreateFrame("Frame", "NWBlayerDragFrame", NWBlayerFrame);
 NWBlayerDragFrame:SetToplevel(true);
 NWBlayerDragFrame:EnableMouse(true);
@@ -5343,26 +5313,44 @@ function NWB:openLayerFrame()
 	end
 end
 
-function NWB:createNewLayer(zoneID)
-	NWB.data.layers[zoneID] = {
-		rendTimer = 0,
-		rendYell = 0,
-		rendYell2 = 0,
-		onyTimer = 0,
-		onyYell = 0,
-		onyYell2 = 0,
-		onyNpcDied = 0,
-		nefTimer = 0,
-		nefYell = 0,
-		nefYell2 = 0,
-		nefNpcDied = 0,
-		created = GetServerTime(),
-		--zanTimer = 0,
-		--zanYell = 0,
-		--zanYell2 = 0,
-	};
-	NWB:debug("created new layer", zoneID);
-	NWB:createWorldbuffMarkers();
+function NWB:createNewLayer(zoneID, GUID)
+	if (GUID and GUID ~= "other" and GUID ~= "none") then
+		--Creating layers anywhere but from other users data requires npc validation here.
+		local unitType, _, _, _, zoneID, npcID = strsplit("-", GUID);
+		if (NWB.faction == "Horde") then
+			if (not NWB.orgrimmarCreatures[tonumber(npcID)] or unitType ~= "Creature") then
+				NWB:debug("bad layer detected", unitType, zoneID, npcID);
+				return;
+			end
+		elseif (NWB.faction == "Alliance") then
+			if (not NWB.stormwindCreatures[tonumber(npcID)] or unitType ~= "Creature") then
+				NWB:debug("bad layer detected", unitType, zoneID, npcID);
+				return;
+			end
+		end
+	end
+	if (NWB:validateLayer(zoneID)) then
+		NWB.data.layers[zoneID] = {
+			rendTimer = 0,
+			rendYell = 0,
+			rendYell2 = 0,
+			onyTimer = 0,
+			onyYell = 0,
+			onyYell2 = 0,
+			onyNpcDied = 0,
+			nefTimer = 0,
+			nefYell = 0,
+			nefYell2 = 0,
+			nefNpcDied = 0,
+			created = GetServerTime(),
+			GUID = GUID or "none",
+			--zanTimer = 0,
+			--zanYell = 0,
+			--zanYell2 = 0,
+		};
+		NWB:debug("created new layer", zoneID);
+		NWB:createWorldbuffMarkers();
+	end
 end
 
 function NWB:removeOldLayers()
@@ -5403,9 +5391,6 @@ function NWB:removeOldLayers()
 end
 
 function NWB:recalclayerFrame()
-	--if (NWB.isDebug and not next(NWB.data.layers)) then
-		--NWB.data.layers = NWB.testLayers;
-	--end
 	--local scroll = NWBlayerFrame:GetVerticalScroll();
 	NWBlayerFrame.EditBox:SetText("\n\n");
 	local count = 0;
@@ -5415,11 +5400,7 @@ function NWB:recalclayerFrame()
 	for k, v in NWB:pairsByKeys(NWB.data.layers) do
 		foundTimers = true;
 		count = count + 1;
-		--if (NWB.isDebug) then
-		--	NWBlayerFrame.EditBox:Insert("\n|cff00ff00[Layer " .. count .. "]|r (zone id: " .. k .. ")\n");
-		--else
-			NWBlayerFrame.EditBox:Insert("\n|cff00ff00[Layer " .. count .. "]|r  |cFF989898(zone " .. k .. ")|r\n");
-		--end
+		NWBlayerFrame.EditBox:Insert("\n|cff00ff00[Layer " .. count .. "]|r  |cFF989898(zone " .. k .. ")|r\n");
 		local msg = "";
 		if (NWB.faction == "Horde" or NWB.db.global.allianceEnableRend) then
 			if (v.rendTimer > (GetServerTime() - NWB.db.global.rendRespawnTime)) then
@@ -5507,9 +5488,9 @@ function NWB:setCurrentLayerText(unit)
 	end
 	local _, _, zone = NWB.dragonLib:GetPlayerZonePosition();
 	local GUID = UnitGUID(unit);
-	local zoneID, npcID;
+	local unitType, zoneID, npcID;
 	if (GUID) then
-		_, _, _, _, zoneID, npcID = strsplit("-", GUID);
+		unitType, _, _, _, zoneID, npcID = strsplit("-", GUID);
 	end
 	if (not zoneID) then
 		--NWBlayerFrame.fs2:SetText("|cFF9CD6DETarget any NPC in Orgrimmar to see your current layer.|r");
@@ -5521,6 +5502,10 @@ function NWB:setCurrentLayerText(unit)
 		return;
 	end
 	if (NWB.faction == "Alliance" and (zone ~= 1453 or not npcID)) then
+		NWBlayerFrame.fs2:SetText("|cFF9CD6DETarget any NPC in Stormwind to see your current layer.|r");
+		return;
+	end
+	if (unitType ~= "Creature") then
 		NWBlayerFrame.fs2:SetText("|cFF9CD6DETarget any NPC in Stormwind to see your current layer.|r");
 		return;
 	end
@@ -5537,9 +5522,9 @@ function NWB:setCurrentLayerText(unit)
 			return;
 		end
 	end
-	if (((NWB.faction == "Alliance" and zone ~= 1453) or (NWB.faction == "Horde" and zone ~= 1454))
+	if (((NWB.faction == "Alliance" and zone == 1453) or (NWB.faction == "Horde" and zone == 1454))
 			and tonumber(zoneID) and not NWB.data.layers[tonumber(zoneID)]) then
-		NWB:createNewLayer(tonumber(zoneID));
+		NWB:createNewLayer(tonumber(zoneID), GUID);
 	end
 	NWBlayerFrame.fs2:SetText("|cFF9CD6DECan't find current layer or no timers active for this layer.|r");
 end
@@ -5554,7 +5539,7 @@ function NWB:resetLayerData()
 	end
 end
 
-function NWB:validateLayer(layer)
+function NWB:fixLayer(layer)
 	if (not tonumber(NWB.data.layers[layer]['rendTimer'])) then
 		NWB.data.layers[layer]['rendTimer'] = 0;
 	end
@@ -5584,6 +5569,28 @@ function NWB:validateLayer(layer)
 	end
 end
 
+function NWB:validateLayer(layer)
+	--Temp fix till I work out why sometimes the NPC zoneid is different by a few integers, it's strange....
+	--In testing the zoneid's had the same last and first number, but middle numbers sometimes changed depending on person.
+	--107 and 127 from same NPC by different people, --9914 and 9924 from same NPC by different people.
+	--Ignore new data if it's within close numeric range of an ID we already have.
+	--No 2 valid layers should ever have close together id's?
+	--EDIT: From a user on curse layer numbers on Auberdine for this week are 315 and 326.
+	for localLayer, localV in pairs(NWB.data.layers) do
+		if ((layer > (localLayer - 30)) and (layer < (localLayer + 30)) and localLayer ~= layer
+				--Some realms seem to have legit layers close together.
+				--Each fake close together layer I've seen so far has the same last number, it's always multiples of 10.
+				--Removing the strict 30 closeness check and try this instead to accomodate those close together realms.
+				--If it works it should atleast lower the chance of a false positive to 1 in 10.
+				--Can't create new chars on these locked layered realms to test so all I can do is ake these small changes and hope...
+				and (string.sub(layer, -1) == string.sub(localLayer, -1))) then
+			NWB:debug("close range layer found old:", localLayer, "new:", layer);
+			return;
+		end
+	end
+	return true;
+end
+
 local f = CreateFrame("Frame");
 f:RegisterEvent("ZONE_CHANGED_NEW_AREA");
 f:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -5604,29 +5611,11 @@ f:SetScript('OnEvent', function(self, event, ...)
 	end
 end)
 	
---Layer minimap frame.
---[[MinimapLayerFrame = CreateFrame("Frame", "MinimapLayerFrame", Minimap, "TooltipBorderedFrameTemplate");
-local MinimapLayerFrame = CreateFrame("Button", "MinimapLayerFrame", Minimap);
-MinimapLayerFrame:SetPoint("BOTTOM", 0, -37);
-MinimapLayerFrame:SetFrameStrata("HIGH");
-MinimapLayerFrame:SetFrameLevel(9);
-MinimapLayerFrame.fs = MinimapLayerFrame:CreateFontString("MinimapLayerFrameFS", "ARTWORK");
-MinimapLayerFrame.fs:SetPoint("CENTER", 0, 0);
-MinimapLayerFrame.fs:SetFont(NWB.regionFont, 10);
-MinimapLayerFrame.fs:SetText("Layer 1");
-MinimapLayerFrame:SetWidth(60);
-MinimapLayerFrame:SetHeight(28);
-MinimapLayerFrame:Hide();
-MinimapLayerFrame.texture = MinimapLayerFrame:CreateTexture("MinimapLayerFrameTexture", "BORDER");
-MinimapLayerFrame.texture:SetTexture("Interface\\TimeManager\\ClockBackground");
-MinimapLayerFrame.texture:SetAllPoints();
-MinimapLayerFrame.texture:SetTexCoord(0.015625, 0.8125, 0.015625, 0.390625); --<TexCoords left="0.015625" right="0.8125" top="0.015625" bottom="0.390625"/>
-MinimapLayerFrame.texture:SetRotation(3.14);]]
-
 local MinimapLayerFrame = CreateFrame("Frame", "MinimapLayerFrame", Minimap, "ThinGoldEdgeTemplate");
 MinimapLayerFrame:SetPoint("BOTTOM", 2, 4);
 MinimapLayerFrame:SetFrameStrata("HIGH");
 MinimapLayerFrame:SetFrameLevel(9);
+MinimapLayerFrame:SetMovable(true);
 MinimapLayerFrame.fs = MinimapLayerFrame:CreateFontString("MinimapLayerFrameFS", "ARTWORK");
 MinimapLayerFrame.fs:SetPoint("CENTER", 0, 0);
 MinimapLayerFrame.fs:SetFont("Fonts\\ARIALN.ttf", 10); --No region font here, "Layer" in english always.
@@ -5652,9 +5641,28 @@ MinimapLayerFrame:SetScript("OnLeave", function(self)
 	MinimapLayerFrame.tooltip:Hide();
 end)
 MinimapLayerFrame.tooltip:Hide();
-MinimapLayerFrame:SetScript("OnMouseDown", function(self)
-	NWB:openLayerFrame();
+MinimapLayerFrame:SetScript("OnMouseDown", function(self, button)
+	if (button == "LeftButton" and not self.isMoving and IsShiftKeyDown()) then
+		self:StartMoving();
+		self.isMoving = true;
+		--self:SetUserPlaced(false);
+	else
+		NWB:openLayerFrame();
+	end
 end)
+MinimapLayerFrame:SetScript("OnMouseUp", function(self, button)
+	if (button == "LeftButton" and self.isMoving) then
+		self:StopMovingOrSizing();
+		self.isMoving = false;
+	end
+end)
+MinimapLayerFrame:SetScript("OnHide", function(self)
+	if (self.isMoving) then
+		self:StopMovingOrSizing();
+		self.isMoving = false;
+	end
+end)
+	
 NWB.currentLayer = 0;
 function NWB:recalcMinimapLayerFrame()
 	if (not NWB.db.global.minimapLayerFrame or not NWB.isLayered) then

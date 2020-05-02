@@ -1,6 +1,26 @@
 ﻿--变量
 local id = 1;
 local _G = _G;
+local select = select;
+local floor = math.floor;
+local UnitExists = UnitExists;
+local UnitName = UnitName;
+local UnitClass = UnitClass;
+local UnitIsDead = UnitIsDead;
+local UnitIsPlayer = UnitIsPlayer;
+local UnitIsEnemy = UnitIsEnemy;
+local UnitIsFriend = UnitIsFriend;
+local UnitHealth = UnitHealth;
+local UnitHealthMax = UnitHealthMax;
+local UnitPower = UnitPower;
+local UnitPowerMax = UnitPowerMax;
+local UnitPowerType = UnitPowerType;
+local UnitDebuff = UnitDebuff;
+local CooldownFrame_Set = CooldownFrame_Set;
+local CooldownFrame_Clear = CooldownFrame_Clear;
+local RegisterUnitWatch = RegisterUnitWatch;
+local InCombatLockdown = InCombatLockdown;
+
 local UFP_MAX_PARTYTARGET_DEBUFFS = 5;
 
 --队友目标
@@ -205,7 +225,7 @@ function UnitFramesPlus_PartyTargetDisplayUpdate(id)
         if UnitHealthMax(unit) > 0 then
             _G["UFP_PartyTarget"..id].HealthBar:SetValue(UnitHealth(unit) / UnitHealthMax(unit) * 100);
             if UnitFramesPlusDB["partytarget"]["hppct"] == 1 then
-                ToPPctText = math.floor(UnitHealth(unit) / UnitHealthMax(unit) * 100).."%";
+                ToPPctText = floor(UnitHealth(unit) / UnitHealthMax(unit) * 100).."%";
             end
         else
             _G["UFP_PartyTarget"..id].HealthBar:SetValue(0);
@@ -272,7 +292,7 @@ function UnitFramesPlus_PartyTargetClassPortraitDisplayUpdate(id)
             _G["UFP_PartyTarget"..id].Portrait:Hide();
             _G["UFP_PartyTarget"..id].ClassPortrait:Show();
         -- end
-        local IconCoord = CLASS_ICON_TCOORDS[select(2,UnitClass("party"..id.."target"))]
+        local IconCoord = CLASS_ICON_TCOORDS[select(2, UnitClass("party"..id.."target"))];
         if IconCoord then
             _G["UFP_PartyTarget"..id].ClassPortrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles");
             _G["UFP_PartyTarget"..id].ClassPortrait:SetTexCoord(unpack(IconCoord));
@@ -461,13 +481,13 @@ function UnitFramesPlus_OptionsFrame_PartyTargetDebuffDisplayUpdate()
                                 local timeleft = expirationTime - GetTime();
                                 if timeleft >= 0 then
                                     if timeleft < 60 then
-                                        timetext = math.floor(timeleft+1);
+                                        timetext = floor(timeleft+1);
                                         -- textalpha = 1 - timeleft/200;
                                         -- r, g, b = UnitFramesPlus_GetRGB(timeleft, 60);
                                     elseif timeleft <= 1800 then
-                                        timetext = math.floor(timeleft/60+1).."m";
+                                        timetext = floor(timeleft/60+1).."m";
                                     else
-                                        timetext = math.floor(timeleft/3600+1).."h";
+                                        timetext = floor(timeleft/3600+1).."h";
                                     end
                                 end
                             end

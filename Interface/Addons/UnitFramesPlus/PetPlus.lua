@@ -1,4 +1,9 @@
-﻿--宠物头像内战斗信息
+﻿--变量
+local IsShiftKeyDown = IsShiftKeyDown;
+local InCombatLockdown = InCombatLockdown;
+local hooksecurefunc = hooksecurefunc;
+
+--宠物头像内战斗信息
 function UnitFramesPlus_PetPortraitIndicator()
     local petregistered = PetFrame:IsEventRegistered("UNIT_COMBAT");
     if UnitFramesPlusDB["pet"]["indicator"] == 1 then

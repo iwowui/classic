@@ -1,4 +1,9 @@
-﻿--地图按钮，参考了Xinhuan的BankItems
+﻿--变量
+local deg = math.deg;
+local atan2 = math.atan2;
+local GetCursorPosition = GetCursorPosition;
+
+--地图按钮，参考了Xinhuan的BankItems
 local MinimapButton = CreateFrame("Button", "UFP_MinimapButton", Minimap);
 MinimapButton:EnableMouse(true);
 MinimapButton:SetMovable(false);
@@ -40,7 +45,7 @@ local function UnitFramesPlus_MinimapButton_BeingDragged()
     xpos = xmin-xpos/UIParent:GetScale()+70;
     ypos = ypos/UIParent:GetScale()-ymin-70;
 
-    local v = math.deg(math.atan2(ypos, xpos));
+    local v = deg(atan2(ypos, xpos));
     if v < 0 then
         v = v + 360;
     end
