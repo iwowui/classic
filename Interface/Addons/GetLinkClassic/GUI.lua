@@ -22,6 +22,7 @@ local GetLinkGuiMode_MenuList = {
 			{ text = ITEM_QUALITY4_DESC, func = function() GLOptions["quality"] = 5; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 5; end },
 			{ text = ITEM_QUALITY5_DESC, func = function() GLOptions["quality"] = 6; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 6; end },
 			{ text = ITEM_QUALITY6_DESC, func = function() GLOptions["quality"] = 7; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 7; end },
+			{ text = ITEM_QUALITY8_DESC, func = function() GLOptions["quality"] = 8; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 8; end },
 		},
 	},
 	{ text = CANCEL },
@@ -83,7 +84,7 @@ end);
 glg.keyword = glg:CreateFontString(nil, nil, "GameFontNormalLarge");
 glg.keyword:ClearAllPoints();
 glg.keyword:SetPoint("BOTTOMLEFT", glg, "BOTTOMLEFT", 16, 18);
-glg.keyword:SetWidth(47);
+glg.keyword:SetWidth(49);
 glg.keyword:SetText(GLG_KEYWORD);
 glg.keyword:SetTextColor(1, 1, 1);
 

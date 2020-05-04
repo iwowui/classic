@@ -781,7 +781,7 @@ NWB.optionDefaults = {
 		filterNpcKilled = false,
 		minimapLayerFrame = true,
 		
-		resetLayers2 = true, --Reset layers one time (sometimes needed when upgrading from old version.
+		resetLayers3 = true, --Reset layers one time (sometimes needed when upgrading from old version.
 		resetSongflowers = true, --Reset songflowers one time.
 	},
 };

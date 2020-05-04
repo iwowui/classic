@@ -24,6 +24,7 @@ NWB.latestRemoteVersion = version;
 
 function NWB:OnInitialize()
 	self:setLayered();
+	self:setLayerLimit();
 	self:loadSpecificOptions();
     self.db = LibStub("AceDB-3.0"):New("NWBdatabase", NWB.optionDefaults, "Default");
     LibStub("AceConfig-3.0"):RegisterOptionsTable("NovaWorldBuffs", NWB.options);
@@ -35,8 +36,6 @@ function NWB:OnInitialize()
 	self:buildRealmFactionData();
 	self:setRegionFont();
 	self:timerCleanup();
-	self:ticker();
-	self:yellTicker();
 	self:setSongFlowers();
 	self:createSongflowerMarkers();
 	self:createTuberMarkers();
@@ -49,6 +48,8 @@ function NWB:OnInitialize()
 	self:resetSongFlowers();
 	self:resetLayerData();
 	self:removeOldLayers();
+	self:ticker();
+	self:yellTicker();
 end
 
 --Set font used in fontstrings on frames.
@@ -68,6 +69,14 @@ end
 
 local foundPartner; --Debug testing.
 function NWB:OnCommReceived(commPrefix, string, distribution, sender)
+	if (distribution == "GUILD" and commPrefix == NWB.commPrefix) then
+		--Temp bug test.
+		local tempSender = sender;
+		if (not string.match(tempSender, "-")) then
+			tempSender = tempSender .. "-" .. GetNormalizedRealmName();
+		end
+		NWB.hasAddon[tempSender] = 0;
+	end
 	if (UnitInBattleground("player") and distribution ~= "GUILD") then
 		return;
 	end
@@ -97,7 +106,6 @@ function NWB:OnCommReceived(commPrefix, string, distribution, sender)
 		sender = sender .. "-" .. GetNormalizedRealmName();
 	end
 	--Keep a list of addon users for use in NWB:sendGuildMsg().
-	NWB.hasAddon[sender] = true;
 	if (distribution == "GUILD") then
 		foundPartner = true;
 	end
@@ -116,7 +124,7 @@ function NWB:OnCommReceived(commPrefix, string, distribution, sender)
 		data = args[2]; --Data (everything after version arg).
 		remoteVersion = 0;
 	end
-	NWB.hasAddon[sender] = remoteVersion or true;
+	NWB.hasAddon[sender] = remoteVersion or 0;
 	--if (commPrefix == "NWB") then
 		--NWB:debug("received", commPrefix, distribution, sender, cmd);
 	--end
@@ -125,8 +133,8 @@ function NWB:OnCommReceived(commPrefix, string, distribution, sender)
 		NWB:debug("version missing", sender, cmd, data);
 		return;
 	end
-	--Ignore old version data with this update, trying to weed out old versions setting wrong timers.
-	if (tonumber(remoteVersion) < 1.40) then
+	--Some updates requite ignoring old versions.
+	if (tonumber(remoteVersion) < 1.49) then
 		if (cmd == "requestData" and distribution == "GUILD") then
 			NWB:sendData("GUILD");
 		end
@@ -643,11 +651,7 @@ function NWB:receivedData(data, sender, distribution)
 						vv['nefNpcDied'] = nil;
 					end
 				end
-				local count = 0;
-				for k, v in pairs(NWB.data.layers) do
-					count = count + 1;
-				end
-				if (NWB:validateLayer(layer) and count <= NWB.limitLayerCount) then
+				if (NWB:validateLayer(layer)) then
 					if (not NWB.data.layers[layer]) then
 						if (vv['GUID']) then
 							NWB:createNewLayer(layer, vv['GUID']);
@@ -1298,14 +1302,19 @@ function NWB:ticker()
 	end
 	if (NWB.data.myChars[UnitName("player")].buffs) then
 		for k, v in pairs(NWB.data.myChars[UnitName("player")].buffs) do
-			v.timeLeft = v.timeLeft - 1;
-			if (v.type == "dmf") then
-				if ((lastDmfTick + 7200) >= 1 and (v.timeLeft + 7200) <= 0) then
-					NWB:print(L["dmfBuffReset"]);
-					lastDmfTick = -99999;
-					NWB.data.myChars[UnitName("player")].buffs[k] = nil;
-				else
-					lastDmfTick = v.timeLeft;
+			--Correct a rare bug.
+			if (not v.timeLeft) then
+				NWB.data.myChars[UnitName("player")].buffs[k] = nil;
+			else
+				v.timeLeft = v.timeLeft - 1;
+				if (v.type == "dmf") then
+					if ((lastDmfTick + 7200) >= 1 and (v.timeLeft + 7200) <= 0) then
+						NWB:print(L["dmfBuffReset"]);
+						lastDmfTick = -99999;
+						NWB.data.myChars[UnitName("player")].buffs[k] = nil;
+					else
+						lastDmfTick = v.timeLeft;
+					end
 				end
 			end
 		end
@@ -1829,13 +1838,19 @@ function NWB:combatLogEventUnfiltered(...)
 			local expirationTime = NWB:getBuffDuration(L["Warchief's Blessing"], 1);
 			local _, _, zone = NWB.dragonLib:GetPlayerZonePosition();
 			--If layered then you must be in org to set the right layer id, the barrens is disabled.
+			NWB:trackNewBuff(spellName, "rend");
+			if (NWB.isLayered and (not npcID or npcID ~= "4949")) then
+				--Some parts on the edges of orgrimmar seem to give the buff from Herald instead of Thrall, even while on map 1454.
+				--This creates a false 3rd layer with the barrens zoneid, took way too long to figure this out...
+				NWB:debug("bad rend buff source on layered realm", sourceGUID);
+				return;
+			end
 			if (expirationTime >= 3599.5 and (zone == 1454 or not NWB.isLayered) and unitType == "Creature") then
 				NWB:setRendBuff("self", UnitName("player"), zoneID, sourceGUID);
 			end
-			NWB:trackNewBuff(spellName, "rend");
-		elseif (destName == UnitName("player") and spellName == L["Spirit of Zandalar"] and (GetServerTime() - lastZanBuffGained) > 0
-				and unitType == "Creature") then
-			local expirationTime = NWB:getBuffDuration(L["Spirit of Zandalar"], 1);
+		elseif (destName == UnitName("player") and spellName == L["Spirit of Zandalar"] and (GetServerTime() - lastZanBuffGained) > 1) then
+			--Zan buff has no sourceName or sourceGUID, not sure why.
+			local expirationTime = NWB:getBuffDuration(L["Spirit of Zandalar"], 4);
 			if (expirationTime >= 7199.5) then
 				NWB:setZanBuff("self", UnitName("player"), zoneID, sourceGUID);
 				NWB:trackNewBuff(spellName, "zan");
@@ -1871,14 +1886,14 @@ function NWB:combatLogEventUnfiltered(...)
 				or spellName == L["Sayge's Dark Fortune of Strength"] or spellName == L["Sayge's Dark Fortune of Armor"]
 				or spellName == L["Sayge's Dark Fortune of Resistance"] or spellName == L["Sayge's Dark Fortune of Damage"]
 				 or spellName == L["Sayge's Dark Fortune of Intelligence"])) then
-			local expirationTime = NWB:getBuffDuration(spellName, 2);
+			local expirationTime = NWB:getBuffDuration(spellName, 0);
 			if (expirationTime >= 7199) then
 				NWB:trackNewBuff(spellName, "dmf");
 			end
 		elseif (destName == UnitName("player") and npcID == "14822") then
 			--Backup checking Sayge NPC ID until all localizations are done properly.
 			--Maybe this is a better way of doing it overall but I have to test when DMF is actually up first.
-			local expirationTime = NWB:getBuffDuration(spellName, 2);
+			local expirationTime = NWB:getBuffDuration(spellName, 0);
 			if (expirationTime >= 7199) then
 				NWB:trackNewBuff(spellName, "dmf");
 			end
@@ -1897,64 +1912,64 @@ function NWB:combatLogEventUnfiltered(...)
 				NWB:trackNewBuff(spellName, "ony");
 			end
 		elseif (destName == UnitName("player") and spellName == L["Songflower Serenade"]) then
-			local expirationTime = NWB:getBuffDuration(L["Songflower Serenade"], 2);
+			local expirationTime = NWB:getBuffDuration(L["Songflower Serenade"], 3);
 			if (expirationTime >= 3599) then
 				NWB:trackNewBuff(spellName, "songflower");
 			end
 		elseif (npcID == "14326" and destName == UnitName("player")) then
 			--Mol'dar's Moxie.
-			local expirationTime = NWB:getBuffDuration(spellName, 2);
+			local expirationTime = NWB:getBuffDuration(spellName, 0);
 			if (expirationTime >= 7199) then
 				NWB:trackNewBuff(spellName, "moxie");
 			end
 		elseif (npcID == "14321" and destName == UnitName("player")) then
 			--Fengus' Ferocity.
-			local expirationTime = NWB:getBuffDuration(spellName, 2);
+			local expirationTime = NWB:getBuffDuration(spellName, 0);
 			if (expirationTime >= 7199) then
 				NWB:trackNewBuff(spellName, "ferocity");
 			end
 		elseif (npcID == "14323" and destName == UnitName("player")) then
 			--Slip'kik's Savvy.
-			local expirationTime = NWB:getBuffDuration(spellName, 2);
+			local expirationTime = NWB:getBuffDuration(spellName, 0);
 			if (expirationTime >= 7199) then
 				NWB:trackNewBuff(spellName, "savvy");
 			end
 		elseif (NWB.isDebugg and destName == UnitName("player") and spellName == "Ice Armor") then
-			local expirationTime = NWB:getBuffDuration("Ice Armor", 2);
+			local expirationTime = NWB:getBuffDuration("Ice Armor", 0);
 			if (expirationTime >= 1799) then
 				NWB:trackNewBuff(spellName, "ice");
 			end
 		elseif (destName == UnitName("player")
 				and (spellName == L["Flask of Supreme Power"] or spellName == L["Supreme Power"])) then
-			local expirationTime = NWB:getBuffDuration(spellName, 2);
+			local expirationTime = NWB:getBuffDuration(spellName, 0);
 			if (expirationTime >= 7199) then
 				NWB:trackNewBuff(spellName, "flaskPower");
 			end
 		elseif (destName == UnitName("player") and spellName == L["Flask of the Titans"]) then
 			--This is the only flask spell with "Flask" in the name it seems.
-			local expirationTime = NWB:getBuffDuration(spellName, 2);
+			local expirationTime = NWB:getBuffDuration(spellName, 0);
 			if (expirationTime >= 7199) then
 				NWB:trackNewBuff(spellName, "flaskTitans");
 			end
 		elseif (destName == UnitName("player")
 				and (spellName == L["Flask of Distilled Wisdom"] or spellName == L["Distilled Wisdom"])) then
-			local expirationTime = NWB:getBuffDuration(spellName, 2);
+			local expirationTime = NWB:getBuffDuration(spellName, 0);
 			if (expirationTime >= 7199) then
 				NWB:trackNewBuff(spellName, "flaskWisdom");
 			end
 		elseif (destName == UnitName("player")
 				and (spellName == L["Flask of Chromatic Resistance"] or spellName == L["Chromatic Resistance"])) then
-			local expirationTime = NWB:getBuffDuration(spellName, 2);
+			local expirationTime = NWB:getBuffDuration(spellName, 0);
 			if (expirationTime >= 7199) then
 				NWB:trackNewBuff(spellName, "flaskResistance");
 			end
 		elseif (destName == UnitName("player") and spellName == L["Resist Fire"]) then
-			local expirationTime = NWB:getBuffDuration(spellName, 2);
+			local expirationTime = NWB:getBuffDuration(spellName, 0);
 			if (expirationTime >= 3599) then
 				NWB:trackNewBuff(spellName, "resistFire");
 			end
 		elseif (destName == UnitName("player") and spellName == L["Blessing of Blackfathom"]) then
-			local expirationTime = NWB:getBuffDuration(spellName, 2);
+			local expirationTime = NWB:getBuffDuration(spellName, 0);
 			if (expirationTime >= 3599) then
 				NWB:trackNewBuff(spellName, "blackfathom");
 			end
@@ -2302,22 +2317,20 @@ end
 function NWB:recalcBuffTimers()
 	if (NWB.data.myChars[UnitName("player")].buffs) then
 		for k, v in pairs(NWB.data.myChars[UnitName("player")].buffs) do
-			if (not gotPlayedData) then
-				NWB:debug("no played data found");
-				return
+			if (not v.timeLeft or not v.setTime) then
+				NWB.data.myChars[UnitName("player")].buffs[k] = nil;
+			else
+				if (not gotPlayedData) then
+					NWB:debug("no played data found");
+					return
+				end
+				if (not v.playedCacheSetAt) then
+					v.playedCacheSetAt = 0;
+				end
+				--Calc the difference between current total played time and the played time we record when buff was gotten.
+				v.timeLeft = NWB.db.global[v.type .. "BuffTime"] - (NWB.played - v.playedCacheSetAt);
+				--NWB.data.myChars[UnitName("player")].buffs[k].timeLeft = NWB.db.global[v.type .. "BuffTime"] - (NWB.played - v.playedCacheSetAt);
 			end
-			if (not v.setTime) then
-				v.setTime = 0;
-			end
-			if (not v.timeLeft) then
-				v.timeLeft = 0;
-			end
-			if (not v.playedCacheSetAt) then
-				v.playedCacheSetAt = 0;
-			end
-			--Calc the difference between current total played time and the played time we record when buff was gotten.
-			v.timeLeft = NWB.db.global[v.type .. "BuffTime"] - (NWB.played - v.playedCacheSetAt);
-			--NWB.data.myChars[UnitName("player")].buffs[k].timeLeft = NWB.db.global[v.type .. "BuffTime"] - (NWB.played - v.playedCacheSetAt);
 		end
 	end
 end
@@ -2448,6 +2461,12 @@ function NWB:setLayered()
 			or NWB.realm == "로크홀라" or NWB.realm == "얼음피" or NWB.realm == "힐스브레드" or NWB.realm == "라그나로스"
 			or NWB.realm == "소금 평원") then
 		NWB.isLayered = true;
+	end
+end
+
+function NWB:setLayerLimit()
+	if (fsdfsfs) then
+		NWB.limitLayerCount = 2;
 	end
 end
 
@@ -2889,6 +2908,7 @@ end
 
 --English buff names, we check both english and locale names for buff durations just to be sure in untested locales.
 local englishBuffs = {
+	[0] = "NoNe",
 	[1] = "Warchief's Blessing",
 	[2] = "Rallying Cry of the Dragonslayer",
 	[3] = "Songflower Serenade",
@@ -3026,6 +3046,10 @@ function SlashCmdList.NWBCMD(msg, editBox)
 			msg = cmd;
 		end
 	end
+	if (msg == "reset") then
+		NWB:resetTimerData();
+		return;
+	end
 	if (msg == "version" or msg == "versions") then
 		NWB:openVersionFrame();
 		return;
@@ -3064,6 +3088,35 @@ function SlashCmdList.NWBCMD(msg, editBox)
 			NWB:openLayerFrame();
 		end
 	end
+end
+
+function NWB:resetTimerData()
+	NWB:resetBuffData();
+	for k, v in pairs(NWB.songFlowers) do
+		NWB.data[k] = 0;
+	end
+	for k, v in pairs(NWB.tubers) do
+		NWB.data[k] = 0;
+	end
+	for k, v in pairs(NWB.dragons) do
+		NWB.data[k] = 0;
+	end
+	NWB.data.layers = {};
+	NWB.data.rendTimer = 0;
+	NWB.data.rendYell = 0;
+	NWB.data.rendYell2 = 0;
+	NWB.data.onyTimer = 0;
+	NWB.data.onyYell = 0;
+	NWB.data.onyYell2 = 0;
+	NWB.data.onyNpcDied = 0;
+	NWB.data.nefTimer = 0;
+	NWB.data.nefYell = 0;
+	NWB.data.nefYell2 = 0;
+	NWB.data.nefNpcDied = 0;
+	--zanTimer = 0;
+	NWB.data.zanYell = 0;
+	NWB.data.zanYell2 = 0;
+	NWB:print("All timer data has been reset.");
 end
 
 ---===== Most of these are now disabled, only DBM is left =====---
@@ -4114,6 +4167,7 @@ function NWB:createWorldbuffMarkers()
 	NWB:refreshWorldbuffMarkers();
 end
 
+local mapMarkers = {};
 function NWB:createWorldbuffMarker(type, data, layer, count)
 	if (layer) then
 		if (not _G[type .. layer .. "NWBWorldMap"]) then
@@ -4210,6 +4264,7 @@ function NWB:createWorldbuffMarker(type, data, layer, count)
 			obj:SetScript("OnMouseDown", function(self)
 				NWB:openBuffListFrame();
 			end)
+			mapMarkers[type .. layer .. "NWBWorldMap"] = true;
 		end
 	else
 		--Worldmap marker.
@@ -4300,12 +4355,16 @@ function NWB:refreshWorldbuffMarkers()
 		local offset = 0;
 		local foundLayers;
 		for layer, data in NWB:pairsByKeys(NWB.data.layers) do
-			for k, v in pairs(NWB.worldBuffMapMarkerTypes) do
+			--[[for k, v in pairs(NWB.worldBuffMapMarkerTypes) do
 				--if (not NWB.data.layers[layer] and _G[k .. layer .. "NWBWorldMap"]) then
 				if (_G[k .. layer .. "NWBWorldMap"]) then
-					--Removed all icons first so it fixes any layer changes or data reset after server restart etc.
+					--Remove all icons first so it fixes any layer changes or data reset after server restart etc.
 					NWB.dragonLibPins:RemoveWorldMapIcon(k .. layer .. "NWBWorldMap", _G[k .. layer .. "NWBWorldMap"]);
 				end
+			end]]
+			for k, v in pairs(mapMarkers) do
+				--Remove all icons first so it fixes any layer changes or data reset after server restart etc.
+				NWB.dragonLibPins:RemoveWorldMapIcon(k, _G[k]);
 			end
 		end
 		for layer, data in NWB:pairsByKeys(NWB.data.layers) do
@@ -5314,6 +5373,14 @@ function NWB:openLayerFrame()
 end
 
 function NWB:createNewLayer(zoneID, GUID)
+	local count, remoteCount = 0, 0;
+	for k, v in pairs(NWB.data.layers) do
+		count = count + 1;
+	end
+	if (count >= NWB.limitLayerCount) then
+		NWB:debug("Could not create new layer", zoneID, "already at limit", NWB.limitLayerCount);
+		return;
+	end
 	if (GUID and GUID ~= "other" and GUID ~= "none") then
 		--Creating layers anywhere but from other users data requires npc validation here.
 		local unitType, _, _, _, zoneID, npcID = strsplit("-", GUID);
@@ -5360,19 +5427,19 @@ function NWB:removeOldLayers()
 		for k, v in NWB:pairsByKeys(NWB.data.layers) do
 			--Check if this layer has any current timers old than an hour expired.
 			local validTimer = nil;
-			if ((v.rendTimer + expireTime) > (GetServerTime() - NWB.db.global.rendRespawnTime)) then
+			if (v.rendTimer and (v.rendTimer + expireTime) > (GetServerTime() - NWB.db.global.rendRespawnTime)) then
 				validTimer = true;
 			end
-			if ((v.onyNpcDied > v.onyTimer) and
+			if (v.onyNpcDied and (v.onyNpcDied > v.onyTimer) and
 					(v.onyNpcDied > (GetServerTime() - NWB.db.global.onyRespawnTime))) then
 				validTimer = true;
-			elseif ((v.onyTimer + expireTime) > (GetServerTime() - NWB.db.global.onyRespawnTime)) then
+			elseif (v.onyTimer and (v.onyTimer + expireTime) > (GetServerTime() - NWB.db.global.onyRespawnTime)) then
 				validTimer = true;
 			end
-			if ((v.nefNpcDied > v.nefTimer) and
+			if (v.nefNpcDied and (v.nefNpcDied > v.nefTimer) and
 					(v.nefNpcDied > (GetServerTime() - NWB.db.global.nefRespawnTime))) then
 				validTimer = true;
-			elseif ((v.nefTimer + expireTime) > (GetServerTime() - NWB.db.global.nefRespawnTime)) then
+			elseif (v.nefTimer and (v.nefTimer + expireTime) > (GetServerTime() - NWB.db.global.nefRespawnTime)) then
 				validTimer = true;
 			end
 			if (not v.created) then
@@ -5382,6 +5449,7 @@ function NWB:removeOldLayers()
 			if (not validTimer and v.created < GetServerTime() - expireTime) then
 				NWB.data.layers[k] = nil;
 				removed = true;
+				NWB:debug("Removed old layer", k);
 			end
 		end
 	end
@@ -5466,6 +5534,8 @@ function NWB:recalclayerFrame()
 		NWBlayerFrame.fs3:SetText("Out of date version " .. version .. " (New version: "
 				.. NWB.latestRemoteVersion .. ")\nPlease update so your timers are accurate.");
 	end
+	--Add 2 extra blank lines to you can scroll layer data up past text at bottom of the frame.
+	NWBlayerFrame.EditBox:Insert("\n\n");
 end
 
 local f = CreateFrame("Frame");
@@ -5532,10 +5602,10 @@ end
 --Reset layers one time, needed when upgrading from old version.
 --Old version copys over the whole table from new version users and prevents a proper new layer being created with that id.
 function NWB:resetLayerData()
-	if (NWB.db.global.resetLayers2) then
+	if (NWB.db.global.resetLayers3) then
 		NWB:debug("resetting layer data");
 		NWB.data.layers = {};
-		NWB.db.global.resetLayers2 = false;
+		NWB.db.global.resetLayers3 = false;
 	end
 end
 
@@ -5590,6 +5660,10 @@ function NWB:validateLayer(layer)
 	end
 	return true;
 end
+
+--function NWB:validateLayer(layer)
+--	return true;
+--end
 
 local f = CreateFrame("Frame");
 f:RegisterEvent("ZONE_CHANGED_NEW_AREA");

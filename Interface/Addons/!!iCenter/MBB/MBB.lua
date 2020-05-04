@@ -83,7 +83,9 @@ MBB_Ignore = {
 	[41] = "PremadeFilter_MinimapButton",    -- PreMadeFilter
 	[42] = "GarrisonMinimapButton",
 	[43] = "QuestieFrame",
-	[44] = "Guidelime"
+	[44] = "Guidelime",
+	[45] = "NauticusClassicMiniIcon",
+	[46] = "Spy_" --Spy Addon
 };
 
 MBB_IgnoreSize = {

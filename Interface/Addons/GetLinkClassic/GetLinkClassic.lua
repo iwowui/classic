@@ -2,13 +2,16 @@
 !!Add support for scaled ilevels.
 Add a very minor UI and integrate into the options menu.
 Look up better LUA table practices.
-Use a compression to reduce the size of the database.]]
+Use a compression to reduce the size of the database.
+Allow removed items to stay in the database while keeping maintenance automatic.
+Spell lookup.
+]]
 
 local SearchFrame = CreateFrame("Frame")
-local nTopID = 24283 --Update this for new item IDs, https://classic.wowhead.com/items?filter=151;2;24283
-local tclassic = {172070} --Weird itemids for classic.
-local nStepSize = 50 --Database build speed.  This can be set to 500+ on beefier computers.
-local nVersion = 3
+local nTopID = 24284 --Update this for new item IDs, https://classic.wowhead.com/items?filter=151;2;24283
+local tclassic = {172070, 122284, 122270} --Weird ids for classic.
+local nStepSize = 52 --Database build speed.  This can be set to 500+ on beefier computers.
+local nVersion = 4
 local bBuilding = false
 local nCurrentID = 0
 local tc = {
@@ -18,7 +21,8 @@ local tc = {
 	["ffffff"] = "4",
 	["9d9d9d"] = "5",
 	["ff8000"] = "6",
-	["e6cc80"] = "8"
+	["e6cc80"] = "8",
+	["00ccff"] = "9"
 }
 local rtc = {
 	["1"] = "a335ee",
@@ -27,10 +31,11 @@ local rtc = {
 	["4"] = "ffffff",
 	["5"] = "9d9d9d",
 	["6"] = "ff8000",
-	["8"] = "e6cc80"
+	["8"] = "e6cc80",
+	["9"] = "00ccff"
 }
 
-local qualityfix = {5, 4, 3, 2, 1, 6, 8}
+local qualityfix = {5, 4, 3, 2, 1, 6, 8, 9}
 
 local lasttime = GetTime()
 
@@ -50,7 +55,9 @@ SlashCmdList["DevLink"] = function(msg)
 	end
 end
 
-function GLTest(msg) end
+function GLTest(msg) 
+	AddItem(msg)
+end
 
 --[[Checks the query to make sure it's a decent length to prevent full on spam.
 Then it turns it and the results into lower case and generates the saved link if there's
@@ -102,9 +109,17 @@ function GetLink_Command(msg)
 						if GLOptions["extra"] == 1 then
 							if msg:len() == 0 or string.find(name:lower(), msg, 2) then
 								if not _G["GetLinkGui"]:IsShown() then
-									print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+									if string.find(name:sub(1,2), "|") then
+										print(name)
+									else
+										print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+									end
 								end
-								_G["GetLinkGui"].message:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+								if string.find(name:sub(1,2), "|") then
+									_G["GetLinkGui"].message:AddMessage(name)
+								else
+									_G["GetLinkGui"].message:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+								end
 								num = num + 1
 							end
 						else
@@ -119,9 +134,17 @@ function GetLink_Command(msg)
 							end
 							if found == 1 then
 								if not _G["GetLinkGui"]:IsShown() then
-									print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+									if string.find(name:sub(1,2), "|") then
+										print(name)
+									else
+										print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+									end
 								end
-								_G["GetLinkGui"].message:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+								if string.find(name:sub(1,2), "|") then
+									_G["GetLinkGui"].message:AddMessage(name)
+								else
+									_G["GetLinkGui"].message:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+								end
 								num = num + 1
 							end
 						end
@@ -167,12 +190,19 @@ function GetSearch(self, elapsed)
 	end
 end
 
---[[Clean item links then save them.]]
+--[[Clean item links then save them.  If the item link can't be cleaned just add it whole.]]
 
 function AddItem(idnum)
-	if not idnum or idnum == "" or idnum == 0 then return end
-	local name, link = GetItemInfo(idnum)
-	if name then GLTable[tostring(idnum)] = string.format("%s%s", tc[link:sub(5, 10)], name) end
+	idnum = tonumber(idnum)
+	local name, link
+	if(idnum and idnum > 0) then name, link = GetItemInfo(idnum) end --Thanks islerwow for pointing out a stack overflow.
+	if name then
+		if tc[link:sub(5, 10)] then
+			GLTable[tostring(idnum)] = string.format("%s%s", tc[link:sub(5, 10)], name)
+		else
+			GLTable[idnum] = link
+		end
+	end
 end
 
 --[[SearchFrame registers this function to activate whenever the addon is loaded
@@ -193,7 +223,9 @@ function EventHandler(self, event, arg1, arg2)
 		end
 		if not GLOptions["extra"] then GLOptions["extra"] = 0 end
 		if not GLOptions["quality"] then GLOptions["quality"] = 1 end
-	elseif event == "GET_ITEM_INFO_RECEIVED" then AddItem(arg1) end
+	elseif event == "GET_ITEM_INFO_RECEIVED" and arg1 > 0 then
+		AddItem(arg1)
+	end
 end
 
 SearchFrame:RegisterEvent("ADDON_LOADED")

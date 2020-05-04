@@ -18,6 +18,7 @@ ADDONSELF.L = L
 local locale = GetLocale()
 
 if locale == 'enUs' then
+L["# line starts with # will be ignored"] = true
 L["# one item per line, can be item name or item id"] = true
 L["#Try to convert to item link"] = true
 L["/raidledger"] = true
@@ -37,6 +38,7 @@ L["Bid mode"] = true
 L["Bid price"] = true
 L["Cannot find any debit entry in template, please check your template in options"] = true
 L["Clear"] = true
+L["Click here to clear ledger"] = true
 L["Close text export"] = true
 L["Compensation"] = true
 L["Compensation added"] = true
@@ -107,6 +109,7 @@ L["Value"] = true
 L["Winner"] = true
 
 elseif locale == 'zhCN' then
+L["# line starts with # will be ignored"] = "# 以 # 开头的行自动被忽略"
 L["# one item per line, can be item name or item id"] = "# 每行一条, 可以是物品名称或物品ID"
 L["#Try to convert to item link"] = "#尝试转换为物品链接"
 L["/raidledger"] = "/gtuan"
@@ -126,6 +129,7 @@ L["Bid mode"] = "加价模式"
 L["Bid price"] = "竞拍价"
 L["Cannot find any debit entry in template, please check your template in options"] = "无法在支出模板中找到任何内容, 请在选项中检查模板内容"
 L["Clear"] = "清空"
+L["Click here to clear ledger"] = "点我清空账本"
 L["Close text export"] = "关闭文本模式"
 L["Compensation"] = "补助"
 L["Compensation added"] = "已经添补助"
@@ -197,6 +201,8 @@ L["Winner"] = "赢家"
 
 elseif locale == 'zhTW' then
 --[[Translation missing --]]
+--[[ L["# line starts with # will be ignored"] = "# line starts with # will be ignored"--]] 
+--[[Translation missing --]]
 --[[ L["# one item per line, can be item name or item id"] = "# one item per line, can be item name or item id"--]] 
 L["#Try to convert to item link"] = "#嘗試轉換為物品連結"
 L["/raidledger"] = "/gtuan"
@@ -224,6 +230,8 @@ L["Beneficiary"] = "獲取人"
 --[[ L["Bid price"] = "Bid price"--]] 
 L["Cannot find any debit entry in template, please check your template in options"] = "無法在支出模板中找到任何內容, 請在選項中檢查模板內容"
 L["Clear"] = "清空"
+--[[Translation missing --]]
+--[[ L["Click here to clear ledger"] = "Click here to clear ledger"--]] 
 L["Close text export"] = "關閉文字模式"
 L["Compensation"] = "補助"
 L["Compensation added"] = "已經添補助"

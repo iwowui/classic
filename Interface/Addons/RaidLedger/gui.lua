@@ -399,6 +399,8 @@ function GUI:Init()
             local l = s:CreateFontString(nil, "OVERLAY", "GameFontNormal")
             l:SetPoint("RIGHT", s, "LEFT", -20, 1)
             l:SetText(L["Count down time"])
+            bf:SetWidth(math.max(bf:GetWidth(), l:GetStringWidth() + 220))
+
 
             s:SetPoint("TOPLEFT", bf, 40 + l:GetStringWidth(), -70)
 
@@ -427,6 +429,8 @@ function GUI:Init()
             local l = s:CreateFontString(nil, "OVERLAY", "GameFontNormal")
             l:SetPoint("RIGHT", s, "LEFT", -20, 1)
             l:SetText(L["Starting price"])
+            bf:SetWidth(math.max(bf:GetWidth(), l:GetStringWidth() + 220))
+
 
             s:SetPoint("TOPLEFT", bf, 40 + l:GetStringWidth(), -120)
 
@@ -542,6 +546,8 @@ function GUI:Init()
                     local l = s:CreateFontString(nil, "OVERLAY", "GameFontNormal")
                     l:SetPoint("RIGHT", s, "LEFT", -20, 1)
                     l:SetText(L["Bid increment"])
+
+                    bf:SetWidth(math.max(bf:GetWidth(), l:GetStringWidth() + 220))
         
                     s:SetPoint("TOPLEFT", bf, 40 + l:GetStringWidth(), -200)
         
@@ -820,12 +826,12 @@ function GUI:Init()
                         end
 
                         local sendalert = ctx.countdown <= 5
-                        sendalert = sendalert or (ctx.countdown <= 15 and (ctx.countdown % 5 == 0))
-                        sendalert = sendalert or (ctx.countdown <= 30 and (ctx.countdown % 10 == 0))
-                        sendalert = sendalert or (ctx.countdown % 30 == 0)
+                        -- sendalert = sendalert or (ctx.countdown <= 15 and (ctx.countdown % 5 == 0))
+                        -- sendalert = sendalert or (ctx.countdown <= 30 and (ctx.countdown % 10 == 0))
+                        -- sendalert = sendalert or (ctx.countdown % 30 == 0)
 
                         if sendalert then
-                            SendRaidMessage(item .. " " .. L["Current price"] .. " >>" .. GetMoneyStringL(ctx.currentprice) .. "<< " .. L["Time left"] .. " " .. (SECOND_ONELETTER_ABBR:format(ctx.countdown)))
+                            SendRaidMessage(" " .. L["Current price"] .. " >>" .. GetMoneyStringL(ctx.currentprice) .. "<< " .. L["Time left"] .. " " .. (SECOND_ONELETTER_ABBR:format(ctx.countdown)))
                         end
                     end)
                 end)
@@ -867,7 +873,11 @@ function GUI:Init()
         end
 
         bf:Hide()
-        bf:SetScript("OnHide", bf.CancelBid)
+        bf:SetScript("OnHide", function() 
+            if GUI.mainframe:IsShown() then
+                bf.CancelBid()
+            end
+        end)
 
         self.bidframe = bf
     end
@@ -1124,8 +1134,29 @@ function GUI:Init()
             return data
         end
 
+        local lastchat = {}
+        local onraidchat = function(text, playerName)
+            playerName = strsplit("-", playerName)
+            lastchat[playerName] = time()
+
+            local min = playerName
+            for p in pairs(lastchat) do
+                if lastchat[p] < lastchat[min] then
+                    min = p
+                end
+            end
+
+            if #lastchat > 10 then
+                lastchat[min] = nil
+            end
+        end
+
+        RegEvent("CHAT_MSG_RAID_LEADER", onraidchat)
+        RegEvent("CHAT_MSG_RAID", onraidchat)
+
         local autoCompleteRaidRoster = function(text)
             local data = {}
+            local tmp = {}
 
             for i = 1, MAX_RAID_MEMBERS do
                 local name, _, subgroup, _, class = GetRaidRosterInfo(i)
@@ -1141,12 +1172,20 @@ function GUI:Init()
                     b = b or (strfind(class, string.lower(text)))
 
                     if b then
-                        tinsert(data, {
-                            ["name"] = name,
-                            ["priority"] = LE_AUTOCOMPLETE_PRIORITY_IN_GROUP,
-                        })
+                        tinsert(tmp, name)
                     end
                 end
+            end
+
+            table.sort(tmp, function(a, b)
+                return (lastchat[a] or 0) > (lastchat[b] or 0)
+            end)
+
+            for _, name in pairs(tmp) do 
+                tinsert(data, {
+                    ["name"] = name,
+                    ["priority"] = LE_AUTOCOMPLETE_PRIORITY_IN_GROUP,
+                })
             end
 
             return data
@@ -1329,6 +1368,7 @@ function GUI:Init()
                 cellFrame.textBox:SetHeight(30)
                 cellFrame.textBox:SetAutoFocus(false)
                 cellFrame.textBox:SetScript("OnEscapePressed", cellFrame.textBox.ClearFocus)
+                cellFrame.textBox:SetScript("OnEnterPressed", cellFrame.textBox.ClearFocus)
                 popOnFocus(cellFrame.textBox)
 
                 if entry["lock"] then
@@ -1401,6 +1441,9 @@ function GUI:Init()
                 cellFrame.textBox:SetHeight(30)
                 cellFrame.textBox:SetAutoFocus(false)
                 cellFrame.textBox:SetScript("OnEscapePressed", cellFrame.textBox.ClearFocus)
+                cellFrame.textBox:SetScript("OnEnterPressed", cellFrame.textBox.ClearFocus)
+                cellFrame.textBox.raidledgerbeneficiary = true
+
                 AutoCompleteEditBox_SetAutoCompleteSource(cellFrame.textBox, autoCompleteRaidRoster)
                 popOnFocus(cellFrame.textBox)
 
@@ -1488,6 +1531,8 @@ function GUI:Init()
                 cellFrame.textBox:SetAutoFocus(false)
                 cellFrame.textBox:SetMaxLetters(10)
                 cellFrame.textBox:SetScript("OnChar", mustnumber)
+                cellFrame.textBox:SetScript("OnEnterPressed", cellFrame.textBox.ClearFocus)
+                cellFrame.textBox:SetScript("OnEscapePressed", cellFrame.textBox.ClearFocus)
 
                 if entry["lock"] then
                     cellFrame.textBox:Disable()
