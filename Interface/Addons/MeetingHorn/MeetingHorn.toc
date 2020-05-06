@@ -3,7 +3,7 @@
 ## Title-zhCN: |CFFFF8000辅助|R 集结号
 ## Title-zhTW: |CFFFF8000輔助|R 集結號
 ## X-Repple: 辅助
-## Version: 1.1.8
+## Version: 1.1.9
 ## SavedVariables: MEETINGHORN_DB
 
 Load.xml

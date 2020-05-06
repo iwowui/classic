@@ -12,11 +12,11 @@ hooksecurefunc("SetItemRef", function(link)
         local linkType, target = strsplit(":", link)
 
         if linkType == "item" then
-            local _, itemLink = GetItemInfo(target)
-            if itemLink then
-                Print(L["Item added"] .. " " .. itemLink)
-                Database:AddLoot(itemLink, 1, "", 0, true)
-            end
+            -- local _, itemLink = GetItemInfo(target)
+            -- if itemLink then
+            --     Print(L["Item added"] .. " " .. itemLink)
+            --     Database:AddLoot(itemLink, 1, "", 0, true)
+            -- end
         elseif linkType == "player" then
             local playerName = strsplit("-", target)
             Print(L["Compensation added"] .. " " .. playerName)
@@ -33,6 +33,15 @@ hooksecurefunc("SetItemRef", function(link)
     end
 end)
 
+hooksecurefunc("HandleModifiedItemClick", function(link)
+    if GUI.mainframe:IsShown() then
+        local _, itemLink = GetItemInfo(link)
+        if itemLink then
+            Print(L["Item added"] .. " " .. itemLink)
+            Database:AddLoot(itemLink, 1, "", 0, true)
+        end
+    end
+end)
 
 local AUTOADDLOOT_TYPE_ALL = 0
 -- local AUTOADDLOOT_TYPE_PARTY = 1
@@ -98,51 +107,65 @@ local clearledger = function()
     StaticPopup_Show("RAIDLEDGER_CLEARMSG")
 end
 
-local cleartoast = AlertFrame:AddSimpleAlertFrameSubSystem("MoneyWonAlertFrameTemplate", function(frame, text)
 
-    frame.Icon:SetTexture("Interface\\Icons\\inv_misc_note_03")
-    frame.Label:SetText(L["Raid Ledger"])
-    frame.Amount:SetText(L["Click here to clear ledger"])
-    frame.Amount:SetWidth(180)
-    frame.Amount:SetFontObject(GameFontWhite)
-    frame:SetScript("OnClick", clearledger)
+do
+    -- some pharc addon overwrite AlertFrame
+    local frame = EnumerateFrames()
+    while frame do
+        if frame:GetName() == "AlertFrame" then
 
-    if not frame.closebtn then
-        b = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
-        b:SetPoint("TOPRIGHT", frame, 0, 0);
-        frame.closebtn = b
-    end
+            local cleartoast = frame:AddSimpleAlertFrameSubSystem("MoneyWonAlertFrameTemplate", function(frame, text)
 
-end)
+                frame.Icon:SetTexture("Interface\\Icons\\inv_misc_note_03")
+                frame.Label:SetText(L["Raid Ledger"])
+                frame.Amount:SetText(L["Click here to clear ledger"])
+                frame.Amount:SetWidth(180)
+                frame.Amount:SetFontObject(GameFontWhite)
+                frame:SetScript("OnClick", clearledger)
 
-local lastzone = nil
+                if not frame.closebtn then
+                    b = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
+                    b:SetPoint("TOPRIGHT", frame, 0, 0);
+                    frame.closebtn = b
+                end
 
-C_Timer.NewTicker(5, function()
-    local zone = GetInstanceInfo()
-    if not zone then
-        return
-    end
+            end)
 
-    if zone == "" then
-        return
-    end
+            local lastzone = nil
 
-    local _, type = IsInInstance()
+            C_Timer.NewTicker(5, function()
 
-    if type == "raid" or type == "party" then
+                local zone = GetInstanceInfo()
+                if not zone then
+                    return
+                end
 
-        if lastzone ~= zone then
-            if #Database:GetCurrentLedger()["items"] > 0 then
-                cleartoast:AddAlert()
-            end
+                if zone == "" then
+                    return
+                end
+
+                local _, type = IsInInstance()
+
+                if type == "raid" then
+
+                    if lastzone ~= zone then
+                        if #Database:GetCurrentLedger()["items"] > 0 then
+                            cleartoast:AddAlert()
+                        end
+                    end
+
+                end
+
+                lastzone = zone
+
+            end)
+
+
+            break
         end
-
+        frame = EnumerateFrames(frame)
     end
-
-    lastzone = zone
-
-end)
-
+end
 
 SlashCmdList["RAIDLEDGER"] = function(msg, editbox)
     local cmd, what = msg:match("^(%S*)%s*(%S*)%s*$")
@@ -152,7 +175,7 @@ SlashCmdList["RAIDLEDGER"] = function(msg, editbox)
 
         Print(L["Shift + item/name to add to record"])
         Print(L["Right click to remove record"])
-        Print(L["Shift + Right click to remove ALL SAME record"])
+        -- Print(L["Shift + Right click to remove ALL SAME record"])
         -- ShowCurrentAutoLootType()
         -- Print("[".. L["/raidledger"] .. " toggle] " .. L["toggle Auto recording on/off"])
 

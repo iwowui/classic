@@ -259,6 +259,10 @@ function ExAE_SavePlayerEquipSet(setId)
 end 
 
 function ExAE_LoadPlayerEquipSet(setId, showMsg)
+	if ( InCombatLockdown() ) then
+		DEFAULT_CHAT_FRAME:AddMessage(BINDING_HEADER_ExAE_TITLE..": "..ExAE_MSG_COMBAT, 1, 0.75 , 0);
+		return
+	end
 	ExAE_GetPlayerItems()
 	local equipSet = ExAE_GetPlayerEquipSet(setId) 
 	if ( not equipSet ) then 

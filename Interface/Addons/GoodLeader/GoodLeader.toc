@@ -4,7 +4,7 @@
 ## Title-zhTW: |CFFFF8000輔助|R 好團長
 ## X-Repple: 辅助
 ## Author: NetEase
-## Version: 0.0.15
+## Version: 0.0.16
 ## SavedVariables: GOODLEADER_DB
 
 Load.xml

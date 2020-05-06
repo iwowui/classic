@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.60 (29th April 2020)
+-- 	Leatrix Plus 1.13.61 (6th May 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 --	Version
-	LeaPlusLC["AddonVer"] = "1.13.60"
+	LeaPlusLC["AddonVer"] = "1.13.61"
 	LeaPlusLC["RestartReq"] = nil
 
 --	If client restart is required and has not been done, show warning and quit
@@ -921,6 +921,7 @@
 						if npcID == "15192"	-- Anachronos (Caverns of Time)
 						or npcID == "3430" 	-- Mangletooth (Blood Shard quests, Barrens)
 						or npcID == "14828" -- Gelvas Grimegate (Darkmoon Faire Ticket Redemption, Elwynn Forest and Mulgore)
+						or npcID == "14921" -- Rin'wosho the Trader (Zul'Gurub Isle, Stranglethorn Vale)
 						then
 							return true
 						end
@@ -6907,11 +6908,40 @@
 
 		if event == "RESURRECT_REQUEST" then
 
-			-- Resurrect automatically if not in combat
-			if not UnitAffectingCombat(arg1) then
-				AcceptResurrect()
-				StaticPopup_Hide("RESURRECT_NO_TIMER")
+			-- Exclude Chained Spirit (Zul'Gurub)
+			local chainLoc
+
+			-- Exclude Chained Spirit (Zul'Gurub)
+			chainLoc = "Chained Spirit"
+			if 	   GameLocale == "zhCN" then chainLoc = "被禁锢的灵魂"
+			elseif GameLocale == "zhTW" then chainLoc = "禁錮之魂"
+			elseif GameLocale == "ruRU" then chainLoc = "Скованный дух"
+			elseif GameLocale == "koKR" then chainLoc = "구속된 영혼"
+			elseif GameLocale == "esMX" then chainLoc = "Espíritu encadenado"
+			elseif GameLocale == "ptBR" then chainLoc = "Espírito Acorrentado"
+			elseif GameLocale == "deDE" then chainLoc = "Angeketteter Geist"
+			elseif GameLocale == "esES" then chainLoc = "Espíritu encadenado"
+			elseif GameLocale == "frFR" then chainLoc = "Esprit enchaîné"
+			elseif GameLocale == "itIT" then chainLoc = "Spirito Incatenato"
 			end
+			if arg1 == chainLoc then return	end
+
+			-- Resurrect
+			local resTimer = GetCorpseRecoveryDelay()
+			if resTimer and resTimer > 0 then
+				-- Resurrect has a delay so wait before resurrecting
+				C_Timer.After(resTimer + 1, function()
+					if not UnitAffectingCombat(arg1) and LeaPlusLC["AutoAcceptRes"] == "On" then
+						AcceptResurrect()
+					end
+				end)
+			else
+				-- Resurrect has no delay so resurrect now
+				if not UnitAffectingCombat(arg1) then
+					AcceptResurrect()
+				end
+			end
+
 			return
 
 		end
