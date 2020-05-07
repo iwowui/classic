@@ -780,9 +780,11 @@ NWB.optionDefaults = {
 		filterSongflowers = false,
 		filterNpcKilled = false,
 		minimapLayerFrame = true,
+		blackfathomBuffTime = 3600,
 		
 		resetLayers3 = true, --Reset layers one time (sometimes needed when upgrading from old version.
 		resetSongflowers = true, --Reset songflowers one time.
+		experimental = true, --Enable features being tested on occasion.
 	},
 };
 

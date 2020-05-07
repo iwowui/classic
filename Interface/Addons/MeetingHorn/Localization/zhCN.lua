@@ -9,6 +9,7 @@ L.ADDON_NAME = '集结号'
 L['Leader'] = '队长'
 L['Comment'] = '说明'
 L['Operation'] = '操作'
+L['Class'] = '职业'
 
 L['Activity'] = '活动类型'
 L['Activity Mode'] = '活动模式'
@@ -47,7 +48,7 @@ L.CATEGORY_RECRUIT = '招募'
 L.SUMMARY_NEW_VERSION = [[|cff00ffff%s|r：
 发现新版本：%s，请及时下载更新
 下载链接：%s]]
-
+L.WELCOME_MESSAGE= [[更新日期|cff00ffff%s|r - 输入 /MeetingHorn或者/LFG打开主面板]]
 -- L['Quest'] = '任务'
 -- L['Raid'] = '团队副本'
 -- L['Dungeon'] = '地下城'
@@ -58,12 +59,17 @@ L.SUMMARY_NEW_VERSION = [[|cff00ffff%s|r：
 L['Sell'] = '出售'
 L['Buy'] = '购买'
 
+L['Alliance'] = '联盟'
+L['Horde'] = '部落'
+
 L['<Double-Click> Whisper to player'] = '<双击>密语'
 L['<Right-Click> Open activity menu'] = '<右键>打开活动菜单'
 L['(Include channel message)'] = '(包含频道聊天)'
 L['Applicanted'] = '已申请'
 
 L['|cff00ffff%s|r instance already exists, continue to create?'] = '|cff00ffff%s|r进度已存在，继续创建？'
+L['RIVAL_CAMP_WARNING_Alliance'] = '|cff00ffff%s|r是|cffb30000%s|r的领土，继续创建？'
+L['RIVAL_CAMP_WARNING_Horde'] = '|cff00ffff%s|r是|cff0078ff%s|r的领土，继续创建？'
 L['Update activity success.'] = '更新活动成功。'
 L['Create acitivty success.'] = '创建活动成功。'
 L['Activity closed.'] = '活动已解散。'
@@ -77,26 +83,29 @@ L['Activity Count'] = '活动总数'
 
 L['Toggle MeetingHorn'] = '打开/关闭集结号'
 L['Toggle MeetingHorn key binding'] = '打开/关闭集结号快捷键'
-L['按键已绑定到|cffffd100%s|r，你确定要覆盖吗？'] = true
+L['Key binding confirmation'] = '按键已绑定到|cffffd100%s|r，你确定要覆盖吗？'
 
 L['Options'] = '设置'
-L['启用关键字过滤'] = true
-L['关键字过滤'] = true
-L['导入'] = true
-L['导出'] = true
-L['导入关键字'] = true
-L['导出关键字'] = true
-L['请输入需要屏蔽的关键字'] = true
-L['匹配?'] = true
-L['添加失败，关键字错误。'] = true
-L['添加失败，关键字“%s”已存在。'] = true
-L['添加成功，关键字“%s”已添加。'] = true
-L['删除失败，关键字错误。'] = true
-L['删除失败，关键字“%s”不存在。'] = true
-L['删除成功，关键字“%s”已删除。'] = true
+L['Enable keyword filtering'] = '启用关键字过滤'
+L['keyword filtering'] = '关键字过滤'
+L['Import'] = '导入'
+L['Export'] = '导出'
+L['Import keywords'] = '倒入关键字'
+L['Export keywords'] = '导出关键字'
+L['Please enter keywords to be blocked'] = '请输出需要屏蔽的关键字'
+L['Match?'] = '匹配'
+L['Add failed, wrong keyword'] = '添加失败，关键字错误'
+L['Add failed, keyword already exists'] = '添加失败，关键字“%s”已存在'
+L['Add success, the keyword has been added'] = '添加成功，关键字“%s”已添加'
+L['Failed to delete, wrong keyword'] = '删除失败，关键字错误'
+L['Failed to delete, the keyword does not exist'] = '删除失败，关键字“%s”不存在'
+L['Deleted successfully, the keyword has been deleted'] = '删除成功，关键字“%s”已删除'
 
 L['Show data broker'] = '显示悬浮窗'
+L['Show minimap'] = '隐藏小地图图标'
 L['Hide activity in chat frame'] = '隐藏聊天窗口内的集结号活动'
+L['Idle Timer'] = '自动刷新活动列表'
+L['Confirm'] = '修改此项将重新载入插件'
 
 L.HELP_COMMENT = [[|cffffd100使用说明|r
 1. 集结号刚打开的时候是有短暂收集数据的时间，还请您耐心等待。
@@ -107,6 +116,7 @@ L.HELP_COMMENT = [[|cffffd100使用说明|r
 L['CHANNEL: Port'] = '传送频道'
 L['CHANNEL: Trade'] = '交易'
 L['CHANNEL: Group'] = 'MeetingHorn'
+L['CHANNEL: LFG'] = '寻求组队'
 L['CHANNEL: Recruit'] = '公会招募'
 
 L['Wild PvP'] = '野外PvP'
@@ -126,6 +136,8 @@ L['Ysondre'] = '伊森德雷' -- 伊森德雷
 L['Taerar'] = '泰拉尔' -- 泰拉尔
 L['Emeriss'] = '艾莫莉丝' -- 艾莫莉丝
 L['Lethon'] = '莱索恩' -- 莱索恩
+
+L['SHORT'] = '快速搜索'
 
 L['SHORT: Molten Core'] = 'MC' -- 熔火之心
 L['SHORT: Onyxia\'s Lair'] = '黑龙' -- 奥妮克希亚的巢穴
@@ -168,3 +180,12 @@ L['SHORT: Ysondre'] = '' -- 伊森德雷
 L['SHORT: Taerar'] = '' -- 泰拉尔
 L['SHORT: Emeriss'] = '' -- 艾莫莉丝
 L['SHORT: Lethon'] = '' -- 莱索恩
+
+L['MODE:with new player'] = '带新'
+L['MODE:self-improvement'] = '自强'
+L['MODE:Roll'] = 'Roll'
+L['MODE:AA'] = 'AA'
+L['MODE:Melee'] = '菜刀'
+L['MODE:Transfer'] = '传送'
+L['MODE:Others'] = '其他'
+L['MODE:Action'] = '拍卖'

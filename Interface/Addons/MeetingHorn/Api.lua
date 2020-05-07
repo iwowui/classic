@@ -45,7 +45,7 @@ local BASE_TIMEOUT = 90
 
 local function category(path, name, channel, interval, timeout, inCity)
     if not channel then
-        channel = {L['CHANNEL: Group'], '寻求组队'}
+        channel = {L['CHANNEL: Group'], L['CHANNEL: LFG']}
     end
 
     local channels = {}
@@ -86,7 +86,7 @@ local CATEGORY_LIST = {
 }
 
 local CLASS_INFO = FillLocalizedClassList{}
-local MODE_LIST = {'带新', '自强', 'Roll', 'AA', '菜刀', '传送', '其它'}
+local MODE_LIST = {L['MODE:with new player'], L['MODE:self-improvement'], L['MODE:Roll'],L['MODE:AA'], L['MODE:Melee'],L['MODE:Transfer'], L['MODE:Others'],L['MODE:Action']}
 local MODE_IDS = tInvert(MODE_LIST)
 local CATEGORY_DATA = invert(CATEGORY_LIST, 'path')
 local SHORT_NAMES = {
@@ -208,18 +208,18 @@ local ACTIVITY_LIST = { --
     raid(1977, 20), -- 祖尔格拉布
     raid(3429, 20), -- 安其拉废墟
     -- 地下城
-    dungeon(2017, 58), -- 斯坦索姆
+    dungeon(2017, 57), -- 斯坦索姆
     dungeon(2057, 58), -- 通灵学院
-    dungeon('Dire Maul - North', 58), -- 厄运之槌 - 北
-    dungeon('Dire Maul - West', 58), -- 厄运之槌 - 西
-    dungeon('Dire Maul - East', 58), -- 厄运之槌 - 东
-    dungeon('Upper Blackrock Spire', 55, 10), -- 黑石塔上层
-    dungeon('Lower Blackrock Spire', 55), -- 黑石塔下层
-    dungeon(1584, 52), -- 黑石深渊
-    dungeon(1477, 50), -- 阿塔哈卡神庙
-    dungeon(2100, 46), -- 玛拉顿
-    dungeon(1176, 44), -- 祖尔法拉克
-    dungeon(1337, 41), -- 奥达曼
+    dungeon('Dire Maul - North', 56), -- 厄运之槌 - 北
+    dungeon('Dire Maul - West', 56), -- 厄运之槌 - 西
+    dungeon('Dire Maul - East', 56), -- 厄运之槌 - 东
+    dungeon('Upper Blackrock Spire', 56, 10), -- 黑石塔上层
+    dungeon('Lower Blackrock Spire', 56), -- 黑石塔下层
+    dungeon(1584, 48), -- 黑石深渊
+    dungeon(1477, 44), -- 阿塔哈卡神庙
+    dungeon(2100, 40), -- 玛拉顿
+    dungeon(1176, 43), -- 祖尔法拉克
+    dungeon(1337, 38), -- 奥达曼
     dungeon(722, 37), -- 剃刀高地
     dungeon('Scarlet Monastery - Cathedral', 35), -- 血色修道院 - 大教堂
     dungeon('Scarlet Monastery - Armory', 32), -- 血色修道院 - 军械库
@@ -228,8 +228,8 @@ local ACTIVITY_LIST = { --
     dungeon(491, 29), -- 剃刀沼泽
     dungeon(721, 29), -- 诺莫瑞根
     dungeon(717, 24), -- 监狱
-    dungeon(719, 24), -- 黑暗深渊
-    dungeon(209, 22), -- 影牙城堡
+    dungeon(719, 23), -- 黑暗深渊
+    dungeon(209, 20), -- 影牙城堡
     dungeon(718, 17), -- 哀嚎洞穴
     dungeon(1581, 17), -- 死亡矿井
     dungeon(2437, 13), -- 怒焰裂谷
@@ -300,6 +300,17 @@ local ACTIVITY_LIST = { --
 
 ACTIVITY_LIST[0] = {path = 'Other', name = CHANNEL, interval = 30, timeout = 60, category = CATEGORY_DATA['Other']}
 
+local SHORT_LIST={
+    L['SHORT: Molten Core'],
+    L['SHORT: Onyxia\'s Lair'],
+    L['SHORT: Blackwing Lair'],
+    L['SHORT: Ahn\'Qiraj Temple'],
+    L['SHORT: Naxxramas'],
+    L['SHORT: Zul\'Gurub'],
+    L['SHORT: Ruins of Ahn\'Qiraj']
+}
+
+
 local function pick(path, isCreator)
     local result = {}
     local minLevel = 60
@@ -338,6 +349,10 @@ ns.ACTIVITY_MENU = {}
 ns.ACTIVITY_FILTER_MENU = {{text = ALL}}
 ns.MODE_MENU = {}
 ns.MODE_FILTER_MENU = {{text = ALL}}
+ns.SHORT_MENU = {}
+ns.SHORT_FILTER_MENU = {{text = ALL}}
+
+
 
 for _, category in ipairs(CATEGORY_LIST) do
     local path = category.path
@@ -385,6 +400,13 @@ for i, v in ipairs(CATEGORY_LIST) do
     for k, v in pairs(v.channels) do
         OUR_CHANNELS[k] = true
     end
+end
+
+for id, short in ipairs(SHORT_LIST) do
+    -- print(short)
+    local menuItem = {text = short, value = id}
+    tinsert(ns.SHORT_MENU, menuItem)
+    tinsert(ns.SHORT_FILTER_MENU, menuItem)
 end
 
 function ns.NameToId(name)

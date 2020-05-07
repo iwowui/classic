@@ -75,7 +75,7 @@ function NWB:OnCommReceived(commPrefix, string, distribution, sender)
 		if (not string.match(tempSender, "-")) then
 			tempSender = tempSender .. "-" .. GetNormalizedRealmName();
 		end
-		NWB.hasAddon[tempSender] = 0;
+		NWB.hasAddon[tempSender] = "0";
 	end
 	if (UnitInBattleground("player") and distribution ~= "GUILD") then
 		return;
@@ -124,7 +124,7 @@ function NWB:OnCommReceived(commPrefix, string, distribution, sender)
 		data = args[2]; --Data (everything after version arg).
 		remoteVersion = 0;
 	end
-	NWB.hasAddon[sender] = remoteVersion or 0;
+	NWB.hasAddon[sender] = remoteVersion or "0";
 	--if (commPrefix == "NWB") then
 		--NWB:debug("received", commPrefix, distribution, sender, cmd);
 	--end
@@ -364,12 +364,21 @@ function NWB:createData(distribution)
 	return data;
 end
 
+local lastSendLayerMap = {};
 function NWB:createDataLayered(distribution)
 	local data = {};
 	if (UnitInBattleground("player") and distribution ~= "GUILD") then
 		return data;
 	end
-	--data.layers = {};
+	if (not lastSendLayerMap[distribution]) then
+		lastSendLayerMap[distribution] = 0;
+	end
+	local sendLayerMap;
+	if ((GetServerTime() - lastSendLayerMap[distribution]) > 540 or NWB.isDebug or distribution == "GUILD") then
+		--Only send layermap info once per 10mins, this data won't change much except right after a server restart.
+		--So there's no need to use the addon bandwidth every time we send, 540 seconds should be every 2rd yell.
+		sendLayerMap = true;
+	end
 	for layer, v in NWB:pairsByKeys(NWB.data.layers) do
 		if (NWB.data.layers[layer].rendTimer > (GetServerTime() - NWB.db.global.rendRespawnTime)) then
 			--Only create layers table if we have valid timers so we don't waste addon bandwidth with useless data.
@@ -446,6 +455,21 @@ function NWB:createDataLayered(distribution)
 			data.layers[layer]['nefNpcDied'] = NWB.data.layers[layer].nefNpcDied;
 			if (NWB.data.layers[layer].GUID) then
 				data.layers[layer]['GUID'] = NWB.data.layers[layer].GUID;
+			end
+		end
+		if (sendLayerMap) then
+			if (NWB.data.layers[layer].layerMap and next(NWB.data.layers[layer].layerMap)) then
+				lastSendLayerMap[distribution] = GetServerTime();
+				if (not data.layers) then
+					data.layers = {};
+				end
+				if (not data.layers[layer]) then
+					data.layers[layer] = {};
+				end
+				--NWB:debug("sending layer map data", distribution);
+				data.layers[layer].layerMap = NWB.data.layers[layer].layerMap;
+				--Don't share created time for now.
+				data.layers[layer].layerMap.created = nil;
 			end
 		end
 	end
@@ -574,7 +598,7 @@ function NWB:receivedData(data, sender, distribution)
 	--end
 	if (not NWB:validateData(data)) then
 		NWB:debug("invalid data received.");
-		NWB:debug(data);
+		--NWB:debug(data);
 		return;
 	end
 	if (data["rendTimer"] and (data["rendTimer"] < NWB.data["rendTimer"] or 
@@ -725,8 +749,18 @@ function NWB:receivedData(data, sender, distribution)
 											hasNewData = true;
 										end
 									end
+								elseif (k == "layerMap") then
+									if (not NWB.data.layers[layer].layerMap) then
+										NWB.data.layers[layer].layerMap = {};
+									end
+									for zoneID, mapID in pairs(v) do
+										if (not NWB.data.layers[layer].layerMap[zoneID]) then
+											NWB.data.layers[layer].layerMap[zoneID] = mapID;
+										end
+									end
 								elseif (v ~= nil and k ~= "layers") then
 									if (not validKeys[k]) then
+										--NWB:debug(data)
 										NWB:debug("Invalid key received:", k, v);
 									end
 									--if (not validKeys[k] and not next(v)) then
@@ -2642,10 +2676,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 			NWB:requestSettings("GUILD");
 			NWB:syncBuffsWithCurrentDuration();
 		end)
-		C_Timer.After(60, function()
+		C_Timer.After(45, function()
 			--Can't work out why sometimes 2 users send same msg in guild chat, someitmes they don't register other as having the addon.
 			--Another temp bug fix just to see if it's an issue with the serialized table data being sent..
-			NWB:sendComm("GUILD", "ping");
+			--NWB:sendComm("GUILD", "ping");
+			C_ChatInfo.SendAddonMessage(NWB.commPrefix, "ping", "GUILD");
 		end)
 	elseif (event == "PLAYER_ENTERING_WORLD") then
 		if (doLogon) then
@@ -3048,6 +3083,10 @@ function SlashCmdList.NWBCMD(msg, editBox)
 	end
 	if (msg == "reset") then
 		NWB:resetTimerData();
+		return;
+	end
+	if (msg == "layermap") then
+		NWB:openLayerMapFrame();
 		return;
 	end
 	if (msg == "version" or msg == "versions") then
@@ -4559,9 +4598,11 @@ function NWB:getDmfStartEnd(month, nextYear)
 		hourOffset = 8; -- 8am.
 		validRegion = true;
 	elseif (region == 2) then
-		--Korea 9pm UTC sunday (4am monday local) reset time.
-		dayOffset = 2;
-		hourOffset = 21;
+		--Korea 1am UTC monday (9am monday local) reset time.
+		--(TW seems to be region 2 for some reason also? Hopefully they have same DMF spawn).
+		--I can change it to server name based if someone from KR says this spawn time is wrong.
+		dayOffset = 3;
+		hourOffset = 1;
 		validRegion = true;
 	elseif (region == 3) then
 		--EU Monday 4am UTC reset time.
@@ -4569,9 +4610,9 @@ function NWB:getDmfStartEnd(month, nextYear)
 		hourOffset = 4; -- 4am.
 		validRegion = true;
 	elseif (region == 4) then
-		--Taiwan 8pm UTC sunday (4am monday local) reset time.
-		dayOffset = 2;
-		hourOffset = 20;
+		--Taiwan 1am UTC monday (9am monday local) reset time.
+		dayOffset = 3;
+		hourOffset = 1;
 		validRegion = true;
 	elseif (region == 5) then
 		--China 8pm UTC sunday (4am monday local) reset time.
@@ -5415,6 +5456,11 @@ function NWB:createNewLayer(zoneID, GUID)
 			--zanYell = 0,
 			--zanYell2 = 0,
 		};
+		if (NWB.data.layerMapBackups and NWB.data.layerMapBackups[zoneID]
+				and (GetServerTime() - NWB.data.layerMapBackups[zoneID].created) < 518400) then
+				--Restore layermap backup if less than 6 days old.
+			NWB.data.layers[zoneID].layerMap = NWB.data.layerMapBackups[zoneID];
+		end
 		NWB:debug("created new layer", zoneID);
 		NWB:createWorldbuffMarkers();
 	end
@@ -5424,7 +5470,7 @@ function NWB:removeOldLayers()
 	local expireTime = 21600;
 	local removed;
 	if (next(NWB.data.layers)) then
-		for k, v in NWB:pairsByKeys(NWB.data.layers) do
+		for k, v in pairs(NWB.data.layers) do
 			--Check if this layer has any current timers old than an hour expired.
 			local validTimer = nil;
 			if (v.rendTimer and (v.rendTimer + expireTime) > (GetServerTime() - NWB.db.global.rendRespawnTime)) then
@@ -5447,9 +5493,25 @@ function NWB:removeOldLayers()
 				v.created = 0;
 			end
 			if (not validTimer and v.created < GetServerTime() - expireTime) then
+				if (v.layerMap and next(v.layerMap)) then
+					if (not NWB.data.layerMapBackups) then
+						NWB.data.layerMapBackups = {};
+					end
+					NWB.data.layerMapBackups[k] = v.layerMap;
+					NWB.data.layerMapBackups[k].created = v.created or 0;
+				end
 				NWB.data.layers[k] = nil;
 				removed = true;
 				NWB:debug("Removed old layer", k);
+			end
+		end
+	end
+	if (NWB.data.layerMapBackups and next(NWB.data.layers)) then
+		for k, v in pairs(NWB.data.layerMapBackups) do
+			--Remove layermap backups older than 6 days.
+			--Thesebackups are just there to be restored when a layer dissapears because no timers for a long time (like overnight).
+			if (not v.created or (GetServerTime() - v.created) > 518400) then
+				NWB.data.layerMapBackups[k] = nil;
 			end
 		end
 	end
@@ -5541,17 +5603,41 @@ end
 local f = CreateFrame("Frame");
 f:RegisterEvent("UNIT_TARGET");
 f:RegisterEvent("PLAYER_TARGET_CHANGED");
-f:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+f:RegisterEvent("UPDATE_MOUSEOVER_UNIT");
+f:RegisterEvent("GROUP_JOINED");
+f:RegisterEvent("ZONE_CHANGED_NEW_AREA");
+f:RegisterEvent("PLAYER_ENTERING_WORLD");
+f:RegisterEvent("UNIT_PHASE");
+NWB.lastJoinedGroup = 0;
+NWB.validLayer = false;
 f:SetScript('OnEvent', function(self, event, ...)
 	if (event == "UNIT_TARGET" or event == "PLAYER_TARGET_CHANGED") then
+		--These 2 funcs need to be merged after testing.
 		NWB:setCurrentLayerText("target");
+		NWB:mapCurrentLayer("target");
 	elseif (event == "UPDATE_MOUSEOVER_UNIT") then
 		NWB:setCurrentLayerText("mouseover");
+		NWB:mapCurrentLayer("mouseover");
+	elseif (event == "GROUP_JOINED") then
+		NWB.lastKnownLayerMapID = 0;
+		NWB.lastJoinedGroup = GetServerTime();
+	elseif (event == "ZONE_CHANGED_NEW_AREA" or event == "PLAYER_ENTERING_WORLD") then
+		NWB:recalcMinimapLayerFrame();
+	elseif (event == "UNIT_PHASE") then
+		local unit = ...;
+		--This event fires for team members not for self.
+		--But seems ok way to find if you join a team to phase.
+		--Seems to fire even when you are in the same phase, guess it will still do for now to reset the phase frame and make user retarget a npc.
+		if (UnitIsGroupLeader(unit)) then
+			NWB.currentLayer = 0;
+			NWB:recalcMinimapLayerFrame();
+		end
 	end
 end)
 
 NWB.lastKnownLayer = 0;
 NWB.lastKnownLayerID = 0;
+NWB.lastKnownLayerMapID = 0;
 function NWB:setCurrentLayerText(unit)
 	if (not NWB.isLayered or not unit) then
 		return;
@@ -5575,7 +5661,7 @@ function NWB:setCurrentLayerText(unit)
 		NWBlayerFrame.fs2:SetText("|cFF9CD6DETarget any NPC in Stormwind to see your current layer.|r");
 		return;
 	end
-	if (unitType ~= "Creature") then
+	if (unitType ~= "Creature" or NWB.companionCreatures[tonumber(npcID)]) then
 		NWBlayerFrame.fs2:SetText("|cFF9CD6DETarget any NPC in Stormwind to see your current layer.|r");
 		return;
 	end
@@ -5587,6 +5673,9 @@ function NWB:setCurrentLayerText(unit)
 			NWB.currentLayer = count;
 			NWB.lastKnownLayer = count;
 			NWB.lastKnownLayerID = k;
+			if ((GetServerTime() - NWB.lastJoinedGroup) > 180) then --What's the longest time it can take to change layer?
+				NWB.lastKnownLayerMapID = tonumber(k);
+			end
 			NWB.lastKnownLayerTime = GetServerTime();
 			NWB:recalcMinimapLayerFrame();
 			return;
@@ -5597,6 +5686,252 @@ function NWB:setCurrentLayerText(unit)
 		NWB:createNewLayer(tonumber(zoneID), GUID);
 	end
 	NWBlayerFrame.fs2:SetText("|cFF9CD6DECan't find current layer or no timers active for this layer.|r");
+end
+
+--This is in early testing and relys on a few things.
+--[[If you cross a zone border but can still see mobs from the previous zone and target them it could map the previous zoneid
+	to the new zone, it won't overwrite an already known id so this should be fine aslong as the previous zone was
+	shared by someone else or we mouseovered any mob in the previous zone and recorded our own data.
+	On rare occasions it could map the wrong id if previous zone we came from is completly unknown,
+	but with the data being shared around the server, most of the time after server restarts it will just
+	get mapped one time by a few early players and shared around, so the chances of this bug happening is pretty low.]]
+	
+function NWB:mapCurrentLayer(unit)
+	--Speedy Creature-0-4671-70-27258-16547-0000312293
+	if (not NWB.isLayered or not unit or UnitOnTaxi("player") or IsInInstance() or UnitInBattleground("player")) then
+		return;
+	end
+	local _, _, zone = NWB.dragonLib:GetPlayerZonePosition();
+	if ((NWB.faction == "Alliance" and zone == 1453) or (NWB.faction == "Horde" and zone == 1454)) then
+		return;
+	end
+	local GUID = UnitGUID(unit);
+	local unitType, zoneID, npcID;
+	if (GUID) then
+		unitType, _, _, _, zoneID, npcID = strsplit("-", GUID);
+	end
+	if (unitType ~= "Creature" or NWB.companionCreatures[tonumber(npcID)]) then
+		--NWB:debug("not a creature");
+		return;
+	end
+	if (not zoneID) then
+		NWB:debug("no zone id");
+		return;
+	end
+	zoneID = tonumber(zoneID);
+	--Only start mapping if we have come from org/stormwind and know our layer already.
+	--And only start mapping if we haven't joined a group since leaving org.
+	if (NWB.lastKnownLayerMapID < 1) then
+		local foundOldID;
+		if ((GetServerTime() - NWB.lastJoinedGroup) > 180) then
+			for k, v in pairs(NWB.data.layers) do
+				if (v.layerMap and next(v.layerMap)) then
+					for zone, map in pairs(v.layerMap) do
+						if (zone == zoneID) then
+							--Also can start mapping if we pickup our current layer from an already known id.
+							NWB:debug("found mapped id");
+							NWB.lastKnownLayerMapID = k;
+							foundOldID = true;
+						end
+					end
+				end
+			end
+		end
+		if (not foundOldID or NWB.lastKnownLayerMapID < 1) then
+			NWB:debug("no known last layer");
+			return;
+		end
+	end
+	--Don't map a new zone if it's a guard outside capital city with the city zoneid.
+	if (zoneID == NWB.lastKnownLayerMapID) then
+		NWB:debug("trying to map zone to already known layer");
+		return;
+	end
+	if (NWB.data.layers[NWB.lastKnownLayerMapID]) then
+		if (not NWB.data.layers[NWB.lastKnownLayerMapID].layerMap) then
+			--Create layer map if doesn't exist.
+			NWB.data.layers[NWB.lastKnownLayerMapID].layerMap = {};
+			NWB.data.layers[NWB.lastKnownLayerMapID].layerMap.created = GetServerTime();
+		end
+		if (not NWB.data.layers[NWB.lastKnownLayerMapID].layerMap[zoneID]) then
+			--If zone is not mapped yet since server restart then add it.
+			for k, v in pairs(NWB.data.layers[NWB.lastKnownLayerMapID].layerMap) do
+				if (k == zoneID) then
+					--If we already have a zoneid with this mapid then don't overwrite it.
+					NWB:debug("mapid already known");
+					return;
+				end
+			end
+			NWB:debug("mapped new zone to layer id", NWB.lastKnownLayerMapID, "zoneid:", zoneID, "zone:", zone);
+			NWB.data.layers[NWB.lastKnownLayerMapID].layerMap[zoneID] = zone;
+			NWB:sendData("GUILD");
+		else
+			--NWB:debug("zoneid already known");
+		end
+	end
+	NWB:recalcMinimapLayerFrame();
+end
+
+function NWB:resetLayerMaps()
+	if (next(NWB.data.layers)) then
+		for k, v in pairs(NWB.data.layers) do
+			NWB.data.layers[k].layerMap = nil;
+		end
+	end
+end
+
+--Version guild display.
+local NWBLayerMapFrame = CreateFrame("ScrollFrame", "NWBLayerMapFrame", UIParent, "InputScrollFrameTemplate");
+NWBLayerMapFrame:Hide();
+NWBLayerMapFrame:SetToplevel(true);
+NWBLayerMapFrame:SetMovable(true);
+NWBLayerMapFrame:EnableMouse(true);
+tinsert(UISpecialFrames, "NWBLayerMapFrame");
+NWBLayerMapFrame:SetPoint("CENTER", UIParent, 0, 100);
+NWBLayerMapFrame:SetBackdrop({bgFile = "Interface\\Buttons\\WHITE8x8",insets = {top = 0, left = 0, bottom = 0, right = 0}});
+NWBLayerMapFrame:SetBackdropColor(0,0,0,.5);
+NWBLayerMapFrame.CharCount:Hide();
+NWBLayerMapFrame:SetFrameStrata("HIGH");
+NWBLayerMapFrame.EditBox:SetAutoFocus(false);
+NWBLayerMapFrame.EditBox:SetScript("OnKeyDown", function(self, arg)
+	--If control key is down keep focus for copy/paste to work.
+	--Otherwise remove focus so "enter" can be used to open chat and not have a stuck cursor on this edit box.
+	if (not IsControlKeyDown()) then
+		NWBLayerMapFrame.EditBox:ClearFocus();
+	end
+end)
+NWBLayerMapFrame.EditBox:SetScript("OnShow", function(self, arg)
+	NWBLayerMapFrame:SetVerticalScroll(0);
+end)
+local buffUpdateTime = 0;
+NWBLayerMapFrame:HookScript("OnUpdate", function(self, arg)
+	--Only update once per second.
+	if (GetServerTime() - buffUpdateTime > 0 and self:GetVerticalScrollRange() == 0) then
+		NWB:recalclayerFrame();
+		buffUpdateTime = GetServerTime();
+	end
+end)
+NWBLayerMapFrame.fs = NWBLayerMapFrame:CreateFontString("NWBLayerMapFrameFS", "HIGH");
+NWBLayerMapFrame.fs:SetPoint("TOP", 0, -0);
+NWBLayerMapFrame.fs:SetFont(NWB.regionFont, 14);
+NWBLayerMapFrame.fs:SetText("|cFFFFFF00Layer Mapping for " .. GetRealmName() .. "|r");
+
+local NWBLayerMapDragFrame = CreateFrame("Frame", "NWBLayerMapDragFrame", NWBLayerMapFrame);
+NWBLayerMapDragFrame:SetToplevel(true);
+NWBLayerMapDragFrame:EnableMouse(true);
+NWBLayerMapDragFrame:SetWidth(205);
+NWBLayerMapDragFrame:SetHeight(38);
+NWBLayerMapDragFrame:SetPoint("TOP", 0, 4);
+NWBLayerMapDragFrame:SetFrameLevel(131);
+NWBLayerMapDragFrame.tooltip = CreateFrame("Frame", "NWBLayerMapDragTooltip", NWBLayerMapDragFrame, "TooltipBorderedFrameTemplate");
+NWBLayerMapDragFrame.tooltip:SetPoint("CENTER", NWBLayerMapDragFrame, "TOP", 0, 12);
+NWBLayerMapDragFrame.tooltip:SetFrameStrata("TOOLTIP");
+NWBLayerMapDragFrame.tooltip:SetFrameLevel(9);
+NWBLayerMapDragFrame.tooltip:SetAlpha(.8);
+NWBLayerMapDragFrame.tooltip.fs = NWBLayerMapDragFrame.tooltip:CreateFontString("NWBLayerMapDragTooltipFS", "HIGH");
+NWBLayerMapDragFrame.tooltip.fs:SetPoint("CENTER", 0, 0.5);
+NWBLayerMapDragFrame.tooltip.fs:SetFont(NWB.regionFont, 12);
+NWBLayerMapDragFrame.tooltip.fs:SetText("Hold to drag");
+NWBLayerMapDragFrame.tooltip:SetWidth(NWBLayerMapDragFrame.tooltip.fs:GetStringWidth() + 16);
+NWBLayerMapDragFrame.tooltip:SetHeight(NWBLayerMapDragFrame.tooltip.fs:GetStringHeight() + 10);
+NWBLayerMapDragFrame:SetScript("OnEnter", function(self)
+	NWBLayerMapDragFrame.tooltip:Show();
+end)
+NWBLayerMapDragFrame:SetScript("OnLeave", function(self)
+	NWBLayerMapDragFrame.tooltip:Hide();
+end)
+NWBLayerMapDragFrame.tooltip:Hide();
+NWBLayerMapDragFrame:SetScript("OnMouseDown", function(self, button)
+	if (button == "LeftButton" and not self:GetParent().isMoving) then
+		self:GetParent().EditBox:ClearFocus();
+		self:GetParent():StartMoving();
+		self:GetParent().isMoving = true;
+		--self:GetParent():SetUserPlaced(false);
+	end
+end)
+NWBLayerMapDragFrame:SetScript("OnMouseUp", function(self, button)
+	if (button == "LeftButton" and self:GetParent().isMoving) then
+		self:GetParent():StopMovingOrSizing();
+		self:GetParent().isMoving = false;
+	end
+end)
+NWBLayerMapDragFrame:SetScript("OnHide", function(self)
+	if (self:GetParent().isMoving) then
+		self:GetParent():StopMovingOrSizing();
+		self:GetParent().isMoving = false;
+	end
+end)
+
+--Top right X close button.
+local NWBLayerMapFrameClose = CreateFrame("Button", "NWBLayerMapFrameClose", NWBLayerMapFrame, "UIPanelCloseButton");
+NWBLayerMapFrameClose:SetPoint("TOPRIGHT", -5, 8.6);
+NWBLayerMapFrameClose:SetWidth(31);
+NWBLayerMapFrameClose:SetHeight(31);
+NWBLayerMapFrameClose:SetScript("OnClick", function(self, arg)
+	NWBLayerMapFrame:Hide();
+end)
+
+function NWB:openLayerMapFrame()
+	if (not NWB.db.global.experimental) then
+		return;
+	end
+	NWBLayerMapFrame.fs:SetFont(NWB.regionFont, 14);
+	if (NWBLayerMapFrame:IsShown()) then
+		NWBLayerMapFrame:Hide();
+	else
+		NWBLayerMapFrame:SetHeight(300);
+		NWBLayerMapFrame:SetWidth(450);
+		local fontSize = false
+		NWBLayerMapFrame.EditBox:SetFont(NWB.regionFont, 14);
+		NWBLayerMapFrame.EditBox:SetWidth(NWBLayerMapFrame:GetWidth() - 30);
+		NWBLayerMapFrame:Show();
+		NWB:recalcLayerMapFrame()
+		--Changing scroll position requires a slight delay.
+		--Second delay is a backup.
+		C_Timer.After(0.05, function()
+			NWBLayerMapFrame:SetVerticalScroll(0);
+		end)
+		C_Timer.After(0.3, function()
+			NWBLayerMapFrame:SetVerticalScroll(0);
+		end)
+		--So interface options and this frame will open on top of each other.
+		if (InterfaceOptionsFrame:IsShown()) then
+			NWBLayerMapFrame:SetFrameStrata("DIALOG")
+		else
+			NWBLayerMapFrame:SetFrameStrata("HIGH")
+		end
+	end
+end
+
+function NWB:recalcLayerMapFrame()
+	NWBLayerMapFrame.EditBox:SetText("\n");
+	if (not IsInGuild()) then
+		NWBLayerMapFrame.EditBox:Insert("|cffFFFF00No zones have been mapped yet since server restart.\n");
+	else
+		local count = 0;
+		for k, v in NWB:pairsByKeys(NWB.data.layers) do
+			count = count + 1;
+			if (NWB.faction == "Horde") then
+				NWBLayerMapFrame.EditBox:Insert("\n|cff00ff00[Layer " .. count .. "]|r  |cff9CD6DE(Orgrimmar " .. k .. ")|r\n");
+			else
+				NWBLayerMapFrame.EditBox:Insert("\n|cff00ff00[Layer " .. count .. "]|r  |cff9CD6DE(Stormwind " .. k .. ")|r\n");
+			end
+			if (v.layerMap and next(v.layerMap)) then
+				for kk, vv in NWB:pairsByKeys(v.layerMap) do
+					local mapInfo = C_Map.GetMapInfo(vv);
+					local zoneInfo = "Unknown";
+					if (mapInfo and next(mapInfo)) then
+						zoneInfo = mapInfo.name;
+					end
+					---NWBLayerMapFrame.EditBox:Insert("  -|cffFFFF00" .. zoneInfo .. " ".. kk .. " |cff9CD6DE" .. vv .. "\n");
+					NWBLayerMapFrame.EditBox:Insert("  -|cffFFFF00" .. zoneInfo .. " |cFF989898(" .. kk .. ")|r\n");
+				end
+			else --C_Map.GetAreaInfo(
+			--C_Map.GetMapInfoAtPosition(1434, 1, 1)
+				NWBLayerMapFrame.EditBox:Insert("  -|cffFFFF00No zones mapped for this layer yet.\n");
+			end
+		end
+	end
 end
 
 --Reset layers one time, needed when upgrading from old version.
@@ -5664,26 +5999,6 @@ end
 --function NWB:validateLayer(layer)
 --	return true;
 --end
-
-local f = CreateFrame("Frame");
-f:RegisterEvent("ZONE_CHANGED_NEW_AREA");
-f:RegisterEvent("PLAYER_ENTERING_WORLD");
-f:RegisterEvent("UNIT_PHASE");
-NWB.validLayer = false;
-f:SetScript('OnEvent', function(self, event, ...)
-	if (event == "ZONE_CHANGED_NEW_AREA" or event == "PLAYER_ENTERING_WORLD") then
-		NWB:recalcMinimapLayerFrame();
-	elseif (event == "UNIT_PHASE") then
-		local unit = ...;
-		--This event fires for team members not for self.
-		--But seems ok way to find if you join a team to phase.
-		--Seems to fire even when you are in the same phase, guess it will still do for now to reset the phase frame and make user retarget a npc.
-		if (UnitIsGroupLeader(unit)) then
-			NWB.currentLayer = 0;
-			NWB:recalcMinimapLayerFrame();
-		end
-	end
-end)
 	
 local MinimapLayerFrame = CreateFrame("Frame", "MinimapLayerFrame", Minimap, "ThinGoldEdgeTemplate");
 MinimapLayerFrame:SetPoint("BOTTOM", 2, 4);
@@ -5744,10 +6059,56 @@ function NWB:recalcMinimapLayerFrame()
 		return;
 	end
 	local _, _, zone = NWB.dragonLib:GetPlayerZonePosition();
-	if ((NWB.faction == "Horde" and zone == 1454)
+	local foundOldID, foundLayer;
+	--[[for k, v in pairs(NWB.data.layers) do
+		if (v.layerMap and next(v.layerMap)) then
+			for kk, vv in pairs(v.layerMap) do
+				if (zone == vv) then
+					--Also can start mapping if we pickup our current layer from an already known id.
+					WB:debug("found mapped id2");
+					NWB.lastKnownLayerMapID = k;
+					foundOldID = true;
+				end
+			end
+		end
+	end
+	local count, layerNum = 0, 0;
+	if (foundOldID) then
+		for k, v in NWB:pairsByKeys(NWB.data.layers) do
+			count = count + 1;
+			if (k == NWB.lastKnownLayerMapID) then
+				NWBlayerFrame.fs2:SetText("|cFF9CD6DEYou are currently on |cff00ff00[Layer " .. count .. "]|cFF9CD6DE.|r");
+				--NWB.currentLayer = count;
+				--NWB.lastKnownLayer = count;
+				--NWB.lastKnownLayerID = k;
+				--NWB.lastKnownLayerTime = GetServerTime();
+				layerNum = count;
+				foundLayer = true;
+			end
+		end
+	end]]
+	local count, layerNum = 0, 0;
+	if (NWB.lastKnownLayerMapID > 0) then
+		for k, v in NWB:pairsByKeys(NWB.data.layers) do
+			count = count + 1;
+			if (k == NWB.lastKnownLayerMapID) then
+				NWBlayerFrame.fs2:SetText("|cFF9CD6DEYou are currently on |cff00ff00[Layer " .. count .. "]|cFF9CD6DE.|r");
+				NWB.currentLayer = count;
+				NWB.lastKnownLayer = count;
+				NWB.lastKnownLayerID = k;
+				NWB.lastKnownLayerTime = GetServerTime();
+				layerNum = count;
+				foundLayer = true;
+			end
+		end
+	end
+	if (foundLayer or (NWB.faction == "Horde" and zone == 1454)
 			or (NWB.faction == "Alliance" and zone == 1453)) then
 		if (NWB.currentLayer > 0) then
 			MinimapLayerFrame.fs:SetText("Layer " .. NWB.lastKnownLayer);
+			MinimapLayerFrame.fs:SetFont("Fonts\\ARIALN.ttf", 12);
+		elseif (layerNum > 0) then
+			MinimapLayerFrame.fs:SetText("Layer " .. layerNum);
 			MinimapLayerFrame.fs:SetFont("Fonts\\ARIALN.ttf", 12);
 		else
 			MinimapLayerFrame.fs:SetText("No Layer");
@@ -5914,7 +6275,9 @@ function NWB:recalcVersionFrame()
 		end
 		for k, v in NWB:pairsByKeys(sorted) do
 			for kk, vv in NWB:pairsByKeys(v) do
-				NWBVersionFrame.EditBox:Insert("|cffFFFF00" .. k .. " |cff9CD6DE" .. kk .. "\n");
+				if (tonumber(k) > 0 or NWB.isDebug) then
+					NWBVersionFrame.EditBox:Insert("|cffFFFF00" .. k .. " |cff9CD6DE" .. kk .. "\n");
+				end
 			end
 		end
 	end

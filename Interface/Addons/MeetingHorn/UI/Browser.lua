@@ -23,8 +23,9 @@ function Browser:Constructor()
     self.Header2:SetText(L['Mode'])
     self.Header3:SetText(L['Members'])
     self.Header4:SetText(L['Leader'])
-    self.Header5:SetText(L['Comment'])
-    self.Header6:SetText(L['Operation'])
+    self.Header5:SetText(L['Class'])
+    self.Header6:SetText(L['Comment'])
+    self.Header7:SetText(L['Operation'])
     -- self.Header1:Disable()
     self.Header2:Disable()
     self.Header3:Disable()
@@ -35,32 +36,19 @@ function Browser:Constructor()
     -- self.CreateButton:SetText(L['Create Activity'])
     self.ActivityLabel:SetText(L['Activity'])
     self.ModeLabel:SetText(L['Activity Mode'])
+    self.QuickLabel:SetText(L['SHORT'])
     self.SearchLabel:SetText(SEARCH .. L['(Include channel message)'])
     self.ProgressBar.Loading:SetText(L['Receiving active data, please wait patiently'])
     self.ProgressBar:SetMinMaxValues(0, 1)
 
     ns.GUI:GetClass('Dropdown'):Bind(self.Activity)
     ns.GUI:GetClass('Dropdown'):Bind(self.Mode)
+    ns.GUI:GetClass('Dropdown'):Bind(self.Quick)
 
     local function Search()
         return self:Search()
     end
 
-    local function QuickButtonOnClick(button)
-        self.Activity:SetValue(button.id)
-    end
-
-    ---@param button Button
-    local function SetupQuickButton(button, id)
-        local data = ns.GetActivityData(id)
-        button:SetText(data.shortName or data.name)
-        button:SetScript('OnClick', QuickButtonOnClick)
-        button.id = id
-    end
-
-    SetupQuickButton(self.Quick1, 1)
-    SetupQuickButton(self.Quick2, 6)
-    SetupQuickButton(self.Quick3, 3)
 
     self.Activity:SetMenuTable(ns.ACTIVITY_FILTER_MENU)
     self.Activity:SetDefaultText(ALL)
@@ -76,7 +64,21 @@ function Browser:Constructor()
     self.Mode:SetDefaultText(ALL)
     self.Mode:SetCallback('OnSelectChanged', Search)
     self.Mode:SetMaxItem(20)
-
+    
+    self.Quick:SetDefaultText(ALL)
+    self.Quick:SetMenuTable(ns.SHORT_FILTER_MENU)
+    self.Quick:SetCallback('OnSelectChanged', function()
+        local QuickId = tonumber(self.Quick:GetValue())
+        local activityData = QuickId and ns.GetActivityData(QuickId)
+        if QuickId then
+            self.Activity:SetValue(QuickId)
+            self.Input:SetText(activityData and activityData.shortName or '')
+        else
+            self.Activity:SetValue(All)
+            self.Input:SetText('')
+        end
+        self:Search()
+    end)
     self.Input:HookScript('OnTextChanged', Search)
 
     ns.UI.ListView:Bind(self.ActivityList)
@@ -96,9 +98,11 @@ function Browser:Constructor()
 
         button.Name:SetText(item:GetTitle())
         button.Leader:SetText(item:GetLeader())
+        button.Class:SetText(item:GetLeaderLocClass())
         button.Comment:SetText(item:GetComment())
         button.Mode:SetText(item:GetMode())
         button.Leader:SetTextColor(GetClassColor(item:GetLeaderClass()))
+        button.Class:SetTextColor(GetClassColor(item:GetLeaderClass()))
         button.Comment:SetWidth(item:IsActivity() and 290 or 360)
         local members = item:GetMembers()
         if members then
@@ -108,7 +112,6 @@ function Browser:Constructor()
         else
             button.Members:SetText('-')
         end
-
         button.State:SetShown(state)
         button.State:SetText(state)
         button.State:SetTextColor(GREEN_FONT_COLOR:GetRGB())
@@ -146,6 +149,15 @@ function Browser:Constructor()
             GameTooltip:AddLine(format('%s |cff%02x%02x%02x%s|r', LEVEL, color.r * 255, color.g * 255, color.b * 255,
                                        item:GetLeaderLevel()), 1, 1, 1)
         end
+        local Race = item:GetLeaderLocRace()
+        if Race then
+            GameTooltip:AddLine(item:GetLeaderLocRace(), 1, 1, 1, true)
+        end
+        local Class = item:GetLeaderLocClass()
+        if Class then
+            GameTooltip:AddLine(format('%s |cff%02x%02x%02x%s|r', CLASS, r * 255, g * 255, b * 255,
+                                        item:GetLeaderLocClass()), 1, 1, 1)
+         end
         GameTooltip:AddLine(item:GetComment(), 0.6, 0.6, 0.6, true)
         GameTooltip:AddLine(' ')
 
@@ -161,16 +173,18 @@ function Browser:Constructor()
         self.Activity:SetValue(nil)
         self.Mode:SetValue(nil)
         self.Input:SetText('')
+        self.Quick:SetValue(nil)
         self.sortOrder = nil
         self.sortId = nil
-        self:Search()
+        self.ActivityList:SetItemList(nil)
+        self:Sort()
+        ns.LFG.idleTimer:Start(5)
+        self.ActivityList:Refresh()
+        -- self.Empty.Text:SetShown(#result == 0)
     end)
 
     self.Refresh:SetScript('OnClick', Search)
 
-    -- self.CreateButton:SetScript('OnClick', function()
-    --     ns.Addon.MainPanel:SetTab(2)
-    -- end)
 
     self.progressTimer = ns.Timer:New(function()
         self:UpdateProgress()
