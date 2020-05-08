@@ -1638,8 +1638,6 @@ function GUI:Init()
         self.lootLogFrame.frame:SetPoint("TOPLEFT", f, "TOPLEFT", 30, -50)
 
         self.lootLogFrame:RegisterEvents({
-
-
             ["OnClick"] = function (rowFrame, cellFrame, data, cols, row, realrow, column, sttable, button, ...)
                 clearAllFocus()
                 local entry, idx = GetEntryFromUI(rowFrame, cellFrame, data, cols, row, realrow, column, sttable)
@@ -1677,6 +1675,17 @@ function GUI:Init()
                     ChatEdit_InsertLink(entry["detail"]["item"])
                 end
             end,
+
+            ["OnDoubleClick"] = function (rowFrame, cellFrame, data, cols, row, realrow, column, sttable, button, ...)
+                local item, idx = GetEntryFromUI(rowFrame, cellFrame, data, cols, row, realrow, column, sttable)
+
+                if not item then
+                    return
+                end
+
+                SendChatMessage(ADDONSELF.GenExportLine(item, item["costcache"], true), f.reportopt.channel)
+
+            end,
         })
     end
 
@@ -1684,21 +1693,36 @@ function GUI:Init()
     -- report btn
     do
         local b = CreateFrame("Button", nil, f, "GameMenuButtonTemplate")
-        b:SetWidth(120)
+        b:SetWidth(95)
         b:SetHeight(25)
         b:SetPoint("BOTTOMLEFT", 40, 15)
         b:SetText(RAID)
-        -- b:SetText(L["Report"] .. " :" .. RAID)
         b:RegisterForClicks("LeftButtonUp", "RightButtonUp")
-        local icon = b:CreateTexture(nil, 'ARTWORK')
-        icon:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ArmoryChat")
-        icon:SetPoint('TOPLEFT', 10, -5)
-        icon:SetSize(16, 16)
+        do
+            local icon = b:CreateTexture(nil, 'ARTWORK')
+            icon:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ArmoryChat")
+            icon:SetPoint('TOPLEFT', 10, -5)
+            icon:SetSize(16, 16)
+        end
+
+        local ba = CreateFrame("Button", nil, f, "GameMenuButtonTemplate")
+        ba:SetWidth(25)
+        ba:SetHeight(25)
+        ba:SetPoint("LEFT", b, "RIGHT", 0, 0)
+        ba:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+        do
+            local icon = ba:CreateTexture(nil, 'ARTWORK')
+            icon:SetTexture("Interface\\ChatFrame\\ChatFrameExpandArrow")
+            icon:SetPoint('CENTER', 1, 0)
+            icon:SetSize(16, 16)
+        end
 
         local optctx = {
             channel = "RAID",
             filterzero = false,
         }
+
+        f.reportopt = optctx
 
         local setReportChannel = function(self)
             optctx.channel = self.arg1
@@ -1747,7 +1771,18 @@ function GUI:Init()
                 notCheckable = true,
             },
             {
-                text = L["Report"] .. " " .. L["Subgroup total"], 
+                text = L["Summary"], 
+                func = function()
+                    GenReport(Database:GetCurrentLedger()["items"], GUI:GetSplitNumber(), optctx.channel, {
+                        short = true,
+                        filterzero = optctx.filterzero,
+                        rounddown = GUI.rouddownCheck:GetChecked(),
+                    })
+                end, 
+                notCheckable = true,
+            },
+            {
+                text = L["Subgroup total"], 
                 func = function()
 
                     local c = 0
@@ -1810,7 +1845,7 @@ function GUI:Init()
                 notCheckable = true,
             },
             {
-                text = L["Report"] .. " " .. L["0 credit items"], 
+                text = L["0 credit items"], 
                 func = function()
                     local items = Database:GetCurrentLedger()["items"]
                     local lines = {}
@@ -1846,6 +1881,37 @@ function GUI:Init()
                 notCheckable = true,
             },
             {
+                text = L["Credit"], 
+                func = function()
+                    local lines = {}
+                    local _, _, revenue = calcavg(Database:GetCurrentLedger()["items"], GUI:GetSplitNumber(), function(item, cost)
+
+                        if cost > 0 then
+                            table.insert(lines, ADDONSELF.GenExportLine(item, cost, true))
+                        end
+
+                    end, nil, {
+                        rounddown = GUI.rouddownCheck:GetChecked(),
+                    })
+
+                    revenue = GetMoneyStringL(revenue)
+                    table.insert(lines, L["Revenue"] .. ": " .. revenue)
+
+                    SendToChatSlowly(lines, optctx.channel)
+                    
+                end, 
+                notCheckable = true,
+            },
+            {
+                text = L["Debit"], 
+                func = function()
+                    GenReport(Database:GetCurrentLedger()["items"], GUI:GetSplitNumber(), optctx.channel, {
+                        expenseonly = true,
+                    })
+                end, 
+                notCheckable = true,
+            },
+            {
                 isTitle = true,
                 text = OPTIONS,
                 notCheckable = true,
@@ -1872,6 +1938,10 @@ function GUI:Init()
                     rounddown = GUI.rouddownCheck:GetChecked(),
                 })
             end
+        end)
+
+        ba:SetScript("OnClick", function(self, button)
+            EasyMenu(channelTypeMenu, menuFrame, "cursor", 0 , 0, "MENU");
         end)
 
         local tooltip = GUI.commtooltip
@@ -1903,13 +1973,13 @@ function GUI:Init()
         b:SetScript("OnClick", function()
             if exportEditbox:GetParent():IsShown() then
                 lootLogFrame:Show()
-                countEdit:Show()
+                countEdit:Enable()
                 hidelockedCheck:Show()
                 exportEditbox:GetParent():Hide()
                 b:SetText(L["Export as text"])
             else
                 lootLogFrame:Hide()
-                countEdit:Hide()
+                countEdit:Disable()
                 hidelockedCheck:Hide()
                 exportEditbox:GetParent():Show()
                 b:SetText(L["Close text export"])

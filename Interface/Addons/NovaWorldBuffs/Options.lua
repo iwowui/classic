@@ -647,6 +647,116 @@ NWB.options = {
 			get = "getFilterNpcKilled",
 			set = "setFilterNpcKilled",
 		},
+		sounds = {
+			type = "header",
+			name = "Sounds",
+			order = 110,
+		},
+		soundsDesc = {
+			type = "description",
+			name = "|CffDEDE42Set sound to \"None\" to disable.",
+			fontSize = "medium",
+			order = 111,
+		},
+		disableAllSounds = {
+			type = "toggle",
+			name = "Disable All Sounds",
+			desc = "Disable all sounds from this addon.",
+			order = 112,
+			get = "getDisableAllSounds",
+			set = "setDisableAllSounds",
+		},
+		extraSoundOptions = {
+			type = "toggle",
+			name = "Extra Sound Options",
+			desc = "Enable this to display all the sounds from all your addons at once in the dropdown lists here.",
+			order = 113,
+			get = "getExtraSoundOptions",
+			set = "setExtraSoundOptions",
+			--width = "double",
+		},
+		soundOnlyInCity = {
+			type = "toggle",
+			name = "Only In City",
+			desc = "Only play buff sounds when you are in the main city where the buffs drop (Stranglethorn Vale included for Zandalar buff).",
+			order = 114,
+			get = "getSoundOnlyInCity",
+			set = "setSoundOnlyInCity",
+		},
+		soundsDisableInInstances = {
+			type = "toggle",
+			name = "Disable In Instances",
+			desc = "Disable sounds while in raids and instances.",
+			order = 115,
+			get = "getSoundsDisableInInstances",
+			set = "setSoundsDisableInInstances",
+		},
+		soundsFirstYell = {
+			type = "select",
+			name = "Buff Coming",
+			desc = "Sound to play when head is handed in and you have a few seconds before buff will drop (First NPC Yell).",
+			values = function()
+				return NWB:getSounds();
+			end,
+			order = 116,
+			get = "getSoundsFirstYell",
+			set = "setSoundsFirstYell",
+		},
+		soundsOneMinute = {
+			type = "select",
+			name = "One Minute Warning",
+			desc = "Sound to play for 1 minute left timer warning.",
+			values = function()
+				return NWB:getSounds();
+			end,
+			order = 117,
+			get = "getSoundsOneMinute",
+			set = "setSoundsOneMinute",
+		},
+		soundsRendDrop = {
+			type = "select",
+			name = "Rend Buff Gained",
+			desc = "Sound to play for Rend buff drops and you get the buff.",
+			values = function()
+				return NWB:getSounds("rend");
+			end,
+			order = 120,
+			get = "getSoundsRendDrop",
+			set = "setSoundsRendDrop",
+		},
+		soundsOnyDrop = {
+			type = "select",
+			name = "Ony Buff Gained",
+			desc = "Sound to play for Onyxia buff drops and you get the buff.",
+			values = function()
+				return NWB:getSounds("ony");
+			end,
+			order = 121,
+			get = "getSoundsOnyDrop",
+			set = "setSoundsOnyDrop",
+		},
+		soundsNefDrop = {
+			type = "select",
+			name = "Nef Buff Gained",
+			desc = "Sound to play for Nefarian buff drops and you get the buff.",
+			values = function()
+				return NWB:getSounds("nef");
+			end,
+			order = 122,
+			get = "getSoundsNefDrop",
+			set = "setSoundsNefDrop",
+		},
+		soundsZanDrop = {
+			type = "select",
+			name = "Zandalar Buff Gained",
+			desc = "Sound to play for Zandalar buff drops and you get the buff.",
+			values = function()
+				return NWB:getSounds("zan");
+			end,
+			order = 123,
+			get = "getSoundsZanDrop",
+			set = "setSoundsZanDrop",
+		},
 	},
 };
 
@@ -781,10 +891,21 @@ NWB.optionDefaults = {
 		filterNpcKilled = false,
 		minimapLayerFrame = true,
 		blackfathomBuffTime = 3600,
+		disableAllSounds = false,
+		extraSoundOptions = false,
+		soundOnlyInCity = false,
+		soundsDisableInInstances = true,
+		soundsFirstYell = "NWB - Electronic",
+		soundsOneMinute = "None",
+		soundsRendDrop = "NWB - Zelda",
+		soundsOnyDrop = "NWB - Zelda",
+		soundsNefDrop = "NWB - Zelda",
+		soundsZanDrop = "NWB - Zelda",
 		
 		resetLayers3 = true, --Reset layers one time (sometimes needed when upgrading from old version.
 		resetSongflowers = true, --Reset songflowers one time.
 		experimental = true, --Enable features being tested on occasion.
+		resetLayerMaps = true;
 	},
 };
 
@@ -1499,4 +1620,170 @@ end
 
 function NWB:getMinimapLayerFrame(info)
 	return self.db.global.minimapLayerFrame;
+end
+
+------------
+---Sounds---
+------------
+
+local sounds = {
+	--Random snipets from youtube.
+	["NWB - Zelda"] = "Interface\\AddOns\\NovaWorldBuffs\\Media\\Zelda.ogg",
+	["NWB - FF7"] = "Interface\\AddOns\\NovaWorldBuffs\\Media\\FF7.ogg",
+	["NWB - Bell"] = "Interface\\AddOns\\NovaWorldBuffs\\Media\\Bell.ogg",
+	["NWB - Alarm"] = "Interface\\AddOns\\NovaWorldBuffs\\Media\\Alarm.ogg",
+	["NWB - Alien"] = "Interface\\AddOns\\NovaWorldBuffs\\Media\\Alien.ogg",
+	["NWB - Clock"] = "Interface\\AddOns\\NovaWorldBuffs\\Media\\Clock.ogg",
+	["NWB - Electronic"] = "Interface\\AddOns\\NovaWorldBuffs\\Media\\Electronic.ogg",
+	["NWB - Pop"] = "Interface\\AddOns\\NovaWorldBuffs\\Media\\Pop.ogg",
+}
+function NWB:registerSounds()
+	for k, v in pairs(sounds) do
+		NWB.LSM:Register("sound", k, v);
+	end
+end
+
+function NWB:getSounds(type)
+	NWB.sounds = {};
+	if (self.db.global.extraSoundOptions) then
+		for _, v in pairs(NWB.LSM:List("sound")) do
+			NWB.sounds[v] = v;
+		end
+	else
+		for k, v in NWB:pairsByKeys(sounds) do
+			NWB.sounds[k] = k;
+		end
+		NWB.sounds["None"] = "None";
+	end
+	if (type == "rend") then
+		NWB.sounds["NWB - Rend Voice"] = "NWB - Rend Voice";
+	elseif (type == "ony") then
+		NWB.sounds["NWB - Ony Voice"] = "NWB - Ony Voice";
+	elseif (type == "nef") then
+		NWB.sounds["NWB - Nef Voice"] = "NWB - Nef Voice";
+		NWB.sounds["NWB - Ony Voice"] = "NWB - Ony Voice";
+	elseif (type == "zan") then
+		NWB.sounds["NWB - Zandalar Voice"] = "NWB - Zandalar Voice";
+	end
+	return NWB.sounds;
+end
+
+--Disable all sounds.
+function NWB:setDisableAllSounds(info, value)
+	self.db.global.disableAllSounds = value;
+end
+
+function NWB:getDisableAllSounds(info)
+	return self.db.global.disableAllSounds;
+end
+
+--Enable extra sounds.
+function NWB:setExtraSoundOptions(info, value)
+	self.db.global.extraSoundOptions = value;
+end
+
+function NWB:getExtraSoundOptions(info)
+	return self.db.global.extraSoundOptions;
+end
+
+--Only plays sounds in city.
+function NWB:setSoundOnlyInCity(info, value)
+	self.db.global.soundOnlyInCity = value;
+end
+
+function NWB:getSoundOnlyInCity(info)
+	return self.db.global.soundOnlyInCity;
+end
+
+--Only plays sounds in city.
+function NWB:setSoundsDisableInInstances(info, value)
+	self.db.global.soundsDisableInInstances = value;
+end
+
+function NWB:getSoundsDisableInInstances(info)
+	return self.db.global.soundsDisableInInstances;
+end
+
+--First yell sound.
+function NWB:setSoundsFirstYell(info, value)
+	self.db.global.soundsFirstYell = value;
+	local soundFile = NWB.LSM:Fetch("sound", value);
+	PlaySoundFile(soundFile);
+end
+
+function NWB:getSoundsFirstYell(info)
+	return self.db.global.soundsFirstYell;
+end
+
+--One minute warning sound.
+function NWB:setSoundsOneMinute(info, value)
+	self.db.global.soundsOneMinute = value;
+	local soundFile = NWB.LSM:Fetch("sound", value);
+	PlaySoundFile(soundFile);
+end
+
+function NWB:getSoundsOneMinute(info)
+	return self.db.global.soundsOneMinute;
+end
+
+--Rend drop sound.
+function NWB:setSoundsRendDrop(info, value)
+	self.db.global.soundsRendDrop = value;
+	if (value == "NWB - Rend Voice") then
+		PlaySoundFile("Interface\\AddOns\\NovaWorldBuffs\\Media\\RendDropped.ogg", "Master");
+	else
+		local soundFile = NWB.LSM:Fetch("sound", value);
+		PlaySoundFile(soundFile);
+	end
+end
+
+function NWB:getSoundsRendDrop(info)
+	return self.db.global.soundsRendDrop;
+end
+
+--Ony drop sound.
+function NWB:setSoundsOnyDrop(info, value)
+	self.db.global.soundsOnyDrop = value;
+	if (value == "NWB - Ony Voice") then
+		PlaySoundFile("Interface\\AddOns\\NovaWorldBuffs\\Media\\OnyxiaDropped.ogg", "Master");
+	else
+		local soundFile = NWB.LSM:Fetch("sound", value);
+		PlaySoundFile(soundFile);
+	end
+end
+
+function NWB:getSoundsOnyDrop(info)
+	return self.db.global.soundsOnyDrop;
+end
+
+--Nef drop sound.
+function NWB:setSoundsNefDrop(info, value)
+	self.db.global.soundsNefDrop = value;
+	if (value == "NWB - Nef Voice") then
+		PlaySoundFile("Interface\\AddOns\\NovaWorldBuffs\\Media\\NefarianDropped.ogg", "Master");
+	elseif (value == "NWB - Ony Voice") then
+		PlaySoundFile("Interface\\AddOns\\NovaWorldBuffs\\Media\\OnyxiaDropped.ogg", "Master");
+	else
+		local soundFile = NWB.LSM:Fetch("sound", value);
+		PlaySoundFile(soundFile);
+	end
+end
+
+function NWB:getSoundsNefDrop(info)
+	return self.db.global.soundsNefDrop;
+end
+
+--Zan drop sound.
+function NWB:setSoundsZanDrop(info, value)
+	self.db.global.soundsZanDrop = value;
+	if (value == "NWB - Zandalar Voice") then
+		PlaySoundFile("Interface\\AddOns\\NovaWorldBuffs\\Media\\ZandalarDropped.ogg", "Master");
+	else
+		local soundFile = NWB.LSM:Fetch("sound", value);
+		PlaySoundFile(soundFile);
+	end
+end
+
+function NWB:getSoundsZanDrop(info)
+	return self.db.global.soundsZanDrop;
 end

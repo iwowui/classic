@@ -2101,7 +2101,7 @@ Inst14Quest12_Note = "Anthion stands just outside the Stratholme portal. You nee
 Inst14Quest12_Prequest = "In Search of Anthion"
 Inst14Quest12_Folgequest = "Proof of Life"
 --
-Inst14Quest11name1 = "Ysida's Satchel"
+Inst14Quest12name1 = "Ysida's Satchel"
 
 --Quest 13 Alliance
 Inst14Quest13 = "13. The Left Piece of Lord Valthalak's Amulet"
@@ -2284,7 +2284,8 @@ Inst14Quest12_HORDE_Location = Inst14Quest12_Location
 Inst14Quest12_HORDE_Note = Inst14Quest12_Note
 Inst14Quest12_HORDE_Prequest = Inst14Quest12_Prequest
 Inst14Quest12_HORDE_Folgequest = Inst14Quest12_Folgequest
--- No Rewards for this quest
+--
+Inst14Quest12name1_HORDE = Inst14Quest12name1
 
 --Quest 13 Horde  (same as Quest 13 Alliance)
 Inst14Quest13_HORDE = Inst14Quest13

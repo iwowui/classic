@@ -1,6 +1,6 @@
 
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.61 (6th May 2020)
+	-- 	Leatrix Maps 1.13.62 (7th May 2020)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.61"
+	LeaMapsLC["AddonVer"] = "1.13.62"
 	LeaMapsLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -737,7 +737,7 @@
 			local lastMapID = WorldMapFrame.mapID
 
 			-- Store pan and zoom settings when map is hidden
-			hooksecurefunc(WorldMapFrame, "Hide", function()
+			WorldMapFrame:HookScript("OnHide", function()
 				if LeaMapsLC["RememberZoom"] == "On" then
 					lastZoomLevel = WorldMapFrame.ScrollContainer:GetCanvasScale()
 					lastHorizontal = WorldMapFrame.ScrollContainer:GetNormalizedHorizontalScroll()
@@ -747,7 +747,7 @@
 			end)
 
 			-- Restore pan and zoom settings when map is shown
-			hooksecurefunc(WorldMapFrame, "Show", function()
+			WorldMapFrame:HookScript("OnShow", function()
 				if LeaMapsLC["RememberZoom"] == "On" then
 					if WorldMapFrame.mapID == lastMapID then
 						WorldMapFrame.ScrollContainer:InstantPanAndZoom(lastZoomLevel, lastHorizontal, lastVertical)

@@ -828,11 +828,11 @@ Inst4Quest12ITC1_HORDE = Itemc4;
 Inst4Quest12description1_HORDE = AQITEM_PATTERN
 Inst4Quest12ID1_HORDE = "12696"
 --ITEM2
-Inst4Quest12ITC2_HORDE = Itemc2;
+Inst4Quest12ITC2_HORDE = Itemc3;
 Inst4Quest12description2_HORDE = AQITEM_BAG
 Inst4Quest12ID2_HORDE = "12849"
 --ITEM3
-Inst4Quest12ITC3_HORDE = Itemc3;
+Inst4Quest12ITC3_HORDE = Itemc2;
 Inst4Quest12description3_HORDE = AQITEM_POTION
 Inst4Quest12ID3_HORDE = "9224"
 
@@ -1752,7 +1752,11 @@ Inst14Quest11description3_HORDE = AQITEM_ONEHAND .. AQITEM_SWORD
 Inst14Quest11ID3_HORDE = "13246"
 
 --Quest 12 Horde
-Inst14Quest12Rewardtext_HORDE = AQNoReward
+Inst14Quest12Rewardtext_HORDE = AQDiscription_REWARD..WHITE.."1"
+--ITEM1
+Inst14Quest12ITC1_HORDE = Itemc2;
+Inst14Quest12description1_HORDE = AQITEM_BAG
+Inst14Quest12ID1_HORDE = "22137"
 
 --Quest 13 Horde
 Inst14Quest13Rewardtext_HORDE = AQNoReward
