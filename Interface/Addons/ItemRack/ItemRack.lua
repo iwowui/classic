@@ -3,7 +3,7 @@ ItemRack = {}
 local disable_delayed_swaps = nil -- temporary. change nil to 1 to stop attempting to delay set swaps while casting
 local _
 
-ItemRack.Version = "3.30"
+ItemRack.Version = "3.35"
 
 ItemRackUser = {
 	Sets = {}, -- user's sets
@@ -263,7 +263,8 @@ function ItemRack.OnLeavingCombatOrDeath()
 		ItemRack.UpdateCombatQueue()
 		ItemRack.EquipSet("~CombatQueue")
 	end
-	if event=="PLAYER_REGEN_ENABLED" then
+	local inLockdown = InCombatLockdown()
+	if not inLockdown then
 		ItemRack.inCombat = nil
 		if ItemRackOptFrame and ItemRackOptFrame:IsVisible() then
 			ItemRackOpt.ListScrollFrameUpdate()
@@ -376,14 +377,14 @@ function ItemRack.InitCore()
 
 	-- pattern splitter by Maldivia http://forums.worldofwarcraft.com/thread.html?topicId=6441208576
 	local function split(str, t)
-	    local start, stop, single, plural = str:find("\1244(.-):(.-);")
-	    if start then
-	        split(str:sub(1, start - 1) .. single .. str:sub(stop + 1), t)
-	        split(str:sub(1, start - 1) .. plural .. str:sub(stop + 1), t)
-	    else
-	        tinsert(t, (str:gsub("%%d","%%d+")))
-	    end
-	    return t
+		local start, stop, single, plural = str:find("\1244(.-):(.-);")
+		if start then
+			split(str:sub(1, start - 1) .. single .. str:sub(stop + 1), t)
+			split(str:sub(1, start - 1) .. plural .. str:sub(stop + 1), t)
+		else
+			tinsert(t, (str:gsub("%%d","%%d+")))
+		end
+		return t
 	end
 	ItemRack.CHARGES_PATTERNS = {}
 	split(ITEM_SPELL_CHARGES,ItemRack.CHARGES_PATTERNS)
@@ -1333,16 +1334,8 @@ end
 
 function ItemRack.IsPlayerReallyDead()
 	local dead = UnitIsDeadOrGhost("player")
-	if select(2,UnitClass("player"))=="HUNTER" then
-		if GetLocale()=="enUS" and AuraUtil.FindAuraByName("Feign Death", "player") then
-			return nil
-		else
-			for i=1,40 do
-				if select(2,UnitBuff("player",i))==GetFileIDFromPath("Interface\\Icons\\Ability_Rogue_FeignDeath") then
-					return nil
-				end
-			end
-		end
+	if UnitIsFeignDeath("player") then
+		dead = false
 	end
 	return dead
 end

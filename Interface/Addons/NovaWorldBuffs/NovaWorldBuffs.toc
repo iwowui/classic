@@ -5,7 +5,7 @@
 ## Title-zhTW: |CFFFF8000輔助|R 世界Buff冷却计时
 ## X-Repple: 辅助
 ## Author: Novaspark-Arugal OCE
-## Version: 1.51
+## Version: 1.53
 ## SavedVariables: NWBdatabase
 
 embeds.xml

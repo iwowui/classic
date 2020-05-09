@@ -8,6 +8,7 @@
 ## X-Repple: 辅助
 ## SavedVariables: ItemRackSettings, ItemRackItems, ItemRackEvents
 ## SavedVariablesPerCharacter: ItemRackUser
+## X-Curse-Project-ID: 340903
 ItemRack.lua
 ItemRack.xml
 ItemRackButtons.lua
@@ -15,6 +16,3 @@ ItemRackButtons.xml
 ItemRackEquip.lua
 ItemRackQueue.lua
 ItemRackEvents.lua
-
-
-

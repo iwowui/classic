@@ -398,6 +398,7 @@ tb:SetScript("OnEvent", function(self, event, ...)
 end)
 
 -- fix raidframe
+local fr = CreateFrame("Frame");
 function Fix_RaidFrame_OnClick()
     if InCombatLockdown() then
         fr:RegisterEvent("PLAYER_REGEN_ENABLED");
@@ -415,8 +416,6 @@ function Fix_RaidFrame_OnClick()
         end
     end
 end
-
-local fr = CreateFrame("Frame");
 fr:RegisterEvent("ADDON_LOADED")
 fr:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then

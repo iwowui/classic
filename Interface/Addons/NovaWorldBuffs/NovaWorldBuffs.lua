@@ -379,7 +379,7 @@ function NWB:createDataLayered(distribution)
 	if (not lastSendLayerMap[distribution]) then
 		lastSendLayerMap[distribution] = 0;
 	end
-	local sendLayerMap;
+	local sendLayerMap, foundTimer;
 	if ((GetServerTime() - lastSendLayerMap[distribution]) > 540 or NWB.isDebug or distribution == "GUILD") then
 		--Only send layermap info once per 10mins, this data won't change much except right after a server restart.
 		--So there's no need to use the addon bandwidth every time we send, 540 seconds should be every 2rd yell.
@@ -404,6 +404,7 @@ function NWB:createDataLayered(distribution)
 			if (NWB.data.layers[layer].GUID) then
 				data.layers[layer]['GUID'] = NWB.data.layers[layer].GUID;
 			end
+			foundTimer = true;
 		end
 		if (NWB.data.layers[layer].onyTimer > (GetServerTime() - NWB.db.global.onyRespawnTime)) then
 			if (not data.layers) then
@@ -420,6 +421,7 @@ function NWB:createDataLayered(distribution)
 			if (NWB.data.layers[layer].GUID) then
 				data.layers[layer]['GUID'] = NWB.data.layers[layer].GUID;
 			end
+			foundTimer = true;
 		end
 		if (NWB.data.layers[layer].nefTimer > (GetServerTime() - NWB.db.global.nefRespawnTime)) then
 			if (not data.layers) then
@@ -436,6 +438,7 @@ function NWB:createDataLayered(distribution)
 			if (NWB.data.layers[layer].GUID) then
 				data.layers[layer]['GUID'] = NWB.data.layers[layer].GUID;
 			end
+			foundTimer = true;
 		end
 		if ((NWB.data.layers[layer].onyNpcDied > NWB.data.layers[layer].onyTimer) and
 				(NWB.data.layers[layer].onyNpcDied > (GetServerTime() - NWB.db.global.onyRespawnTime))) then
@@ -449,6 +452,7 @@ function NWB:createDataLayered(distribution)
 			if (NWB.data.layers[layer].GUID) then
 				data.layers[layer]['GUID'] = NWB.data.layers[layer].GUID;
 			end
+			foundTimer = true;
 		end
 		if ((NWB.data.layers[layer].nefNpcDied > NWB.data.layers[layer].nefTimer) and
 				(NWB.data.layers[layer].nefNpcDied > (GetServerTime() - NWB.db.global.nefRespawnTime))) then
@@ -462,8 +466,9 @@ function NWB:createDataLayered(distribution)
 			if (NWB.data.layers[layer].GUID) then
 				data.layers[layer]['GUID'] = NWB.data.layers[layer].GUID;
 			end
+			foundTimer = true;
 		end
-		if (sendLayerMap) then
+		if (sendLayerMap and foundTimer) then
 			if (NWB.data.layers[layer].layerMap and next(NWB.data.layers[layer].layerMap)) then
 				lastSendLayerMap[distribution] = GetServerTime();
 				if (not data.layers) then
@@ -646,6 +651,17 @@ function NWB:receivedData(data, sender, distribution)
 	if (NWB.isLayered and data.layers) then
 		--There's a lot of ugly shit in this function trying to quick fix timer bugs for this layered stuff...
 		for layer, vv in NWB:pairsByKeys(data.layers) do
+			--Temp fix, this can be removed soon.
+			if ((not vv["rendTimer"] or vv["rendTimer"] == 0) and (not vv["onyTimer"] or vv["onyTimer"] == 0)
+					 and (not vv["nefTimer"] or vv["nefTimer"] == 0) and (not vv["onyNpcDied"] or vv["onyNpcDied"] == 0)
+					  and (not vv["nefNpcDied"] or vv["nefNpcDied"] == 0)) then
+				--Do nothing if all timers are 0, this is to fix a bug in last version with layerMaps causing old layer data
+				--to bounce back and forth between users, making it so layers with no timers keep being created after server
+				--restart and won't disappear.
+				--Usually layers with no timers would not be sent, but because they contain the new layermaps now the table
+				--isn't empty and gets sent, this has been corrected but old versions can still send data so we ignore it here.
+				--This can be removed when we next ignore older versions.
+			else
 			if (type(vv) == "table" and next(vv)) then
 				for localLayer, localV in pairs(NWB.data.layers) do
 					--Quick fix for timestamps sometimes syncing between layers.
@@ -768,7 +784,7 @@ function NWB:receivedData(data, sender, distribution)
 													skip = true;
 												end
 											end
-											if (not skip) then
+											if (NWB:validateZoneID(zoneID, layer, mapID) and not skip) then
 												NWB.data.layers[layer].layerMap[zoneID] = mapID;
 											end
 										end
@@ -788,6 +804,7 @@ function NWB:receivedData(data, sender, distribution)
 							end
 						end
 					end
+				end
 				end
 			end
 		end
@@ -2685,7 +2702,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 			--Another temp bug fix just to see if it's an issue with the serialized table data being sent..
 			--NWB:sendComm("GUILD", "ping");
 			if (IsInGuild()) then
-				C_ChatInfo.SendAddonMessage(NWB.commPrefix, Serializer:Serialize("ping"), "GUILD");
+				C_ChatInfo.SendAddonMessage(NWB.commPrefix, Serializer:Serialize("ping " .. version), "GUILD");
 			end
 		end)
 	elseif (event == "PLAYER_ENTERING_WORLD") then
@@ -2939,6 +2956,9 @@ function NWB:startFlash()
 end
 
 function NWB:playSound(sound, type)
+	if (NWB.db.global.disableAllSounds) then
+		return;
+	end
 	if (IsInInstance() and NWB.db.global.soundsDisableInInstances) then
 		return;
 	end
@@ -2956,7 +2976,7 @@ function NWB:playSound(sound, type)
 			return;
 		end
 	end
-	if (not NWB.db.global.disableAllSounds and NWB.db.global[sound] and NWB.db.global[sound] ~= "None") then
+	if (NWB.db.global[sound] and NWB.db.global[sound] ~= "None") then
 		if (sound == "soundsRendDrop" and NWB.db.global.soundsRendDrop == "NWB - Rend Voice") then
 			PlaySoundFile("Interface\\AddOns\\NovaWorldBuffs\\Media\\RendDropped.ogg", "Master");
 		elseif (sound == "soundsOnyDrop" and NWB.db.global.soundsOnyDrop == "NWB - Ony Voice") then
@@ -5734,7 +5754,11 @@ function NWB:setCurrentLayerText(unit)
 		return;
 	end
 	if (unitType ~= "Creature" or NWB.companionCreatures[tonumber(npcID)]) then
-		NWBlayerFrame.fs2:SetText("|cFF9CD6DETarget any NPC in Stormwind to see your current layer.|r");
+		if (NWB.faction == "Horde") then
+			NWBlayerFrame.fs2:SetText("|cFF9CD6DETarget any NPC in Orgrimmar to see your current layer.|r");
+		else
+			NWBlayerFrame.fs2:SetText("|cFF9CD6DETarget any NPC in Stormwind to see your current layer.|r");
+		end
 		return;
 	end
 	local count = 0;
@@ -5914,12 +5938,7 @@ function NWB:mapCurrentLayer(unit)
 					return;
 				end
 			end
-			if (NWB.layerMapWhitelist[zone]) then
-				if (zoneID > 10000) then
-					--Azshara (128144) I don't know where tf a zoneid this high came from, but it was recorded.
-					--Maybe a parsing error with the guid?
-					return;
-				end
+			if (NWB.layerMapWhitelist[zone] and NWB:validateZoneID(zoneID, NWB.lastKnownLayerMapID, zone)) then
 				--If zone is not mapped yet since server restart then add it.
 				NWB:debug("mapped new zone to layer id", NWB.lastKnownLayerMapID, "zoneid:", zoneID, "zone:", zone);
 				NWB.data.layers[NWB.lastKnownLayerMapID].layerMap[zoneID] = zone;
@@ -5930,6 +5949,29 @@ function NWB:mapCurrentLayer(unit)
 		end
 	end
 	NWB:recalcMinimapLayerFrame();
+end
+
+function NWB:validateZoneID(zoneID, layerID, mapID)
+	local blackList = {
+	};
+	if (zoneID > 10000) then
+		--Azshara (128144) I don't know where tf a zoneid this high came from, but it was recorded.
+		--Maybe a parsing error with the guid?
+		--Edit same number recorded again in Azshara after data reset (same week though).
+		--Some kinda subzone there with same mapid? Seen this in a few different zones now.
+		--Blasted Lands (814) Feralas (966) Mulgore (12138) Durotar (101136)
+		return;
+	end
+	if (layerID) then
+		for k, v in pairs(NWB.data.layers[layerID].layerMap) do
+			if (mapID and mapID == v) then
+				--If we already have a zoneid with this mapid then don't overwrite it.
+				--NWB:debug("mapid already known");
+				return;
+			end
+		end
+	end
+	return true;
 end
 
 function NWB:resetLayerMaps()

@@ -57,7 +57,7 @@ local function UnitFramesPlus_PlayerShiftDrag()
     end)
 end
 
-function UnitFramesPlus_PlayerPosition()
+function UnitFramesPlus_PlayerPositionSet()
     if UnitFramesPlusVar["player"]["moved"] == 0 then
         PlayerFrame:ClearAllPoints();
         if TitanPanel_AdjustFrames then
@@ -68,6 +68,19 @@ function UnitFramesPlus_PlayerPosition()
     else
         PlayerFrame:ClearAllPoints();
         PlayerFrame:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", UnitFramesPlusVar["player"]["x"], UnitFramesPlusVar["player"]["y"]);
+    end
+end
+
+function UnitFramesPlus_PlayerPosition()
+    if not InCombatLockdown() then
+        UnitFramesPlus_PlayerPositionSet();
+    else
+        local func = {};
+        func.name = "UnitFramesPlus_PlayerPositionSet";
+        func.callback = function()
+            UnitFramesPlus_PlayerPositionSet();
+        end;
+        UnitFramesPlus_WaitforCall(func);
     end
 end
 

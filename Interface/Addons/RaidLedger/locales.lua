@@ -24,6 +24,7 @@ L["#Try to convert to item link"] = true
 L["/raidledger"] = true
 L["[Unknown]"] = true
 L["0 credit items"] = true
+L["Add to"] = true
 L["Auto recording blacklist"] = true
 L["Auto recording loot"] = true
 L["Auto recording loot: In Raid Only"] = true
@@ -117,6 +118,7 @@ L["#Try to convert to item link"] = "#尝试转换为物品链接"
 L["/raidledger"] = "/gtuan"
 L["[Unknown]"] = "[未知]"
 L["0 credit items"] = "0 收入物品"
+L["Add to"] = "添加到"
 L["Auto recording blacklist"] = "自动拾取黑名单"
 L["Auto recording loot"] = "自动拾取记录"
 L["Auto recording loot: In Raid Only"] = "自动拾取记录: 仅团队中"
@@ -213,6 +215,8 @@ L["/raidledger"] = "/gtuan"
 L["[Unknown]"] = "[未知]"
 --[[Translation missing --]]
 --[[ L["0 credit items"] = "0 credit items"--]] 
+--[[Translation missing --]]
+--[[ L["Add to"] = "Add to"--]] 
 --[[Translation missing --]]
 --[[ L["Auto recording blacklist"] = "Auto recording blacklist"--]] 
 L["Auto recording loot"] = "自動拾取紀錄"
