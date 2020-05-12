@@ -5,7 +5,7 @@
 ## X-Repple: 辅助
 ## Author: d87
 ## SavedVariables: ClassicAuraDurationsDB
-## Version: 1.13.55
+## Version: 1.13.56
 
 ## X-WoWI-ID: 25006
 ## X-Curse-Project-ID: 323806

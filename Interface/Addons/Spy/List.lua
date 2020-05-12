@@ -11,7 +11,9 @@ function Spy:RefreshCurrentList(player, source)
 
 	local mode = Spy.db.profile.CurrentList
 	local manageFunction = Spy.ListTypes[mode][2]
-	if manageFunction then manageFunction() end
+	if manageFunction then
+		manageFunction()
+	end
 
 	local button = 1
 	for index, data in pairs(Spy.CurrentList) do
@@ -24,9 +26,13 @@ function Spy:RefreshCurrentList(player, source)
 			if playerData then
 				if playerData.level then
 					level = playerData.level
-					if playerData.isGuess == true and tonumber(playerData.level) < Spy.MaximumPlayerLevel then level = level.."+" end
+					if playerData.isGuess == true and tonumber(playerData.level) < Spy.MaximumPlayerLevel then
+						level = level.."+"
+					end
 				end
-				if playerData.class then class = playerData.class end
+				if playerData.class then
+					class = playerData.class
+				end
 			end
 
 			local description = level.." "
@@ -51,9 +57,6 @@ function Spy:RefreshCurrentList(player, source)
 
 	if Spy.db.profile.ResizeSpy then
 		Spy:AutomaticallyResize()
---	else if not InCombatLockdown() and Spy.MainWindow:GetHeight()< 34 then 
---		Spy:RestoreMainWindowPosition(Spy.MainWindow:GetLeft(), Spy.MainWindow:GetTop(), Spy.MainWindow:GetWidth(), 34) end 
---	end
 	else
 		if not Spy.db.profile.InvertSpy then 		
 			if not InCombatLockdown() and Spy.MainWindow:GetHeight()< 34 then
@@ -167,7 +170,9 @@ end
 function Spy:ManageExpirations()
 	local mode = Spy.db.profile.CurrentList
 	local expirationFunction = Spy.ListTypes[mode][3]
-	if expirationFunction then expirationFunction() end
+	if expirationFunction then
+		expirationFunction()
+	end
 end
 
 function Spy:ManageNearbyListExpirations()
@@ -291,14 +296,14 @@ function Spy:UpdatePlayerData(name, class, level, race, guild, isEnemy, isGuess)
 			if (WorldMapFrame:IsVisible() and Spy.db.profile.SwitchToZone) then
 				WorldMapFrame:SetMapID(C_Map.GetBestMapForUnit("player"))
 			end
-			if (nil == C_Map.GetBestMapForUnit("player")) or (nil == C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player")) then -- 8.0 Changes
-			local x,y = 0,0
+			if (nil == C_Map.GetBestMapForUnit("player")) or (nil == C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player")) then
+				local x,y = 0,0
 				local InsName = GetInstanceInfo()
 				playerData.zone = InsName
 				playerData.subZone = ""
 			else
-				local mapX, mapY = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player"):GetXY() -- 8.0 Change			
-					if mapX ~= 0 and mapY ~= 0 then
+				local mapX, mapY = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player"):GetXY()			
+				if mapX ~= 0 and mapY ~= 0 then
 					mapX = math.floor(tonumber(mapX) * 100) / 100
 					mapY = math.floor(tonumber(mapY) * 100) / 100
 					playerData.mapX = mapX
@@ -313,6 +318,24 @@ function Spy:UpdatePlayerData(name, class, level, race, guild, isEnemy, isGuess)
 		end	
 	end
 	return detected
+end
+
+function Spy:UpdatePlayerStatus(name, class, level, race, guild, isEnemy, isGuess)
+	local playerData = SpyPerCharDB.PlayerData[name]
+	if not playerData then
+		playerData = Spy:AddPlayerData(name, class, level, race, guild, isEnemy, isGuess)
+	else
+		if name ~= nil then playerData.name = name end  
+		if class ~= nil then playerData.class = class end
+		if type(level) == "number" then playerData.level = level end
+		if race ~= nil then playerData.race = race end
+		if guild ~= nil then playerData.guild = guild end
+		if isEnemy ~= nil then playerData.isEnemy = isEnemy end
+		if isGuess ~= nil then playerData.isGuess = isGuess end
+	end
+	if playerData.time == nil then
+		playerData.time = time()
+	end	
 end
 
 function Spy:RemovePlayerData(name)
@@ -332,16 +355,22 @@ end
 function Spy:AddKOSData(name)
 	SpyPerCharDB.KOSData[name] = time()
 --	SpyPerCharDB.PlayerData[name].kos = 1 
-	if Spy.db.profile.ShareKOSBetweenCharacters then SpyDB.removeKOSData[Spy.RealmName][Spy.FactionName][name] = nil end
+	if Spy.db.profile.ShareKOSBetweenCharacters then
+		SpyDB.removeKOSData[Spy.RealmName][Spy.FactionName][name] = nil
+	end
 end
 
 function Spy:RemoveKOSData(name)
 	if SpyPerCharDB.KOSData[name] then
 		local playerData = SpyPerCharDB.PlayerData[name]
-		if playerData and playerData.reason then playerData.reason = nil end
+		if playerData and playerData.reason then
+			playerData.reason = nil
+		end
 		SpyPerCharDB.KOSData[name] = nil
 		SpyPerCharDB.PlayerData[name].kos = nil		
-		if Spy.db.profile.ShareKOSBetweenCharacters then SpyDB.removeKOSData[Spy.RealmName][Spy.FactionName][name] = time() end
+		if Spy.db.profile.ShareKOSBetweenCharacters then
+			SpyDB.removeKOSData[Spy.RealmName][Spy.FactionName][name] = time()
+		end
 	end
 end
 
@@ -355,7 +384,9 @@ function Spy:SetKOSReason(name, reason, other)
 			if reason == L["KOSReasonOther"] then
 				if not other then 
 					local dialog = StaticPopup_Show("Spy_SetKOSReasonOther", name)
-					if dialog then dialog.playerName = name end
+					if dialog then
+						dialog.playerName = name
+					end
 				else
 					if other == "" then
 						playerData.reason[L["KOSReasonOther"]] = nil
@@ -440,7 +471,7 @@ function Spy:AlertPlayer(player, source)
 				end
 			end
 		end
-	elseif Spy.db.profile.EnableSound and not Spy.db.profile.OnlySoundKoS then 	--++
+	elseif Spy.db.profile.EnableSound and not Spy.db.profile.OnlySoundKoS then
 		if source == nil or source == Spy.CharacterName then
 			PlaySoundFile("Interface\\AddOns\\Spy\\Sounds\\detected-nearby.mp3", Spy.db.profile.SoundChannel)
 		end
@@ -452,7 +483,7 @@ function Spy:AlertStealthPlayer(player)
 		if Spy.db.profile.DisplayWarningsInErrorsFrame then
 			local text = Spy.db.profile.Colors.Warning["Warning Text"]
 			local msg = L["StealthWarning"]..player
-			UIErrorsFrame:AddMessage(msg, text.r, text.g, text.b, 1.0, UIERRORS_HOLD_TIME)						
+			UIErrorsFrame:AddMessage(msg, text.r, text.g, text.b, 1.0, UIERRORS_HOLD_TIME)
 		else
 			Spy:ShowAlert("stealth", player)
 		end
@@ -467,7 +498,7 @@ function Spy:AlertProwlPlayer(player)
 		if Spy.db.profile.DisplayWarningsInErrorsFrame then
 			local text = Spy.db.profile.Colors.Warning["Warning Text"]
 			local msg = L["StealthWarning"]..player
-			UIErrorsFrame:AddMessage(msg, text.r, text.g, text.b, 1.0, UIERRORS_HOLD_TIME)						
+			UIErrorsFrame:AddMessage(msg, text.r, text.g, text.b, 1.0, UIERRORS_HOLD_TIME)
 		else
 			Spy:ShowAlert("prowl", player)
 		end
@@ -504,9 +535,15 @@ function Spy:AnnouncePlayer(player, channel)
 				end
 				if playerData.level or playerData.race or (playerData.class and playerData.class ~= "") then
 					msg = msg.."- "
-					if playerData.level and playerData.isGuess == false then msg = msg..L["Level"].." "..playerData.level.." " end
-					if playerData.race and playerData.race ~= "" then msg = msg..playerData.race.." " end
-					if playerData.class and playerData.class ~= "" then msg = msg..L[playerData.class].." " end
+					if playerData.level and playerData.isGuess == false then
+						msg = msg..L["Level"].." "..playerData.level.." "
+					end
+					if playerData.race and playerData.race ~= "" then
+						msg = msg..playerData.race.." "
+					end
+					if playerData.class and playerData.class ~= "" then
+						msg = msg..L[playerData.class].." "
+					end
 				end
 				if playerData.zone then
 					if playerData.subZone and playerData.subZone ~= "" and playerData.subZone ~= playerData.zone then
@@ -515,12 +552,14 @@ function Spy:AnnouncePlayer(player, channel)
 						msg = msg.."- "..playerData.zone
 					end
 				end
-				if playerData.mapX and playerData.mapY then msg = msg.." ("..math.floor(tonumber(playerData.mapX) * 100)..","..math.floor(tonumber(playerData.mapY) * 100)..")" end
+				if playerData.mapX and playerData.mapY then
+					msg = msg.." ("..math.floor(tonumber(playerData.mapX) * 100)..","..math.floor(tonumber(playerData.mapY) * 100)..")"
+				end
 			end
 
 			if channel then
 				-- announce to selected channel
-				if (channel == "PARTY" and GetNumGroupMembers() > 0) or (channel == "RAID" and UnitInRaid("player")) or (channel == "GUILD" and GetGuildInfo("player") ~= nil) then --++
+				if (channel == "PARTY" and GetNumGroupMembers() > 0) or (channel == "RAID" and UnitInRaid("player")) or (channel == "GUILD" and GetGuildInfo("player") ~= nil) then
 					SendChatMessage(msg, channel)
 				elseif channel == "LOCAL" then
 					SendChatMessage(msg, "CHANNEL", nil, GetChannelName(L["LocalDefenseChannelName"].." - "..GetZoneText()))
@@ -541,28 +580,34 @@ function Spy:AnnouncePlayer(player, channel)
 
 		-- announce to other Spy users
 		if Spy.db.profile.ShareData then
-			local class, level, race, zone, subZone, mapX, mapY, guild, mapID = "", "", "", "", "", "", "", "", ""	 --++8.0			
+			local class, level, race, zone, subZone, mapX, mapY, guild, mapID = "", "", "", "", "", "", "", "", ""
 			if playerData then
 				if playerData.class then class = playerData.class end
 				if playerData.level and playerData.isGuess == false then level = playerData.level end
 				if playerData.race then race = playerData.race end
 				if playerData.zone then zone = playerData.zone end
-				if playerData.mapID then mapID = playerData.mapID end		--++8.0				
+				if playerData.mapID then mapID = playerData.mapID end
 				if playerData.subZone then subZone = playerData.subZone end
 				if playerData.mapX then mapX = playerData.mapX end
 				if playerData.mapY then mapY = playerData.mapY end
 				if playerData.guild then guild = playerData.guild end
 			end
-			local details = Spy.Version.."|"..player.."|"..class.."|"..level.."|"..race.."|"..zone.."|"..subZone.."|"..mapX.."|"..mapY.."|"..guild.."|"..mapID	 --++8.0
+			local details = Spy.Version.."|"..player.."|"..class.."|"..level.."|"..race.."|"..zone.."|"..subZone.."|"..mapX.."|"..mapY.."|"..guild.."|"..mapID
 			if strlen(details) < 240 then
 				if channel then
-					if (channel == "PARTY" and GetNumGroupMembers() > 0) or (channel == "RAID" and UnitInRaid("player")) or (channel == "GUILD" and GetGuildInfo("player") ~= nil) then --++
+					if (channel == "PARTY" and GetNumGroupMembers() > 0) or (channel == "RAID" and UnitInRaid("player")) or (channel == "GUILD" and GetGuildInfo("player") ~= nil) then
 						Spy:SendCommMessage(Spy.Signature, details, channel)
 					end
 				else
-					if GetNumGroupMembers() > 0 then Spy:SendCommMessage(Spy.Signature, details, "PARTY") end --++
-					if UnitInRaid("player") then Spy:SendCommMessage(Spy.Signature, details, "RAID") end
-					if Spy.InInstance == false and GetGuildInfo("player") ~= nil then Spy:SendCommMessage(Spy.Signature, details, "GUILD") end
+					if GetNumGroupMembers() > 0 then
+						Spy:SendCommMessage(Spy.Signature, details, "PARTY")
+					end
+					if UnitInRaid("player") then
+						Spy:SendCommMessage(Spy.Signature, details, "RAID")
+					end
+					if Spy.InInstance == false and GetGuildInfo("player") ~= nil then
+						Spy:SendCommMessage(Spy.Signature, details, "GUILD")
+					end
 				end
 			end
 		end
@@ -585,7 +630,9 @@ function Spy:SendKoStoGuild(player)
 	end
 	local details = Spy.Version.."|"..player.."|"..class.."|"..level.."|"..race.."|"..zone.."|"..subZone.."|"..mapX.."|"..mapY.."|"..guild.."|"..mapID	
 	if strlen(details) < 240 then
-		if Spy.InInstance == false and GetGuildInfo("player") ~= nil then Spy:SendCommMessage(Spy.Signature, details, "GUILD") end
+		if Spy.InInstance == false and GetGuildInfo("player") ~= nil then
+			Spy:SendCommMessage(Spy.Signature, details, "GUILD")
+		end
 	end
 end
 
@@ -605,7 +652,9 @@ function Spy:ToggleIgnorePlayer(ignore, player)
 		DEFAULT_CHAT_FRAME:AddMessage(L["SpySignatureColored"]..L["PlayerRemovedFromIgnoreColored"]..player)
 	end
 	Spy:RegenerateKOSGuildList()
-	if Spy.db.profile.ShareKOSBetweenCharacters then Spy:RegenerateKOSCentralList() end
+	if Spy.db.profile.ShareKOSBetweenCharacters then
+		Spy:RegenerateKOSCentralList()
+	end
 	Spy:RefreshCurrentList()
 end
 
@@ -613,8 +662,9 @@ function Spy:ToggleKOSPlayer(kos, player)
 	if kos then
 		Spy:AddKOSData(player)
 		Spy:RemoveIgnoreData(player)
-		if player ~= SpyPerCharDB.PlayerData[name] then --++
-			Spy:UpdatePlayerData(player, nil, nil, nil, nil, true, nil) --++
+		if player ~= SpyPerCharDB.PlayerData[name] then
+--			Spy:UpdatePlayerData(player, nil, nil, nil, nil, true, nil)
+			Spy:UpdatePlayerStatus(player, nil, nil, nil, nil, true, nil)
 			SpyPerCharDB.PlayerData[player].kos = 1 
 		end	
 		if Spy.db.profile.EnableSound then
@@ -629,7 +679,9 @@ function Spy:ToggleKOSPlayer(kos, player)
 		DEFAULT_CHAT_FRAME:AddMessage(L["SpySignatureColored"]..L["PlayerRemovedFromKOSColored"]..player)
 	end
 	Spy:RegenerateKOSGuildList()
-	if Spy.db.profile.ShareKOSBetweenCharacters then Spy:RegenerateKOSCentralList() end
+	if Spy.db.profile.ShareKOSBetweenCharacters then
+		Spy:RegenerateKOSCentralList()
+	end
 	Spy:RefreshCurrentList()
 end
 
@@ -654,22 +706,22 @@ function Spy:PurgeUndetectedData()
 	local currentTime = time()
 	for player in pairs(SpyPerCharDB.PlayerData) do
 		local playerData = SpyPerCharDB.PlayerData[player]
-		if Spy.db.profile.PurgeWinLossData then -- Added v3.2.9
+		if Spy.db.profile.PurgeWinLossData then
 			if not playerData.time or (currentTime - playerData.time) > timeout or not playerData.isEnemy then
 				Spy:RemoveIgnoreData(player)
 				Spy:RemoveKOSData(player)
 				SpyPerCharDB.PlayerData[player] = nil
 			end
 		else
-			if ((playerData.loses == nil) and (playerData.wins == nil)) then -- Added v3.2.9
+			if ((playerData.loses == nil) and (playerData.wins == nil)) then
 				if not playerData.time or (currentTime - playerData.time) > timeout or not playerData.isEnemy then
 					Spy:RemoveIgnoreData(player)
-					if Spy.db.profile.PurgeKoS then -- Added v3.2.9	
+					if Spy.db.profile.PurgeKoS then
 						Spy:RemoveKOSData(player)
 						SpyPerCharDB.PlayerData[player] = nil
 					else
 						if (playerData.kos == nil) then
-							SpyPerCharDB.PlayerData[player] = nil  -- Added v3.4.0
+							SpyPerCharDB.PlayerData[player] = nil
 						end	
 					end	
 				end
@@ -683,7 +735,7 @@ function Spy:PurgeUndetectedData()
 		local characterKosData = kosData[characterName]
 		for player in pairs(characterKosData) do
 			local kosPlayerData = characterKosData[player]
-			if Spy.db.profile.PurgeKoS then -- Added v3.2.9
+			if Spy.db.profile.PurgeKoS then
 				if not kosPlayerData.time or (currentTime - kosPlayerData.time) > timeout or not kosPlayerData.isEnemy then
 					SpyDB.kosData[Spy.RealmName][Spy.FactionName][characterName][player] = nil
 					SpyDB.removeKOSData[Spy.RealmName][Spy.FactionName][player] = nil
@@ -719,13 +771,17 @@ function Spy:RegenerateKOSCentralList(player)
 	if player then
 		local playerData = SpyPerCharDB.PlayerData[player]
 		SpyDB.kosData[Spy.RealmName][Spy.FactionName][Spy.CharacterName][player] = {}
-		if playerData then SpyDB.kosData[Spy.RealmName][Spy.FactionName][Spy.CharacterName][player] = playerData end
+		if playerData then
+			SpyDB.kosData[Spy.RealmName][Spy.FactionName][Spy.CharacterName][player] = playerData
+		end
 		SpyDB.kosData[Spy.RealmName][Spy.FactionName][Spy.CharacterName][player].added = SpyPerCharDB.KOSData[player]
 	else
 		for player in pairs(SpyPerCharDB.KOSData) do
 			local playerData = SpyPerCharDB.PlayerData[player]
 			SpyDB.kosData[Spy.RealmName][Spy.FactionName][Spy.CharacterName][player] = {}
-			if playerData then SpyDB.kosData[Spy.RealmName][Spy.FactionName][Spy.CharacterName][player] = playerData end
+			if playerData then
+				SpyDB.kosData[Spy.RealmName][Spy.FactionName][Spy.CharacterName][player] = playerData
+			end
 			SpyDB.kosData[Spy.RealmName][Spy.FactionName][Spy.CharacterName][player].added = SpyPerCharDB.KOSData[player]
 		end
 	end
@@ -745,19 +801,45 @@ function Spy:RegenerateKOSListFromCentral()
 					local kosPlayerData = characterKosData[player]
 					if kosPlayerData.time and (not playerData.time or (playerData.time and playerData.time < kosPlayerData.time)) then
 						playerData.time = kosPlayerData.time
-						if kosPlayerData.class then playerData.class = kosPlayerData.class end
-						if type(kosPlayerData.level) == "number" and (type(playerData.level) ~= "number" or playerData.level < kosPlayerData.level) then playerData.level = kosPlayerData.level end
-						if kosPlayerData.race then playerData.race = kosPlayerData.race end
-						if kosPlayerData.guild then playerData.guild = kosPlayerData.guild end
-						if kosPlayerData.isEnemy then playerData.isEnemy = kosPlayerData.isEnemy end
-						if kosPlayerData.isGuess then playerData.isGuess = kosPlayerData.isGuess end
-						if type(kosPlayerData.wins) == "number" and (type(playerData.wins) ~= "number" or playerData.wins < kosPlayerData.wins) then playerData.wins = kosPlayerData.wins end
-						if type(kosPlayerData.loses) == "number" and (type(playerData.loses) ~= "number" or playerData.loses < kosPlayerData.loses) then playerData.loses = kosPlayerData.loses end
-						if kosPlayerData.mapX then playerData.mapX = kosPlayerData.mapX end
-						if kosPlayerData.mapY then playerData.mapY = kosPlayerData.mapY end
-						if kosPlayerData.zone then playerData.zone = kosPlayerData.zone end
-						if kosPlayerData.mapID then playerData.mapID = kosPlayerData.mapID end			 --++8.0						
-						if kosPlayerData.subZone then playerData.subZone = kosPlayerData.subZone end
+						if kosPlayerData.class then
+							playerData.class = kosPlayerData.class
+						end
+						if type(kosPlayerData.level) == "number" and (type(playerData.level) ~= "number" or playerData.level < kosPlayerData.level) then
+							playerData.level = kosPlayerData.level
+						end
+						if kosPlayerData.race then
+							playerData.race = kosPlayerData.race
+						end
+						if kosPlayerData.guild then
+							playerData.guild = kosPlayerData.guild
+						end
+						if kosPlayerData.isEnemy then
+							playerData.isEnemy = kosPlayerData.isEnemy
+						end
+						if kosPlayerData.isGuess then
+							playerData.isGuess = kosPlayerData.isGuess
+						end
+						if type(kosPlayerData.wins) == "number" and (type(playerData.wins) ~= "number" or playerData.wins < kosPlayerData.wins) then
+							playerData.wins = kosPlayerData.wins
+						end
+						if type(kosPlayerData.loses) == "number" and (type(playerData.loses) ~= "number" or playerData.loses < kosPlayerData.loses) then
+							playerData.loses = kosPlayerData.loses
+						end
+						if kosPlayerData.mapX then
+							playerData.mapX = kosPlayerData.mapX
+						end
+						if kosPlayerData.mapY then
+							playerData.mapY = kosPlayerData.mapY
+						end
+						if kosPlayerData.zone then
+							playerData.zone = kosPlayerData.zone
+						end
+						if kosPlayerData.mapID then
+							playerData.mapID = kosPlayerData.mapID
+						end
+						if kosPlayerData.subZone then
+							playerData.subZone = kosPlayerData.subZone
+						end
 						if kosPlayerData.reason then
 							playerData.reason = {}
 							for reason in pairs(kosPlayerData.reason) do
@@ -841,7 +923,7 @@ function Spy:ParseMinimapTooltip(tooltip)
 				end	
 				if not SpyPerCharDB.IgnoreData[name] and not Spy.InInstance then
 					local detected = Spy:UpdatePlayerData(name, nil, nil, nil, nil, true, nil)
-					if detected and Spy.db.profile.MinimapTracking then
+					if detected and Spy.db.profile.MinimapDetection then
 						Spy:AddDetected(name, time(), false)
 					end
 				end
@@ -889,7 +971,9 @@ function Spy:ParseUnitAbility(analyseSpell, event, player, class, race, spellId,
 					end
 					if ability.level then
 						local playerLevelNumber = nil
-						if playerData and playerData.level then playerLevelNumber = tonumber(playerData.level) end
+						if playerData and playerData.level then
+							playerLevelNumber = tonumber(playerData.level)
+						end
 						if type(playerLevelNumber) ~= "number" or playerLevelNumber < ability.level then
 							level = ability.level
 							learnt = true
@@ -917,7 +1001,7 @@ function Spy:ParseUnitAbility(analyseSpell, event, player, class, race, spellId,
 	return learnt, nil
 end
 
-function Spy:ParseUnitDetails(player, class, level, race, zone, subZone, mapX, mapY, guild, mapID) --++ P8.0
+function Spy:ParseUnitDetails(player, class, level, race, zone, subZone, mapX, mapY, guild, mapID)
 	if player then
 		local playerData = SpyPerCharDB.PlayerData[player]
 		if not playerData then
@@ -935,13 +1019,17 @@ function Spy:ParseUnitDetails(player, class, level, race, zone, subZone, mapX, m
 					end
 				end
 			end
-			if not playerData.race then playerData.race = race end
-			if not playerData.guild then playerData.guild = guild end
+			if not playerData.race then
+				playerData.race = race
+			end
+			if not playerData.guild then
+				playerData.guild = guild
+			end
 		end
 		playerData.isEnemy = true
 		playerData.time = time()
 		playerData.zone = zone
-		playerData.mapID = mapID --++ P8.0		
+		playerData.mapID = mapID
 		playerData.subZone = subZone
 		playerData.mapX = mapX
 		playerData.mapY = mapY
@@ -1047,7 +1135,8 @@ function Spy:AppendUnitNames()
 			end		
 		end
     end
-	Spy.db.profile.AppendUnitNameCheck=true --sets profile so it only runs once
+	-- set profile so it only runs once
+	Spy.db.profile.AppendUnitNameCheck=true
 end
 
 function Spy:AppendUnitKoS()
@@ -1061,7 +1150,8 @@ function Spy:AppendUnitKoS()
 			end		
 		end
     end
-	Spy.db.profile.AppendUnitKoSCheck=true --sets profile so it only runs once
+	-- set profile so it only runs once
+	Spy.db.profile.AppendUnitKoSCheck=true
 end
 
 Spy.ListTypes = {

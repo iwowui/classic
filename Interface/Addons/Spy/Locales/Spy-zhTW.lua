@@ -68,6 +68,10 @@ L["The Vindicaar"] = "维迪卡尔"
 L["Krasus' Landing"] = "卡薩斯平臺"
 L["The Violet Gate"] = "紫羅蘭之門"
 L["Magni's Encampment"] = "麥格尼的營地"
+L["Silithus"] = "希利蘇斯"
+L["Chamber of Heart"] = "心之室"
+L["Hall of Ancient Paths"] = "远古通路大厅"
+L["Sanctum of the Sages"] = "賢者聖所"
 
 -- Display
 L["DisplayOptions"] = "顯示"
@@ -255,6 +259,8 @@ L["KOSDescription"] = "從即殺清單加入/移除玩家。"
 L["InvalidInput"] = "输入无效"
 L["Ignore"] = "忽略"
 L["IgnoreDescription"] = "從忽略清單加入/移除玩家。"
+L["Test"] = "Test"
+L["TestDescription"] = "顯示警告，以便您可以重新放置它。"
 
 -- Lists
 L["Nearby"] = "附近"
@@ -427,7 +433,7 @@ StaticPopupDialogs["Spy_SetKOSReasonOther"] = {
 	OnShow = function(self)
 		self.editBox:SetText("");
 	end,
-    	OnAccept = function(self)
+    OnAccept = function(self)
 		local reason = self.editBox:GetText()
 		Spy:SetKOSReason(self.playerName, "自行輸入原因...", reason)
 	end,

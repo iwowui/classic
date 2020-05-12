@@ -1,4 +1,4 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("Spy", "zhCN")
+local L = LibStub("AceLocale-3.0"):NewLocale("Spy", "zhCN") -- Simplified Chinese
 if not L then return end
 -- TOC Note: "检测并提醒您附近有敌方玩家。"
  
@@ -27,16 +27,16 @@ L["SpyDescription2"] = [[
 在该列表中的敌对玩家一旦被侦测会出警报。您可以通过鼠标右键菜单或按住Shift点击从列表中添加或删除敌对玩家。
  
 右键菜单也可以添加将某人加入此列表的原因。如果你希望添加不在列表中的说明，可以通过其他列表“自行输入原因...”。
-  
+
 |cffffd000Statistics Window|cffffffff
 The Statistics Window contains a list of all enemy encounters which can be sorted by name, level, guild, wins, losses and the last time an enemy was detected. It also provides the ability to search for a specific enemy by name or guild and has filters to show only enemies that are marked as Kill on Sight, with a Win/Loss or entered Reasons. 
 
 |cffffd000Kill On Sight Button|cffffffff
 If enabled, this button will be located on the enemy players target frame. Clicking on this button will add/remove the enemy target to/from the Kill On Sight list. Right clicking on the button will allow you to enter Kill on Sight reasons.
-  
+
 |cffffd000作者: Slipjack|cffffffff
 ]]
- 
+
 -- General Settings
 L["GeneralSettings"] = "一般配置"
 L["GeneralSettingsDescription"] = [[
@@ -68,6 +68,10 @@ L["The Vindicaar"] = "维迪卡尔"
 L["Krasus' Landing"] = "克拉苏斯平台"
 L["The Violet Gate"] = "紫罗兰之门"
 L["Magni's Encampment"] = "麦格尼的营地"
+L["Silithus"] = "希利苏斯"
+L["Chamber of Heart"] = "心之秘室"
+L["Hall of Ancient Paths"] = "远古通路大厅"
+L["Sanctum of the Sages"] = "贤者圣殿"
  
 -- Display
 L["DisplayOptions"] = "显示"
@@ -255,6 +259,8 @@ L["KOSDescription"] = "从KOS敌对玩家列表中添加或删除敌对玩家"
 L["InvalidInput"] = "输入错误"
 L["Ignore"] = "忽略"
 L["IgnoreDescription"] = "从忽略列表中添加或删除敌对玩家"
+L["Test"] = "Test"
+L["TestDescription"] = "显示警告，以便您可以重新放置它。"
  
 -- Lists
 L["Nearby"] = "附近"
@@ -427,61 +433,61 @@ StaticPopupDialogs["Spy_SetKOSReasonOther"] = {
     OnShow = function(self)
         self.editBox:SetText("");
     end,
-        OnAccept = function(self)
+    OnAccept = function(self)
         local reason = self.editBox:GetText()
         Spy:SetKOSReason(self.playerName, "自行输入原因...", reason)
     end,
 };
 
 --++ Class descriptions
---L["DEATHKNIGHT"] = "Death Knight"
---L["DEMONHUNTER"] = "Demon Hunter"
-L["DRUID"] = "Druid"
-L["HUNTER"] = "Hunter"
-L["MAGE"] = "Mage"
---L["MONK"] = "Monk"
-L["PALADIN"] = "Paladin"
-L["PRIEST"] = "Priest"
-L["ROGUE"] = "Rogue"
-L["SHAMAN"] = "Shaman"
-L["WARLOCK"] = "Warlock"
-L["WARRIOR"] = "Warrior"
-L["UNKNOWN"] = "Unknown"
+L["DEATHKNIGHT"] = "死亡騎士"
+L["DEMONHUNTER"] = "惡魔獵人"
+L["DRUID"] = "德魯伊"
+L["HUNTER"] = "獵人"
+L["MAGE"] = "法師"
+L["MONK"] = "武僧"
+L["PALADIN"] = "聖騎士"
+L["PRIEST"] = "牧師"
+L["ROGUE"] = "盜賊"
+L["SHAMAN"] = "薩滿"
+L["WARLOCK"] = "術士"
+L["WARRIOR"] = "戰士"
+L["UNKNOWN"] = "未知"
 
 --++ Race descriptions
-L["HUMAN"] = "Human"
-L["ORC"] = "Orc"
-L["DWARF"] = "Dwarf"
-L["NIGHT ELF"] = "Night Elf"
-L["UNDEAD"] = "Undead"
-L["TAUREN"] = "Tauren"
-L["GNOME"] = "Gnome"
-L["TROLL"] = "Troll"
-L["GOBLIN"] = "Goblin"
---L["BLOOD ELF"] = "Blood Elf"
---L["DRAENEI"] = "Draenei"
---L["WORGEN"] = "Worgen"
---L["PANDAREN"] = "Pandaren"
---L["NIGHTBORNE"] = "Nightborne"
---L["HIGHMOUNTAIN TAUREN"] = "Highmountain Tauren"
---L["VOID ELF"] = "Void Elf"
---L["LIGHTFORGED DRAENEI"] = "Lightforged Draenei"
---L["ZANDALARI TROLL"] = "Zandalari Troll"
---L["KUL TIRAN"] = "Kul Tiran"
---L["DARK IRON DWARF"] = "Dark Iron Dwarf"
---L["MAG'HAR ORC"] = "Mag'har Orc"
+L["HUMAN"] = "人类"
+L["ORC"] = "兽人"
+L["DWARF"] = "矮人"
+L["NIGHT ELF"] = "暗夜精灵"
+L["UNDEAD"] = "亡灵"
+L["TAUREN"] = "牛头人"
+L["GNOME"] = "侏儒"
+L["TROLL"] = "巨魔"
+L["GOBLIN"] = "地精"
+L["BLOOD ELF"] = "血精灵"
+L["DRAENEI"] = "德莱尼"
+L["WORGEN"] = "狼人"
+L["PANDAREN"] = "熊猫人"
+L["NIGHTBORNE"] = "夜之子"
+L["HIGHMOUNTAIN TAUREN"] = "至高岭牛头人"
+L["VOID ELF"] = "虚空精灵"
+L["LIGHTFORGED DRAENEI"] = "光铸德莱尼"
+L["ZANDALARI TROLL"] = "赞达拉巨魔"
+L["KUL TIRAN"] = "库尔提拉斯人"
+L["DARK IRON DWARF"] = "黑铁矮人"
+L["MAG'HAR ORC"] = "玛格汉兽人"
 
 -- Stealth abilities
 L["Stealth"] = "潜行"
 L["Prowl"] = "潛行"
 
 --++ Minimap color codes
---L["MinimapClassTextDEATHKNIGHT"] = "|cffc41e3a"
---L["MinimapClassTextDEMONHUNTER"] = "|cffa330c9"
+L["MinimapClassTextDEATHKNIGHT"] = "|cffc41e3a"
+L["MinimapClassTextDEMONHUNTER"] = "|cffa330c9"
 L["MinimapClassTextDRUID"] = "|cffff7c0a"
 L["MinimapClassTextHUNTER"] = "|cffaad372"
 L["MinimapClassTextMAGE"] = "|cff68ccef"
---L["MinimapClassTextMONK"] = "|cff00ff96"
+L["MinimapClassTextMONK"] = "|cff00ff96"
 L["MinimapClassTextPALADIN"] = "|cfff48cba"
 L["MinimapClassTextPRIEST"] = "|cffffffff"
 L["MinimapClassTextROGUE"] = "|cfffff468"
