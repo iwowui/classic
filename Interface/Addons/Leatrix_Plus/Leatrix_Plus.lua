@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.61 (6th May 2020)
+-- 	Leatrix Plus 1.13.63 (13th May 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 --	Version
-	LeaPlusLC["AddonVer"] = "1.13.61"
+	LeaPlusLC["AddonVer"] = "1.13.63"
 	LeaPlusLC["RestartReq"] = nil
 
 --	If client restart is required and has not been done, show warning and quit
@@ -882,8 +882,20 @@
 				if GetTime() - tDelay >= 0.3 then
 					tDelay = GetTime()
  					if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
-						for i = GetNumLootItems(), 1, -1 do
-							LootSlot(i)
+						if GetLootMethod() == "master" then
+							-- Master loot is enabled so fast loot if item should be auto looted
+							local lootThreshold = GetLootThreshold()
+							for i = GetNumLootItems(), 1, -1 do
+								local lootIcon, lootName, lootQuantity, currencyID, lootQuality = GetLootSlotInfo(i)
+								if lootQuality and lootThreshold and lootQuality < lootThreshold then
+									LootSlot(i)
+								end
+							end
+						else
+							-- Master loot is disabled so fast loot regardless
+							for i = GetNumLootItems(), 1, -1 do
+								LootSlot(i)
+							end
 						end
 						tDelay = GetTime()
 					end

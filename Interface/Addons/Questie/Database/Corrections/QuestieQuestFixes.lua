@@ -170,7 +170,7 @@ function QuestieQuestFixes:Load()
         [526] = {
             [QuestieDB.questKeys.exclusiveTo] = {322,324}, -- not 100% sure on this one but it seems lightforge ingots is optional, block it after completing subsequent steps (#587)
         },
-        [535] = {
+        [533] = {
             [QuestieDB.questKeys.childQuests] = {535},
         },
         [535] = {
@@ -327,11 +327,17 @@ function QuestieQuestFixes:Load()
             [QuestieDB.questKeys.preQuestSingle] = {944}, -- #1517
             [QuestieDB.questKeys.exclusiveTo] = {950}, -- #1517
         },
+        [984] = {
+            [QuestieDB.questKeys.triggerEnd] = {"Find a corrupt furbolg camp",{[148]={{39.34,53.51},{39.86,53.89},{42.68,86.53},},},},
+        },
         [1026] = {
             [QuestieDB.questKeys.requiredSourceItems] = {5475},
         },
         [1036] = {
             [QuestieDB.questKeys.requiredMinRep] = {87,1}, -- #1854
+        },
+        [1056] = {
+            [QuestieDB.questKeys.exclusiveTo] = {1057}, -- #1901
         },
         [1061] = {
             [QuestieDB.questKeys.exclusiveTo] = {1062}, -- #1803
@@ -427,6 +433,9 @@ function QuestieQuestFixes:Load()
         },
         [1395] = {
             [QuestieDB.questKeys.preQuestSingle] = {}, -- #1727
+        },
+        [1339] = {
+            [QuestieDB.questKeys.exclusiveTo] = {1338},
         },
         [1418] = {
             [QuestieDB.questKeys.exclusiveTo] = {1419,1420}, -- #1594
@@ -861,6 +870,12 @@ function QuestieQuestFixes:Load()
         },
         [4763] = {
             [QuestieDB.questKeys.requiredSourceItems] = {12347,12341,12342,12343,}, -- #798
+        },
+        [4764] = {
+            [QuestieDB.questKeys.preQuestSingle] = {}, -- #1916
+        },
+        [4766] = {
+            [QuestieDB.questKeys.exclusiveTo] = {4764} -- #1916
         },
         [4768] = {
             [QuestieDB.questKeys.preQuestSingle] = {}, -- #1859
@@ -1418,6 +1433,9 @@ function QuestieQuestFixes:Load()
         [8272] = { -- bad race data
             [QuestieDB.questKeys.requiredRaces] = 178,
         },
+        [8280] = {
+            [QuestieDB.questKeys.exclusiveTo] = {}, -- #1873
+        },
         [8286] = {
             [QuestieDB.questKeys.triggerEnd] = {"Discover the Brood of Nozdormu.",{[440]={{63.43, 50.61},},},},
         },
@@ -1432,6 +1450,12 @@ function QuestieQuestFixes:Load()
         },
         [8314] = {
             [QuestieDB.questKeys.specialFlags] = nil, -- #1870
+        },
+        [8331]  ={
+            [QuestieDB.questKeys.exclusiveTo] = {},
+        },
+        [8332] = {
+            [QuestieDB.questKeys.preQuestSingle] = {},
         },
         [8368] = {
             [QuestieDB.questKeys.exclusiveTo] = {8426,8427,8428,8429,8430},

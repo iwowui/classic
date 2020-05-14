@@ -350,16 +350,16 @@ function QuestieOptions.tabs.general:Initialize()
                     Questie:Debug(DEBUG_DEVELOP, QuestieLocale:GetUIString('ENABLE_MANUAL_OFFSET'), value)
                 end,
             },
-            manualMinLevelOffsetAbsolute = {
+            absoluteLevelOffset = {
                 type = "toggle",
                 order = 2.4,
                 name = function() return QuestieLocale:GetUIString('ENABLE_MANUAL_OFFSET_ABSOLUTE'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_MANUAL_OFFSET_ABSOLUTE_DESC'); end,
                 width = 1.5,
                 disabled = function() return Questie.db.char.lowlevel; end,
-                get = function () return Questie.db.char.manualMinLevelOffsetAbsolute; end,
+                get = function () return Questie.db.char.absoluteLevelOffset; end,
                 set = function (info, value)
-                    Questie.db.char.manualMinLevelOffsetAbsolute = value
+                    Questie.db.char.absoluteLevelOffset = value
                     QuestieOptions.AvailableQuestRedraw();
                     Questie:Debug(DEBUG_DEVELOP, QuestieLocale:GetUIString('ENABLE_MANUAL_OFFSET_ABSOLUTE'), value)
                 end,
@@ -368,17 +368,17 @@ function QuestieOptions.tabs.general:Initialize()
                 type = "range",
                 order = 2.5,
                 name = function()
-                    if Questie.db.char.manualMinLevelOffsetAbsolute then 
+                    if Questie.db.char.absoluteLevelOffset then 
                         return QuestieLocale:GetUIString('LEVEL_FROM');
                     else
                         return QuestieLocale:GetUIString('LOWLEVEL_BELOW'); 
                     end
                 end,
                 desc = function()
-                    if Questie.db.char.manualMinLevelOffsetAbsolute then
+                    if Questie.db.char.absoluteLevelOffset then
                         return QuestieLocale:GetUIString('LEVEL_FROM_DESC');
                     else
-                        return QuestieLocale:GetUIString('LOWLEVEL_BELOW_DESC', optionsDefaults.global.minLevelFilter); 
+                        return QuestieLocale:GetUIString('LOWLEVEL_BELOW_DESC', optionsDefaults.char.minLevelFilter);
                     end
                 end,
                 width = "normal",
@@ -392,9 +392,9 @@ function QuestieOptions.tabs.general:Initialize()
                         return true;
                     end
                 end,
-                get = function(info) return QuestieOptions:GetGlobalOptionValue(info); end,
+                get = function() return Questie.db.char.minLevelFilter; end,
                 set = function (info, value)
-                    QuestieOptions:SetGlobalOptionValue(info, value)
+                    Questie.db.char.minLevelFilter = value;
                     QuestieOptionsUtils:Delay(0.3, QuestieOptions.AvailableQuestRedraw, QuestieLocale:GetUIString('DEBUG_MINLEVEL', value))
                 end,
             },
@@ -402,27 +402,27 @@ function QuestieOptions.tabs.general:Initialize()
                 type = "range",
                 order = 2.6,
                 name = function()
-                    if Questie.db.char.manualMinLevelOffsetAbsolute then
+                    if Questie.db.char.absoluteLevelOffset then
                         return QuestieLocale:GetUIString('LEVEL_TO');
                     else
-                        return QuestieLocale:GetUIString('LOWLEVEL_ABOVE'); 
+                        return QuestieLocale:GetUIString('LOWLEVEL_ABOVE');
                     end
                 end,
                 desc = function()
-                    if Questie.db.char.manualMinLevelOffsetAbsolute then
+                    if Questie.db.char.absoluteLevelOffset then
                         return QuestieLocale:GetUIString('LEVEL_TO_DESC');
                     else
-                        return QuestieLocale:GetUIString('LOWLEVEL_ABOVE_DESC', optionsDefaults.global.maxLevelFilter); 
+                        return QuestieLocale:GetUIString('LOWLEVEL_ABOVE_DESC', optionsDefaults.char.maxLevelFilter);
                     end
                 end,
                 width = "normal",
                 min = 0,
                 max = 60,
                 step = 1,
-                disabled = function() return QuestiePlayer:GetPlayerLevel() == 60 and (not Questie.db.char.manualMinLevelOffsetAbsolute); end,
-                get = function(info) return QuestieOptions:GetGlobalOptionValue(info); end,
+                disabled = function() return QuestiePlayer:GetPlayerLevel() == 60 and (not Questie.db.char.absoluteLevelOffset); end,
+                get = function(info) return Questie.db.char.maxLevelFilter; end,
                 set = function (info, value)
-                    QuestieOptions:SetGlobalOptionValue(info, value)
+                    Questie.db.char.maxLevelFilter = value;
                     QuestieOptionsUtils:Delay(0.3, QuestieOptions.AvailableQuestRedraw, QuestieLocale:GetUIString('DEBUG_MAXLEVEL', value))
                 end,
             },

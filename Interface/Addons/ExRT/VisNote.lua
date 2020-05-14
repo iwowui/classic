@@ -730,7 +730,7 @@ function module.options:Load()
 		{L.S_ZoneT25Nyalotha..": "..L.bossName[2337],{1597,0.48,0.5,1.2}},	--Carapace of N'Zoth
 		{L.S_ZoneT25Nyalotha..": "..L.bossName[2344],{1597,0.48,0.26,4}},	--N'Zoth the Corruptor
 		{"Razorgore the Untamed",{"Interface/AddOns/ExRT/mediaclassic/bwl_razorgore.tga"}},
-		{"Vaelastrasz the Corrupted",{"Interface/AddOns/ExRT/mediaclassic/bwl_vaelastrasz.tga"}},
+		{"Vaelastrasz the Corrupt",{"Interface/AddOns/ExRT/mediaclassic/bwl_vaelastrasz.tga"}},
 		{"Broodlord Laylash",{"Interface/AddOns/ExRT/mediaclassic/bwl_broodlord.tga"}},
 		{"Firemaw",{"Interface/AddOns/ExRT/mediaclassic/bwl_firemaw.tga"}},
 
@@ -741,6 +741,19 @@ function module.options:Load()
 		{"Nefarian",{"Interface/AddOns/ExRT/mediaclassic/bwl_nefarian.tga"}},
 		{"Molten Core",{"Interface/AddOns/ExRT/mediaclassic/mc.tga"}},
 		{"Zul'gurub",{"Interface/AddOns/ExRT/mediaclassic/zg.tga"}},
+		{"Ruins of Ahn'Qiraj",{"Interface/AddOns/ExRT/mediaclassic/aq20.tga"}},
+		{"Map",{"Interface/AddOns/ExRT/mediaclassic/aq40.tga"}},
+		{"Entrance",{"Interface/AddOns/ExRT/mediaclassic/aq40_entrance.tga"}},
+		{"C'Thun",{"Interface/AddOns/ExRT/mediaclassic/aq40_cthun.tga"}},
+		
+		--71-80
+		{"Map",{"Interface/AddOns/ExRT/mediaclassic/naxx.tga"}},
+		{"Arachnid Quarter",{"Interface/AddOns/ExRT/mediaclassic/naxx_arachnid.tga"}},
+		{"Construct Quarter",{"Interface/AddOns/ExRT/mediaclassic/naxx_construct.tga"}},
+		{"Militairy Quarter",{"Interface/AddOns/ExRT/mediaclassic/naxx_militairy.tga"}},
+		{"Plague Quarter",{"Interface/AddOns/ExRT/mediaclassic/naxx_plague.tga"}},
+		{"Sapphiron / Kel'thuzad",{"Interface/AddOns/ExRT/mediaclassic/naxx_sapp_kel.tga"}},
+		
 	}
 	--[[
 	MC: 243
@@ -762,8 +775,11 @@ function module.options:Load()
 	if ExRT.isClassic then
 		mapsSorted = {
 			1,10,
-			{"Blackwing Lair","by Wollie81",57,58,59,60,61,62,63,64},
+			{"Blackwing Lair","by Wollie",57,58,59,60,61,62,63,64},
 			{"Molten Core",65},
+			{"Naxxramas","by Wollie",71,72,73,74,75,76},
+			{"Ruins of Ahn'Qiraj",67},
+			{"Temple of Ahn'Qiraj",68,69,70},
 			{"Zul'gurub",66},
 		}
 	end
