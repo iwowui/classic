@@ -14,3 +14,11 @@ CSC_WEAPON_STAFF_TXT        = "法杖";
 CSC_WEAPON_UNARMED_TXT      = "拳套";
 CSC_WEAPON_DAGGER_TXT       = "匕首";
 CSC_HIT_BIZNICKS_TXT        = HIT;
+
+CSC_SPELL_HIT_TOOLTIP_TXT       = "法术命中（装备）: %d%%";
+CSC_SPELL_HIT_SUBTOOLTIP_TXT    = "法术命中（装备+天赋）:";
+CSC_ARCANE_SPELL_HIT_TXT        = "奥术法术命中";
+CSC_FIRE_SPELL_HIT_TXT          = "火焰法术命中";
+CSC_FROST_SPELL_HIT_TXT         = "冰霜法术命中";
+CSC_DESTRUCTION_SPELL_HIT_TXT   = "毁灭法术命中";
+CSC_AFFLICTION_SPELL_HIT_TXT    = "痛苦法术命中";
