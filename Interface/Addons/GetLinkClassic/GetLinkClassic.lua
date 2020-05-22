@@ -11,7 +11,7 @@ local SearchFrame = CreateFrame("Frame")
 local nTopID = 24284 --Update this for new item IDs, https://classic.wowhead.com/items?filter=151;2;24283
 local tclassic = {172070, 122284, 122270} --Weird ids for classic.
 local nStepSize = 52 --Database build speed.  This can be set to 500+ on beefier computers.
-local nVersion = 4
+local nVersion = 4.1
 local bBuilding = false
 local nCurrentID = 0
 local tc = {
@@ -104,48 +104,52 @@ function GetLink_Command(msg)
 					tb = GetLink_Str2Table(msg)
 				end
 				_G["GetLinkGui"].message:SetMaxLines(99999)
+				local itemname, itemrarity, itemtype, itemsubtype, itemloc
 				for id, name in pairs(GLTable) do
-					if (tonumber(name:sub(1,1)) < 6 and GLOptions["quality"] < 6 and tonumber(name:sub(1,1)) <= qualityfix[GLOptions["quality"]]) or (tonumber(name:sub(1,1)) > 5 and tonumber(name:sub(1,1)) >= qualityfix[GLOptions["quality"]]) then
-						if GLOptions["extra"] == 1 then
-							if msg:len() == 0 or string.find(name:lower(), msg, 2) then
-								if not _G["GetLinkGui"]:IsShown() then
-									if string.find(name:sub(1,2), "|") then
-										print(name)
+					itemname, itemrarity, itemtype, itemsubtype, itemloc = strsplit("$", name)
+					if GLOptions["type"] == -1 or (tonumber(itemtype) == GLOptions["type"] and (tonumber(itemsubtype) == GLOptions["subtype"] or GLOptions["subtype"] == -1) and (GLOptions["type"] ~= 4 or (itemloc == GLOptions["loc"] or GLOptions["loc"] == "all"))) then
+						if (tonumber(itemrarity) < 6 and GLOptions["quality"] < 6 and tonumber(itemrarity) <= qualityfix[GLOptions["quality"]]) or (tonumber(itemrarity) > 5 and tonumber(itemrarity) >= qualityfix[GLOptions["quality"]]) then
+							if GLOptions["extra"] == 1 then
+								if msg:len() == 0 or string.find(itemname:lower(), msg, 2) then
+									if not _G["GetLinkGui"]:IsShown() then
+										if string.find(itemname, "|") then
+											print(name)
+										else
+											print("|cff" .. rtc[itemrarity] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. itemname .. "]|h|r")
+										end
+									end
+									if string.find(itemname, "|") then
+										_G["GetLinkGui"].message:AddMessage(name)
 									else
-										print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+										_G["GetLinkGui"].message:AddMessage("|cff" .. rtc[itemrarity] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. itemname .. "]|h|r")
+									end
+									num = num + 1
+								end
+							else
+								local found = 1
+								if msg:len() ~= 0 then
+									for k, v in pairs(tb) do
+										if not string.find(itemname:lower(), v, 2) then
+											found = 0
+											break
+										end
 									end
 								end
-								if string.find(name:sub(1,2), "|") then
-									_G["GetLinkGui"].message:AddMessage(name)
-								else
-									_G["GetLinkGui"].message:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
-								end
-								num = num + 1
-							end
-						else
-							local found = 1
-							if msg:len() ~= 0 then
-								for k, v in pairs(tb) do
-									if not string.find(name:lower(), v, 2) then
-										found = 0
-										break
+								if found == 1 then
+									if not _G["GetLinkGui"]:IsShown() then
+										if string.find(itemname, "|") then
+											print(name)
+										else
+											print("|cff" .. rtc[itemrarity] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. itemname .. "]|h|r")
+										end
 									end
-								end
-							end
-							if found == 1 then
-								if not _G["GetLinkGui"]:IsShown() then
-									if string.find(name:sub(1,2), "|") then
-										print(name)
+									if string.find(itemname, "|") then
+										_G["GetLinkGui"].message:AddMessage(name)
 									else
-										print("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
+										_G["GetLinkGui"].message:AddMessage("|cff" .. rtc[itemrarity] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. itemname .. "]|h|r")
 									end
+									num = num + 1
 								end
-								if string.find(name:sub(1,2), "|") then
-									_G["GetLinkGui"].message:AddMessage(name)
-								else
-									_G["GetLinkGui"].message:AddMessage("|cff" .. rtc[name:sub(1,1)] .. "|Hitem:" .. id .. ":::::::::::::::|h[" .. name:sub(2) .. "]|h|r")
-								end
-								num = num + 1
 							end
 						end
 					end
@@ -194,13 +198,16 @@ end
 
 function AddItem(idnum)
 	idnum = tonumber(idnum)
-	local name, link
-	if(idnum and idnum > 0) then name, link = GetItemInfo(idnum) end --Thanks islerwow for pointing out a stack overflow.
-	if name then
-		if tc[link:sub(5, 10)] then
-			GLTable[tostring(idnum)] = string.format("%s%s", tc[link:sub(5, 10)], name)
+	local itemName, itemLink, itemClassID, itemSubClassID
+	-- itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
+	-- itemEquipLoc, itemIcon, itemSellPrice, itemClassID, itemSubClassID, bindType, expacID, itemSetID, 
+	-- isCraftingReagent = GetItemInfo(itemID or "itemString" or "itemName" or "itemLink") 
+	if(idnum and idnum > 0) then itemName, itemLink, _, _, _, _, _, _, itemEquipLoc, _, _, itemClassID, itemSubClassID = GetItemInfo(idnum) end --Thanks islerwow for pointing out a stack overflow.
+	if itemName then
+		if tc[itemLink:sub(5, 10)] then
+			GLTable[tostring(idnum)] = string.format("%s$%s$%s$%s$%s$", itemName, tc[itemLink:sub(5, 10)], itemClassID, itemSubClassID, itemEquipLoc)
 		else
-			GLTable[idnum] = link
+			GLTable[idnum] = itemLink
 		end
 	end
 end
@@ -223,6 +230,8 @@ function EventHandler(self, event, arg1, arg2)
 		end
 		if not GLOptions["extra"] then GLOptions["extra"] = 0 end
 		if not GLOptions["quality"] then GLOptions["quality"] = 1 end
+		if not GLOptions["type"] then GLOptions["type"] = -1 end
+		if not GLOptions["subtype"] then GLOptions["subtype"] = -1 end
 	elseif event == "GET_ITEM_INFO_RECEIVED" and arg1 > 0 then
 		AddItem(arg1)
 	end
