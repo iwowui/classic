@@ -232,6 +232,7 @@ function EventHandler(self, event, arg1, arg2)
 		if not GLOptions["quality"] then GLOptions["quality"] = 1 end
 		if not GLOptions["type"] then GLOptions["type"] = -1 end
 		if not GLOptions["subtype"] then GLOptions["subtype"] = -1 end
+		if not GLOptions["loc"] then GLOptions["loc"] = "all" end
 	elseif event == "GET_ITEM_INFO_RECEIVED" and arg1 > 0 then
 		AddItem(arg1)
 	end

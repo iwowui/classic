@@ -1024,8 +1024,8 @@ function Spy:RestoreMainWindowPosition(x, y, width, height)
 end
 
 function Spy:SaveAlertWindowPosition()
-	Spy.db.profile.AlertWindow.Position.x = Spy.MainWindow:GetLeft()
-	Spy.db.profile.MainWindow.Position.y = Spy.MainWindow:GetTop()
+	Spy.db.profile.AlertWindow.Position.x = Spy.AlertWindow:GetLeft()
+	Spy.db.profile.AlertWindow.Position.y = Spy.AlertWindow:GetTop()
 end
 
 function Spy:ShowTooltip(self, show, id)

@@ -433,69 +433,71 @@ StaticPopupDialogs["Spy_SetKOSReasonOther"] = {
 	OnShow = function(self)
 		self.editBox:SetText("");
 	end,
-    OnAccept = function(self)
+	OnAccept = function(self)
 		local reason = self.editBox:GetText()
 		Spy:SetKOSReason(self.playerName, "自行輸入原因...", reason)
 	end,
 };
 
---++ Class descriptions
---L["DEATHKNIGHT"] = "死亡騎士"
---L["DEMONHUNTER"] = "惡魔獵人"
+-- Class descriptions
+L["UNKNOWN"] = "未知"
 L["DRUID"] = "德魯伊"
 L["HUNTER"] = "獵人"
 L["MAGE"] = "法師"
---L["MONK"] = "武僧"
 L["PALADIN"] = "聖騎士"
 L["PRIEST"] = "牧師"
 L["ROGUE"] = "盜賊"
 L["SHAMAN"] = "薩滿"
 L["WARLOCK"] = "術士"
 L["WARRIOR"] = "戰士"
-L["UNKNOWN"] = "未知"
+L["DEATHKNIGHT"] = "死亡騎士"
+L["MONK"] = "武僧"
+L["DEMONHUNTER"] = "惡魔獵人"
 
---++ Race descriptions
-L["HUMAN"] = "人类"
-L["ORC"] = "兽人"
-L["DWARF"] = "矮人"
-L["NIGHT ELF"] = "暗夜精灵"
-L["UNDEAD"] = "亡灵"
-L["TAUREN"] = "牛头人"
-L["GNOME"] = "侏儒"
-L["TROLL"] = "巨魔"
---L["GOBLIN"] = "地精"
---L["BLOOD ELF"] = "血精灵"
---L["DRAENEI"] = "德莱尼"
---L["WORGEN"] = "狼人"
---L["PANDAREN"] = "熊猫人"
---L["NIGHTBORNE"] = "夜之子"
---L["HIGHMOUNTAIN TAUREN"] = "至高岭牛头人"
---L["VOID ELF"] = "虚空精灵"
---L["LIGHTFORGED DRAENEI"] = "光铸德莱尼"
---L["ZANDALARI TROLL"] = "赞达拉巨魔"
---L["KUL TIRAN"] = "库尔提拉斯人"
---L["DARK IRON DWARF"] = "黑铁矮人"
---L["MAG'HAR ORC"] = "玛格汉兽人"
+-- Race descriptions
+L["Human"] = "人类"
+L["Orc"] = "兽人"
+L["Dwarf"] = "矮人"
+L["Tauren"] = "牛头人"
+L["Troll"] = "巨魔"
+L["Night Elf"] = "暗夜精灵"
+L["Undead"] = "亡灵"
+L["Gnome"] = "侏儒"
+L["Blood Elf"] = "血精灵"
+L["Draenei"] = "德莱尼"
+L["Goblin"] = "地精"
+L["Worgen"] = "狼人"
+L["Pandaren"] = "熊猫人"
+L["Highmountain Tauren"] = "至高岭牛头人"
+L["Lightforged Draenei"] = "光铸德莱尼"
+L["Nightborne"] = "夜之子"
+L["Void Elf"] = "虚空精灵"
+L["Dark Iron Dwarf"] = "黑铁矮人"
+L["Mag'har Orc"] = "玛格汉兽人"
+L["Kul Tiran"] = "库尔提拉斯人"
+L["Zandalari Troll"] = "赞达拉巨魔"
+L["Mechagnome"] = "机械侏儒"
+L["Vulpera"] = "狐人"
 
 -- Stealth abilities
 L["Stealth"] = "潜行"
 L["Prowl"] = "潛行"
 
---++ Minimap color codes
---L["MinimapClassTextDEATHKNIGHT"] = "|cffc41e3a"
---L["MinimapClassTextDEMONHUNTER"] = "|cffa330c9"
+-- Minimap color codes
+L["MinimapGuildText"] = "|cffffffff"
+L["MinimapClassTextUNKNOWN"] = "|cff191919"
 L["MinimapClassTextDRUID"] = "|cffff7c0a"
 L["MinimapClassTextHUNTER"] = "|cffaad372"
 L["MinimapClassTextMAGE"] = "|cff68ccef"
---L["MinimapClassTextMONK"] = "|cff00ff96"
 L["MinimapClassTextPALADIN"] = "|cfff48cba"
 L["MinimapClassTextPRIEST"] = "|cffffffff"
 L["MinimapClassTextROGUE"] = "|cfffff468"
 L["MinimapClassTextSHAMAN"] = "|cff2359ff"
 L["MinimapClassTextWARLOCK"] = "|cff9382c9"
 L["MinimapClassTextWARRIOR"] = "|cffc69b6d"
-L["MinimapClassTextUNKNOWN"] = "|cff191919"
-L["MinimapGuildText"] = "|cffffffff"
+L["MinimapClassTextDEATHKNIGHT"] = "|cffc41e3a"
+L["MinimapClassTextMONK"] = "|cff00ff96"
+L["MinimapClassTextDEMONHUNTER"] = "|cffa330c9"
 
 Spy_AbilityList = {
 -----------------------------------------------------------

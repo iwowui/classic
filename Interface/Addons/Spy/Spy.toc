@@ -1,6 +1,6 @@
 ﻿## Interface: 11304
 ## Title: Spy
-## Version: 1.0.27
+## Version: 1.0.28
 ## Notes: Detects and alerts you to the presence of nearby enemy players.
 ## Title-zhCN: |CFFFF8000战斗|R 侦测敌方玩家
 ## Title-zhTW: |CFFFF8000戰鬥|R 偵測敵方玩家

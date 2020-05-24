@@ -36,15 +36,18 @@ function Spy:RefreshCurrentList(player, source)
 			end
 
 			local description = level.." "
-			if L[class] and type(L[class]) == "string" then description = description..L[class] end
-
+			if L[class] and type(L[class]) == "string" then
+				description = description..L[class]
+			end
 			if mode == 1 and Spy.InactiveList[data.player] then
 				opacity = 0.5
 			end
 			if player == data.player then
 				if not source or source ~= Spy.CharacterName then
 					Spy:AlertPlayer(player, source)
-					if not source then Spy:AnnouncePlayer(player) end
+					if not source then
+						Spy:AnnouncePlayer(player)
+					end
 				end
 			end
 
@@ -469,6 +472,14 @@ function Spy:AlertPlayer(player, source)
 						PlaySoundFile("Interface\\AddOns\\Spy\\Sounds\\detected-nearby.mp3", Spy.db.profile.SoundChannel)
 					end
 				end
+			end
+		end 
+	elseif Spy.db.profile.EnableSound and not Spy.db.profile.OnlySoundKoS then 
+		if source == nil or source == Spy.CharacterName then
+			if playerData and Spy.db.profile.WarnOnRace and playerData.race == Spy.db.profile.SelectWarnRace then
+				PlaySoundFile("Interface\\AddOns\\Spy\\Sounds\\detected-race.mp3", Spy.db.profile.SoundChannel) 
+			else
+				PlaySoundFile("Interface\\AddOns\\Spy\\Sounds\\detected-nearby.mp3", Spy.db.profile.SoundChannel)
 			end
 		end
 	elseif Spy.db.profile.EnableSound and not Spy.db.profile.OnlySoundKoS then

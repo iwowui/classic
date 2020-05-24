@@ -7,7 +7,7 @@ local fonts = SM:List("font")
 local _
 
 Spy = LibStub("AceAddon-3.0"):NewAddon("Spy", "AceConsole-3.0", "AceEvent-3.0", "AceComm-3.0", "AceTimer-3.0")
-Spy.Version = "1.0.27"
+Spy.Version = "1.0.28"
 Spy.DatabaseVersion = "1.1"
 Spy.Signature = "[Spy]"
 Spy.ButtonLimit = 15
@@ -657,27 +657,53 @@ Spy.options = {
 					order = 13,
 					name = L["SelectWarnRace"],
 					desc = L["SelectWarnRaceDescription"],
-					values = { 
-						["None"] = L["None"],
---						["Blood Elf"] = L["BLOOD ELF"],
---						["Draenei"] = L["DRAENEI"],
-						["Dwarf"] = L["DWARF"],
---						["Goblin"] = L["GOBLIN"],
-						["Gnome"] = L["GNOME"],
-						["Human"] = L["HUMAN"],
-						["Night Elf"] = L["NIGHT ELF"],
-						["Orc"] = L["ORC"],
---						["Pandaren"] = L["PANDAREN"],
-						["Tauren"] = L["TAUREN"],
-						["Troll"] = L["TROLL"],
-						["Undead"] = L["UNDEAD"],
---						["Worgen"] = L["WORGEN"],
-					},
 					get = function()
 						return Spy.db.profile.SelectWarnRace
 					end,
 					set = function(info, value)
 						Spy.db.profile.SelectWarnRace = value
+					end,
+					values = function()
+						local raceOptions = {}
+						local races = {
+							Alliance = {
+								["None"] = L["None"],
+								["Human"] = L["Human"],	
+								["Dwarf"] = L["Dwarf"],		
+								["Night Elf"] = L["Night Elf"],			
+								["Gnome"] = L["Gnome"],	
+--								["Draenei"] = L["Draenei"],
+--								["Worgen"] = L["Worgen"],
+--								["Pandaren"] = L["Pandaren"],	
+--								["Lightforged Draenei"] = L["Lightforged Draenei"],
+--								["Void Elf"] = L["Void Elf"],
+--								["Dark Iron Dwarf"] = L["Dark Iron Dwarf"],
+--								["Kul Tiran"] = L["Kul Tiran"],
+--								["Mechagnome"] = L["Mechagnome"],
+							},
+							Horde = {
+								["None"] = L["None"],
+								["Orc"] = L["Orc"],
+								["Tauren"] = L["Tauren"],
+								["Troll"] = L["Troll"],	
+								["Undead"] = L["Undead"],				
+--								["Blood Elf"] = L["Blood Elf"],
+--								["Goblin"] = L["Goblin"],			
+--								["Pandaren"] = L["Pandaren"],
+--								["Highmountain Tauren"] = L["Highmountain Tauren"],
+--								["Nightborne"] = L["Nightborne"],
+--								["Mag'har Orc"] = L["Mag'har Orc"],
+--								["Zandalari Troll"] = L["Zandalari Troll"],
+--								["Vulpera"] = L["Vulpera"],
+							},
+						}
+						if Spy.EnemyFactionName == "Alliance" then
+							raceOptions = races.Alliance
+						end	
+						if Spy.EnemyFactionName == "Horde" then
+							raceOptions = races.Horde
+						end	
+						return raceOptions
 					end,
 				},
 				WarnRaceNote = {
@@ -1676,47 +1702,53 @@ function Spy:OnInitialize()
     Spy.FactionName = select(1, UnitFactionGroup("player"))
 	if Spy.FactionName == "Alliance" then
 		Spy.EnemyFactionName = "Horde"
-	else
+	elseif Spy.FactionName == "Horde" then
 		Spy.EnemyFactionName = "Alliance"
+	else
+		Spy.EnemyFactionName = "None"	
 	end
 	Spy.CharacterName = UnitName("player")
 
-	Spy.ValidClasses = {}
---	Spy.ValidClasses["DEATHKNIGHT"] = true
---	Spy.ValidClasses["DEMONHUNTER"] = true	
-	Spy.ValidClasses["DRUID"] = true
-	Spy.ValidClasses["HUNTER"] = true
-	Spy.ValidClasses["MAGE"] = true
---	Spy.ValidClasses["MONK"] = true 
-	Spy.ValidClasses["PALADIN"] = true
-	Spy.ValidClasses["PRIEST"] = true
-	Spy.ValidClasses["ROGUE"] = true
-	Spy.ValidClasses["SHAMAN"] = true
-	Spy.ValidClasses["WARLOCK"] = true
-	Spy.ValidClasses["WARRIOR"] = true
+	Spy.ValidClasses = {
+		["DRUID"] = true,
+		["HUNTER"] = true,	
+		["MAGE"] = true,	
+		["PALADIN"] = true,	
+		["PRIEST"] = true,
+		["ROGUE"] = true,	
+		["SHAMAN"] = true,
+		["WARLOCK"] = true,		
+		["WARRIOR"] = true,
+--		["DEATHKNIGHT"] = true,		
+--		["MONK"] = true,
+--		["DEMONHUNTER"] = true
+	}
 
-	Spy.ValidRaces = {}
---	Spy.ValidRaces["Blood Elf"] = true
---	Spy.ValidRaces["Draenei"] = true
-	Spy.ValidRaces["Dwarf"] = true
---	Spy.ValidRaces["Goblin"] = true
-	Spy.ValidRaces["Gnome"] = true
-	Spy.ValidRaces["Human"] = true
-	Spy.ValidRaces["Night Elf"] = true
-	Spy.ValidRaces["Orc"] = true
---	Spy.ValidRaces["Pandaren"] = true 
-	Spy.ValidRaces["Tauren"] = true
-	Spy.ValidRaces["Troll"] = true
-	Spy.ValidRaces["Undead"] = true
---	Spy.ValidRaces["Worgen"] = true
---	Spy.ValidRaces["Void Elf"] = true	
---	Spy.ValidRaces["Lightforged Draenei"] = true
---	Spy.ValidRaces["Dark Iron Dwarf"] = true
---	Spy.ValidRaces["Kul Tiran"] = true
---	Spy.ValidRaces["Nightborne"] = true
---	Spy.ValidRaces["Highmountain Tauren"] = true
---	Spy.ValidRaces["Zandalari Troll"] = true
---	Spy.ValidRaces["Mag'har Orc"] = true
+	Spy.ValidRaces = {
+		["Human"] = true,
+		["Orc"] = true,
+		["Dwarf"] = true,
+		["Tauren"] = true,
+		["Troll"] = true,		
+		["NightElf"] = true,
+		["Scourge"] = true,		
+		["Gnome"] = true,
+--		["BloodElf"] = true,		
+--		["Draenei"] = true,
+--		["Goblin"] = true,		
+--		["Worgen"] = true,
+--		["Pandaren"] = true,
+--		["HighmountainTauren"] = true,		
+--		["LightforgedDraenei"] = true,
+--		["Nightborne"] = true,		
+--		["VoidElf"] = true,
+--		["DarkIronDwarf"] = true,
+--		["MagharOrc"] = true,		
+--		["KulTiran"] = true,
+--		["ZandalariTroll"] = true,
+--		["Mechagnome"] = true,
+--		["Vulpera"] = true,				
+	}
 
 	local acedb = LibStub:GetLibrary("AceDB-3.0")
 
@@ -1961,13 +1993,13 @@ timestamp, event, hideCaster, srcGUID, srcName, srcFlags, sourceRaidFlags, dstGU
 		if bit.band(srcFlags, COMBATLOG_OBJECT_REACTION_HOSTILE) == COMBATLOG_OBJECT_REACTION_HOSTILE and srcGUID and srcName and not SpyPerCharDB.IgnoreData[srcName] then
 			local srcType = strsub(srcGUID, 1,6)
 			if srcType == "Player" then
-				local _, class, _, race, _, name = GetPlayerInfoByGUID(srcGUID)
+				local _, class, race, raceFile, _, name = GetPlayerInfoByGUID(srcGUID)
 				if not Spy.ValidClasses[class] then
 					class = nil
 				end	
-				if not Spy.ValidRaces[race] then
+				if not Spy.ValidRaces[raceFile] then
 					race = nil
-				end				
+				end
 				local learnt = false
 				local detected = true
 				local playerData = SpyPerCharDB.PlayerData[srcName]
@@ -1998,11 +2030,11 @@ timestamp, event, hideCaster, srcGUID, srcName, srcFlags, sourceRaidFlags, dstGU
 		if bit.band(dstFlags, COMBATLOG_OBJECT_REACTION_HOSTILE) == COMBATLOG_OBJECT_REACTION_HOSTILE and dstGUID and dstName and not SpyPerCharDB.IgnoreData[dstName] then
 			local dstType = strsub(dstGUID, 1,6)
 			if dstType == "player" then
-				local _, class, _, race, _, name = GetPlayerInfoByGUID(dstGUID)
+				local _, class, race, raceFile, _, name = GetPlayerInfoByGUID(dstGUID)
 				if not Spy.ValidClasses[class] then
 					class = nil
 				end	
-				if not Spy.ValidRaces[race] then
+				if not Spy.ValidRaces[raceFile] then
 					race = nil
 				end				
 				local learnt = false
@@ -2014,7 +2046,6 @@ timestamp, event, hideCaster, srcGUID, srcName, srcFlags, sourceRaidFlags, dstGU
 				if not learnt then
 					detected = Spy:UpdatePlayerData(dstName, class, nil, race, nil, true, nil)
 				end
-
 				if detected then
 					Spy:AddDetected(dstName, timestamp, learnt)
 				end
