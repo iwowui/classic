@@ -10,7 +10,7 @@
 ## Author: |cff00ff00ALA|r @ |cffff0000163UI|r
 ## Author-zhCN: |cff00ff00ALA|r @ |cffff0000网易有爱|r
 ## Author-zhTW: |cff00ff00ALA|r @ |cffff0000网易有爱|r
-## Version: 113r.200514
+## Version: 113r.200527
 
 alaTalentEmu.xml
 
@@ -23,4 +23,4 @@ alaTalentEmu.xml
 ## Notes-zhTW: 天賦模擬器，可以模擬天賦、匯出代碼、導入代碼、觀察其他玩家天賦、應用模擬器天賦等。
 ## X-Repple: 辅助
 ## X-Vendor: NetEase
-## X-163UI-Version: 20200409195510
+## X-163UI-Version: 20200521143713

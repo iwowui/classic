@@ -9,10 +9,9 @@
 ----------------------------------------------------------------------------------------------------
 local ADDON, NS = ...;
 _G.__ala_meta__ = _G.__ala_meta__ or {  };
-local _G = _G;
 
+local _G = _G;
 do
-	local _G = _G;
 	if NS.__fenv == nil then
 		NS.__fenv = setmetatable({  },
 				{
@@ -3610,7 +3609,7 @@ do	-- equipmentFrame
 			icon:GetHighlightTexture():SetTexCoord(TEXTURE_SET.EQUIPMENT_HIGHLIGHT_COORD[1], TEXTURE_SET.EQUIPMENT_HIGHLIGHT_COORD[2], TEXTURE_SET.EQUIPMENT_HIGHLIGHT_COORD[3], TEXTURE_SET.EQUIPMENT_HIGHLIGHT_COORD[4]);
 
 			local glow = icon:CreateTexture(nil, "OVERLAY");
-			glow:SetAllPoints(true);
+			glow:SetAllPoints();
 			glow:SetTexture(TEXTURE_SET.EQUIPMENT_GLOW);
 			glow:SetBlendMode("ADD");
 			glow:SetTexCoord(unpack(TEXTURE_SET.EQUIPMENT_GLOW_COORD));
@@ -4173,7 +4172,7 @@ do	-- talentFrame
 			talentFrame.vSep = vSep;
 
 			local BG = talentFrame:CreateTexture(nil, "BORDER");
-			BG:SetAllPoints(true);
+			BG:SetAllPoints();
 			BG:SetAlpha(0.6);
 			local ratio = ui_style.talentFrameXSizeSingle / ui_style.talentFrameYSize;
 			if ratio > 1.0 then
@@ -5224,6 +5223,25 @@ do	-- mainFrame
 end
 
 do	-- initialize
+	function NS.DB_PreLoad(_talentDB)	--	unnecessary
+		for _, DB in pairs(_talentDB) do
+			for _, db in pairs(DB) do
+				for dataIndex, data in pairs(db) do
+					for i = 1, #data[8] do
+						C_Spell.RequestLoadSpellData(data[8][i]);
+					end
+				end
+			end
+		end
+		--
+		for class, S in pairs(_spellDB) do
+			for _, v in pairs(S) do
+				for i = 1, #v do
+					C_Spell.RequestLoadSpellData(v[i][2]);
+				end
+			end
+		end
+	end
 	function NS.DB_PreProc(_talentDB)
 		-- 1---- 2--- 3-- 4-------- 5------- 6------ 7----- 8-------- 9------- 10--------- 11---------------- 12
 		--tier, col, id, maxPoint, reqTier, reqCol, reqId, Spell[5], texture, icon-index, req-index[] in db, { req-by-index } in db
@@ -5246,9 +5264,6 @@ do	-- initialize
 						if not data[11] then
 							_log_("DB_PreProc", 1, "req of ", data[1], data[2], data[5], data[6], "missing");
 						end
-					end
-					for i = 1, #data[8] do
-						C_Spell.RequestLoadSpellData(data[8][i]);
 					end
 				end
 			end
@@ -5294,7 +5309,6 @@ do	-- initialize
 					if v.passive then
 						v[i][6] = true;
 					end
-					C_Spell.RequestLoadSpellData(v[i][2]);
 				end
 				if v.talent then
 					local rid = v.require or v[1][2];
@@ -5404,6 +5418,53 @@ do	-- initialize
 		end
 	end]]
 
+	local function init()
+		config._version = 200512.0;
+		NS.DB_PreProc(_talentDB);
+		NS.EmuCore_InitCodeTable();
+
+		--[[if LibStub then
+			local icon = LibStub("LibDBIcon-1.0", true);
+			if icon then
+				icon:Register("alaTalentEmu",
+				{
+					icon = TEXTURE_SET.LIBDBICON,
+					OnClick = DBIcon_OnClick,
+					text = L.DBIcon_Text,
+					OnTooltipShow = function(tt)
+							tt:AddLine("alaTalentEmulator");
+							tt:AddLine(" ");
+							tt:AddLine(L.DBIcon_Text);
+						end
+				},
+				{
+					minimapPos = 0,
+				}
+				);
+			end
+		end]]
+
+		NS.EmuCore_InitAddonMessage();
+		NS.tooltipFrame = NS.CreateTooltipFrame();
+
+		extern.addon_init();
+
+		if config.inspectButtonKey == "CTRL" then
+			NS.inspectButtonKeyFunc = IsControlKeyDown;
+		elseif config.inspectButtonKey == "SHIFT" then
+			NS.inspectButtonKeyFunc = IsShiftKeyDown;
+		elseif config.inspectButtonKey == "ALT" then
+			NS.inspectButtonKeyFunc = IsAltKeyDown;
+		else
+			NS.inspectButtonKeyFunc = IsAltKeyDown;
+		end
+
+		NS.initialized = true;
+
+		if __ala_meta__.initpublic then __ala_meta__.initpublic(); end
+		
+		C_Timer.After(8.0, function() NS.DB_PreLoad(_talentDB); end);
+	end
 	function NS.PLAYER_ENTERING_WORLD()
 		if not NS.initialized then
 			if alaTalentEmuSV then
@@ -5427,50 +5488,7 @@ do	-- initialize
 			else
 				_G.alaTalentEmuSV = config;
 			end
-			config._version = 200512.0;
-			NS.DB_PreProc(_talentDB);
-			NS.EmuCore_InitCodeTable();
-
-			--[[if LibStub then
-				local icon = LibStub("LibDBIcon-1.0", true);
-				if icon then
-					icon:Register("alaTalentEmu",
-					{
-						icon = TEXTURE_SET.LIBDBICON,
-						OnClick = DBIcon_OnClick,
-						text = L.DBIcon_Text,
-						OnTooltipShow = function(tt)
-								tt:AddLine("alaTalentEmulator");
-								tt:AddLine(" ");
-								tt:AddLine(L.DBIcon_Text);
-							end
-					},
-					{
-						minimapPos = 0,
-					}
-					);
-				end
-			end]]
-
-			NS.EmuCore_InitAddonMessage();
-			NS.tooltipFrame = NS.CreateTooltipFrame();
-
-			extern.addon_init();
-
-			if config.inspectButtonKey == "CTRL" then
-				NS.inspectButtonKeyFunc = IsControlKeyDown;
-			elseif config.inspectButtonKey == "SHIFT" then
-				NS.inspectButtonKeyFunc = IsShiftKeyDown;
-			elseif config.inspectButtonKey == "ALT" then
-				NS.inspectButtonKeyFunc = IsAltKeyDown;
-			else
-				NS.inspectButtonKeyFunc = IsAltKeyDown;
-			end
-
-			NS.initialized = true;
-
-			if __ala_meta__.initpublic then __ala_meta__.initpublic(); end
-
+			C_Timer.After(0.1, init);
 		end
 	end
 	_EventHandler:RegEvent("PLAYER_ENTERING_WORLD");

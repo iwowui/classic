@@ -10,7 +10,7 @@
 
 ## X-Repple: 辅助
 
-## Version: 1.13.64
+## Version: 1.13.65
 ## Author: Leatrix
 ## SavedVariables: LeaPlusDB
 

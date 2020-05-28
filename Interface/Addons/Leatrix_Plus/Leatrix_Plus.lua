@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.64 (20th May 2020)
+-- 	Leatrix Plus 1.13.65 (27th May 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 --	Version
-	LeaPlusLC["AddonVer"] = "1.13.64"
+	LeaPlusLC["AddonVer"] = "1.13.65"
 	LeaPlusLC["RestartReq"] = nil
 
 --	If client restart is required and has not been done, show warning and quit
@@ -2382,10 +2382,12 @@
 					if C_DeathInfo.GetSelfResurrectOptions() and #C_DeathInfo.GetSelfResurrectOptions() > 0 then return end
 					local InstStat, InstType = IsInInstance()
 					if InstStat and InstType == "pvp" then
-						local dialog = StaticPopup_Visible("DEATH")
-						if dialog then
-							StaticPopup_OnClick(_G[dialog], 1)
-						end
+						C_Timer.After(0.2, function()
+							local dialog = StaticPopup_Visible("DEATH")
+							if dialog then
+								StaticPopup_OnClick(_G[dialog], 1)
+							end
+						end)
 					end
 				end
 			end)
@@ -3225,13 +3227,26 @@
 			local BagItemSearchBox = CreateFrame("EditBox", "BagItemSearchBox", ContainerFrame1, "BagSearchBoxTemplate")
 			BagItemSearchBox:SetSize(110, 18)
 			BagItemSearchBox:SetMaxLetters(15)
-			BagItemSearchBox:SetPoint("TOPLEFT", 54, -29)
 
 			-- Create bank item search box
 			local BankItemSearchBox = CreateFrame("EditBox", "BankItemSearchBox", BankFrame, "BagSearchBoxTemplate")
 			BankItemSearchBox:SetSize(120, 14)
 			BankItemSearchBox:SetMaxLetters(15)
 			BankItemSearchBox:SetPoint("TOPRIGHT", -60, -40)
+
+			-- Attach bag search box first bag only
+			hooksecurefunc("ContainerFrame_Update", function(self)
+				if self:GetID() == 0 then
+					BagItemSearchBox:SetParent(self)
+					BagItemSearchBox:SetPoint("TOPLEFT", self, "TOPLEFT", 54, -29)
+					BagItemSearchBox.anchorBag = self
+					BagItemSearchBox:Show()
+				elseif BagItemSearchBox.anchorBag == self then
+					BagItemSearchBox:ClearAllPoints()
+					BagItemSearchBox:Hide()
+					BagItemSearchBox.anchorBag = nil
+				end
+			end)
 
 		end
 
