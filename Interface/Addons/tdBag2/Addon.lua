@@ -208,9 +208,7 @@ function Addon:SetupDatabase()
     local function OnDatabaseShutdown()
         local characters = self.db.global.characters
         for k, v in pairs(characters) do
-            if v then
-                characters[k] = ns.RemoveDefaults(v, ns.CHARACTER_PROFILE)
-            end
+            characters[k] = ns.RemoveDefaults(v, ns.CHARACTER_PROFILE)
         end
     end
 

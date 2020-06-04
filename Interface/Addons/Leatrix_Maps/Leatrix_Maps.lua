@@ -1,6 +1,6 @@
 
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.65 (27th May 2020)
+	-- 	Leatrix Maps 1.13.66 (3rd June 2020)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.65"
+	LeaMapsLC["AddonVer"] = "1.13.66"
 	LeaMapsLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -320,31 +320,6 @@
 				border:SetPoint("TOPLEFT", -5, 5)
 				border:SetPoint("BOTTOMRIGHT", 5, -5)
 				border:SetVertexColor(0, 0, 0, 0.5)
-
-				-- Create drag button
-				local moveMap = LeaMapsLC:CreateButton("MoveMapButton", WorldMapFrame.ScrollContainer, "Drag", "TOPLEFT", 10, -10, 25, "")
-				moveMap:SetPushedTextOffset(0, 0)
-				moveMap:SetAlpha(0.8)
-				moveMap:RegisterForDrag("LeftButton")
-				moveMap:SetScript("OnDragStart", function()
-					WorldMapFrame:GetScript("OnDragStart")()
-				end)
-				moveMap:SetScript("OnDragStop", function()
-					WorldMapFrame:GetScript("OnDragStop")()
-				end)
-
-				-- Show drag button if map is unlocked
-				local function ShowDragButton()
-					if LeaMapsLC["UnlockMapFrame"] == "On" then
-						moveMap:Show()
-					else
-						moveMap:Hide()
-					end
-				end
-
-				-- Set drag button when unlock map frame option is clicked and on startup
-				LeaMapsCB["UnlockMapFrame"]:HookScript("OnClick", ShowDragButton)
-				ShowDragButton()
 
 				-- Move scale handle
 				LeaMapsLC.scaleHandle:ClearAllPoints()
@@ -2576,7 +2551,7 @@
 	LeaMapsLC:MakeCB(PageF, "RememberZoom", "Remember zoom level", 16, -112, false, "If checked, opening the map will use the same zoom level from when you last closed it as long as the map zone has not changed.")
 	LeaMapsLC:MakeCB(PageF, "EnlargePlayerArrow", "Enlarge player arrow", 16, -132, false, "If checked, you will be able to enlarge the player arrow.")
 	LeaMapsLC:MakeCB(PageF, "UseClassIcons", "Class colored icons", 16, -152, true, "If checked, group icons will use a modern, class-colored design.")
-	LeaMapsLC:MakeCB(PageF, "UnlockMapFrame", "Unlock map frame", 16, -172, false, "If checked, you will be able to scale and move the map.|n|nScale the map by dragging the scale handle in the bottom-right corner.|n|nMove the map by dragging the border and frame edges.  If you have removed the map border, a drag button will be shown in the top-left corner.")
+	LeaMapsLC:MakeCB(PageF, "UnlockMapFrame", "Unlock map frame", 16, -172, false, "If checked, you will be able to scale and move the map.|n|nScale the map by dragging the scale handle in the bottom-right corner.|n|nMove the map by dragging the border and frame edges.")
 	LeaMapsLC:MakeCB(PageF, "SetMapOpacity", "Set map opacity", 16, -192, false, "If checked, you will be able to set the opacity of the map.")
 	LeaMapsLC:MakeCB(PageF, "StickyMapFrame", "Sticky map frame", 16, -212, true, "If checked, the map frame will remain open until you close it.")
 	LeaMapsLC:MakeCB(PageF, "AutoChangeZones", "Auto change zones", 16, -232, true, "If checked, when your character changes zones, the map will automatically change to the new zone.")

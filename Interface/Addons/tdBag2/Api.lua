@@ -510,17 +510,17 @@ function ns.CopyDefaults(dest, src)
 end
 
 function ns.RemoveDefaults(dest, src)
-    if dest then
-        for k, v in pairs(src) do
-            if type(v) == 'table' then
-                dest[k] = ns.RemoveDefaults(dest[k], v)
-            elseif dest[k] == v then
-                dest[k] = nil
-            end
-        end
-        return next(dest) and dest or nil
+    if dest == nil then
+        return
     end
-    return nil
+    for k, v in pairs(src) do
+        if type(v) == 'table' then
+            dest[k] = ns.RemoveDefaults(dest[k], v)
+        elseif dest[k] == v then
+            dest[k] = nil
+        end
+    end
+    return next(dest) and dest or nil
 end
 
 function ns.Hook(...)
