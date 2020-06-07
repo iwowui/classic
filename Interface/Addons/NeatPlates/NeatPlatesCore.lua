@@ -817,7 +817,7 @@ do
 
 		local powerType = UnitPowerType(unitid) or 0
 		unit.power = UnitPower(unitid, powerType) or 0
-		unit.powermax = UnitPowerMax(unitid, powerType) or 1
+		unit.powermax = UnitPowerMax(unitid, powerType) or 0
 
 		unit.threatValue = UnitThreatSituation("player", unitid) or 0
 		unit.threatSituation = ThreatReference[unit.threatValue]
@@ -880,6 +880,13 @@ do
 	function UpdateIndicator_PowerBar()
 		visual.powerbar:SetMinMaxValues(0, unit.powermax)
 		visual.powerbar:SetValue(unit.power)
+
+		-- Hide bar if max power is none as the unit doesn't use power
+		if unit.powermax == 0 or not ShowPowerBar then
+			visual.powerbar:Hide()
+		elseif ShowPowerBar then
+			visual.powerbar:Show()
+		end
 
 		-- Fixes issue with small sliver being displayed even at 0
 		if unit.power == 0 then
@@ -1717,7 +1724,7 @@ do
 			visual.raidicon:SetTexture(style.raidicon.texture)
 		end
 		if style and style.healthbar.texture == EMPTY_TEXTURE then visual.noHealthbar = true end
-		if style and not ShowPowerBar then visual.powerbar:Hide() else visual.powerbar:Show() end
+		--if style and not ShowPowerBar then visual.powerbar:Hide() else visual.powerbar:Show() end
 		-- Font Group
 		for index = 1, #fontgroup do
 			local objectname = fontgroup[index]

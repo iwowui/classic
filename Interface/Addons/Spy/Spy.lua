@@ -7,7 +7,7 @@ local fonts = SM:List("font")
 local _
 
 Spy = LibStub("AceAddon-3.0"):NewAddon("Spy", "AceConsole-3.0", "AceEvent-3.0", "AceComm-3.0", "AceTimer-3.0")
-Spy.Version = "1.0.28"
+Spy.Version = "1.0.29"
 Spy.DatabaseVersion = "1.1"
 Spy.Signature = "[Spy]"
 Spy.ButtonLimit = 15
@@ -384,9 +384,27 @@ Spy.options = {
 						Spy.db.profile.DisplayLastSeen = value
 					end,
 				},
+				DisplayListData = {
+					name = L["DisplayListData"],
+					type = 'select',
+					order = 16,
+					values = {
+						["NameLevelClass"] = L["Name"].." / "..L["Level"].." / "..L["Class"],
+						["NameLevelOnly"] = L["Name"].." / "..L["Level"],
+						["NameGuild"] = L["Name"].." / "..L["Guild"],
+						["NameOnly"] = L["Name"],
+					},					
+					get = function()
+						return Spy.db.profile.DisplayListData
+					end,
+					set = function(info, value)
+						Spy.db.profile.DisplayListData = value
+						Spy:RefreshCurrentList() 
+					end,
+				},
 				SelectFont = {
 					type = "select",
-					order = 16,
+					order = 17,
 					name = L["SelectFont"],
 					desc = L["SelectFontDescription"],
 					values = fonts,
@@ -406,7 +424,7 @@ Spy.options = {
 				},
 				RowHeight = {
 					type = "range",
-					order = 17,
+					order = 18,
 					name = L["RowHeight"], 
 					desc = L["RowHeightDescription"], 
 					min = 8, max = 20, step = 1,
@@ -422,7 +440,7 @@ Spy.options = {
 				},
 				BarTexture = {
 					type = "select",				
-					order = 18,
+					order = 19,
 					name = L["Texture"],	
 					desc = L["TextureDescription"],	
 					dialogControl = "LSM30_Statusbar",					
@@ -587,17 +605,21 @@ Spy.options = {
 						Spy.db.profile.OnlyAnnounceKoS = value
 					end,
 				},
-				DisplayWarningsInErrorsFrame = {
-					name = L["DisplayWarningsInErrorsFrame"],
-					desc = L["DisplayWarningsInErrorsFrameDescription"],
-					type = "toggle",
+				DisplayWarnings = {
+					name = L["DisplayWarnings"],
+					type = 'select',
 					order = 8,
-					width = "full",
-					get = function(info)
-						return Spy.db.profile.DisplayWarningsInErrorsFrame
+					values = {
+						["Default"] = L["Default"],
+						["ErrorFrame"] = L["ErrorFrame"],
+						["Moveable"] = L["Moveable"],
+					},					
+					get = function()
+						return Spy.db.profile.DisplayWarnings
 					end,
 					set = function(info, value)
-						Spy.db.profile.DisplayWarningsInErrorsFrame = value
+						Spy.db.profile.DisplayWarnings = value
+						Spy:UpdateAlertWindow()
 					end,
 				},
 				WarnOnStealth = {
@@ -1319,8 +1341,10 @@ local Default_Profile = {
 		},
 		AlertWindow={
 			Position={
-				x = 0,
-				y = -140,
+--				x = 0,
+--				y = -140,
+				x = 750,
+				y = 750,
 			},
 			NameSize=14,
 			LocationSize=10,			
@@ -1347,6 +1371,7 @@ local Default_Profile = {
 		DisplayWinLossStatistics=true,
 		DisplayKOSReason=true,
 		DisplayLastSeen=true,
+		DisplayListData="NameLevelClass",
 		ShowOnDetection=true,
 		HideSpy=false,
 --		ShowOnlyPvPFlagged=false,
@@ -1362,7 +1387,7 @@ local Default_Profile = {
 		WarnOnKOSGuild=false,
 		WarnOnRace=false,
 		SelectWarnRace="None",		
-		DisplayWarningsInErrorsFrame=false,
+		DisplayWarnings="Default",
 		EnableSound=true,
 		OnlySoundKoS=false, 
 		StopAlertsOnTaxi=true,
@@ -2172,10 +2197,6 @@ function Spy:CommReceived(prefix, message, distribution, source)
 					end
 					if strlen(race) > 0 then
 						if not Spy.ValidRaces[race] then
-							return
-						end
-						if (Spy.EnemyFactionName == "Alliance" and race ~= "Dwarf" and race ~= "Gnome" and race ~= "Human" and race ~= "Night Elf")
-						or (Spy.EnemyFactionName == "Horde" and race ~= "Orc" and race ~= "Tauren" and race ~= "Troll" and race ~= "Undead") then
 							return
 						end
 					else
