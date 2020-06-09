@@ -140,177 +140,179 @@ elseif GetLocale() == "zhTW" then
 	GLG_TAILORING = "裁縫"
 end
 
-local GetLinkGuiMode_MenuList = {
-	{ text = TYPE, hasArrow = true,
+local GetLinkGuiMode_MenuListType = {
+	-- { text = TYPE, isTitle = true },
+	{ text = ALL, func = function() GLOptions["type"] = -1; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == -1; end },
+	{ text = AUCTION_CATEGORY_WEAPONS, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 2; end, hasArrow = true,
 		menuList = {
-			{ text = ALL, func = function() GLOptions["type"] = -1; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == -1; end },
-			{ text = AUCTION_CATEGORY_WEAPONS, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 2; end, hasArrow = true,
-				menuList = {
-					{ text = ALL, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
-					{ text = GLG_OneHandedAxes, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 0; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 0; end },
-					{ text = GLG_TwoHandedAxes, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 1; end },
-					{ text = GLG_OneHandedMaces, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 4; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 4; end },
-					{ text = GLG_TwoHandedMaces, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 5; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 5; end },
-					{ text = GLG_OneHandedSwords, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 7; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 7; end },
-					{ text = GLG_TwoHandedSwords, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 8; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 8; end },
-					{ text = GLG_Polearms, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 6; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 6; end },
-					{ text = GLG_Daggers, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 15; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 15; end },
-					{ text = GLG_FistWeapons, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 13; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 13; end },
-					{ text = GLG_Staves, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 10; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 10; end },
-					{ text = GLG_Wands, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 19; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 19; end },
-					{ text = GLG_Bows, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end },
-					{ text = GLG_Guns, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end },
-					{ text = GLG_Crossbows, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 18; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 18; end },
-					{ text = GLG_Spears, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 17; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 17; end },
-					{ text = GLG_Thrown, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 16; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 16; end },
-					{ text = GLG_FishingPoles, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 20; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 20; end },
-					{ text = MISCELLANEOUS, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 14; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 14; end },
-				}
-			},
-			{ text = AUCTION_CATEGORY_ARMOR, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = -1; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 4; end, hasArrow = true,
-				menuList = {
-					{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = -1; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
-					{ text = GLG_Cloth, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 1; end, hasArrow = true,
-						menuList = {
-							{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "all"; end },
-							{ text = HEADSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_HEAD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HEAD"; end },
-							{ text = SHOULDERSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_SHOULDER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_SHOULDER"; end },
-							{ text = BACKSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_CLOAK"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CLOAK"; end },
-							{ text = CHESTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_CHEST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CHEST"; end },
-							{ text = CHESTSLOT.."2", func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_ROBE"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_ROBE"; end },
-							{ text = WAISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_WAIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WAIST"; end },
-							{ text = HANDSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_HAND"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HAND"; end },
-							{ text = WRISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_WRIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WRIST"; end },
-							{ text = LEGSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_LEGS"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_LEGS"; end },
-							{ text = FEETSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_FEET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FEET"; end },
-						}
-					},
-					{ text = GLG_Leather, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end, hasArrow = true,
-						menuList = {
-							{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "all"; end },
-							{ text = HEADSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_HEAD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HEAD"; end },
-							{ text = SHOULDERSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_SHOULDER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_SHOULDER"; end },
-							{ text = CHESTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_CHEST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CHEST"; end },
-							{ text = CHESTSLOT.."2", func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_ROBE"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_ROBE"; end },
-							{ text = WAISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_WAIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WAIST"; end },
-							{ text = HANDSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_HAND"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HAND"; end },
-							{ text = WRISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_WRIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WRIST"; end },
-							{ text = LEGSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_LEGS"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_LEGS"; end },
-							{ text = FEETSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_FEET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FEET"; end },
-						}
-					},
-					{ text = GLG_Mail, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end, hasArrow = true,
-						menuList = {
-							{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "all"; end },
-							{ text = HEADSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_HEAD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HEAD"; end },
-							{ text = SHOULDERSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_SHOULDER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_SHOULDER"; end },
-							{ text = CHESTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_CHEST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CHEST"; end },
-							{ text = CHESTSLOT.."2", func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_ROBE"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_ROBE"; end },
-							{ text = WAISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_WAIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WAIST"; end },
-							{ text = HANDSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_HAND"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HAND"; end },
-							{ text = WRISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_WRIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WRIST"; end },
-							{ text = LEGSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_LEGS"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_LEGS"; end },
-							{ text = FEETSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_FEET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FEET"; end },
-						}
-					},
-					{ text = GLG_Plate, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 4; end, hasArrow = true,
-						menuList = {
-							{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "all"; end },
-							{ text = HEADSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_HEAD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HEAD"; end },
-							{ text = SHOULDERSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_SHOULDER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_SHOULDER"; end },
-							{ text = CHESTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_CHEST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CHEST"; end },
-							{ text = WAISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_WAIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WAIST"; end },
-							{ text = HANDSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_HAND"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HAND"; end },
-							{ text = WRISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_WRIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WRIST"; end },
-							{ text = LEGSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_LEGS"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_LEGS"; end },
-							{ text = FEETSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_FEET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FEET"; end },
-						}
-					},
-					{ text = GLG_Shields, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 6; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 6; end },
-					{ text = GLG_Librams, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 7; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 7; end },
-					{ text = GLG_Idols, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 8; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 8; end },
-					{ text = GLG_Totems, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 9; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 9; end },
-					{ text = MISCELLANEOUS, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 0; end, hasArrow = true,
-						menuList = {
-							{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "all"; end },
-							{ text = NECKSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_NECK"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_NECK"; end },
-							{ text = TABARDSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_TABARD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_TABARD"; end },
-							{ text = FINGER1SLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_FINGER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FINGER"; end },
-							{ text = TRINKET0SLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_TRINKET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_TRINKET"; end },
-							{ text = SECONDARYHANDSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_HOLDABLE"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HOLDABLE"; end },
-							{ text = HEADSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_HEAD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HEAD"; end },
-							{ text = SHOULDERSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_SHOULDER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_SHOULDER"; end },
-							{ text = CHESTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_CHEST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CHEST"; end },
-							{ text = CHESTSLOT.."2", func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_BODY"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_BODY"; end },
-							{ text = CHESTSLOT.."3", func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_ROBE"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_ROBE"; end },
-							{ text = WAISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_WAIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WAIST"; end },
-							{ text = HANDSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_HAND"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HAND"; end },
-							{ text = WRISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_WRIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WRIST"; end },
-							{ text = LEGSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_LEGS"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_LEGS"; end },
-							{ text = FEETSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_FEET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FEET"; end },
-							{ text = MISCELLANEOUS, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = ""; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == ""; end },
-						}
-					},
-				}
-			},
-			{ text = AUCTION_CATEGORY_CONTAINERS, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 1; end, hasArrow = true,
-				menuList = {
-					{ text = ALL, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
-					{ text = BAGSLOT, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = 0; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 0; end },
-					{ text = GLG_SOULBAG, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = 1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 1; end },
-					{ text = GLG_HERBALISMBAG, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end },
-					{ text = GLG_ENCHANTINGBAG, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end },
-				}
-			},
-			{ text = AUCTION_CATEGORY_CONSUMABLES, func = function() GLOptions["type"] = 0; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 0; end },
-			{ text = AUCTION_CATEGORY_REAGENT, func = function() GLOptions["type"] = 5; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 5; end },
-			{ text = BAG_FILTER_TRADE_GOODS, func = function() GLOptions["type"] = 7; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 7; end },
-			{ text = AUCTION_CATEGORY_RECIPES, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 9; end, hasArrow = true,
-				menuList = {
-					{ text = ALL, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
-					{ text = GLG_BOOK, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 0; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 0; end },
-					{ text = GLG_LEATHERWORKING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 1; end },
-					{ text = GLG_TAILORING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end },
-					{ text = GLG_ENGINEERING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end },
-					{ text = GLG_BLACKSMITHING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 4; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 4; end },
-					{ text = GLG_ALCHEMY, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 6; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 6; end },
-					{ text = GLG_ENCHANTING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 8; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 8; end },
-					{ text = PROFESSIONS_COOKING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 5; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 5; end },
-					{ text = PROFESSIONS_FIRST_AID, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 7; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 7; end },
-					{ text = PROFESSIONS_FISHING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 9; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 9; end },
-				}
-			},
-			{ text = GLG_QUEST, func = function() GLOptions["type"] = 12; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 12; end },
-			{ text = GLG_KEY, func = function() GLOptions["type"] = 13; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 13; end },
-			{ text = AUCTION_CATEGORY_PROJECTILE, func = function() GLOptions["type"] = 6; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 6; end, hasArrow = true,
-				menuList = {
-					{ text = ALL, func = function() GLOptions["type"] = 6; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
-					{ text = GLG_ARROW, func = function() GLOptions["type"] = 6; GLOptions["subtype"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end },
-					{ text = AUCTION_CATEGORY_PROJECTILE, func = function() GLOptions["type"] = 6; GLOptions["subtype"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end },
-				}
-			},
-			{ text = AUCTION_CATEGORY_QUIVER, func = function() GLOptions["type"] = 11; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 11; end, hasArrow = true,
-				menuList = {
-					{ text = ALL, func = function() GLOptions["type"] = 11; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
-					{ text = AUCTION_CATEGORY_QUIVER, func = function() GLOptions["type"] = 11; GLOptions["subtype"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end },
-					{ text = GLG_AMMOPOUCH, func = function() GLOptions["type"] = 11; GLOptions["subtype"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end },
-				}
-			},
-			{ text = MISCELLANEOUS, func = function() GLOptions["type"] = 15; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 15; end },
-		},
+			{ text = ALL, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
+			{ text = GLG_OneHandedAxes, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 0; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 0; end },
+			{ text = GLG_TwoHandedAxes, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 1; end },
+			{ text = GLG_OneHandedMaces, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 4; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 4; end },
+			{ text = GLG_TwoHandedMaces, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 5; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 5; end },
+			{ text = GLG_OneHandedSwords, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 7; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 7; end },
+			{ text = GLG_TwoHandedSwords, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 8; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 8; end },
+			{ text = GLG_Polearms, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 6; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 6; end },
+			{ text = GLG_Daggers, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 15; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 15; end },
+			{ text = GLG_FistWeapons, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 13; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 13; end },
+			{ text = GLG_Staves, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 10; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 10; end },
+			{ text = GLG_Wands, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 19; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 19; end },
+			{ text = GLG_Bows, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end },
+			{ text = GLG_Guns, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end },
+			{ text = GLG_Crossbows, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 18; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 18; end },
+			{ text = GLG_Spears, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 17; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 17; end },
+			{ text = GLG_Thrown, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 16; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 16; end },
+			{ text = GLG_FishingPoles, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 20; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 20; end },
+			{ text = MISCELLANEOUS, func = function() GLOptions["type"] = 2; GLOptions["subtype"] = 14; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 14; end },
+		}
 	},
-	{ text = RARITY, hasArrow = true,
+	{ text = AUCTION_CATEGORY_ARMOR, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = -1; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 4; end, hasArrow = true,
 		menuList = {
-			{ text = ITEM_QUALITY0_DESC, func = function() GLOptions["quality"] = 1; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 1; end },
-			{ text = ITEM_QUALITY1_DESC, func = function() GLOptions["quality"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 2; end },
-			{ text = ITEM_QUALITY2_DESC, func = function() GLOptions["quality"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 3; end },
-			{ text = ITEM_QUALITY3_DESC, func = function() GLOptions["quality"] = 4; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 4; end },
-			{ text = ITEM_QUALITY4_DESC, func = function() GLOptions["quality"] = 5; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 5; end },
-			{ text = ITEM_QUALITY5_DESC, func = function() GLOptions["quality"] = 6; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 6; end },
-			{ text = ITEM_QUALITY6_DESC, func = function() GLOptions["quality"] = 7; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 7; end },
-			{ text = ITEM_QUALITY8_DESC, func = function() GLOptions["quality"] = 8; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 8; end },
-		},
+			{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = -1; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
+			{ text = GLG_Cloth, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 1; end, hasArrow = true,
+				menuList = {
+					{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "all"; end },
+					{ text = HEADSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_HEAD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HEAD"; end },
+					{ text = SHOULDERSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_SHOULDER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_SHOULDER"; end },
+					{ text = BACKSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_CLOAK"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CLOAK"; end },
+					{ text = CHESTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_CHEST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CHEST"; end },
+					{ text = CHESTSLOT.."2", func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_ROBE"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_ROBE"; end },
+					{ text = WAISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_WAIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WAIST"; end },
+					{ text = HANDSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_HAND"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HAND"; end },
+					{ text = WRISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_WRIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WRIST"; end },
+					{ text = LEGSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_LEGS"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_LEGS"; end },
+					{ text = FEETSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 1; GLOptions["loc"] = "INVTYPE_FEET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FEET"; end },
+				}
+			},
+			{ text = GLG_Leather, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end, hasArrow = true,
+				menuList = {
+					{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "all"; end },
+					{ text = HEADSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_HEAD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HEAD"; end },
+					{ text = SHOULDERSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_SHOULDER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_SHOULDER"; end },
+					{ text = CHESTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_CHEST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CHEST"; end },
+					{ text = CHESTSLOT.."2", func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_ROBE"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_ROBE"; end },
+					{ text = WAISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_WAIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WAIST"; end },
+					{ text = HANDSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_HAND"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HAND"; end },
+					{ text = WRISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_WRIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WRIST"; end },
+					{ text = LEGSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_LEGS"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_LEGS"; end },
+					{ text = FEETSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 2; GLOptions["loc"] = "INVTYPE_FEET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FEET"; end },
+				}
+			},
+			{ text = GLG_Mail, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end, hasArrow = true,
+				menuList = {
+					{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "all"; end },
+					{ text = HEADSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_HEAD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HEAD"; end },
+					{ text = SHOULDERSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_SHOULDER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_SHOULDER"; end },
+					{ text = CHESTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_CHEST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CHEST"; end },
+					{ text = CHESTSLOT.."2", func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_ROBE"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_ROBE"; end },
+					{ text = WAISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_WAIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WAIST"; end },
+					{ text = HANDSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_HAND"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HAND"; end },
+					{ text = WRISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_WRIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WRIST"; end },
+					{ text = LEGSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_LEGS"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_LEGS"; end },
+					{ text = FEETSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 3; GLOptions["loc"] = "INVTYPE_FEET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FEET"; end },
+				}
+			},
+			{ text = GLG_Plate, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 4; end, hasArrow = true,
+				menuList = {
+					{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "all"; end },
+					{ text = HEADSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_HEAD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HEAD"; end },
+					{ text = SHOULDERSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_SHOULDER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_SHOULDER"; end },
+					{ text = CHESTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_CHEST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CHEST"; end },
+					{ text = WAISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_WAIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WAIST"; end },
+					{ text = HANDSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_HAND"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HAND"; end },
+					{ text = WRISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_WRIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WRIST"; end },
+					{ text = LEGSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_LEGS"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_LEGS"; end },
+					{ text = FEETSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 4; GLOptions["loc"] = "INVTYPE_FEET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FEET"; end },
+				}
+			},
+			{ text = GLG_Shields, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 6; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 6; end },
+			{ text = GLG_Librams, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 7; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 7; end },
+			{ text = GLG_Idols, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 8; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 8; end },
+			{ text = GLG_Totems, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 9; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 9; end },
+			{ text = MISCELLANEOUS, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 0; end, hasArrow = true,
+				menuList = {
+					{ text = ALL, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "all"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "all"; end },
+					{ text = NECKSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_NECK"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_NECK"; end },
+					{ text = TABARDSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_TABARD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_TABARD"; end },
+					{ text = FINGER1SLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_FINGER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FINGER"; end },
+					{ text = TRINKET0SLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_TRINKET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_TRINKET"; end },
+					{ text = SECONDARYHANDSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_HOLDABLE"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HOLDABLE"; end },
+					{ text = HEADSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_HEAD"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HEAD"; end },
+					{ text = SHOULDERSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_SHOULDER"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_SHOULDER"; end },
+					{ text = CHESTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_CHEST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_CHEST"; end },
+					{ text = CHESTSLOT.."2", func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_BODY"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_BODY"; end },
+					{ text = CHESTSLOT.."3", func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_ROBE"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_ROBE"; end },
+					{ text = WAISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_WAIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WAIST"; end },
+					{ text = HANDSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_HAND"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_HAND"; end },
+					{ text = WRISTSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_WRIST"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_WRIST"; end },
+					{ text = LEGSSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_LEGS"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_LEGS"; end },
+					{ text = FEETSLOT, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = "INVTYPE_FEET"; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == "INVTYPE_FEET"; end },
+					{ text = MISCELLANEOUS, func = function() GLOptions["type"] = 4; GLOptions["subtype"] = 0; GLOptions["loc"] = ""; CloseDropDownMenus(); end, checked = function() return GLOptions["loc"] == ""; end },
+				}
+			},
+		}
 	},
+	{ text = AUCTION_CATEGORY_CONTAINERS, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 1; end, hasArrow = true,
+		menuList = {
+			{ text = ALL, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
+			{ text = BAGSLOT, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = 0; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 0; end },
+			{ text = GLG_SOULBAG, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = 1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 1; end },
+			{ text = GLG_HERBALISMBAG, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end },
+			{ text = GLG_ENCHANTINGBAG, func = function() GLOptions["type"] = 1; GLOptions["subtype"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end },
+		}
+	},
+	{ text = AUCTION_CATEGORY_CONSUMABLES, func = function() GLOptions["type"] = 0; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 0; end },
+	{ text = AUCTION_CATEGORY_REAGENT, func = function() GLOptions["type"] = 5; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 5; end },
+	{ text = BAG_FILTER_TRADE_GOODS, func = function() GLOptions["type"] = 7; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 7; end },
+	{ text = AUCTION_CATEGORY_RECIPES, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 9; end, hasArrow = true,
+		menuList = {
+			{ text = ALL, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
+			{ text = GLG_BOOK, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 0; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 0; end },
+			{ text = GLG_LEATHERWORKING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 1; end },
+			{ text = GLG_TAILORING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end },
+			{ text = GLG_ENGINEERING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end },
+			{ text = GLG_BLACKSMITHING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 4; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 4; end },
+			{ text = GLG_ALCHEMY, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 6; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 6; end },
+			{ text = GLG_ENCHANTING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 8; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 8; end },
+			{ text = PROFESSIONS_COOKING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 5; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 5; end },
+			{ text = PROFESSIONS_FIRST_AID, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 7; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 7; end },
+			{ text = PROFESSIONS_FISHING, func = function() GLOptions["type"] = 9; GLOptions["subtype"] = 9; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 9; end },
+		}
+	},
+	{ text = GLG_QUEST, func = function() GLOptions["type"] = 12; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 12; end },
+	{ text = GLG_KEY, func = function() GLOptions["type"] = 13; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 13; end },
+	{ text = AUCTION_CATEGORY_PROJECTILE, func = function() GLOptions["type"] = 6; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 6; end, hasArrow = true,
+		menuList = {
+			{ text = ALL, func = function() GLOptions["type"] = 6; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
+			{ text = GLG_ARROW, func = function() GLOptions["type"] = 6; GLOptions["subtype"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end },
+			{ text = AUCTION_CATEGORY_PROJECTILE, func = function() GLOptions["type"] = 6; GLOptions["subtype"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end },
+		}
+	},
+	{ text = AUCTION_CATEGORY_QUIVER, func = function() GLOptions["type"] = 11; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 11; end, hasArrow = true,
+		menuList = {
+			{ text = ALL, func = function() GLOptions["type"] = 11; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == -1; end },
+			{ text = AUCTION_CATEGORY_QUIVER, func = function() GLOptions["type"] = 11; GLOptions["subtype"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 2; end },
+			{ text = GLG_AMMOPOUCH, func = function() GLOptions["type"] = 11; GLOptions["subtype"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["subtype"] == 3; end },
+		}
+	},
+	{ text = MISCELLANEOUS, func = function() GLOptions["type"] = 15; GLOptions["subtype"] = -1; CloseDropDownMenus(); end, checked = function() return GLOptions["type"] == 15; end },
+	{ text = CANCEL },
+}
+
+local GetLinkGuiMode_MenuListParity = {
+	-- { text = RARITY, isTitle = true },
+	{ text = ITEM_QUALITY0_DESC, func = function() GLOptions["quality"] = 1; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 1; end },
+	{ text = ITEM_QUALITY1_DESC, func = function() GLOptions["quality"] = 2; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 2; end },
+	{ text = ITEM_QUALITY2_DESC, func = function() GLOptions["quality"] = 3; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 3; end },
+	{ text = ITEM_QUALITY3_DESC, func = function() GLOptions["quality"] = 4; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 4; end },
+	{ text = ITEM_QUALITY4_DESC, func = function() GLOptions["quality"] = 5; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 5; end },
+	{ text = ITEM_QUALITY5_DESC, func = function() GLOptions["quality"] = 6; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 6; end },
+	{ text = ITEM_QUALITY6_DESC, func = function() GLOptions["quality"] = 7; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 7; end },
+	{ text = ITEM_QUALITY8_DESC, func = function() GLOptions["quality"] = 8; CloseDropDownMenus(); end, checked = function() return GLOptions["quality"] == 8; end },
+	{ text = CANCEL },
+}
+
+local GetLinkGuiMode_MenuListSetting = {
 	{ text = AH_EXACT_MATCH, hasArrow = true,
 		menuList = {
 			{ text = YES, func = function() GLOptions["extra"] = 1; CloseDropDownMenus(); end, checked = function() return GLOptions["extra"] == 1; end },
@@ -318,12 +320,21 @@ local GetLinkGuiMode_MenuList = {
 		},
 	},
 	{ text = CANCEL },
+
 }
 
 local GetLinkGuiMode_Menu = CreateFrame("Frame", nil, glg, "UIDropDownMenuTemplate");
 
-local function GetLinkGui_Mode()
-	EasyMenu(GetLinkGuiMode_MenuList, GetLinkGuiMode_Menu, "cursor", 0 , 0, "MENU");
+local function GetLinkGui_ModeType()
+	EasyMenu(GetLinkGuiMode_MenuListType, GetLinkGuiMode_Menu, "cursor", 0 , 0, "MENU");
+end
+
+local function GetLinkGui_ModeParity()
+	EasyMenu(GetLinkGuiMode_MenuListParity, GetLinkGuiMode_Menu, "cursor", 0 , 0, "MENU");
+end
+
+local function GetLinkGui_ModeSetting()
+	EasyMenu(GetLinkGuiMode_MenuListSetting, GetLinkGuiMode_Menu, "cursor", 0 , 0, "MENU");
 end
 
 local glg = CreateFrame("Frame", "GetLinkGui", UIParent);
@@ -365,12 +376,49 @@ glg.close:SetSize(24, 24);
 glg.setting = CreateFrame("Button", nil, glg);
 glg.setting:SetNormalTexture("Interface\\Buttons\\UI-OptionsButton");
 glg.setting:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Round");
+-- glg.settingtext = glg.match:CreateFontString(nil, nil, "GameFontNormalSmall");
+-- glg.settingtext:ClearAllPoints();
+-- glg.settingtext:SetPoint("CENTER");
+-- glg.settingtext:SetText(AH_EXACT_MATCH);
+-- glg.settingtext:SetTextColor(1, 1, 1);
 glg.setting:SetWidth(14);
 glg.setting:SetHeight(14);
 glg.setting:ClearAllPoints();
 glg.setting:SetPoint("RIGHT", glg.close, "LEFT", -2, 0);
 glg.setting:SetScript("OnClick", function()
-    GetLinkGui_Mode();
+	GetLinkGui_ModeSetting();
+end);
+
+glg.parity = CreateFrame("Button", nil, glg);
+-- glg.parity:SetNormalTexture("Interface\\Icons\\INV_Misc_OrnateBox");
+-- glg.parity:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Round");
+glg.paritytext = glg.parity:CreateFontString(nil, nil, "GameFontNormalSmall");
+glg.paritytext:ClearAllPoints();
+glg.paritytext:SetPoint("CENTER");
+glg.paritytext:SetText(RARITY);
+glg.paritytext:SetTextColor(1, 1, 1);
+glg.parity:SetWidth(48);
+glg.parity:SetHeight(14);
+glg.parity:ClearAllPoints();
+glg.parity:SetPoint("RIGHT", glg.setting, "LEFT", -8, 0);
+glg.parity:SetScript("OnClick", function()
+	GetLinkGui_ModeParity();
+end);
+
+glg.type = CreateFrame("Button", nil, glg);
+-- glg.type:SetNormalTexture("Interface\\Icons\\INV_Staff_Medivh");
+-- glg.type:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Round");
+glg.typetext = glg.type:CreateFontString(nil, nil, "GameFontNormalSmall");
+glg.typetext:ClearAllPoints();
+glg.typetext:SetPoint("CENTER");
+glg.typetext:SetText(TYPE);
+glg.typetext:SetTextColor(1, 1, 1);
+glg.type:SetWidth(24);
+glg.type:SetHeight(14);
+glg.type:ClearAllPoints();
+glg.type:SetPoint("RIGHT", glg.parity, "LEFT", -12, 0);
+glg.type:SetScript("OnClick", function()
+	GetLinkGui_ModeType();
 end);
 
 glg.keyword = glg:CreateFontString(nil, nil, "GameFontNormalLarge");
