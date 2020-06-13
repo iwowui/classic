@@ -9,7 +9,7 @@
 ## DefaultState: Disabled
 ## Author: ykiigor
 ## SavedVariables: VExRT
-## Version: 4150
+## Version: 4160
 core.lua
 Functions.lua
 embeds.xml

@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.66 (3rd June 2020)
+-- 	Leatrix Plus 1.13.67 (10th June 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -10,25 +10,41 @@
 -- 	Leatrix Plus
 ----------------------------------------------------------------------
 
---  Create global table
+	-- Create global table
 	_G.LeaPlusDB = _G.LeaPlusDB or {}
 
--- 	Create locals
+	-- Create locals
 	local LeaPlusLC, LeaPlusCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 	local ClientVersion = GetBuildInfo()
 	local GameLocale = GetLocale()
 	local void
 
---	Version
-	LeaPlusLC["AddonVer"] = "1.13.66"
+	-- Version
+	LeaPlusLC["AddonVer"] = "1.13.67"
 	LeaPlusLC["RestartReq"] = nil
 
---	If client restart is required and has not been done, show warning and quit
+	-- Get locale table
+	local void, Leatrix_Plus = ...
+	local L = Leatrix_Plus.L
+
+	-- Check Wow version is valid
+	do
+		local gameversion, gamebuild, gamedate, gametocversion = GetBuildInfo()
+		if gametocversion and gametocversion > 19999 then
+			-- Game client is not Wow Classic
+			C_Timer.After(2, function()
+				print(L["LEATRIX PLUS: WRONG VERSION INSTALLED!"])
+			end)
+			return
+		end
+	end
+
+	-- If client restart is required and has not been done, show warning and quit
 	if LeaPlusLC["RestartReq"] then
 		local metaVer = GetAddOnMetadata("Leatrix_Plus", "Version")
 		if metaVer and metaVer ~= LeaPlusLC["AddonVer"] then
 			C_Timer.After(1, function()
-				print("NOTICE!|nYou must fully restart your game client before you can use this version of Leatrix Plus.")
+				print(L["NOTICE!|nYou must fully restart your game client before you can use this version of Leatrix Plus."])
 			end)
 			return
 		end
@@ -38,16 +54,12 @@
 --	L00: Leatrix Plus
 ----------------------------------------------------------------------
 
--- 	Get locale table
-	local void, Leatrix_Plus = ...
-	local L = Leatrix_Plus.L
-
---	Initialise variables
+	-- Initialise variables
 	LeaPlusLC["ShowErrorsFlag"] = 1
 	LeaPlusLC["NumberOfPages"] = 9
 	LeaPlusLC["RaidColors"] = RAID_CLASS_COLORS
 
---	Create event frame
+	-- Create event frame
 	local LpEvt = CreateFrame("FRAME")
 	LpEvt:RegisterEvent("ADDON_LOADED")
 	LpEvt:RegisterEvent("PLAYER_LOGIN")

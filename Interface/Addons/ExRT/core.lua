@@ -2,7 +2,7 @@
 
 local GlobalAddonName, ExRT = ...
 
-ExRT.V = 4150
+ExRT.V = 4160
 ExRT.T = "R"
 
 ExRT.OnUpdate = {}		--> таймеры, OnUpdate функции
