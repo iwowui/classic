@@ -932,7 +932,7 @@ end
 local function MultiUnitLoop(Func, unit, ...)
   unit = string.lower(unit)
   if unit == "boss" or unit == "arena" then
-    for i = 1, 5 do
+    for i = 1, MAX_BOSS_FRAMES do
       Func(unit..i, ...)
     end
   elseif unit == "nameplate" then
@@ -1232,6 +1232,9 @@ function GenericTrigger.Add(data, region)
           triggerFunc = WeakAuras.LoadFunction("return "..(trigger.custom or ""), id);
           if (trigger.custom_type == "stateupdate") then
             tsuConditionVariables = WeakAuras.LoadFunction("return function() return \n" .. (trigger.customVariables or "") .. "\n end");
+            if not tsuConditionVariables then
+              tsuConditionVariables = function() return end
+            end
           end
 
           if(trigger.custom_type == "status" or trigger.custom_type == "event" and trigger.custom_hide == "custom") then
@@ -1335,7 +1338,7 @@ function GenericTrigger.Add(data, region)
           automaticAutoHide = true;
         end
 
-        if trigger.event == "Combat Log" and trigger.subeventPrefix and trigger.subeventSuffix then
+        if triggerType == "event" and  trigger.event == "Combat Log" and trigger.subeventPrefix and trigger.subeventSuffix then
           tinsert(trigger_subevents, trigger.subeventPrefix .. trigger.subeventSuffix)
         end
 
@@ -2191,7 +2194,7 @@ do
     startTimeCharges = startTimeCharges or 0;
     durationCharges = durationCharges or 0;
 
-    -- WORKAROUND Sometimes the API returns very high bogus numbers causing client freeezes, discard them here. WowAce issue #1008
+    -- WORKAROUND Sometimes the API returns very high bogus numbers causing client freezes, discard them here. WowAce issue #1008
     if (durationCooldown > 604800) then
       durationCooldown = 0;
       startTimeCooldown = 0;
@@ -2229,7 +2232,7 @@ do
       -- So if GetSpellCooldown returned a cooldown, use that one, if it's a "significant" cooldown
       --  Otherwise check GetSpellCharges
       -- A few abilities have a minor cooldown just to prevent the user from triggering it multiple times,
-      -- ignore them since pratically no one wants to see them
+      -- ignore them since practically no one wants to see them
       if duration and duration <= 1.5 or (duration == gcdDuration and startTime == gcdStart) then
         startTime, duration = startTimeCharges, durationCharges
         unifiedCooldownBecauseRune = false

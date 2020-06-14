@@ -1,9 +1,8 @@
 ItemRack = {}
 
-local disable_delayed_swaps = nil -- temporary. change nil to 1 to stop attempting to delay set swaps while casting
 local _
 
-ItemRack.Version = "3.42"
+ItemRack.Version = "3.43"
 
 ItemRackUser = {
 	Sets = {}, -- user's sets
@@ -206,9 +205,8 @@ end
 
 function ItemRack.OnCastingStart(self,event,unit)
 	if unit=="player" then
-		local _,_,_,startTime,endTime = UnitCastingInfo("player")
-		if endTime-startTime>0 then
-			ItemRack.NowCasting = 1
+		if CastingInfo() or ChannelInfo() then
+			ItemRack.NowCasting = true
 		end
 	end
 end
@@ -219,9 +217,17 @@ function ItemRack.OnCastingStop(self,event,unit)
 			return
 		else
 			ItemRack.NowCasting = nil
+			-- This check is in the event that a successful spellcast puts you in combat
+			if event ~= "UNIT_SPELLCAST_SUCCEEDED" and not ItemRack.inCombat then
+				ItemRack.ProcessCombatQueue()
+			else
+				ItemRack.OnSpellSucceed()
+			end
+			--[[
 			if #(ItemRack.SetsWaiting)>0 and not ItemRack.AnythingLocked() then
 				ItemRack.ProcessSetsWaiting()
 			end
+			]]
 		end
 	end
 end
@@ -229,6 +235,17 @@ end
 function ItemRack.OnItemLockChanged()
 	ItemRack.StartTimer("LocksChanged")
 	ItemRack.LocksHaveChanged = 1
+end
+
+function ItemRack.OnSpellSucceed()
+	ItemRack.StartTimer("DelayedCombatQueue")
+end
+
+function ItemRack.DelayedCombatQueue()
+	if ItemRack.inCombat or ItemRack.NowCasting then
+		return
+	end
+	ItemRack.ProcessCombatQueue()
 end
 
 function ItemRack.OnUnitInventoryChanged(self,event,unit)
@@ -249,6 +266,14 @@ function ItemRack.OnUnitInventoryChanged(self,event,unit)
 end
 
 function ItemRack.OnLeavingCombatOrDeath()
+	ItemRack.inCombat = InCombatLockdown()
+	if ItemRack.NowCasting then
+		return
+	end
+	ItemRack.ProcessCombatQueue()
+end
+
+function ItemRack.ProcessCombatQueue()
 	if not ItemRack.IsPlayerReallyDead() and next(ItemRack.CombatQueue) then
 		local combat = ItemRackUser.Sets["~CombatQueue"].equip
 		local queue = ItemRack.CombatQueue
@@ -263,9 +288,9 @@ function ItemRack.OnLeavingCombatOrDeath()
 		ItemRack.UpdateCombatQueue()
 		ItemRack.EquipSet("~CombatQueue")
 	end
+
 	local inLockdown = InCombatLockdown()
 	if not inLockdown then
-		ItemRack.inCombat = nil
 		if ItemRackOptFrame and ItemRackOptFrame:IsVisible() then
 			ItemRackOpt.ListScrollFrameUpdate()
 			ItemRackOptSetsBindButton:Enable()
@@ -282,6 +307,7 @@ function ItemRack.OnLeavingCombatOrDeath()
 			end
 		end
 	end
+
 end
 
 function ItemRack.OnEnteringCombat()
@@ -397,6 +423,7 @@ function ItemRack.InitCore()
 	ItemRack.CreateTimer("MinimapDragging",ItemRack.MinimapDragging,0,1)
 	ItemRack.CreateTimer("LocksChanged",ItemRack.LocksChanged,.2)
 	ItemRack.CreateTimer("MinimapShine",ItemRack.MinimapShineUpdate,0,1)
+	ItemRack.CreateTimer("DelayedCombatQueue",ItemRack.DelayedCombatQueue,.1)
 
 	for i=-2,11 do
 		ItemRack.LockList[i] = {}
@@ -424,10 +451,10 @@ function ItemRack.InitCore()
 	--if not disable_delayed_swaps then
 		-- in the event delayed swaps while casting don't work well,
 		-- make disable_delayed_swaps=1 at top of this file to disable it
-		-- ItemRackFrame:RegisterEvent("UNIT_SPELLCAST_START")
-		-- ItemRackFrame:RegisterEvent("UNIT_SPELLCAST_STOP")
-		-- ItemRackFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-		-- ItemRackFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
+	ItemRackFrame:RegisterEvent("UNIT_SPELLCAST_START")
+	ItemRackFrame:RegisterEvent("UNIT_SPELLCAST_STOP")
+	ItemRackFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+	ItemRackFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
 	--end
 	ItemRack.StartTimer("CooldownUpdate")
 	ItemRack.MoveMinimap()
@@ -1247,7 +1274,7 @@ end
 
 function ItemRack.EquipItemByID(id,slot)
 	if not id then return end
-	if not ItemRack.SlotInfo[slot].swappable and (UnitAffectingCombat("player") or ItemRack.IsPlayerReallyDead()) then
+	if ItemRack.NowCasting or (not ItemRack.SlotInfo[slot].swappable and (UnitAffectingCombat("player") or ItemRack.IsPlayerReallyDead()) ) then
 		ItemRack.AddToCombatQueue(slot,id)
 	elseif not GetCursorInfo() and not SpellIsTargeting() then
 		if id~=0 then -- not an empty slot
