@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.67 (10th June 2020)
+-- 	Leatrix Plus 1.13.68 (16th June 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 	-- Version
-	LeaPlusLC["AddonVer"] = "1.13.67"
+	LeaPlusLC["AddonVer"] = "1.13.68"
 	LeaPlusLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -1138,6 +1138,15 @@
 					elseif title == L["Additional Runecloth"] then
 						-- Requires 20 Runecloth
 						if IsAltKeyDown() and GetItemCount(14047) >= 20 then return true end
+					elseif title == L["Gurubashi, Vilebranch, and Witherbark Coins"] then
+						-- Requires 1 Gurubashi Coin, 1 Vilebranch Coin, 1 Witherbark Coin
+						if GetItemCount(19701) >= 1 and GetItemCount(19702) >= 1 and GetItemCount(19703) >= 1 then return true end
+					elseif title == L["Sandfury, Skullsplitter, and Bloodscalp Coins"] then
+						-- Requires 1 Sandfury Coin, 1 Skullsplitter Coin, 1 Bloodscalp Coin
+						if GetItemCount(19704) >= 1 and GetItemCount(19705) >= 1 and GetItemCount(19706) >= 1 then return true end
+					elseif title == L["Zulian, Razzashi, and Hakkari Coins"] then
+						-- Requires 1 Zulian Coin, 1 Razzashi Coin, 1 Hakkari Coin
+						if GetItemCount(19698) >= 1 and GetItemCount(19699) >= 1 and GetItemCount(19700) >= 1 then return true end
 
 					else return true
 					end
