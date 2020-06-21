@@ -1,4 +1,4 @@
--- $Id: Atlas_ClassicWoW-zhTW.lua 55 2020-01-14 15:00:30Z arith $
+-- $Id: Atlas_ClassicWoW-zhTW.lua 68 2020-06-20 08:47:23Z arith $
 --[[
 
 	Atlas, a World of Warcraft instance map browser
@@ -29,242 +29,158 @@ local L = AceLocale:NewLocale("Atlas_ClassicWoW", "zhTW", false);
 
 if L then
 L["\"Ambassador\" Dagg'thol"] = "達格索大使"
---[[Translation missing --]]
---[[ L["3rd Box Opened: Postmaster Malown"] = ""--]] 
+L["3rd Box Opened: Postmaster Malown"] = "第三個郵箱被開啟: 郵差瑪羅恩"
 L["Abandonded Mole Machine"] = "棄置的鑽地機"
---[[Translation missing --]]
---[[ L["Abomination Wing"] = ""--]] 
+L["Abandoned Mole Machine"] = "棄置的鑽地機"
+L["Abomination Wing"] = "構造區"
 L["Acride <Scarshield Legion>"] = "裂盾滲透者 <裂盾軍團>"
---[[Translation missing --]]
---[[ L["Agathelos the Raging"] = ""--]] 
---[[Translation missing --]]
---[[ L["Aggem Thorncurse"] = ""--]] 
+L["Agathelos the Raging"] = "暴怒的阿迦賽羅斯"
+L["Aggem Thorncurse"] = "阿葛金‧棘咒"
 L["Aku'mai"] = "阿庫麥爾"
---[[Translation missing --]]
---[[ L["Alarm-a-bomb 2600"] = ""--]] 
+L["Alarm-a-bomb 2600"] = "警報炸彈2600型"
 L["Alchemy Lab"] = "煉金實驗室"
 L["Altar of Blood"] = "血祭談"
---[[Translation missing --]]
---[[ L["Altar of Hakkar"] = ""--]] 
---[[Translation missing --]]
---[[ L["Alzzin the Wildshaper"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ambassador Flamelash"] = ""--]] 
---[[Translation missing --]]
---[[ L["Amnennar the Coldbringer"] = ""--]] 
+L["Altar of Hakkar"] = "哈卡祭壇"
+L["Alzzin the Wildshaper"] = "『狂野變形者』奧茲恩"
+L["Ambassador Flamelash"] = "弗萊拉斯大使"
+L["Amnennar the Coldbringer"] = "『寒冰使者』亞門納爾"
 L["Amnennar's Phylactery"] = "亞門納爾的骨匣"
 L["Ancient Equine Spirit"] = "上古聖馬之魂"
---[[Translation missing --]]
---[[ L["Ancient Stone Keeper"] = ""--]] 
+L["Ancient Stone Keeper"] = "古代的石頭看守者"
 L["Ancient Treasure"] = "古代寶藏"
 L["Andorgos <Brood of Malygos>"] = "安多葛斯 <瑪里苟斯的後裔>"
---[[Translation missing --]]
---[[ L["Annora (Master Enchanter)"] = ""--]] 
---[[Translation missing --]]
---[[ L["Antu'sul"] = ""--]] 
---[[Translation missing --]]
---[[ L["Anub'Rekhan"] = ""--]] 
---[[Translation missing --]]
---[[ L["Anub'shiah"] = ""--]] 
+L["Annora <Master Enchanter>"] = "安諾拉 <附魔師>"
+L["Antu'sul"] = "安圖蘇爾"
+L["Anub'Rekhan"] = "阿努比瑞克漢"
+L["Anub'shiah"] = "阿努希爾"
 L["Aoren Sunglow <The Reliquary>"] = "安歐連·日耀"
-L["AQ"] = "AQ"
-L["AQ10"] = "AQ10"
-L["AQ20"] = "AQ20"
-L["AQ40"] = "AQ40"
---[[Translation missing --]]
---[[ L["Arcanist Doan"] = ""--]] 
---[[Translation missing --]]
---[[ L["Archaedas"] = ""--]] 
---[[Translation missing --]]
---[[ L["Archivist Galford"] = ""--]] 
+L["AQ"] = "安其拉"
+L["AQ20"] = "安其拉（20人團隊)"
+L["AQ40"] = "安其拉（40人團隊）"
+L["Arcanist Doan"] = "秘法師杜安"
+L["Archaedas"] = "阿札達斯"
+L["Archivist Galford"] = "檔案管理員加爾福特"
 L["Archmage Angela Dosantos <Brotherhood of the Light>"] = "大法師安琪拉·多桑杜 <聖光兄弟會>"
---[[Translation missing --]]
---[[ L["Archmage Arugal"] = ""--]] 
---[[Translation missing --]]
---[[ L["Archmage Tarsis Kir-Moldir"] = ""--]] 
---[[Translation missing --]]
---[[ L["Argent Guard Thaelrid"] = ""--]] 
+L["Archmage Arugal"] = "大法師阿魯高"
+L["Archmage Tarsis Kir-Moldir"] = "大法師塔希斯·克摩地爾"
+L["Argent Guard Thaelrid"] = "銀色黎明守衛塞爾瑞德"
 L["Arm"] = "軍械室"
 L["Armory"] = "軍械室"
 L["Arygos"] = "亞雷戈斯"
---[[Translation missing --]]
---[[ L["Atal'ai Defenders"] = ""--]] 
---[[Translation missing --]]
---[[ L["Atal'alarion"] = ""--]] 
---[[Translation missing --]]
---[[ L["Atiesh"] = ""--]] 
---[[Translation missing --]]
---[[ L["Attunement Required"] = ""--]] 
+L["Atal'ai Defenders"] = "阿塔萊捍衛者"
+L["Atal'alarion"] = "阿塔拉利恩"
+L["Atiesh"] = "埃提耶什"
+L["Attunement Required"] = "需要傳送門同步"
 L["Auld Stonespire"] = "奧爾德·石塔"
---[[Translation missing --]]
---[[ L["Aurius"] = ""--]] 
---[[Translation missing --]]
---[[ L["Avatar of Hakkar"] = ""--]] 
---[[Translation missing --]]
---[[ L["Awbee"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ayamiss the Hunter"] = ""--]] 
---[[Translation missing --]]
---[[ L["Azshir the Sleepless"] = ""--]] 
+L["Aurius"] = "奧里克斯"
+L["Avatar of Hakkar"] = "哈卡的化身"
+L["Awbee"] = "奧比"
+L["Ayamiss the Hunter"] = "『狩獵者』阿亞米斯"
+L["Azshir the Sleepless"] = "不眠的艾希爾"
 L["B.E Barechus <S.A.F.E.>"] = "怪怪頭 <S.A.F.E.>"
---[[Translation missing --]]
---[[ L["Bael'Gar"] = ""--]] 
---[[Translation missing --]]
---[[ L["Baelog"] = ""--]] 
+L["Bael'Gar"] = "貝爾加"
+L["Baelog"] = "巴爾洛戈"
 L["Baelog's Chest"] = "巴爾洛戈的箱子"
---[[Translation missing --]]
---[[ L["Balnazzar"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bannok Grimaxe"] = ""--]] 
---[[Translation missing --]]
---[[ L["Baron Aquanis"] = ""--]] 
---[[Translation missing --]]
---[[ L["Baron Geddon"] = ""--]] 
---[[Translation missing --]]
---[[ L["Baron Rivendare"] = ""--]] 
---[[Translation missing --]]
---[[ L["Baron Silverlaine"] = ""--]] 
---[[Translation missing --]]
---[[ L["Baroness Anastari"] = ""--]] 
---[[Translation missing --]]
---[[ L["Battleguard Sartura"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bazil Thredd"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bazzalan"] = ""--]] 
---[[Translation missing --]]
---[[ L["Belnistrasz"] = ""--]] 
+L["Balnazzar"] = "巴納札爾"
+L["Bannok Grimaxe"] = "班諾克·巨斧"
+L["Baron Aquanis"] = "阿奎尼斯男爵"
+L["Baron Geddon"] = "迦頓男爵"
+L["Baron Rivendare"] = "瑞文戴爾男爵"
+L["Baron Silverlaine"] = "席瓦萊恩男爵"
+L["Baroness Anastari"] = "安娜絲塔麗男爵夫人"
+L["Battleguard Sartura"] = "沙爾圖拉"
+L["Bazil Thredd"] = "巴基爾·斯瑞德"
+L["Bazzalan"] = "巴札蘭"
+L["Belnistrasz"] = "貝尼斯特拉茲"
 L["BFD"] = "BFD/黑淵"
---[[Translation missing --]]
---[[ L["Bijou"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bijou's Belongings"] = ""--]] 
---[[Translation missing --]]
---[[ L["Black Guard Swordsmith"] = ""--]] 
+L["Bijou"] = "比修"
+L["Bijou's Belongings"] = "比修的裝置"
+L["Black Guard Swordsmith"] = "黑衣守衛鑄劍師"
 L["Blastmaster Emi Shortfuse"] = "爆破專家艾米·短線"
---[[Translation missing --]]
---[[ L["Blood of Innocents"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bloodmage Thalnos"] = ""--]] 
---[[Translation missing --]]
---[[ L["Boahn"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bodley"] = ""--]] 
+L["Blind Hunter"] = "盲眼獵手"
+L["Blood of Innocents"] = "鑰匙: 無辜者之血"
+L["Blood Steward of Kirtonos"] = "基爾圖諾斯的衛士"
+L["Bloodlord Mandokir"] = "血領主曼多基爾"
+L["Bloodmage Thalnos"] = "血法師薩爾諾斯"
+L["Boahn"] = "博艾恩"
+L["Bodley"] = "布德利"
+L["Brainwashed Noble"] = "被洗腦的貴族"
 L["BRD"] = "BRD/黑石淵"
 L["BRM"] = "BRM/黑石山"
---[[Translation missing --]]
---[[ L["Broodlord Lashlayer"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bruegal Ironknuckle"] = ""--]] 
---[[Translation missing --]]
---[[ L["Burning Felguard"] = ""--]] 
---[[Translation missing --]]
---[[ L["Buru the Gorger"] = ""--]] 
+L["Broodlord Lashlayer"] = "龍領主勒西雷爾"
+L["Bruegal Ironknuckle"] = "布魯戈·艾爾克納寇"
+L["Burning Felguard"] = "燃燒惡魔守衛"
+L["Buru the Gorger"] = "『暴食者』布魯"
 L["BWL"] = "BWL/黑翼"
 L["Caelestrasz"] = "凱雷斯特拉茲"
---[[Translation missing --]]
---[[ L["Cannon Master Willey"] = ""--]] 
+L["Cannon Master Willey"] = "砲手威利"
 L["Captain Drenn"] = "德蘭上尉"
---[[Translation missing --]]
---[[ L["Captain Greenskin"] = ""--]] 
---[[Translation missing --]]
---[[ L["Captain Kromcrush"] = ""--]] 
+L["Captain Greenskin"] = "綠皮隊長"
+L["Captain Kromcrush"] = "克羅卡斯"
 L["Captain Qeez"] = "奎茲上尉"
 L["Captain Tuubid"] = "圖畢德上尉"
 L["Captain Wyrmak"] = "維爾瑪克隊長"
 L["Captain Xurrem"] = "瑟瑞姆上尉"
---[[Translation missing --]]
---[[ L["Cath"] = ""--]] 
---[[Translation missing --]]
---[[ L["Cathedral"] = ""--]] 
---[[Translation missing --]]
---[[ L["Celebras the Cursed"] = ""--]] 
+L["Cath"] = "大教堂"
+L["Cathedral"] = "大教堂"
+L["Cavindra"] = "凱雯德拉"
+L["Celebras the Cursed"] = "被詛咒的塞雷布拉斯"
 L["Celebras the Redeemed"] = "贖罪的塞雷布拉斯"
---[[Translation missing --]]
---[[ L["Charlga Razorflank"] = ""--]] 
+L["Charlga Razorflank"] = "卡爾加·刺肋"
 L["Chase Begins"] = "追逐開始"
 L["Chase Ends"] = "追逐結束"
---[[Translation missing --]]
---[[ L["Chest of The Seven"] = ""--]] 
+L["Chest of The Seven"] = "七賢之箱"
 L["Chief Engineer Bilgewhizzle <Gadgetzan Water Co.>"] = "首席工程師膨嘯 <加基森水業公司>"
---[[Translation missing --]]
---[[ L["Chief Ukorz Sandscalp"] = ""--]] 
+L["Chief Ukorz Sandscalp"] = "烏克茲·沙頂"
 L["Chomper"] = "咀嚼者"
---[[Translation missing --]]
---[[ L["Cho'Rush the Observer"] = ""--]] 
---[[Translation missing --]]
---[[ L["Chromaggus"] = ""--]] 
+L["Cho'Rush the Observer"] = "『觀察者』克魯什"
+L["Chromaggus"] = "克洛瑪古斯"
 L["Colonel Zerran"] = "澤朗上校"
 L["Commander Bagran"] = "指揮官巴格仁"
---[[Translation missing --]]
---[[ L["Commander Gor'shak"] = ""--]] 
---[[Translation missing --]]
---[[ L["Commander Springvale"] = ""--]] 
---[[Translation missing --]]
---[[ L["Conspicuous Urn"] = ""--]] 
---[[Translation missing --]]
---[[ L["Cookie"] = ""--]] 
+L["Commander Gor'shak"] = "指揮官哥沙克"
+L["Commander Springvale"] = "指揮官斯普林瓦爾"
+L["Conspicuous Urn"] = "顯眼的石罐"
+L["Cookie"] = "廚師"
 L["Core Fragment"] = "熔核碎片"
---[[Translation missing --]]
---[[ L["Crimson Hammersmith"] = ""--]] 
---[[Translation missing --]]
---[[ L["Crowd Pummeler 9-60"] = ""--]] 
+L["Crimson Hammersmith"] = "紅衣鑄錘師"
+L["Crowd Pummeler 9-60"] = "群體打擊者9-60"
 L["Crusade Commander Eligor Dawnbringer <Brotherhood of the Light>"] = "指揮官艾利格·黎明使者 <聖光兄弟會>"
 L["Crusade Commander Korfax <Brotherhood of the Light>"] = "『聖光勇士』柯菲斯 <聖光兄弟會>"
---[[Translation missing --]]
---[[ L["Crusaders' Square Postbox"] = ""--]] 
---[[Translation missing --]]
---[[ L["Crystal Fang"] = ""--]] 
---[[Translation missing --]]
---[[ L["C'Thun"] = ""--]] 
+L["Crusaders' Square Postbox"] = "十字軍廣場郵箱"
+L["Crystal Fang"] = "水晶之牙"
+L["C'Thun"] = "克蘇恩"
 L["Cursed Centaur"] = "被詛咒的半人馬"
---[[Translation missing --]]
---[[ L["Dark Coffer"] = ""--]] 
---[[Translation missing --]]
---[[ L["Dark Iron Ambassador"] = ""--]] 
---[[Translation missing --]]
---[[ L["Darkmaster Gandling"] = ""--]] 
---[[Translation missing --]]
---[[ L["Death Speaker Jargba"] = ""--]] 
---[[Translation missing --]]
---[[ L["Deathknight Wing"] = ""--]] 
---[[Translation missing --]]
---[[ L["Deathstalker Adamant"] = ""--]] 
---[[Translation missing --]]
---[[ L["Deathsworn Captain"] = ""--]] 
---[[Translation missing --]]
---[[ L["Defias Gunpowder"] = ""--]] 
---[[Translation missing --]]
---[[ L["Deviate Faerie Dragon"] = ""--]] 
---[[Translation missing --]]
---[[ L["Dextren Ward"] = ""--]] 
---[[Translation missing --]]
---[[ L["Digmaster Shovelphlange"] = ""--]] 
+L["Dark Coffer"] = "黑暗寶箱"
+L["Dark Iron Ambassador"] = "黑鐵大使"
+L["Darkmaster Gandling"] = "黑暗院長加丁"
+L["Darkstone Tablet"] = "黑暗石板"
+L["Death Knight Darkreaver"] = "死亡騎士達克雷爾"
+L["Death Speaker Jargba"] = "亡語者賈格巴"
+L["Deathknight Wing"] = "軍事區"
+L["Deathstalker Adamant"] = "亡靈哨兵阿達曼特"
+L["Deathsworn Captain"] = "死亡誓言者隊長"
+L["Defias Gunpowder"] = "迪菲亞火藥"
+L["Deviate Faerie Dragon"] = "變異精靈龍"
+L["Dextren Ward"] = "迪克斯特·瓦德"
+L["Digmaster Shovelphlange"] = "挖掘專家舒爾弗拉格"
 L["Dire Maul Arena"] = "厄運競技場"
 L["Dire Pool"] = "厄運之池"
---[[Translation missing --]]
---[[ L["Disciple of Naralex"] = ""--]] 
---[[Translation missing --]]
---[[ L["Divination Scryer"] = ""--]] 
+L["Disciple of Naralex"] = "納拉雷克斯的信徒"
+L["Divination Scryer"] = "鑰匙: 預言水晶球"
 L["DM"] = "DM/厄運"
---[[Translation missing --]]
---[[ L["Doctor Theolen Krastinov"] = ""--]] 
---[[Translation missing --]]
---[[ L["Doomrigger's Clasp"] = ""--]] 
---[[Translation missing --]]
---[[ L["Drakefire Amulet"] = ""--]] 
---[[Translation missing --]]
---[[ L["Drakkisath's Brand"] = ""--]] 
---[[Translation missing --]]
---[[ L["Dreamscythe"] = ""--]] 
+L["Doctor Theolen Krastinov"] = "瑟爾林·卡斯迪諾夫教授"
+L["Doomrigger's Clasp"] = "末日扣環"
+L["Doomrigger's Coffer"] = "末日扣環之箱"
+L["Drakefire Amulet"] = "龍火護符"
+L["Drakkisath's Brand"] = "達基薩斯徽記"
+L["Dreamscythe"] = "德姆塞卡爾"
 L["Druid of the Talon"] = "猛禽德魯伊"
---[[Translation missing --]]
---[[ L["Dustwraith"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ebonroc"] = ""--]] 
+L["Dustwraith"] = "灰塵怨靈"
+L["Earthcaller Halmgar"] = "喚地者哈穆加"
+L["Ebonroc"] = "埃博諾克"
 L["Ebru <Disciple of Naralex>"] = "厄布魯 <納拉雷克斯的侍徒>"
---[[Translation missing --]]
---[[ L["Edwin VanCleef"] = ""--]] 
+L["Edge of Madness"] = "瘋狂之緣"
+L["Edwin VanCleef"] = "艾德溫·范克里夫"
 L["Elder Farwhisper"] = "遙語長者"
 L["Elder Mistwalker"] = "霧行長者"
 L["Elder Morndeep"] = "深晨長者"
@@ -273,717 +189,472 @@ L["Elder Starsong"] = "星歌長者"
 L["Elder Stonefort"] = "石壘長者"
 L["Elder Wildmane"] = "蠻鬃長者"
 L["Elders' Square Postbox"] = "長者廣場郵箱"
---[[Translation missing --]]
---[[ L["Electrocutioner 6000"] = ""--]] 
---[[Translation missing --]]
---[[ L["Emperor Dagran Thaurissan"] = ""--]] 
---[[Translation missing --]]
---[[ L["Eric \"The Swift\""] = ""--]] 
---[[Translation missing --]]
---[[ L["Essence Font"] = ""--]] 
+L["Electrocutioner 6000"] = "電刑器6000型"
+L["Emperor Dagran Thaurissan"] = "達格蘭·索瑞森大帝"
+L["Emperor Vek'lor"] = "維克洛爾大帝"
+L["Emperor Vek'nilash"] = "維克尼拉斯"
+L["Eric \"The Swift\""] = "『迅捷』艾利克"
+L["Essence Font"] = "精華之泉"
 L["Estulan <The Highborne>"] = "艾斯圖蘭"
---[[Translation missing --]]
---[[ L["Eviscerator"] = ""--]] 
---[[Translation missing --]]
---[[ L["Exit"] = ""--]] 
+L["Eviscerator"] = "剜眼者"
+L["Exit"] = "出口"
 L["Face <S.A.F.E.>"] = "小白臉 <S.A.F.E.>"
---[[Translation missing --]]
---[[ L["Fallen Champion"] = ""--]] 
+L["Fallen Champion"] = "死靈勇士"
 L["Falrin Treeshaper"] = "法琳·樹形者"
---[[Translation missing --]]
---[[ L["Fankriss the Unyielding"] = ""--]] 
---[[Translation missing --]]
---[[ L["Father Flame"] = ""--]] 
---[[Translation missing --]]
---[[ L["Fathom Core"] = ""--]] 
---[[Translation missing --]]
---[[ L["Fel Steed"] = ""--]] 
---[[Translation missing --]]
---[[ L["Fenrus the Devourer"] = ""--]] 
+L["Fankriss the Unyielding"] = "不屈的范克里斯"
+L["Father Flame"] = "烈焰之父"
+L["Fathom Core"] = "深淵之核"
+L["Fel Steed"] = "地獄戰馬"
+L["Fenrus the Devourer"] = "『吞噬者』芬魯斯"
 L["Ferra"] = "費拉"
 L["Festival Lane Postbox"] = "節日小道郵箱"
---[[Translation missing --]]
---[[ L["Fifth Mosh'aru Tablet"] = ""--]] 
---[[Translation missing --]]
---[[ L["Fineous Darkvire"] = ""--]] 
---[[Translation missing --]]
---[[ L["Finkle Einhorn"] = ""--]] 
+L["Fifth Mosh'aru Tablet"] = "第五塊摩沙魯石板"
+L["Fineous Darkvire"] = "弗諾斯·達克維爾"
+L["Finkle Einhorn"] = "芬克·恩霍爾"
 L["Fire of Aku'mai"] = "阿庫麥爾之火"
---[[Translation missing --]]
---[[ L["Firemaw"] = ""--]] 
---[[Translation missing --]]
---[[ L["Flamegor"] = ""--]] 
---[[Translation missing --]]
---[[ L["Four Horsemen Chest"] = ""--]] 
+L["Firemaw"] = "費爾默"
+L["Flamegor"] = "弗萊格爾"
+L["Foreman Thistlenettle"] = "工頭希斯耐特"
+L["Four Horsemen Chest"] = "四騎士箱子"
 L["Four Kaldorei Elites"] = "四個卡多雷精英"
---[[Translation missing --]]
---[[ L["Fras Siabi"] = ""--]] 
+L["Franclorn Forgewright"] = "弗蘭克羅恩·鑄鐵的雕像"
+L["Fras Siabi"] = "弗拉斯·希亞比"
 L["Fras Siabi's Postbox"] = "弗拉斯·希亞比的郵箱"
---[[Translation missing --]]
---[[ L["Frostwyrm Lair"] = ""--]] 
+L["Frostwyrm Lair"] = "冰霜巨龍的巢穴"
 L["Furgus Warpwood"] = "佛格斯·扭木"
+L["Gahz'ranka"] = "加茲蘭卡"
+L["Gahz'rilla"] = "加茲瑞拉"
 L["Galamav the Marksman <Kargath Expeditionary Force>"] = "『神射手』賈拉瑪弗 <卡加斯遠征軍>"
---[[Translation missing --]]
---[[ L["Galgann Firehammer"] = ""--]] 
---[[Translation missing --]]
---[[ L["Garr"] = ""--]] 
---[[Translation missing --]]
---[[ L["Garrett Family Chest"] = ""--]] 
---[[Translation missing --]]
---[[ L["Gehennas"] = ""--]] 
---[[Translation missing --]]
---[[ L["Gelihast"] = ""--]] 
---[[Translation missing --]]
---[[ L["General Angerforge"] = ""--]] 
---[[Translation missing --]]
---[[ L["General Drakkisath"] = ""--]] 
---[[Translation missing --]]
---[[ L["General Rajaxx"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ghamoo-ra"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ghok Bashguud"] = ""--]] 
---[[Translation missing --]]
---[[ L["Gilnid"] = ""--]] 
---[[Translation missing --]]
---[[ L["Gizrul the Slavener"] = ""--]] 
---[[Translation missing --]]
---[[ L["Gluth"] = ""--]] 
---[[Translation missing --]]
---[[ L["Glutton"] = ""--]] 
---[[Translation missing --]]
---[[ L["Gnashjaw"] = ""--]] 
+L["Galgann Firehammer"] = "加加恩·火錘"
+L["Garr"] = "加爾"
+L["Garrett Family Chest"] = "加瑞特家族的寶箱"
+L["Gehennas"] = "基赫納斯"
+L["Gelihast"] = "格里哈斯特"
+L["Gelk <The Second Kahn>"] = "吉爾克 <第二可汗>"
+L["General Angerforge"] = "安格弗將軍"
+L["General Drakkisath"] = "達基薩斯將軍"
+L["General Rajaxx"] = "拉賈克斯將軍"
+L["Ghamoo-ra"] = "加摩拉"
+L["Ghok Bashguud"] = "霍克·巴什古德"
+L["Gilnid"] = "基爾尼格"
+L["Gizrul the Slavener"] = "『奴役者』基茲盧爾"
+L["Gluth"] = "古魯斯"
+L["Glutton"] = "暴食者"
+L["Gnashjaw"] = "碎顎"
 L["Gnome"] = "Gnome/諾姆"
---[[Translation missing --]]
---[[ L["Golem Lord Argelmach"] = ""--]] 
---[[Translation missing --]]
---[[ L["Golemagg the Incinerator"] = ""--]] 
+L["Golem Lord Argelmach"] = "魔像領主阿格曼奇"
+L["Golemagg the Incinerator"] = "『焚化者』古雷曼格"
 L["Gomora the Bloodletter"] = "『放血者』高摩拉"
---[[Translation missing --]]
---[[ L["Gorosh the Dervish"] = ""--]] 
---[[Translation missing --]]
---[[ L["Gothik the Harvester"] = ""--]] 
---[[Translation missing --]]
---[[ L["Grand Widow Faerlina"] = ""--]] 
---[[Translation missing --]]
---[[ L["Graveyard"] = ""--]] 
---[[Translation missing --]]
---[[ L["Grimlok"] = ""--]] 
---[[Translation missing --]]
---[[ L["Grizzle"] = ""--]] 
---[[Translation missing --]]
---[[ L["Grobbulus"] = ""--]] 
---[[Translation missing --]]
---[[ L["Grubbis"] = ""--]] 
---[[Translation missing --]]
---[[ L["Guard Fengus"] = ""--]] 
---[[Translation missing --]]
---[[ L["Guard Mol'dar"] = ""--]] 
---[[Translation missing --]]
---[[ L["Guard Slip'kik"] = ""--]] 
---[[Translation missing --]]
---[[ L["GY"] = ""--]] 
---[[Translation missing --]]
---[[ L["Gyth"] = ""--]] 
---[[Translation missing --]]
---[[ L["Halycon"] = ""--]] 
---[[Translation missing --]]
---[[ L["Hamhock"] = ""--]] 
---[[Translation missing --]]
---[[ L["Hammertoe Grez"] = ""--]] 
+L["Goraluk Anvilcrack"] = "古拉魯克"
+L["Gorosh the Dervish"] = "『修行者』高羅什"
+L["Gothik the Harvester"] = "『收割者』高希"
+L["Grand Crusader Dathrohan"] = "大十字軍戰士達索漢"
+L["Grand Widow Faerlina"] = "大寡婦費琳娜"
+L["Graveyard"] = "墓地"
+L["Gri'lek"] = "格里雷克"
+L["Grimlok"] = "格瑞姆洛克"
+L["Grizzle"] = "格里茲爾"
+L["Grobbulus"] = "葛羅巴斯"
+L["Grubbis"] = "格魯比斯"
+L["Guard Fengus"] = "衛兵芬古斯"
+L["Guard Mol'dar"] = "衛兵摩爾達"
+L["Guard Slip'kik"] = "衛兵斯里基克"
+L["GY"] = "墓地"
+L["Gyth"] = "蓋斯"
+L["Hakkar"] = "哈卡"
+L["Halycon"] = "哈雷肯"
+L["Hamhock"] = "哈姆霍克"
+L["Hammertoe Grez"] = "鐵趾格雷茲"
 L["Hann Ibal <S.A.F.E.>"] = "漢·泥巴 <S.A.F.E.>"
---[[Translation missing --]]
---[[ L["Hazzas"] = ""--]] 
---[[Translation missing --]]
---[[ L["Hearthsinger Forresten"] = ""--]] 
---[[Translation missing --]]
---[[ L["Hedrum the Creeper"] = ""--]] 
---[[Translation missing --]]
---[[ L["Heigan the Unclean"] = ""--]] 
---[[Translation missing --]]
---[[ L["Heralath Fallowbrook"] = ""--]] 
---[[Translation missing --]]
---[[ L["Herod"] = ""--]] 
+L["Hazza'rah"] = "哈札拉爾"
+L["Hazzas"] = "哈札斯"
+L["Hearthsinger Forresten"] = "弗雷斯特恩"
+L["Hedrum the Creeper"] = "『爬行者』赫杜姆"
+L["Heigan the Unclean"] = "『骯髒者』海根"
+L["Henry Stern"] = "亨利·斯特恩"
+L["Heralath Fallowbrook"] = "赫爾拉斯·靜水"
+L["Herod"] = "赫洛德"
 L["Hierophant Theodora Mulvadania <Kargath Expeditionary Force>"] = "祭師塞朵拉·穆瓦丹尼 <卡加斯遠征軍>"
 L["High Examiner Tae'thelan Bloodwatcher <The Reliquary>"] = "高階審查員泰瑟連·血腥看守者 <聖匣守護者>"
---[[Translation missing --]]
---[[ L["High Inquisitor Fairbanks"] = ""--]] 
---[[Translation missing --]]
---[[ L["High Inquisitor Whitemane"] = ""--]] 
---[[Translation missing --]]
---[[ L["High Interrogator Gerstahn"] = ""--]] 
---[[Translation missing --]]
---[[ L["High Justice Grimstone"] = ""--]] 
---[[Translation missing --]]
---[[ L["Highlord Mograine <The Ashbringer>"] = ""--]] 
---[[Translation missing --]]
---[[ L["Highlord Omokk"] = ""--]] 
---[[Translation missing --]]
---[[ L["Houndmaster Grebmar"] = ""--]] 
---[[Translation missing --]]
---[[ L["Houndmaster Loksey"] = ""--]] 
---[[Translation missing --]]
---[[ L["Human Remains"] = ""--]] 
---[[Translation missing --]]
---[[ L["Hurley Blackbreath"] = ""--]] 
---[[Translation missing --]]
---[[ L["Hydromancer Velratha"] = ""--]] 
---[[Translation missing --]]
---[[ L["Hydrospawn"] = ""--]] 
---[[Translation missing --]]
---[[ L["Illyanna Ravenoak"] = ""--]] 
---[[Translation missing --]]
---[[ L["Immol'thar"] = ""--]] 
---[[Translation missing --]]
---[[ L["Instructor Malicia"] = ""--]] 
---[[Translation missing --]]
---[[ L["Instructor Razuvious"] = ""--]] 
---[[Translation missing --]]
---[[ L["Interrogator Vishas"] = ""--]] 
+L["High Inquisitor Fairbanks"] = "高等審判官法爾班克斯"
+L["High Inquisitor Whitemane"] = "高等審判官懷特邁恩"
+L["High Interrogator Gerstahn"] = "高階審問者格斯塔恩"
+L["High Justice Grimstone"] = "裁決者格里斯通"
+L["High Priest Thekal"] = "高階祭司塞卡爾"
+L["High Priest Venoxis"] = "高階祭司溫諾希斯"
+L["High Priestess Arlokk"] = "哈卡萊先知"
+L["High Priestess Jeklik"] = "高階祭司耶克里克"
+L["High Priestess Mar'li"] = "哈卡萊安魂者"
+L["Highlord Mograine <The Ashbringer>"] = "大領主莫格萊尼 <灰燼使者>"
+L["Highlord Omokk"] = "歐莫克大王"
+L["Houndmaster Grebmar"] = "馴犬者格雷布瑪爾"
+L["Houndmaster Loksey"] = "馴犬者洛克希"
+L["Human Remains"] = "人類殘骸"
+L["Hurley Blackbreath"] = "霍爾雷·黑鬚"
+L["Hydromancer Velratha"] = "水占師維蕾薩"
+L["Hydrospawn"] = "海多斯博恩"
+L["Illyanna Ravenoak"] = "伊琳娜·鴉橡"
+L["Immol'thar"] = "伊莫塔爾"
+L["Instructor Malicia"] = "講師瑪麗希亞"
+L["Instructor Razuvious"] = "講師拉祖維斯"
+L["Interrogator Vishas"] = "審訊員韋沙斯"
 L["Invoker Xorenth"] = "塑能師索倫斯"
---[[Translation missing --]]
---[[ L["Ironaya"] = ""--]] 
+L["Ironaya"] = "艾隆納亞"
 L["Ironbark the Redeemed"] = "贖罪的鐵朴"
---[[Translation missing --]]
---[[ L["Ironspine"] = ""--]] 
---[[Translation missing --]]
---[[ L["Jade"] = ""--]] 
+L["Ironspine"] = "鐵脊死靈"
+L["Isalien"] = "依薩利恩"
+L["Jade"] = "玉龍"
 L["Jalinda Sprig <Morgan's Militia>"] = "加琳達 <摩根的民兵>"
---[[Translation missing --]]
---[[ L["Jammal'an the Prophet"] = ""--]] 
---[[Translation missing --]]
---[[ L["Jandice Barov"] = ""--]] 
---[[Translation missing --]]
---[[ L["Jarien"] = ""--]] 
---[[Translation missing --]]
---[[ L["J'eevee's Jar"] = ""--]] 
+L["Jammal'an the Prophet"] = "『預言者』迦瑪蘭"
+L["Jandice Barov"] = "詹迪斯·巴羅夫"
+L["Jarien"] = "賈林"
+L["Jed Runewatcher"] = "傑德"
+L["J'eevee's Jar"] = "耶維爾的瓶子"
 L["Je'neu Sancrea <The Earthen Ring>"] = "耶努薩克雷 <陶土議會>"
---[[Translation missing --]]
---[[ L["Jergosh the Invoker"] = ""--]] 
---[[Translation missing --]]
---[[ L["Jordan's Hammer"] = ""--]] 
---[[Translation missing --]]
---[[ L["Kam Deepfury"] = ""--]] 
+L["Jergosh the Invoker"] = "『塑能師』耶戈什"
+L["Jin'do the Hexxer"] = "妖術師金度"
+L["Jordan's Hammer"] = "喬丹的鐵錘"
+L["Kam Deepfury"] = "卡姆·深怒"
 L["Kand Sandseeker <Explorer's League>"] = "坎德·覓沙 <探險者協會>"
 L["Kandrostrasz <Brood of Alexstrasza>"] = "坎多斯塔茲 <雅立史卓莎的後裔>"
---[[Translation missing --]]
---[[ L["Kazkaz the Unholy"] = ""--]] 
---[[Translation missing --]]
---[[ L["Kel'Thuzad"] = ""--]] 
---[[Translation missing --]]
---[[ L["Kernobee"] = ""--]] 
+L["Kazkaz the Unholy"] = "邪惡的卡薩卡茲"
+L["Kel'Thuzad"] = "科爾蘇加德"
+L["Kernobee"] = "克努比"
 L["Kevin Dawson <Morgan's Militia>"] = "凱文·多森 <摩根的民兵>"
---[[Translation missing --]]
---[[ L["Kharan Mighthammer"] = ""--]] 
+L["Kharan Mighthammer"] = "卡蘭·巨錘"
 L["Kherrah"] = "凱拉"
---[[Translation missing --]]
---[[ L["King Gordok"] = ""--]] 
+L["King Gordok"] = "戈多克大王"
 L["King's Square Postbox"] = "國王廣場郵箱"
---[[Translation missing --]]
---[[ L["Kirtonos the Herald"] = ""--]] 
+L["Kirtonos the Herald"] = "傳令官基爾圖諾斯"
 L["Knot Thimblejack"] = "諾特·希姆加克"
+L["Kolk <The First Kahn>"] = "考爾克 <第一可汗>"
 L["Koristrasza"] = "柯莉史卓莎"
---[[Translation missing --]]
---[[ L["Kresh"] = ""--]] 
---[[Translation missing --]]
---[[ L["Kri"] = ""--]] 
---[[Translation missing --]]
---[[ L["Krom Stoutarm's Chest"] = ""--]] 
---[[Translation missing --]]
---[[ L["Kurinnaxx"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lady Anacondra"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lady Blaumeux"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lady Illucia Barov"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lady Sarevess"] = ""--]] 
---[[Translation missing --]]
---[[ L["Landslide"] = ""--]] 
+L["Kormok"] = "科爾莫克"
+L["Kresh"] = "克雷什"
+L["Kri"] = "克里領主"
+L["Krom Stoutarm's Chest"] = "克羅姆·粗臂的箱子"
+L["Kurinnaxx"] = "庫林納克斯"
+L["Lady Anacondra"] = "安娜科德拉"
+L["Lady Blaumeux"] = "布洛莫斯女士"
+L["Lady Illucia Barov"] = "伊露希亞·巴羅夫女士"
+L["Lady Sarevess"] = "薩利維絲女士"
+L["Landslide"] = "蘭斯利德"
 L["LBRS"] = "LBRS/黑下"
 L["Lead Prospector Durdin <Explorer's League>"] = "首席勘察員杜爾丁 <探險者協會>"
---[[Translation missing --]]
---[[ L["Lefty"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lethtendris"] = ""--]] 
+L["Lefty"] = "左撇"
+L["Lethtendris"] = "蕾瑟塔蒂絲"
 L["Lexlort <Kargath Expeditionary Force>"] = "雷克斯洛特 <卡加斯遠征軍>"
---[[Translation missing --]]
---[[ L["Lib"] = ""--]] 
---[[Translation missing --]]
---[[ L["Library"] = ""--]] 
+L["Lib"] = "圖書館"
+L["Library"] = "圖書館"
 L["Lidia Sunglow <The Reliquary>"] = "莉蒂雅·日耀"
---[[Translation missing --]]
---[[ L["Loatheb"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lokhtos Darkbargainer"] = ""--]] 
+L["Lieutenant General Andorov"] = "安多洛夫中將"
+L["Loatheb"] = "憎恨者"
+L["Lokhtos Darkbargainer"] = "羅克圖斯·暗契"
 L["Lokhtos Darkbargainer <The Thorium Brotherhood>"] = "羅克圖斯·暗契 <瑟銀兄弟會>"
---[[Translation missing --]]
---[[ L["Lord Alexei Barov"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lord Cobrahn"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lord Hel'nurath"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lord Incendius"] = ""--]] 
+L["Lord Alexei Barov"] = "阿萊克斯·巴羅夫領主"
+L["Lord Cobrahn"] = "考布萊恩領主"
+L["Lord Hel'nurath"] = "赫爾努拉斯領主"
+L["Lord Incendius"] = "伊森迪奧斯領主"
 L["Lord Itharius"] = "伊薩里奧斯領主"
---[[Translation missing --]]
---[[ L["Lord Pythas"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lord Roccor"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lord Serpentis"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lord Vyletongue"] = ""--]] 
+L["Lord Kri"] = "克里勳爵"
+L["Lord Pythas"] = "皮薩斯領主"
+L["Lord Roccor"] = "洛考爾領主"
+L["Lord Serpentis"] = "瑟芬迪斯領主"
+L["Lord Valthalak"] = "瓦薩拉克"
+L["Lord Vyletongue"] = "維利塔恩領主"
 L["Lorekeeper Javon"] = "博學者亞沃"
 L["Lorekeeper Kildrath"] = "博學者基爾達斯"
 L["Lorekeeper Lydros"] = "博學者萊德羅斯"
 L["Lorekeeper Mykos"] = "博學者麥庫斯"
---[[Translation missing --]]
---[[ L["Lorekeeper Polkelt"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lorgalis Manuscript"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lorgus Jett"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lothos Riftwaker"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lower"] = ""--]] 
---[[Translation missing --]]
---[[ L["Lucifron"] = ""--]] 
---[[Translation missing --]]
---[[ L["Mad Magglish"] = ""--]] 
---[[Translation missing --]]
---[[ L["Maexxna"] = ""--]] 
---[[Translation missing --]]
---[[ L["Magister Kalendris"] = ""--]] 
---[[Translation missing --]]
---[[ L["Magistrate Barthilas"] = ""--]] 
---[[Translation missing --]]
---[[ L["Magmadar"] = ""--]] 
---[[Translation missing --]]
---[[ L["Magmus"] = ""--]] 
---[[Translation missing --]]
---[[ L["Magregan Deepshadow"] = ""--]] 
+L["Lorekeeper Polkelt"] = "博學者普克爾特"
+L["Lorgalis Manuscript"] = "洛迦里斯手稿"
+L["Lorgus Jett"] = "洛古斯·傑特"
+L["Lothos Riftwaker"] = "洛索斯·天痕"
+L["Lower"] = "下層"
+L["Lucifron"] = "魯西弗隆"
+L["Mad Magglish"] = "瘋狂的馬格利什"
+L["Maexxna"] = "梅克絲娜"
+L["Magister Kalendris"] = "卡雷迪斯鎮長"
+L["Magistrate Barthilas"] = "巴瑟拉斯鎮長"
+L["Magmadar"] = "瑪格曼達"
+L["Magmus"] = "瑪格姆斯"
+L["Magra <The Third Kahn>"] = "瑪格拉 <第三可汗>"
+L["Magregan Deepshadow"] = "馬格雷甘·深影"
 L["Mail Box"] = "鎖甲箱"
 L["Major Pakkon"] = "帕康少校"
 L["Major Yeggeth"] = "葉吉斯少校"
---[[Translation missing --]]
---[[ L["Majordomo Executus"] = ""--]] 
---[[Translation missing --]]
---[[ L["Maleki the Pallid"] = ""--]] 
---[[Translation missing --]]
---[[ L["Malgen Longspear"] = ""--]] 
---[[Translation missing --]]
---[[ L["Malor the Zealous"] = ""--]] 
+L["Majordomo Executus"] = "管理者埃克索圖斯"
+L["Maleki the Pallid"] = "蒼白的瑪勒基"
+L["Malgen Longspear"] = "瑪根·長矛"
+L["Malor the Zealous"] = "狂熱的瑪洛爾"
 L["Mara"] = "Mara/瑪拉"
---[[Translation missing --]]
---[[ L["Maraudos (The Fourth Khan)"] = ""--]] 
---[[Translation missing --]]
---[[ L["Marduk Blackpool"] = ""--]] 
+L["Maraudos (The Fourth Khan)"] = "瑪拉多斯 <第四可汗>"
+L["Maraudos <The Fourth Khan>"] = "瑪拉多斯 <第四可汗>"
+L["Marduk Blackpool"] = "馬杜克·布萊克波爾"
+L["Marisa du'Paige"] = "瑪里莎·杜派格"
 L["Market Row Postbox"] = "市場郵箱"
 L["Marshal Maxwell <Morgan's Militia>"] = "麥斯威爾元帥 <摩根的民兵>"
---[[Translation missing --]]
---[[ L["Marshal Windsor"] = ""--]] 
+L["Marshal Windsor"] = "溫德索爾元帥"
 L["Master Craftsman Wilhelm <Brotherhood of the Light>"] = "工匠大師維爾海姆 <聖光兄弟會>"
 L["Master Elemental Shaper Krixix"] = "大元素師克里希克"
---[[Translation missing --]]
---[[ L["Matrix Punchograph 3005-B"] = ""--]] 
---[[Translation missing --]]
---[[ L["Matrix Punchograph 3005-C"] = ""--]] 
---[[Translation missing --]]
---[[ L["Matrix Punchograph 3005-D"] = ""--]] 
+L["Matrix Punchograph 3005-A"] = "矩陣式打孔電腦 3005-A"
+L["Matrix Punchograph 3005-B"] = "矩陣式打孔電腦 3005-B"
+L["Matrix Punchograph 3005-C"] = "矩陣式打孔電腦 3005-C"
+L["Matrix Punchograph 3005-D"] = "矩陣式打孔電腦 3005-D"
 L["Maxwort Uberglint"] = "麥克斯沃特·尤柏格林"
 L["Mayara Brightwing <Morgan's Militia>"] = "瑪亞拉·亮翼 <摩根的民兵>"
 L["Mazoga's Spirit"] = "瑪柔伽的靈魂"
 L["MC"] = "MC"
---[[Translation missing --]]
---[[ L["Medallion of Faith"] = ""--]] 
---[[Translation missing --]]
---[[ L["Mekgineer Thermaplugg"] = ""--]] 
+L["Medallion of Faith"] = "瑪洛爾的保險箱"
+L["Mekgineer Thermaplugg"] = "麥克尼爾·瑟瑪普拉格"
 L["Merithra of the Dream"] = "夢境之龍麥琳瑟拉"
---[[Translation missing --]]
---[[ L["Miner Johnson"] = ""--]] 
+L["Meshlok the Harvester"] = "收割者麥什洛克"
+L["Miner Johnson"] = "礦工約翰森"
 L["Mistress Nagmara"] = "娜瑪拉小姐"
---[[Translation missing --]]
---[[ L["Moam"] = ""--]] 
---[[Translation missing --]]
---[[ L["Monument of Franclorn Forgewright"] = ""--]] 
---[[Translation missing --]]
---[[ L["Mor Grayhoof"] = ""--]] 
---[[Translation missing --]]
---[[ L["Mordresh Fire Eye"] = ""--]] 
---[[Translation missing --]]
---[[ L["Morphaz"] = ""--]] 
---[[Translation missing --]]
---[[ L["Mother Smolderweb"] = ""--]] 
+L["Moam"] = "莫阿姆"
+L["Monument of Franclorn Forgewright"] = "弗蘭克羅恩·鑄鐵的雕像"
+L["Mor Grayhoof"] = "莫爾·灰蹄"
+L["Mordresh Fire Eye"] = "火眼莫德雷斯"
+L["Morphaz"] = "摩弗拉斯"
+L["Mother Smolderweb"] = "煙網蛛后"
 L["Mountaineer Orfus <Morgan's Militia>"] = "巡山人歐弗斯 <摩根的民兵>"
---[[Translation missing --]]
---[[ L["Mr. Bigglesworth"] = ""--]] 
---[[Translation missing --]]
---[[ L["Mr. Smite"] = ""--]] 
+L["Mr. Bigglesworth"] = "畢勾沃斯先生"
+L["Mr. Smite"] = "重拳先生"
+L["Muddy Churning Waters"] = "混濁的水"
 L["Murd Doc <S.A.F.E.>"] = "哮·狼的護腿 <S.A.F.E.>"
---[[Translation missing --]]
---[[ L["Mutanus the Devourer"] = ""--]] 
+L["Murta Grimgut"] = "莫爾塔"
+L["Mutanus the Devourer"] = "『吞噬者』穆坦努斯"
 L["Muyoh <Disciple of Naralex>"] = "繆幽 <納拉雷克斯的侍徒>"
 L["Nalpak <Disciple of Naralex>"] = "納爾派克 <納拉雷克斯的侍徒>"
+L["Namdo Bizzfizzle <Engineering Supplies>"] = "納姆杜"
 L["Naralex"] = "納拉雷克斯"
---[[Translation missing --]]
---[[ L["Nefarian"] = ""--]] 
---[[Translation missing --]]
---[[ L["Nekrum Gutchewer"] = ""--]] 
---[[Translation missing --]]
---[[ L["Nerub'enkan"] = ""--]] 
---[[Translation missing --]]
---[[ L["Noth the Plaguebringer"] = ""--]] 
---[[Translation missing --]]
---[[ L["Noxxion"] = ""--]] 
+L["Nefarian"] = "奈法利安"
+L["Nekrum Gutchewer"] = "耐克魯姆"
+L["Nerub'enkan"] = "奈幽布恩坎"
+L["Noth the Plaguebringer"] = "『瘟疫使者』諾斯"
+L["Noxxion"] = "諾克賽恩"
 L["Nurse Lillian"] = "護士莉蓮"
---[[Translation missing --]]
---[[ L["Obsidian Sentinel"] = ""--]] 
---[[Translation missing --]]
---[[ L["Odo the Blindwatcher"] = ""--]] 
---[[Translation missing --]]
---[[ L["Oggleflint"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ogom the Wretched"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ok'thor the Breaker"] = ""--]] 
---[[Translation missing --]]
---[[ L["Olaf"] = ""--]] 
+L["Obsidian Sentinel"] = "黑曜石哨兵"
+L["Odo the Blindwatcher"] = "『盲眼守衛』奧杜"
+L["Oggleflint"] = "奧格弗林特"
+L["Ogom the Wretched"] = "可悲的奧戈姆"
+L["Ohgan"] = "奧根"
+L["Ok'thor the Breaker"] = "『破壞者』奧科索爾"
+L["Olaf"] = "奧拉夫"
 L["Old Ironbark"] = "埃隆巴克"
---[[Translation missing --]]
---[[ L["Old Serra'kis"] = ""--]] 
+L["Old Serra'kis"] = "瑟拉吉斯"
+L["Old Treasure Chest"] = "舊寶藏箱"
 L["Olga Runesworn <Explorer's League>"] = "歐嘉·符誓 <探險者協會>"
---[[Translation missing --]]
---[[ L["Onyxia"] = ""--]] 
---[[Translation missing --]]
---[[ L["Onyxian Warders"] = ""--]] 
+L["Onyxia"] = "奧妮克希亞"
+L["Onyxian Warders"] = "奧妮克希亞守衛"
 L["Oralius <Morgan's Militia>"] = "奧拉留斯 <摩根的民兵>"
---[[Translation missing --]]
---[[ L["Orb of Command"] = ""--]] 
+L["Orb of Command"] = "命令寶珠"
 L["Orb of Domination"] = "統禦寶珠"
---[[Translation missing --]]
---[[ L["Ossirian the Unscarred"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ouro"] = ""--]] 
---[[Translation missing --]]
---[[ L["Overlord Ramtusk"] = ""--]] 
---[[Translation missing --]]
---[[ L["Overlord Wyrmthalak"] = ""--]] 
---[[Translation missing --]]
---[[ L["Overmaster Pyron"] = ""--]] 
+L["Oro Eyegouge"] = "奧羅"
+L["Ossirian the Unscarred"] = "『無疤者』奧斯里安"
+L["Ouro"] = "奧羅"
+L["Overlord Ramtusk"] = "拉姆塔斯主宰"
+L["Overlord Wyrmthalak"] = "維姆薩拉克主宰"
+L["Overmaster Pyron"] = "征服者派隆"
 L["Packmaster Stonebruiser <Brotherhood of the Light>"] = "軍需籌備官石漢 <聖光兄弟會>"
---[[Translation missing --]]
---[[ L["Panzor the Invincible"] = ""--]] 
---[[Translation missing --]]
---[[ L["Patchwerk"] = ""--]] 
---[[Translation missing --]]
---[[ L["Phalanx"] = ""--]] 
---[[Translation missing --]]
---[[ L["Plague Wing"] = ""--]] 
---[[Translation missing --]]
---[[ L["Plaguemaw the Rotting"] = ""--]] 
---[[Translation missing --]]
---[[ L["Plugger Spazzring"] = ""--]] 
---[[Translation missing --]]
---[[ L["Postmaster Malown"] = ""--]] 
+L["Panzor the Invincible"] = "無敵的潘佐爾"
+L["Patchwerk"] = "縫補者"
+L["Phalanx"] = "法拉克斯"
+L["Pimgib"] = "匹姆吉布"
+L["Plague Wing"] = "瘟疫區"
+L["Plaguemaw the Rotting"] = "腐爛的普雷莫爾"
+L["Plugger Spazzring"] = "普拉格"
+L["Postmaster Malown"] = "郵差瑪羅恩"
 L["Priestess Udum'bra"] = "女祭師烏丹姆布拉"
---[[Translation missing --]]
---[[ L["Prince Tortheldrin"] = ""--]] 
---[[Translation missing --]]
---[[ L["Princess Huhuran"] = ""--]] 
---[[Translation missing --]]
---[[ L["Princess Moira Bronzebeard"] = ""--]] 
---[[Translation missing --]]
---[[ L["Princess Theradras"] = ""--]] 
+L["Prince Tortheldrin"] = "托塞德林王子"
+L["Princess Huhuran"] = "哈霍蘭公主"
+L["Princess Moira Bronzebeard"] = "茉艾拉·銅鬚公主"
+L["Princess Theradras"] = "瑟萊德絲公主"
+L["Princess Yauj"] = "亞爾基公主"
 L["Private Rocknot"] = "羅克諾特下士"
 L["Prospector Seymour <Morgan's Militia>"] = "勘查員希摩爾 <摩根的民兵>"
---[[Translation missing --]]
---[[ L["Pusillin"] = ""--]] 
+L["Pusillin"] = "普希林"
 L["Pylons"] = "水晶塔"
---[[Translation missing --]]
---[[ L["Pyroguard Emberseer"] = ""--]] 
---[[Translation missing --]]
---[[ L["Pyromancer Loregrain"] = ""--]] 
---[[Translation missing --]]
---[[ L["Quartermaster Zigris"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ragglesnout"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ragnaros"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ramstein the Gorger"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ras Frostwhisper"] = ""--]] 
---[[Translation missing --]]
---[[ L["Rattlegore"] = ""--]] 
+L["Pyroguard Emberseer"] = "烈焰衛士艾博希爾"
+L["Pyromancer Loregrain"] = "控火師羅格雷恩"
+L["Quartermaster Zigris"] = "軍需官茲格雷斯"
+L["Ragglesnout"] = "拉戈斯諾特"
+L["Ragnaros"] = "拉格納羅斯"
+L["Ramstein the Gorger"] = "『暴食者』拉姆斯登"
+L["Ras Frostwhisper"] = "萊斯·霜語"
+L["Rattlegore"] = "血骨傀儡"
 L["Raven"] = "拉文"
 L["Razal'blade <Kargath Expeditionary Force>"] = "拉札布雷德 <卡加斯遠征軍>"
---[[Translation missing --]]
---[[ L["Razorclaw the Butcher"] = ""--]] 
---[[Translation missing --]]
---[[ L["Razorgore the Untamed"] = ""--]] 
---[[Translation missing --]]
---[[ L["Razorlash"] = ""--]] 
---[[Translation missing --]]
---[[ L["Remains of a Paladin"] = ""--]] 
---[[Translation missing --]]
---[[ L["Rethilgore"] = ""--]] 
---[[Translation missing --]]
---[[ L["Revelosh"] = ""--]] 
+L["Razorclaw the Butcher"] = "屠夫拉佐克勞"
+L["Razorgore the Untamed"] = "狂野的拉佐格爾"
+L["Razorlash"] = "銳刺鞭笞者"
+L["Remains of a Paladin"] = "聖騎士的遺體"
+L["Renataki"] = "雷納塔基"
+L["Rethilgore"] = "雷希戈爾"
+L["Revelosh"] = "魯維羅什"
 L["RFC"] = "RFC/怒焰"
 L["RFD"] = "RFD"
 L["RFK"] = "RFK"
---[[Translation missing --]]
---[[ L["Rhahk'Zor"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ribbly Screwspigot"] = ""--]] 
+L["Rhahk'Zor"] = "拉克佐"
+L["Ribbly Screwspigot"] = "雷布里·斯庫比格特"
 L["Rifle Commander Coe"] = "步槍指揮官寇伊"
---[[Translation missing --]]
---[[ L["Ring of Law"] = ""--]] 
---[[Translation missing --]]
---[[ L["Roogug"] = ""--]] 
---[[Translation missing --]]
---[[ L["Rotfang"] = ""--]] 
---[[Translation missing --]]
---[[ L["Rotgrip"] = ""--]] 
+L["Ring of Law"] = "秩序競技場"
+L["Roogug"] = "魯古格"
+L["Rotfang"] = "腐牙"
+L["Rotgrip"] = "洛特格里普"
 L["Roughshod Pike"] = "尖銳長矛"
---[[Translation missing --]]
---[[ L["Ruuzlu"] = ""--]] 
+L["Ruuzlu"] = "盧茲魯"
 L["Safe Room"] = "安全的空間"
---[[Translation missing --]]
---[[ L["Sandarr Dunereaver"] = ""--]] 
---[[Translation missing --]]
---[[ L["Sapphiron"] = ""--]] 
---[[Translation missing --]]
---[[ L["Scarlet Commander Mograine"] = ""--]] 
---[[Translation missing --]]
---[[ L["Scarshield Quartermaster <Scarshield Legion>"] = ""--]] 
+L["Sandarr Dunereaver"] = "杉達爾·沙掠者"
+L["Sandfury Executioner"] = "沙怒劊子手"
+L["Sapphiron"] = "薩菲隆"
+L["Scarlet Commander Mograine"] = "血色十字軍指揮官莫格萊尼"
+L["Scarshield Quartermaster <Scarshield Legion>"] = "裂盾軍需官"
 L["Schematic: Field Repair Bot 74A"] = "結構圖:戰地修理機器人74A型"
---[[Translation missing --]]
---[[ L["Scholo"] = ""--]] 
+L["Scholo"] = "通靈"
 L["Scout Cage"] = "斥侯牢籠"
---[[Translation missing --]]
---[[ L["Secret Chest"] = ""--]] 
+L["Secret Chest"] = "舊寶藏箱"
 L["Sentinel Aluwyn"] = "哨兵阿露溫"
---[[Translation missing --]]
---[[ L["Sergeant Bly"] = ""--]] 
---[[Translation missing --]]
---[[ L["SFK"] = ""--]] 
---[[Translation missing --]]
---[[ L["Shade of Eranikus"] = ""--]] 
---[[Translation missing --]]
---[[ L["Shadow Charger"] = ""--]] 
---[[Translation missing --]]
---[[ L["Shadow Hunter Vosh'gajin"] = ""--]] 
+L["Sergeant Bly"] = "布萊中士"
+L["SFK"] = "影牙"
+L["Shade of Eranikus"] = "伊蘭尼庫斯的陰影"
+L["Shadow Charger"] = "暗影軍馬"
+L["Shadow Hunter Vosh'gajin"] = "暗影獵手沃許加斯"
 L["Shadowforge Brazier"] = "暗爐火盆"
---[[Translation missing --]]
---[[ L["Shadowforge Cache"] = ""--]] 
---[[Translation missing --]]
---[[ L["Shadowpriest Sezz'ziz"] = ""--]] 
---[[Translation missing --]]
---[[ L["Shazzrah"] = ""--]] 
+L["Shadowforge Cache"] = "暗影熔爐地窖"
+L["Shadowpriest Sezz'ziz"] = "暗影祭司塞瑟斯"
+L["Shazzrah"] = "沙斯拉爾"
 L["Shen'dralar Ancient"] = "辛德拉古靈"
 L["Shen'dralar Provisioner"] = "辛德拉聖職者"
 L["Shen'dralar Watcher"] = "辛德拉看守者"
---[[Translation missing --]]
---[[ L["Side"] = ""--]] 
---[[Translation missing --]]
---[[ L["Sir Zeliek"] = ""--]] 
---[[Translation missing --]]
---[[ L["Sixth Mosh'aru Tablet"] = ""--]] 
---[[Translation missing --]]
---[[ L["Skeletal Remains of Kariel Winthalus"] = ""--]] 
---[[Translation missing --]]
---[[ L["Skul"] = ""--]] 
---[[Translation missing --]]
---[[ L["Skum"] = ""--]] 
---[[Translation missing --]]
---[[ L["SM"] = ""--]] 
---[[Translation missing --]]
---[[ L["Sneed"] = ""--]] 
---[[Translation missing --]]
---[[ L["Sneed's Shredder"] = ""--]] 
---[[Translation missing --]]
---[[ L["Sorcerer Ashcrombe"] = ""--]] 
---[[Translation missing --]]
---[[ L["Sothos"] = ""--]] 
---[[Translation missing --]]
---[[ L["Spawn of Hakkar"] = ""--]] 
---[[Translation missing --]]
---[[ L["Spider Wing"] = ""--]] 
---[[Translation missing --]]
---[[ L["Spirestone Lord Magus"] = ""--]] 
+L["Side"] = "側"
+L["Sir Zeliek"] = "札里克爵士"
+L["Sixth Mosh'aru Tablet"] = "第六塊摩沙魯石板"
+L["Skeletal Remains of Kariel Winthalus"] = "卡里爾·溫薩魯斯的骸骨"
+L["Skul"] = "斯庫爾"
+L["Skum"] = "斯卡姆"
+L["SM"] = "血色修道院"
+L["Sneed"] = "斯尼德"
+L["Sneed's Shredder"] = "斯尼德的伐木機"
+L["Solakar Flamewreath"] = "索拉卡·火冠"
+L["Sorcerer Ashcrombe"] = "巫士阿克魯比"
+L["Sothos"] = "索索斯"
+L["Spawn of Hakkar"] = "哈卡的後代"
+L["Spider Wing"] = "蜘蛛區"
+L["Spirestone Battle Lord"] = "尖石戰鬥統帥"
+L["Spirestone Butcher"] = "尖石屠夫"
+L["Spirestone Lord Magus"] = "尖石首席魔導師"
 L["Spirit of Agamaggan <Ancient>"] = "阿迦瑪甘之靈 <先祖>"
 L["Spoils of Blackfathom"] = "黑澗之寶"
+L["Sprok <Away Team>"] = "斯普洛克"
 L["ST"] = "ST/神廟"
---[[Translation missing --]]
---[[ L["Stairway"] = ""--]] 
---[[Translation missing --]]
---[[ L["Statue Activation Order"] = ""--]] 
+L["Stairway"] = "樓梯"
+L["Statue Activation Order"] = "雕像激活順序"
 L["Stocks"] = "監獄"
---[[Translation missing --]]
---[[ L["Stomper Kreeg"] = ""--]] 
+L["Stomper Kreeg"] = "踐踏者克雷格"
 L["Stonemaul Ogre"] = "石槌巨魔"
---[[Translation missing --]]
---[[ L["Stonespine"] = ""--]] 
+L["Stonespine"] = "石脊"
 L["Strat"] = "Strat/斯坦"
 L["Stratholme Courier"] = "斯坦索姆信差"
---[[Translation missing --]]
---[[ L["Sulfuron Harbinger"] = ""--]] 
---[[Translation missing --]]
---[[ L["Summoner's Tomb"] = ""--]] 
---[[Translation missing --]]
---[[ L["Tablet of Ryun'Eh"] = ""--]] 
---[[Translation missing --]]
---[[ L["Tablet of Will"] = ""--]] 
---[[Translation missing --]]
---[[ L["Taragaman the Hungerer"] = ""--]] 
---[[Translation missing --]]
---[[ L["Targorr the Dread"] = ""--]] 
---[[Translation missing --]]
---[[ L["Tendris Warpwood"] = ""--]] 
---[[Translation missing --]]
---[[ L["Thaddius"] = ""--]] 
+L["Sulfuron Harbinger"] = "薩弗隆先驅者"
+L["Summoner's Tomb"] = "召喚師之墓"
+L["Tablet of Ryun'Eh"] = "雷烏納石板"
+L["Tablet of Will"] = "意志石板"
+L["Taragaman the Hungerer"] = "『飢餓者』塔拉加曼"
+L["Targorr the Dread"] = "可怕的塔高爾"
+L["Techbot"] = "尖端機器人"
+L["Tendris Warpwood"] = "特迪斯·扭木"
+L["Thaddius"] = "泰迪斯"
 L["Thal'trak Proudtusk <Kargath Expeditionary Force>"] = "薩特拉克·長齒 <卡加斯遠征軍>"
---[[Translation missing --]]
---[[ L["Thane Korth'azz"] = ""--]] 
---[[Translation missing --]]
---[[ L["The Beast"] = ""--]] 
---[[Translation missing --]]
---[[ L["The Behemoth"] = ""--]] 
+L["Thane Korth'azz"] = "寇斯艾茲族長"
+L["The Beast"] = "比斯巨獸"
+L["The Behemoth"] = "貝哈默斯"
 L["The Black Anvil"] = "黑鐵砧"
 L["The Black Forge"] = "黑熔爐"
---[[Translation missing --]]
---[[ L["The Deed to Brill"] = ""--]] 
---[[Translation missing --]]
---[[ L["The Deed to Caer Darrow"] = ""--]] 
---[[Translation missing --]]
---[[ L["The Deed to Southshore"] = ""--]] 
---[[Translation missing --]]
---[[ L["The Deed to Tarren Mill"] = ""--]] 
+L["The Bug Family"] = "蟲族"
+L["The Deed to Brill"] = "布瑞爾地契"
+L["The Deed to Caer Darrow"] = "凱爾達隆地契"
+L["The Deed to Southshore"] = "南海鎮地契"
+L["The Deed to Tarren Mill"] = "塔倫米爾地契"
 L["The Discs of Norgannon"] = "諾甘農圓盤"
---[[Translation missing --]]
---[[ L["The Four Horsemen"] = ""--]] 
---[[Translation missing --]]
---[[ L["The Grim Guzzler"] = ""--]] 
---[[Translation missing --]]
---[[ L["The Lyceum"] = ""--]] 
+L["The Four Horsemen"] = "四騎士"
+L["The Grim Guzzler"] = "黑鐵酒吧"
+L["The Lyceum"] = "講學廳"
 L["The Nameless Prophet"] = "無名預言者"
---[[Translation missing --]]
---[[ L["The Prophet Skeram"] = ""--]] 
---[[Translation missing --]]
---[[ L["The Ravenian"] = ""--]] 
+L["The Prophet Skeram"] = "預言者斯克拉姆"
+L["The Ravenian"] = "拉文尼亞"
 L["The Shadowforge Lock"] = "暗爐之鎖"
 L["The Sparklematic 5200"] = "超級清潔器5200型！"
---[[Translation missing --]]
---[[ L["The Unforgiven"] = ""--]] 
+L["The Twin Emperors"] = "雙子皇帝"
+L["The Unforgiven"] = "不可寬恕者"
 L["The Vault"] = "地窖"
---[[Translation missing --]]
---[[ L["Theka the Martyr"] = ""--]] 
---[[Translation missing --]]
---[[ L["Theldren"] = ""--]] 
+L["Theka the Martyr"] = "『殉教者』塞卡"
+L["Theldren"] = "塞爾德林"
 L["Thunderheart <Kargath Expeditionary Force>"] = "桑德哈特 <卡加斯遠征軍>"
---[[Translation missing --]]
---[[ L["Timmy the Cruel"] = ""--]] 
+L["Timmy the Cruel"] = "悲慘的提米"
 L["Tink Sprocketwhistle <Engineering Supplies>"] = "丁克·鐵哨 <工程學供應商>"
 L["Tinkee Steamboil"] = "丁奇·斯迪波爾"
---[[Translation missing --]]
---[[ L["Tinkerer Gizlock"] = ""--]] 
+L["Tinkerer Gizlock"] = "技工吉茲洛克"
 L["Torben Zapblast <Teleportation Specialist>"] = "托爾班·速轟 <傳送專家>"
---[[Translation missing --]]
---[[ L["Torch Lever"] = ""--]] 
+L["Torch Lever"] = "火炬開關"
 L["Tran'rek"] = "特蘭雷克"
---[[Translation missing --]]
---[[ L["Trigore the Lasher"] = ""--]] 
---[[Translation missing --]]
---[[ L["Troll Minibosses"] = ""--]] 
---[[Translation missing --]]
---[[ L["Tsu'zee"] = ""--]] 
---[[Translation missing --]]
---[[ L["Tuten'kash"] = ""--]] 
---[[Translation missing --]]
---[[ L["Twilight Lord Kelris"] = ""--]] 
---[[Translation missing --]]
---[[ L["UBRS"] = ""--]] 
+L["Transpolyporter"] = "傳送器"
+L["Trigore the Lasher"] = "『鞭笞者』特里高雷"
+L["Troll Minibosses"] = "巨魔小Boss"
+L["Tsu'zee"] = "蘇斯"
+L["Tuten'kash"] = "圖特卡什"
+L["Twilight Lord Kelris"] = "暮光領主克爾里斯"
+L["UBRS"] = "黑石塔上層"
 L["Ulda"] = "Ulda"
---[[Translation missing --]]
---[[ L["Unfired Plate Gauntlets"] = ""--]] 
---[[Translation missing --]]
---[[ L["Urok Doomhowl"] = ""--]] 
+L["Unfired Plate Gauntlets"] = "未淬火的鎧甲護手"
+L["Urok Doomhowl"] = "烏洛克"
 L["Urok's Tribute Pile"] = "烏洛克的貢品堆"
---[[Translation missing --]]
---[[ L["Vaelan"] = ""--]] 
---[[Translation missing --]]
---[[ L["Vaelastrasz the Corrupt"] = ""--]] 
---[[Translation missing --]]
---[[ L["Va'jashni"] = ""--]] 
---[[Translation missing --]]
---[[ L["Varies"] = ""--]] 
---[[Translation missing --]]
---[[ L["Various Postbox Keys"] = ""--]] 
---[[Translation missing --]]
---[[ L["Vectus"] = ""--]] 
---[[Translation missing --]]
---[[ L["Vek'lor"] = ""--]] 
---[[Translation missing --]]
---[[ L["Vek'nilash"] = ""--]] 
---[[Translation missing --]]
---[[ L["Vem"] = ""--]] 
---[[Translation missing --]]
---[[ L["Veng (The Fifth Khan)"] = ""--]] 
---[[Translation missing --]]
---[[ L["Verdan the Everliving"] = ""--]] 
---[[Translation missing --]]
---[[ L["Verek"] = ""--]] 
+L["Vaelan"] = "維埃蘭"
+L["Vaelastrasz the Corrupt"] = "墮落的瓦拉斯塔茲"
+L["Va'jashni"] = "瓦加什尼"
+L["Varies"] = "變化"
+L["Various Postbox Keys"] = "郵箱鑰匙"
+L["VC"] = "VC/死礦"
+L["Vectus"] = "維克圖斯"
+L["Vek'lor"] = "維克洛爾大帝"
+L["Vek'nilash"] = "維克尼拉斯大帝"
+L["Vem"] = "維姆"
+L["Veng (The Fifth Khan)"] = "溫格 <第五可汗>"
+L["Veng <The Fifth Khan>"] = "溫格 <第五可汗>"
+L["Verdan the Everliving"] = "永生的沃爾丹"
+L["Verek"] = "維雷克"
 L["Vethsera <Brood of Ysera>"] = "溫瑟拉 <伊瑟拉的後裔>"
---[[Translation missing --]]
---[[ L["Viscidus"] = ""--]] 
---[[Translation missing --]]
---[[ L["Viscous Fallout"] = ""--]] 
---[[Translation missing --]]
---[[ L["Vorrel Sengutz"] = ""--]] 
---[[Translation missing --]]
---[[ L["Walkway"] = ""--]] 
---[[Translation missing --]]
---[[ L["War Master Voone"] = ""--]] 
---[[Translation missing --]]
---[[ L["Warchief Rend Blackhand"] = ""--]] 
+L["Viscidus"] = "維希度斯"
+L["Viscous Fallout"] = "粘性輻射塵"
+L["Vorrel Sengutz"] = "沃瑞爾·森古斯"
+L["Walkway"] = "人行道"
+L["War Master Voone"] = "指揮官沃恩"
+L["Warchief Rend Blackhand"] = "大酋長雷德·黑手"
 L["Warden Thelwater"] = "典獄官塞爾沃特"
---[[Translation missing --]]
---[[ L["Warder Stilgiss"] = ""--]] 
+L["Warder Stilgiss"] = "守衛斯迪爾基斯"
 L["Warlord Goretooth <Kargath Expeditionary Force>"] = "督軍高圖斯 <卡加斯遠征軍>"
---[[Translation missing --]]
---[[ L["Warosh"] = ""--]] 
+L["Warosh"] = "瓦羅什"
 L["Watchman Doomgrip"] = "衛兵杜格瑞普"
 L["WC"] = "WC/哀嚎"
---[[Translation missing --]]
---[[ L["Weaver"] = ""--]] 
+L["Weaver"] = "德拉維沃爾"
 L["Weegli Blastfuse"] = "維格利"
---[[Translation missing --]]
---[[ L["Whelp Eggs"] = ""--]] 
---[[Translation missing --]]
---[[ L["Willix the Importer"] = ""--]] 
---[[Translation missing --]]
---[[ L["Witch Doctor Zum'rah"] = ""--]] 
---[[Translation missing --]]
---[[ L["Wolf Master Nandos"] = ""--]] 
---[[Translation missing --]]
---[[ L["Yauj"] = ""--]] 
---[[Translation missing --]]
---[[ L["Ysida Harmon"] = ""--]] 
+L["Whelp Eggs"] = "雛龍蛋"
+L["Willix the Importer"] = "進口商威利克斯"
+L["Witch Doctor Zum'rah"] = "巫醫·祖穆拉恩"
+L["Wolf Master Nandos"] = "狼王南杜斯"
+L["Wushoolay"] = "烏蘇雷"
+L["Yauj"] = "亞爾基公主"
+L["Ysida Harmon"] = "亞希達·哈莫"
 L["Yuka Screwspigot <Engineering Supplies>"] = "尤卡·斯庫比格特 <工程學供應商>"
---[[Translation missing --]]
---[[ L["Zekkis"] = ""--]] 
---[[Translation missing --]]
---[[ L["Zerillis"] = ""--]] 
---[[Translation missing --]]
---[[ L["Zevrim Thornhoof"] = ""--]] 
+L["Zanza the Restless"] = "無眠者贊札"
+L["Zealot Lor'Khan"] = "狂熱者洛卡恩"
+L["Zealot Zath"] = "狂熱者札斯"
+L["Zekkis"] = "澤基斯"
+L["Zerillis"] = "澤雷利斯"
+L["Zevrim Thornhoof"] = "瑟雷姆·刺蹄"
 L["Zeya"] = "仄亞"
 L["ZF"] = "ZF/祖法"
---[[Translation missing --]]
---[[ L["Zul'Farrak Dead Hero"] = ""--]] 
+L["Zul'Farrak Dead Hero"] = "祖爾法拉克陣亡英雄"
 
 
 end

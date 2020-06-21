@@ -1,27 +1,25 @@
 local AceLocale = LibStub ("AceLocale-3.0")
 local Loc = AceLocale:GetLocale ("Details_Threat")
 
-local _GetNumSubgroupMembers = GetNumSubgroupMembers --> wow api
-local _GetNumGroupMembers = GetNumGroupMembers --> wow api
-local _UnitIsFriend = UnitIsFriend --> wow api
-local _UnitName = UnitName --> wow api
---local _UnitDetailedThreatSituation = UnitDetailedThreatSituation
-local _IsInRaid = IsInRaid --> wow api
-local _IsInGroup = IsInGroup --> wow api
---local _UnitGroupRolesAssigned = DetailsFramework.UnitGroupRolesAssigned --> wow api
-local GetUnitName = GetUnitName
+local _GetNumSubgroupMembers = _G.GetNumSubgroupMembers --> wow api
+local _GetNumGroupMembers = _G.GetNumGroupMembers --> wow api
+local _UnitIsFriend = _G.UnitIsFriend --> wow api
+local _UnitName = _G.UnitName --> wow api
+local UnitDetailedThreatSituation = _G.UnitDetailedThreatSituation
+local _IsInRaid = _G.IsInRaid --> wow api
+local _IsInGroup = _G.IsInGroup --> wow api
+local CheckInteractDistance = _G.CheckInteractDistance
+local GetUnitName = _G.GetUnitName
 
 local ANIMATION_TIME_DILATATION = 1.005321
 
-local _UnitGroupRolesAssigned = function (unitId) 
+local _UnitGroupRolesAssigned = function (unitId)
 	if (type (unitId) == "string") then
 		local guid = UnitGUID (unitId)
 		if (guid) then
 			local playerSpec = Details.cached_specs [guid]
 			if (playerSpec) then
-				
 				local role = Details:GetRoleFromSpec (playerSpec, guid) or "NONE"
-				--print ("tt:24", "playerSpec", playerSpec, "role", role)
 				return role
 			end
 		end
@@ -46,19 +44,19 @@ local ThreatMeterFrame = ThreatMeter.Frame
 
 ThreatMeter:SetPluginDescription ("Small tool for track the threat you and other raid members have in your current target.")
 
---threat stuff from: https://github.com/EsreverWoW/ClassicThreatMeter by EsreverWoW
---EsreverWoW is MIA at the moment
---local ThreatLib = LibStub:GetLibrary ("ThreatClassic-1.0")
-
 --threat stuff from: https://github.com/dfherr/LibThreatClassic2 by dfherr
 local ThreatLib = LibStub:GetLibrary("LibThreatClassic2")
 
-local _UnitThreatSituation = function (unit, mob)
+local _UnitThreatSituation = function (unit, mob) --not in use
     return ThreatLib:UnitThreatSituation (unit, mob)
 end
 
-local _UnitDetailedThreatSituation = function (unit, mob)
-    return ThreatLib:UnitDetailedThreatSituation (unit, mob)
+local _UnitDetailedThreatSituation = function(unit, mob)
+	if (UnitDetailedThreatSituation) then
+		return UnitDetailedThreatSituation(unit, mob)
+	else
+		return ThreatLib:UnitDetailedThreatSituation(unit, mob)
+	end
 end
 
 --[=
@@ -103,6 +101,11 @@ local function CreatePluginFrames (data)
 	--> window reference
 	local instance
 	local player
+
+	local optionsLabel = DetailsFrameWork:CreateLabel(ThreatMeterFrame, "/tt ot /tinythreat for options")
+	optionsLabel:SetPoint("bottomleft", ThreatMeterFrame, "bottomleft", 1, 1)
+	optionsLabel:Hide()
+	ThreatMeter.optionsLabel = optionsLabel
 	
 	--> OnEvent Table
 	--when an event happens on Details and it triggers a callback on registered details events on this plugin
@@ -115,7 +118,7 @@ local function CreatePluginFrames (data)
 			ThreatMeter.Actived = false
 			ThreatMeter:Cancel()
 		
-		--the window hosting tiny threat is shown is shown
+		--the window hosting tiny threat is shown
 		elseif (event == "SHOW") then
 		
 			instance = ThreatMeter:GetInstance (ThreatMeter.instance_id)
@@ -138,6 +141,12 @@ local function CreatePluginFrames (data)
 				end
 				ThreatMeter.Actived = true
 				ThreatMeter:Start()
+			end
+
+			if(ThreatMeter.options) then
+				if (not ThreatMeter.options.openedfromcommand) then
+					optionsLabel:Show()
+				end
 			end
 		
 		elseif (event == "COMBAT_PLAYER_ENTER") then
@@ -226,7 +235,6 @@ local function CreatePluginFrames (data)
 		if (windowInstance and windowInstance.menu_attribute_string) then
 			if (not newTitle) then
 				windowInstance.menu_attribute_string.text = "Tiny Threat"
-
 			else
 				windowInstance.menu_attribute_string:SetTextTruncated (newTitle, windowInstance.baseframe:GetWidth() - 60)
 			end
@@ -438,7 +446,7 @@ local function CreatePluginFrames (data)
 						return
 					end
 				
-					local isTanking, status, threatpct, rawthreatpct, threatvalue = ThreatLib:UnitDetailedThreatSituation ("party"..i, "target")
+					local isTanking, status, threatpct, rawthreatpct, threatvalue = _UnitDetailedThreatSituation ("party"..i, "target")
 					--returns nil, 0, nil, nil, 0
 					--	print (isTanking, status, threatpct, rawthreatpct, threatvalue)
 
@@ -576,28 +584,37 @@ local function CreatePluginFrames (data)
 				return
 			end
 			
+--------------------------------------------------------------------------------------------------------------
+--> update the window
+
 			local lastIndex = 0
 			local shownMe = false
 			
 			local pullRow = ThreatMeter.ShownRows [1]
 			local me = ThreatMeter.player_list_indexes [ ThreatMeter.player_list_hash [player] ]
+
+			--adjust the pull aggro bar
 			if (me) then
-			
 				local myThreat = me [6] or 0
 				local myRole = me [4]
 				
+				--get the actor with more threat
 				local topThreat = ThreatMeter.player_list_indexes [1]
+				--check if is a melee aggro
 				local aggro = topThreat [6] * (CheckInteractDistance ("target", 3) and 1.1 or 1.3)
 				
-				pullRow:SetLeftText ("Pull Aggro At")
+				pullRow:SetLeftText ("Pull Aggro At") --localize-me
 				local realPercent = _math_floor (aggro / max (topThreat [6], 0.01) * 100)
 				pullRow:SetRightText ("+" .. ThreatMeter:ToK2 (aggro - myThreat) .. " (" .. _math_floor (_math_abs ((myThreat / aggro * 100) - realPercent)) .. "%)") --
 				pullRow:SetValue (100)
 				
 				local myPercentToAggro = myThreat / aggro * 100
 				
+				--set the bar color
 				local r, g = ThreatMeter:percent_color (myPercentToAggro)
 				pullRow:SetColor (r, g, 0)
+
+				--set the bar icon
 				pullRow._icon:SetTexture ([[Interface\PVPFrame\Icon-Combat]])
 				pullRow._icon:SetTexCoord (0, 1, 0, 1)
 				
@@ -608,20 +625,28 @@ local function CreatePluginFrames (data)
 				end
 			end
 			
+			--update all shown bars
 			for index = 2, #ThreatMeter.ShownRows do
 				local thisRow = ThreatMeter.ShownRows [index]
 				local threat_actor = ThreatMeter.player_list_indexes [index-1]
 				
 				if (threat_actor) then
+					--set the role icon
 					local role = threat_actor [4]
 					thisRow._icon:SetTexCoord (_unpack (RoleIconCoord [role]))
 					
+					--set the text for actor name
 					thisRow:SetLeftText (ThreatMeter:GetOnlyName (threat_actor [1]))
 					
+					--set the text for threat
 					local oldPct = thisRow:GetValue() or 0
 					local pct = threat_actor [2]
-					
-					thisRow:SetRightText (ThreatMeter:ToK2 (threat_actor [6]) .. " (" .. _cstr ("%.1f", pct) .. "%)")
+
+					if (options.showamount) then
+						thisRow:SetRightText (ThreatMeter:ToK2 (threat_actor [6]) .. " (" .. _cstr ("%.1f", pct) .. "%)")
+					else
+						thisRow:SetRightText (_cstr ("%.1f", pct) .. "%")
+					end
 
 					--do healthbar animation ~animation ~healthbar
 						thisRow.CurrentPercentMax = 100
@@ -629,21 +654,19 @@ local function CreatePluginFrames (data)
 						thisRow.AnimationEnd = pct
 
 						thisRow:SetValue (oldPct)
-						
-						thisRow.IsAnimating = true
-						
-						if (thisRow.AnimationEnd > thisRow.AnimationStart) then
-							thisRow.AnimateFunc = ThreatMeter.AnimateRightWithAccel
-						else
-							thisRow.AnimateFunc = ThreatMeter.AnimateLeftWithAccel
+						if (options.animate) then
+							thisRow.IsAnimating = true
+							if (thisRow.AnimationEnd > thisRow.AnimationStart) then
+								thisRow.AnimateFunc = ThreatMeter.AnimateRightWithAccel
+							else
+								thisRow.AnimateFunc = ThreatMeter.AnimateLeftWithAccel
+							end
 						end
 
-					--if no animations
-					--thisRow:SetValue (pct)
-					
+					--set the bar color
 					if (options.useplayercolor and threat_actor [1] == player) then
 						thisRow:SetColor (_unpack (options.playercolor))
-						
+
 					elseif (options.useclasscolors) then
 						local color = RAID_CLASS_COLORS [threat_actor [5]]
 						if (color) then
@@ -681,7 +704,13 @@ local function CreatePluginFrames (data)
 						--thisRow.textleft:SetTextColor (unpack (RAID_CLASS_COLORS [threat_actor [5]]))
 						local role = threat_actor [4]
 						thisRow._icon:SetTexCoord (_unpack (RoleIconCoord [role]))
-						thisRow:SetRightText (ThreatMeter:ToK2 (threat_actor [6]) .. " (" .. _cstr ("%.1f", threat_actor [2]) .. "%)")
+
+						if (options.showamount) then
+							thisRow:SetRightText (ThreatMeter:ToK2 (threat_actor [6]) .. " (" .. _cstr ("%.1f", threat_actor [2]) .. "%)")
+						else
+							thisRow:SetRightText (_cstr ("%.1f", threat_actor [2]) .. "%")
+						end
+
 						thisRow:SetValue (threat_actor [2])
 						
 						if (options.useplayercolor) then
@@ -820,6 +849,13 @@ local build_options_panel = function()
 
 	local menu = {
 		{
+			type = "toggle",
+			get = function() return ThreatMeter.saveddata.animate end,
+			set = function (self, fixedparam, value) ThreatMeter.saveddata.animate = value end,
+			desc = "Is the bars do animations",
+			name = "Do Animations"
+		},
+		{
 			type = "range",
 			get = function() return ThreatMeter.saveddata.updatespeed end,
 			set = function (self, fixedparam, value) ThreatMeter.saveddata.updatespeed = value end,
@@ -830,6 +866,14 @@ local build_options_panel = function()
 			name = "Update Speed",
 			usedecimals = true,
 		},
+		{
+			type = "toggle",
+			get = function() return ThreatMeter.saveddata.showamount end,
+			set = function (self, fixedparam, value) ThreatMeter.saveddata.showamount = value end,
+			desc = "If enabled shows the amount of threat each player has.",
+			name = "Show Amount of Threat"
+		},
+
 		{
 			type = "toggle",
 			get = function() return ThreatMeter.saveddata.useplayercolor end,
@@ -845,7 +889,7 @@ local build_options_panel = function()
 				current[1], current[2], current[3], current[4] = r, g, b, a
 			end,
 			desc = "If Player Color is enabled, your bar have this color.",
-			name = "Color"
+			name = "Player Color"
 		},
 		{
 			type = "toggle",
@@ -856,7 +900,14 @@ local build_options_panel = function()
 		},
 	}
 	
-	_detalhes.gump:BuildMenu (options_frame, menu, 15, -65, 260)
+
+	local options_text_template = _G.DetailsFramework:GetTemplate ("font", "OPTIONS_FONT_TEMPLATE")
+	local options_dropdown_template = _G.DetailsFramework:GetTemplate ("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
+	local options_switch_template = _G.DetailsFramework:GetTemplate ("switch", "OPTIONS_CHECKBOX_TEMPLATE")
+	local options_slider_template = _G.DetailsFramework:GetTemplate ("slider", "OPTIONS_SLIDER_TEMPLATE")
+	local options_button_template = _G.DetailsFramework:GetTemplate ("button", "OPTIONS_BUTTON_TEMPLATE")
+
+	_detalhes.gump:BuildMenu (options_frame, menu, 15, -35, 260, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template)
 
 end
 
@@ -869,82 +920,61 @@ end
 
 local loadPlugin = function()
 
-			--> create widgets
-			CreatePluginFrames (data)
+	--> create widgets
+	CreatePluginFrames (data)
 
-			local MINIMAL_DETAILS_VERSION_REQUIRED = 1
-			
-			--> Install
-			local install, saveddata = _G._detalhes:InstallPlugin ("RAID", Loc ["STRING_PLUGIN_NAME"], "Interface\\CHATFRAME\\UI-ChatIcon-D3", ThreatMeter, "DETAILS_PLUGIN_TINY_THREAT", MINIMAL_DETAILS_VERSION_REQUIRED, "Details! Team", "v1.07")
-			if (type (install) == "table" and install.error) then
-				print (install.error)
-			end
-			
-			--> Register needed events
-			_G._detalhes:RegisterEvent (ThreatMeter, "COMBAT_PLAYER_ENTER")
-			_G._detalhes:RegisterEvent (ThreatMeter, "COMBAT_PLAYER_LEAVE")
-			_G._detalhes:RegisterEvent (ThreatMeter, "DETAILS_INSTANCE_ENDRESIZE")
-			_G._detalhes:RegisterEvent (ThreatMeter, "DETAILS_INSTANCE_SIZECHANGED")
-			_G._detalhes:RegisterEvent (ThreatMeter, "DETAILS_INSTANCE_STARTSTRETCH")
-			_G._detalhes:RegisterEvent (ThreatMeter, "DETAILS_INSTANCE_ENDSTRETCH")
-			_G._detalhes:RegisterEvent (ThreatMeter, "DETAILS_OPTIONS_MODIFIED")
-			
-			ThreatMeterFrame:RegisterEvent ("PLAYER_TARGET_CHANGED")
-			ThreatMeterFrame:RegisterEvent ("PLAYER_REGEN_DISABLED")
-			ThreatMeterFrame:RegisterEvent ("PLAYER_REGEN_ENABLED")
-			ThreatMeterFrame:RegisterUnitEvent("UNIT_TARGET", "target")
+	local MINIMAL_DETAILS_VERSION_REQUIRED = 1
+	
+	--> Install
+	local install, saveddata = _G._detalhes:InstallPlugin ("RAID", Loc ["STRING_PLUGIN_NAME"], "Interface\\COMMON\\friendship-FistHuman", ThreatMeter, "DETAILS_PLUGIN_TINY_THREAT", MINIMAL_DETAILS_VERSION_REQUIRED, "Terciob", "v1.08")
+	if (type (install) == "table" and install.error) then
+		print (install.error)
+	end
+	
+	--> Register needed events
+	_G._detalhes:RegisterEvent (ThreatMeter, "COMBAT_PLAYER_ENTER")
+	_G._detalhes:RegisterEvent (ThreatMeter, "COMBAT_PLAYER_LEAVE")
+	_G._detalhes:RegisterEvent (ThreatMeter, "DETAILS_INSTANCE_ENDRESIZE")
+	_G._detalhes:RegisterEvent (ThreatMeter, "DETAILS_INSTANCE_SIZECHANGED")
+	_G._detalhes:RegisterEvent (ThreatMeter, "DETAILS_INSTANCE_STARTSTRETCH")
+	_G._detalhes:RegisterEvent (ThreatMeter, "DETAILS_INSTANCE_ENDSTRETCH")
+	_G._detalhes:RegisterEvent (ThreatMeter, "DETAILS_OPTIONS_MODIFIED")
+	
+	ThreatMeterFrame:RegisterEvent ("PLAYER_TARGET_CHANGED")
+	ThreatMeterFrame:RegisterEvent ("PLAYER_REGEN_DISABLED")
+	ThreatMeterFrame:RegisterEvent ("PLAYER_REGEN_ENABLED")
+	ThreatMeterFrame:RegisterUnitEvent("UNIT_TARGET", "target")
 
-			--> Saved data
-			ThreatMeter.saveddata = saveddata or {}
-			
-			ThreatMeter.saveddata.updatespeed = ThreatMeter.saveddata.updatespeed or 0.25
-			ThreatMeter.saveddata.animate = ThreatMeter.saveddata.animate or false
-			ThreatMeter.saveddata.showamount = ThreatMeter.saveddata.showamount or false
-			ThreatMeter.saveddata.useplayercolor = ThreatMeter.saveddata.useplayercolor or false
-			ThreatMeter.saveddata.playercolor = ThreatMeter.saveddata.playercolor or {1, 1, 1}
-			ThreatMeter.saveddata.useclasscolors = ThreatMeter.saveddata.useclasscolors or false
+	--> default data, plugin too old, isn't using the options table
+	ThreatMeter.saveddata = saveddata or {}
+	
+	ThreatMeter.saveddata.animate = ThreatMeter.saveddata.animate or ThreatMeter.saveddata.animate == nil and true
+	ThreatMeter.saveddata.updatespeed = ThreatMeter.saveddata.updatespeed or 0.25
+	
+	ThreatMeter.saveddata.showamount = ThreatMeter.saveddata.showamount or ThreatMeter.saveddata.showamount == nil and true
 
-			ThreatMeter.options = ThreatMeter.saveddata
+	ThreatMeter.saveddata.useplayercolor = ThreatMeter.saveddata.useplayercolor or false
+	ThreatMeter.saveddata.playercolor = ThreatMeter.saveddata.playercolor or {1, 1, 1}
 
-			ThreatMeter.saveddata.updatespeed = 0.20
-			--ThreatMeter.saveddata.animate = true
-			
-			--> Register slash commands
-			SLASH_DETAILS_TINYTHREAT1, SLASH_DETAILS_TINYTHREAT2 = "/tinythreat", "/tt"
-			
-			function SlashCmdList.DETAILS_TINYTHREAT (msg, editbox)
-			
-				local command, rest = msg:match("^(%S*)%s*(.-)$")
-				
-				if (command == Loc ["STRING_SLASH_ANIMATE"]) then
-				
-				elseif (command == Loc ["STRING_SLASH_SPEED"]) then
-				
-					if (rest) then
-						local speed = tonumber (rest)
-						if (speed) then
-							if (speed > 3) then
-								speed = 3
-							elseif (speed < 0.3) then
-								speed = 0.3
-							end
-							
-							ThreatMeter.saveddata.updatespeed = speed
-							ThreatMeter:Msg (Loc ["STRING_SLASH_SPEED_CHANGED"] .. speed)
-						else
-							ThreatMeter:Msg (Loc ["STRING_SLASH_SPEED_CURRENT"] .. ThreatMeter.saveddata.updatespeed)
-						end
-					end
+	ThreatMeter.saveddata.useclasscolors = ThreatMeter.saveddata.useclasscolors or ThreatMeter.saveddata.useclasscolors == nil and true
 
-				elseif (command == Loc ["STRING_SLASH_AMOUNT"]) then
-				
-				else
-					ThreatMeter:Msg (Loc ["STRING_COMMAND_LIST"])
-					print ("|cffffaeae/tinythreat " .. Loc ["STRING_SLASH_SPEED"] .. "|r: " .. Loc ["STRING_SLASH_SPEED_DESC"])
-				
-				end
-			end
-			ThreatMeter.initialized = true
+	--internal
+	ThreatMeter.saveddata.openedfromcommand = ThreatMeter.saveddata.openedfromcommand or false
+
+	ThreatMeter.options = ThreatMeter.saveddata
+
+	--> Register slash commands
+	SLASH_DETAILS_TINYTHREAT1, SLASH_DETAILS_TINYTHREAT2 = "/tinythreat", "/tt"
+	
+	function SlashCmdList.DETAILS_TINYTHREAT (msg, editbox)
+		ThreatMeter.OpenOptionsPanel()
+		ThreatMeter.saveddata.openedfromcommand = true
+		if (ThreatMeter.optionsLabel) then
+			ThreatMeter.optionsLabel:Hide()
+		end
+	end
+
+	ThreatMeter.initialized = true
 end
 
 function ThreatMeter:OnEvent (_, event, ...)

@@ -4961,14 +4961,17 @@ function DF:CreateTitleBar (f, titleText)
 	titleBar:SetBackdropBorderColor (0, 0, 0, 1)
 	
 	local closeButton = CreateFrame ("button", titleBar:GetName() and titleBar:GetName() .. "CloseButton" or nil, titleBar)
-	closeButton:SetSize (16, 16)
-	closeButton:SetNormalTexture (DF.folder .. "icons")
-	closeButton:SetHighlightTexture (DF.folder .. "icons")
-	closeButton:SetPushedTexture (DF.folder .. "icons")
-	closeButton:GetNormalTexture():SetTexCoord (0, 16/128, 0, 1)
-	closeButton:GetHighlightTexture():SetTexCoord (0, 16/128, 0, 1)
-	closeButton:GetPushedTexture():SetTexCoord (0, 16/128, 0, 1)
-	closeButton:SetAlpha (0.7)
+	closeButton:SetSize (24, 24)
+
+	closeButton:SetNormalTexture ([[Interface\Buttons\UI-Panel-MinimizeButton-Disabled]])
+	closeButton:SetHighlightTexture ([[Interface\Buttons\UI-Panel-MinimizeButton-Disabled]])
+	closeButton:SetPushedTexture ([[Interface\Buttons\UI-Panel-MinimizeButton-Disabled]])
+
+	--closeButton:GetNormalTexture():SetTexCoord (0, 16/128, 0, 1)
+	--closeButton:GetHighlightTexture():SetTexCoord (0, 16/128, 0, 1)
+	--closeButton:GetPushedTexture():SetTexCoord (0, 16/128, 0, 1)
+
+	closeButton:SetAlpha (0.5)
 	closeButton:SetScript ("OnClick", simple_panel_close_click) --upvalue from this file
 	
 	local titleLabel = titleBar:CreateFontString (titleBar:GetName() and titleBar:GetName() .. "TitleText" or nil, "overlay", "GameFontNormal")
@@ -4976,7 +4979,7 @@ function DF:CreateTitleBar (f, titleText)
 	titleLabel:SetText (titleText or "")
 	
 	--anchors
-	closeButton:SetPoint ("right", titleBar, "right", -2, 0)
+	closeButton:SetPoint ("right", titleBar, "right", 1, 0)
 	titleLabel:SetPoint ("center", titleBar, "center")
 	
 	--members

@@ -1,4 +1,4 @@
--- $Id: EJIntegration.lua 337 2020-01-01 14:49:58Z arith $
+-- $Id: EJIntegration.lua 354 2020-06-20 06:50:50Z arith $
 --[[
 
 	Atlas, a World of Warcraft instance map browser
@@ -60,7 +60,9 @@ end
 -- Syntax 2: Atlas_GetBossName(bossname, encounterID);
 -- Syntax 2: Atlas_GetBossName(bossname, encounterID, creatureIndex);
 -- ------------------------------------------------------------
-function addon:GetBossName(bossname, encounterID, creatureIndex)
+function addon:GetBossName(bossname, encounterID, creatureIndex, moduleName)
+	local LL
+	if (moduleName) then LL = LibStub("AceLocale-3.0"):GetLocale("Atlas_"..moduleName) end
 	if (encounterID and EJ_GetEncounterInfo) then
 		local _, encounter, iconImage
 		if (not creatureIndex) then
@@ -75,17 +77,17 @@ function addon:GetBossName(bossname, encounterID, creatureIndex)
 			if (bossname and BB[bossname]) then
 				bossname = BB[bossname]
 			elseif (bossname and L[bossname]) then
-				bossname = L[bossname]
+				bossname = LL and LL[bossname] or bossname
 			else
 				--bossname = bossname
 			end
 		else
 			bossname = iconImage and format("|T%d:0:2.5|t%s", iconImage, encounter) or encounter
 		end
+	elseif (bossname and L[bossname]) then
+		bossname = LL and LL[bossname] or bossname
 	elseif (bossname and BB[bossname]) then
 		bossname = BB[bossname]
-	elseif (bossname and L[bossname]) then
-		bossname = L[bossname]
 	else
 		--bossname = bossname
 	end

@@ -1,4 +1,4 @@
--- $Id: Atlas-zhTW.lua 337 2020-01-01 14:49:58Z arith $
+-- $Id: Atlas-zhTW.lua 352 2020-06-20 02:49:51Z arith $
 --[[
 
 	Atlas, a World of Warcraft instance map browser
@@ -68,9 +68,12 @@ L["ATLAS_DDL_CONTINENT_DEEPHOLM"] = "地深之源副本"
 L["ATLAS_DDL_CONTINENT_DRAENOR"] = "德拉諾副本"
 L["ATLAS_DDL_CONTINENT_EASTERN"] = "東部王國副本"
 L["ATLAS_DDL_CONTINENT_KALIMDOR"] = "卡林多副本"
+L["ATLAS_DDL_CONTINENT_KULTIRAS"] = "庫爾提拉斯副本"
+L["ATLAS_DDL_CONTINENT_NAZJATAR"] = "納沙塔爾副本"
 L["ATLAS_DDL_CONTINENT_NORTHREND"] = "北裂境副本"
 L["ATLAS_DDL_CONTINENT_OUTLAND"] = "外域副本"
 L["ATLAS_DDL_CONTINENT_PANDARIA"] = "潘達利亞副本"
+L["ATLAS_DDL_CONTINENT_ZANDALAR"] = "贊達拉副本"
 L["ATLAS_DDL_EXPANSION"] = "依資料片分類"
 L["ATLAS_DDL_EXPANSION_BC"] = "燃燒的遠征副本"
 L["ATLAS_DDL_EXPANSION_BFA"] = "決戰艾澤拉斯副本"
