@@ -71,9 +71,9 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20200619203919"),
-	DisplayVersion = "1.13.50", -- the string that is shown as version
-	ReleaseRevision = releaseDate(2020, 6, 12) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	Revision = parseCurseDate("20200623122558"),
+	DisplayVersion = "1.13.51", -- the string that is shown as version
+	ReleaseRevision = releaseDate(2020, 6, 23) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -2373,7 +2373,7 @@ do
 			DBM:RequestTimers(3)
 		elseif cmd:sub(1, 6) == "silent" then
 			DBM.Options.SilentMode = DBM.Options.SilentMode == false and true or false
-			DBM:AddMsg("SilentMode is " .. (DBM.Options.SilentMode and "ON" or "OFF"))
+			DBM:AddMsg(L.SILENTMODE_IS .. (DBM.Options.SilentMode and "ON" or "OFF"))
 		elseif cmd:sub(1, 10) == "musicstart" then
 			DBM:TransitionToDungeonBGM(true)
 		elseif cmd:sub(1, 9) == "musicstop" then
@@ -2742,9 +2742,9 @@ do
 
 		function dataBroker.OnClick(self, button)
 			if IsShiftKeyDown() then return end
-			if button == "RightButton" then
+			if IsAltKeyDown() then
 				DBM.Options.SilentMode = DBM.Options.SilentMode == false and true or false
-				DBM:AddMsg("SilentMode is " .. (DBM.Options.SilentMode and "ON" or "OFF"))
+				DBM:AddMsg(L.SILENTMODE_IS .. (DBM.Options.SilentMode and "ON" or "OFF"))
 			else
 				DBM:LoadGUI()
 			end
@@ -11332,7 +11332,7 @@ end
 
 function bossModPrototype:SetRevision(revision)
 	revision = parseCurseDate(revision or "")
-	if not revision or revision == "20200619203919" then
+	if not revision or revision == "20200623122558" then
 		-- bad revision: either forgot the svn keyword or using github
 		revision = DBM.Revision
 	end

@@ -33,6 +33,8 @@ Libs\Ace3\AceTab-3.0\AceTab-3.0.xml
 Libs\Ace3\AceSerializer-3.0\AceSerializer-3.0.xml
 Libs\Ace3\Ace3.lua
 
+Libs\LibSHA1\LibSHA1-1.0.xml
+
 BlizzardRaidFramesFix.lua
 
 # GConfirm.lua
