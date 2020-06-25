@@ -125,6 +125,12 @@ L["RESET_DESC"] = "将所有PallyPower窗口的位置重置回屏幕中央"
 L["RESIZEGRIP"] = "按住左键调整大小 ，右键重置默认大小"
 L["RFM"] = "激活正义之怒"
 L["RFM_DESC"] = "[激活/禁用]正义之怒"
+--[[Translation missing --]]
+L["SALVCOMBAT"] = "Salv in Combat"
+--[[Translation missing --]]
+L["SALVCOMBAT_DESC"] = [=[If you enable this option you will be able to buff Warriors, Druids and Paladins with Greater Blessing of Salvation while in combat.
+
+|cffffff00Note: This setting ONLY applies to raid groups because in our current culture, a lot of tanks use scripts/addons to cancel buffs which can only be done while not in combat. This option is basically a safety to prevent buffing a Tank with Salvation accidentally during combat.|r]=]
 L["SEAL"] = "圣印"
 L["SEAL_DESC"] = "已监视的圣印"
 L["SEALBTN"] = "启用圣印按钮"

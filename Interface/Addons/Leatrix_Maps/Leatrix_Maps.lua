@@ -1,6 +1,6 @@
 
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.68 (16th June 2020)
+	-- 	Leatrix Maps 1.13.69 (24th June 2020)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.68"
+	LeaMapsLC["AddonVer"] = "1.13.69"
 	LeaMapsLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -51,6 +51,63 @@
 
 		-- Get player faction
 		local playerFaction = UnitFactionGroup("player")
+
+		----------------------------------------------------------------------
+		-- Enhance battlefield map
+		----------------------------------------------------------------------
+
+		if LeaMapsLC["EnhanceBattleMap"] == "On" then
+
+			local function SetupBattlefieldMap()
+
+				local partyTexture = "Interface\\AddOns\\Leatrix_Maps\\Leatrix_Maps_Icon.blp"
+
+				for pin in BattlefieldMapFrame:EnumerateAllPins() do
+					if pin.UpdateAppearanceData then
+
+						-- Set icon texture
+						pin:SetPinTexture("raid", partyTexture)
+						pin:SetPinTexture("party", partyTexture)
+						hooksecurefunc(pin, "UpdateAppearanceData", function(self)
+							self:SetPinTexture("raid", partyTexture)
+							self:SetPinTexture("party", partyTexture)
+						end)
+						pin:SetAppearanceField("party", "useClassColor", true)
+						pin:SetAppearanceField("raid", "useClassColor", true)
+						
+						-- Icons should be under the player arrow
+						pin:SetAppearanceField("party", "sublevel", 0)
+						pin:SetAppearanceField("raid", "sublevel", 0)
+
+						-- Icon size (not used yet)
+						-- local bfUnitPinSizes = pin.dataProvider:GetUnitPinSizesTable()
+						-- bfUnitPinSizes.party = 40
+						-- bfUnitPinSizes.raid = 40
+						-- pin:SynchronizePinSizes()
+
+					end
+				end
+
+			end
+
+			-- Run function when required addon has loaded
+			if IsAddOnLoaded("Blizzard_BattlefieldMap") then
+				SetupBattlefieldMap()
+			else
+				local waitFrame = CreateFrame("FRAME")
+				waitFrame:RegisterEvent("ADDON_LOADED")
+				waitFrame:SetScript("OnEvent", function(self, event, arg1)
+					if arg1 == "Blizzard_BattlefieldMap" then
+						SetupBattlefieldMap()
+						waitFrame:UnregisterAllEvents()
+					end
+				end)
+			end
+
+			-- Debug
+			-- LoadAddOn("Blizzard_BattlefieldMap"); BattlefieldMapFrame:Show()
+
+		end
 
 		----------------------------------------------------------------------
 		-- Auto change zones
@@ -1981,6 +2038,7 @@
 		or	(LeaMapsLC["AutoChangeZones"] ~= LeaMapsDB["AutoChangeZones"])		-- Auto change zones
 		or	(LeaMapsLC["UseDefaultMap"] ~= LeaMapsDB["UseDefaultMap"])			-- Use default map
 		or	(LeaMapsLC["HideTownCityIcons"] ~= LeaMapsDB["HideTownCityIcons"])	-- Hide town and city icons
+		or	(LeaMapsLC["EnhanceBattleMap"] ~= LeaMapsDB["EnhanceBattleMap"])	-- Enhance battlefield map
 		then
 			-- Enable the reload button
 			LeaMapsLC:LockItem(LeaMapsCB["ReloadUIButton"], false)
@@ -2263,6 +2321,13 @@
 				LeaMapsLC:Print("hadmin - Show admin help")
 				LeaMapsLC:Print("help - Show help")
 				return
+			elseif str == "dbf" then
+				-- Show battlefield map for debugging
+				if not IsAddOnLoaded("Blizzard_BattlefieldMap") then
+					LoadAddOn("Blizzard_BattlefieldMap")
+				end
+				BattlefieldMapFrame:Show()
+				return
 			elseif str == "admin" then
 				-- Preset profile (reload required)
 				LeaMapsLC["NoSaveSettings"] = true
@@ -2305,7 +2370,8 @@
 				LeaMapsDB["ShowCoords"] = "On"
 				LeaMapsDB["HideTownCityIcons"] = "On"
 
-				-- Settings
+				-- More
+				LeaMapsDB["EnhanceBattleMap"] = "On"
 				LeaMapsDB["ShowMinimapIcon"] = "On"
 				LeaMapsDB["minimapPos"] = 204 -- LeaMapsDB
 
@@ -2398,7 +2464,8 @@
 			LeaMapsLC:LoadVarChk("ShowCoords", "On")					-- Show coordinates
 			LeaMapsLC:LoadVarChk("HideTownCityIcons", "On")				-- Hide town and city icons
 
-			-- Settings
+			-- More
+			LeaMapsLC:LoadVarChk("EnhanceBattleMap", "Off")				-- Enhance battlefield map
 			LeaMapsLC:LoadVarChk("ShowMinimapIcon", "On")				-- Show minimap button
 
 			-- Panel
@@ -2458,6 +2525,7 @@
 			LeaMapsDB["HideTownCityIcons"] = LeaMapsLC["HideTownCityIcons"]
 
 			-- Settings
+			LeaMapsDB["EnhanceBattleMap"] = LeaMapsLC["EnhanceBattleMap"]
 			LeaMapsDB["ShowMinimapIcon"] = LeaMapsLC["ShowMinimapIcon"]
 
 			-- Panel
@@ -2576,8 +2644,9 @@
 	LeaMapsLC:MakeCB(PageF, "ShowCoords", "Show coordinates", 225, -152, false, "If checked, coordinates will be shown.")
 	LeaMapsLC:MakeCB(PageF, "HideTownCityIcons", "Hide town and city icons", 225, -172, true, "If checked, town and city icons will not be shown on the continent maps.")
 
-	LeaMapsLC:MakeTx(PageF, "Settings", 225, -212)
-	LeaMapsLC:MakeCB(PageF, "ShowMinimapIcon", "Show minimap button", 225, -232, false, "If checked, the minimap button will be shown.")
+	LeaMapsLC:MakeTx(PageF, "More", 225, -212)
+	LeaMapsLC:MakeCB(PageF, "EnhanceBattleMap", "Enhance battlefield map", 225, -232, true, "If checked, group icons on the battlefield map will use a modern, class-colored design.")
+	LeaMapsLC:MakeCB(PageF, "ShowMinimapIcon", "Show minimap button", 225, -252, false, "If checked, the minimap button will be shown.")
 
  	LeaMapsLC:CfgBtn("RevTintBtn", LeaMapsCB["RevealMap"])
  	LeaMapsLC:CfgBtn("EnlargePlayerArrowBtn", LeaMapsCB["EnlargePlayerArrow"])

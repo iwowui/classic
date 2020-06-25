@@ -127,6 +127,10 @@ L["RESIZEGRIP"] = [=[Left-Click-Hold to resize
 Right-Click resets default size]=]
 L["RFM"] = "Righteous Fury"
 L["RFM_DESC"] = "[Enable/Disable] Righteous Fury"
+L["SALVCOMBAT"] = "Salv in Combat"
+L["SALVCOMBAT_DESC"] = [=[If you enable this option you will be able to buff Warriors, Druids and Paladins with Greater Blessing of Salvation while in combat.
+
+|cffffff00Note: This setting ONLY applies to raid groups because in our current culture, a lot of tanks use scripts/addons to cancel buffs which can only be done while not in combat. This option is basically a safety to prevent buffing a Tank with Salvation accidentally during combat.|r]=]
 L["SEAL"] = "Seal Button"
 L["SEAL_DESC"] = "[|cffffd200Enable|r/|cffffd200Disable|r] The Seal Button, Enable/Disable Righteous Fury or select the Seal you want to track."
 L["SEALBTN"] = "Seal Button"
@@ -157,5 +161,5 @@ L["VerDownRight"] = "Vertical Down | Right"
 L["VerUpLeft"] = "Vertical Up | Left"
 L["VerUpRight"] = "Vertical Up | Right"
 L["WAIT"] = "Wait for Players"
-L["WAIT_DESC"] = "If this option is enabled then the Auto Buff Button will not auto buff a class with a greater blessing or a player with a normal blessing if they are dead, offline or not in range."
+L["WAIT_DESC"] = "If this option is enabled then the Auto Buff Button and the Class Buff Button(s) will not auto buff a Greater Blessing if recipient(s) are AFK or not within the Paladins range."
  

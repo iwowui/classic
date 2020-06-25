@@ -202,6 +202,12 @@ L["RESIZEGRIP"] = [=[Left-Click-Hold to resize
 Right-Click resets default size]=]
 L["RFM"] = "正義之怒"
 L["RFM_DESC"] = "監控正義之怒"
+--[[Translation missing --]]
+L["SALVCOMBAT"] = "Salv in Combat"
+--[[Translation missing --]]
+L["SALVCOMBAT_DESC"] = [=[If you enable this option you will be able to buff Warriors, Druids and Paladins with Greater Blessing of Salvation while in combat.
+
+|cffffff00Note: This setting ONLY applies to raid groups because in our current culture, a lot of tanks use scripts/addons to cancel buffs which can only be done while not in combat. This option is basically a safety to prevent buffing a Tank with Salvation accidentally during combat.|r]=]
 L["SEAL"] = "聖印"
 L["SEAL_DESC"] = "監控聖印"
 --[[Translation missing --]]
@@ -253,5 +259,5 @@ L["VerUpRight"] = "Vertical Up | Right"
 --[[Translation missing --]]
 L["WAIT"] = "Wait for Players"
 --[[Translation missing --]]
-L["WAIT_DESC"] = "If this option is enabled then the Auto Buff Button will not auto buff a class with a greater blessing or a player with a normal blessing if they are dead, offline or not in range."
+L["WAIT_DESC"] = "If this option is enabled then the Auto Buff Button and the Class Buff Button(s) will not auto buff a Greater Blessing if recipient(s) are AFK or not within the Paladins range."
  

@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.68 (16th June 2020)
+-- 	Leatrix Plus 1.13.69 (24th June 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 	-- Version
-	LeaPlusLC["AddonVer"] = "1.13.68"
+	LeaPlusLC["AddonVer"] = "1.13.69"
 	LeaPlusLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -355,6 +355,7 @@
 
 --	Set lock state for configuration buttons
 	function LeaPlusLC:SetDim()
+		LeaPlusLC:LockOption("AutomateQuests", "AutomateQuestsBtn", false)			-- Automate quests
 		LeaPlusLC:LockOption("InviteFromWhisper", "InvWhisperBtn", false)			-- Invite from whispers
 		LeaPlusLC:LockOption("MailFontChange", "MailTextBtn", true)					-- Resize mail text
 		LeaPlusLC:LockOption("QuestFontChange", "QuestTextBtn", true)				-- Resize quest text
@@ -935,6 +936,43 @@
 
 		do
 
+			-- Create configuration panel
+			local QuestPanel = LeaPlusLC:CreatePanel("Automate quests", "QuestPanel")
+
+			LeaPlusLC:MakeTx(QuestPanel, "Settings", 16, -72)
+			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestShift", "Require shift key for quest automation", 16, -92, false, "If checked, you will need to hold the shift key down for quests to be automated.|n|nIf unchecked, holding shift will prevent quests from being automated.")
+
+			-- Help button hidden
+			QuestPanel.h:Hide()
+
+			-- Back button handler
+			QuestPanel.b:SetScript("OnClick", function() 
+				QuestPanel:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page1"]:Show();
+				return
+			end)
+
+			-- Reset button handler
+			QuestPanel.r:SetScript("OnClick", function()
+
+				-- Reset checkboxes
+				LeaPlusLC["AutoQuestShift"] = "Off"
+
+				-- Refresh panel
+				QuestPanel:Hide(); QuestPanel:Show()
+
+			end)
+
+			-- Show panal when options panel button is clicked
+			LeaPlusCB["AutomateQuestsBtn"]:SetScript("OnClick", function()
+				if IsShiftKeyDown() and IsControlKeyDown() then
+					-- Preset profile
+					LeaPlusLC["AutoQuestShift"] = "Off"
+				else
+					QuestPanel:Show()
+					LeaPlusLC:HideFrames()
+				end
+			end)
+
 			-- Funcion to ignore specific NPCs
 			local function isNpcBlocked(actionType)
 				local npcGuid = UnitGUID("target") or nil
@@ -1064,8 +1102,6 @@
 							or npcID == "11039" -- Duke Nicholas Zverenhoff (Eastern Plaguelands)
 							-- Un'Goro crystals
 							or npcID == "9117" 	-- J. D. Collie (Un'Goro Crater)
-							-- E'Ko
-							or npcID == "10307" -- Witch Doctor Mau'ari (Winterspring)
 							then
 								return true
 							end
@@ -1147,6 +1183,27 @@
 					elseif title == L["Zulian, Razzashi, and Hakkari Coins"] then
 						-- Requires 1 Zulian Coin, 1 Razzashi Coin, 1 Hakkari Coin
 						if GetItemCount(19698) >= 1 and GetItemCount(19699) >= 1 and GetItemCount(19700) >= 1 then return true end
+					elseif title == L["Frostsaber E'ko"] then
+						-- Requires 3 Frostsaber E'ko
+						if GetItemCount(12430) >= 3 then return true end
+					elseif title == L["Winterfall E'ko"] then
+						-- Requires 3 Winterfall E'ko
+						if GetItemCount(12431) >= 3 then return true end
+					elseif title == L["Shardtooth E'ko"] then
+						-- Requires 3 Shardtooth E'ko
+						if GetItemCount(12432) >= 3 then return true end
+					elseif title == L["Wildkin E'ko"] then
+						-- Requires 3 Wildkin E'ko
+						if GetItemCount(12433) >= 3 then return true end
+					elseif title == L["Chillwind E'ko"] then
+						-- Requires 3 Chillwind E'ko
+						if GetItemCount(12434) >= 3 then return true end
+					elseif title == L["Ice Thistle E'ko"] then
+						-- Requires 3 Ice Thistle E'ko
+						if GetItemCount(12435) >= 3 then return true end
+					elseif title == L["Frostmaul E'ko"] then
+						-- Requires 3 Ice Thistle E'ko
+						if GetItemCount(12436) >= 3 then return true end
 
 					else return true
 					end
@@ -1190,8 +1247,10 @@
 					return
 				end
 
-				-- Do nothing if SHIFT key is being held
-				if IsShiftKeyDown() then return end
+				-- Check for SHIFT key modifier
+				if LeaPlusLC["AutoQuestShift"] == "On" and not IsShiftKeyDown() then return 
+				elseif LeaPlusLC["AutoQuestShift"] == "Off" and IsShiftKeyDown() then return 
+				end
 
 				----------------------------------------------------------------------
 				-- Accept quests automatically
@@ -7105,6 +7164,7 @@
 
 				-- Automation
 				LeaPlusLC:LoadVarChk("AutomateQuests", "Off")				-- Automate quests
+				LeaPlusLC:LoadVarChk("AutoQuestShift", "Off")				-- Automate quests requires shift
 				LeaPlusLC:LoadVarChk("AutomateGossip", "Off")				-- Automate gossip
 				LeaPlusLC:LoadVarChk("AutoAcceptSummon", "Off")				-- Accept summon
 				LeaPlusLC:LoadVarChk("AutoAcceptRes", "Off")				-- Accept resurrection
@@ -7275,6 +7335,7 @@
 
 			-- Automation
 			LeaPlusDB["AutomateQuests"]			= LeaPlusLC["AutomateQuests"]
+			LeaPlusDB["AutoQuestShift"]			= LeaPlusLC["AutoQuestShift"]
 			LeaPlusDB["AutomateGossip"]			= LeaPlusLC["AutomateGossip"]
 			LeaPlusDB["AutoAcceptSummon"] 		= LeaPlusLC["AutoAcceptSummon"]
 			LeaPlusDB["AutoAcceptRes"] 			= LeaPlusLC["AutoAcceptRes"]
@@ -8129,11 +8190,14 @@
 					if tonumber(arg1) and tonumber(arg1) < 999999999 then
 						local questCompleted = IsQuestFlaggedCompleted(arg1)
 						local questTitle = C_QuestLog.GetQuestInfo(arg1) or L["Unknown"]
-						if questCompleted then
-							LeaPlusLC:Print(questTitle .. " (" .. arg1 .. "):" .. "|cffffffff " .. L["Completed."])
-						else
-							LeaPlusLC:Print(questTitle .. " (" .. arg1 .. "):" .. "|cffffffff " .. L["Not completed."])
-						end
+						C_Timer.After(0.5, function()
+							local questTitle = C_QuestLog.GetQuestInfo(arg1) or L["Unknown"]
+							if questCompleted then
+								LeaPlusLC:Print(questTitle .. " (" .. arg1 .. "):" .. "|cffffffff " .. L["Completed."])
+							else
+								LeaPlusLC:Print(questTitle .. " (" .. arg1 .. "):" .. "|cffffffff " .. L["Not completed."])
+							end
+						end)
 					else
 						LeaPlusLC:Print("Invalid quest ID.")
 					end
@@ -8622,6 +8686,7 @@
 				LeaPlusLC:PlayerLogout(true)					-- Reset permanent settings
 				-- Automation
 				LeaPlusDB["AutomateQuests"] = "On"				-- Automate quests
+				LeaPlusDB["AutoQuestShift"] = "Off"				-- Automate quests requires shift
 				LeaPlusDB["AutomateGossip"] = "On"				-- Automate gossip
 				LeaPlusDB["AutoAcceptSummon"] = "On"			-- Accept summon
 				LeaPlusDB["AutoAcceptRes"] = "On"				-- Accept resurrection
@@ -8949,6 +9014,8 @@
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Vendors"					, 	340, -72);
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "AutoSellJunk"				,	"Sell junk automatically"		,	340, -92, 	false,	"If checked, all grey items in your bags will be sold automatically when you visit a merchant.|n|nYou can hold the shift key down when you talk to a merchant to override this setting.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "AutoRepairGear"			, 	"Repair automatically"			,	340, -112, 	false,	"If checked, your gear will be repaired automatically when you visit a suitable merchant.|n|nYou can hold the shift key down when you talk to a merchant to override this setting.")
+
+ 	LeaPlusLC:CfgBtn("AutomateQuestsBtn", LeaPlusCB["AutomateQuests"])
 
 ----------------------------------------------------------------------
 -- 	LC2: Social
