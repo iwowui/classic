@@ -43,6 +43,10 @@ Raid or Party channel.]=]
 L["BSC"] = "Buff 縮放"
 L["BSC_DESC"] = "設置 Buff 條大小"
 --[[Translation missing --]]
+L["BUFFDURATION"] = "Buff Duration"
+--[[Translation missing --]]
+L["BUFFDURATION_DESC"] = "If this option is disabled then Class and Player buttons will ignore a buffs duration allowing a buff to be reapplied at will. This is especially useful for Protection Paladins when they spam Greater Blessings to generate more threat."
+--[[Translation missing --]]
 L["BUTTONS"] = "Buttons"
 --[[Translation missing --]]
 L["BUTTONS_DESC"] = "Change the button settings"
@@ -119,10 +123,6 @@ By having a separate setting for both roles it will allow Paladin Class Leaders 
 |cffffff00Note: When there are 5 or more Paladins in a Raid (enough to assign all the Greater Blessings), these settings will automatically be disabled. Tanking Classes will have to manually switch off Blessing of Salvation.|r
 ]=]
 --[[Translation missing --]]
-L["MAINTANK"] = "Auto-Buff Main Tank"
---[[Translation missing --]]
-L["MAINTANK_DESC"] = "If you enable this option PallyPower will automatically over-write a Greater Blessing with a Normal Blessing on players marked with the |cffffd200Main Tank|r role in the Blizzard Raid Panel. This is useful to avoid blessing the |cffffd200Main Tank|r role with a Greater Blessing of Salvation."
---[[Translation missing --]]
 L["MAINTANKGBUFFDP"] = "Override Druids / Paladins..."
 --[[Translation missing --]]
 L["MAINTANKGBUFFDP_DESC"] = "Select the Greater Blessing assignment you wish to over-write on Main Tank: Druids / Paladins."
@@ -180,6 +180,10 @@ Party, and Raid Paladins.]=]
 L["PP_RESET"] = "重設框架"
 --[[Translation missing --]]
 L["PP_SHOW"] = "When to show PallyPower"
+--[[Translation missing --]]
+L["PPMAINTANK"] = "Auto-Buff Main Tank"
+--[[Translation missing --]]
+L["PPMAINTANK_DESC"] = "If you enable this option PallyPower will automatically over-write a Greater Blessing with a Normal Blessing on players marked with the |cffffd200Main Tank|r role in the Blizzard Raid Panel. This is useful to avoid blessing the |cffffd200Main Tank|r role with a Greater Blessing of Salvation."
 --[[Translation missing --]]
 L["RAID"] = "Raid"
 --[[Translation missing --]]

@@ -28,6 +28,8 @@ assignments to the
 Raid or Party channel.]=]
 L["BSC"] = "Buff Scale"
 L["BSC_DESC"] = "Set the Buff Bar scale"
+L["BUFFDURATION"] = "Buff Duration"
+L["BUFFDURATION_DESC"] = "If this option is disabled then Class and Player buttons will ignore a buffs duration allowing a buff to be reapplied at will. This is especially useful for Protection Paladins when they spam Greater Blessings to generate more threat."
 L["BUTTONS"] = "Buttons"
 L["BUTTONS_DESC"] = "Change the button settings"
 L["CLASSBTN"] = "Class Buttons"
@@ -75,8 +77,6 @@ By having a separate setting for both roles it will allow Paladin Class Leaders 
 
 |cffffff00Note: When there are 5 or more Paladins in a Raid (enough to assign all the Greater Blessings), these settings will automatically be disabled. Tanking Classes will have to manually switch off Blessing of Salvation.|r
 ]=]
-L["MAINTANK"] = "Auto-Buff Main Tank"
-L["MAINTANK_DESC"] = "If you enable this option PallyPower will automatically over-write a Greater Blessing with a Normal Blessing on players marked with the |cffffd200Main Tank|r role in the Blizzard Raid Panel. This is useful to avoid blessing the |cffffd200Main Tank|r role with a Greater Blessing of Salvation."
 L["MAINTANKGBUFFDP"] = "Override Druids / Paladins..."
 L["MAINTANKGBUFFDP_DESC"] = "Select the Greater Blessing assignment you wish to over-write on Main Tank: Druids / Paladins."
 L["MAINTANKGBUFFW"] = "Override Warriors..."
@@ -111,6 +111,8 @@ Symbol of Kings among Self,
 Party, and Raid Paladins.]=]
 L["PP_RESET"] = "Just in case you mess up"
 L["PP_SHOW"] = "When to show PallyPower"
+L["PPMAINTANK"] = "Auto-Buff Main Tank"
+L["PPMAINTANK_DESC"] = "If you enable this option PallyPower will automatically over-write a Greater Blessing with a Normal Blessing on players marked with the |cffffd200Main Tank|r role in the Blizzard Raid Panel. This is useful to avoid blessing the |cffffd200Main Tank|r role with a Greater Blessing of Salvation."
 L["RAID"] = "Raid"
 L["RAID_DESC"] = "Raid only options"
 L["REPORTCHANNEL"] = "Blessings Report Channel"

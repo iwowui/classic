@@ -1,7 +1,7 @@
 ## Interface: 11304
 ## Author: Aznamir,Dyaxler
 ## Title: PallyPower Classic
-## Version: v1.2.0-classic
+## Version: v1.2.6-classic
 ## Notes: Raid/Party Paladin buffs.
 ## Title-zhCN: |CFF8000FF职业|R 圣骑士 祝福管理
 ## Notes-zhCN: 圣骑士祝福管理
@@ -10,11 +10,11 @@
 ## X-Repple: 职业
 ## LoadOnDemand: 1
 ## DefaultState: enabled
-## Dependencies: LibClassicDurations
+## Dependencies:
 ## OptionalDeps: Ace3
 ## X-Category: Paladin
 ## X-Embeds: Ace3, LibClassicDurations
-## SavedVariables: PallyPowerDB, PallyPower_Assignments, PallyPower_NormalAssignments, PallyPower_AuraAssignments, PallyPower_SavedPresets, PallyPower_ChanNames
+## SavedVariables: PallyPowerDB, PallyPower_Assignments, PallyPower_NormalAssignments, PallyPower_AuraAssignments, PallyPower_SavedPresets, PallyPower_ChanNames, LCD_Data, LCD_GUIDAccess
 
 #@no-lib-strip@
 embeds.xml

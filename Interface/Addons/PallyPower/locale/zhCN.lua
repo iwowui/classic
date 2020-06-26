@@ -20,6 +20,10 @@ L["BRPT"] = "祝福报告"
 L["BRPT_DESC"] = "报告所有祝福到团队或小队频道"
 L["BSC"] = "主窗口大小"
 L["BSC_DESC"] = "设置祝福施加窗口的大小"
+--[[Translation missing --]]
+L["BUFFDURATION"] = "Buff Duration"
+--[[Translation missing --]]
+L["BUFFDURATION_DESC"] = "If this option is disabled then Class and Player buttons will ignore a buffs duration allowing a buff to be reapplied at will. This is especially useful for Protection Paladins when they spam Greater Blessings to generate more threat."
 L["BUTTONS"] = "按钮"
 L["BUTTONS_DESC"] = "更改按钮设置"
 L["CLASSBTN"] = "启用职业按钮"
@@ -70,8 +74,6 @@ By having a separate setting for both roles it will allow Paladin Class Leaders 
 
 |cffffff00Note: When there are 5 or more Paladins in a Raid (enough to assign all the Greater Blessings), these settings will automatically be disabled. Tanking Classes will have to manually switch off Blessing of Salvation.|r
 ]=]
-L["MAINTANK"] = "自动Buff主坦克"
-L["MAINTANK_DESC"] = "启用后，PallyPower将自动对标记为主坦克的人物施放最高级的祝福，防止被更高级的祝福覆盖。"
 --[[Translation missing --]]
 L["MAINTANKGBUFFDP"] = "Override Druids / Paladins..."
 --[[Translation missing --]]
@@ -108,6 +110,8 @@ L["PP_REFRESH"] = "刷新"
 L["PP_REFRESH_DESC"] = "刷新所有祝福任务、天赋和标记。"
 L["PP_RESET"] = "重置位置"
 L["PP_SHOW"] = "何时显示 PallyPower"
+L["PPMAINTANK"] = "自动Buff主坦克"
+L["PPMAINTANK_DESC"] = "启用后，PallyPower将自动对标记为主坦克的人物施放最高级的祝福，防止被更高级的祝福覆盖。"
 L["RAID"] = "团队"
 L["RAID_DESC"] = "团队选项"
 --[[Translation missing --]]
