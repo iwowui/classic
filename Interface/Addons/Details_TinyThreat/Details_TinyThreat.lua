@@ -652,15 +652,19 @@ local function CreatePluginFrames (data)
 						thisRow.CurrentPercentMax = 100
 						thisRow.AnimationStart = oldPct
 						thisRow.AnimationEnd = pct
-
-						thisRow:SetValue (oldPct)
+						
 						if (options.animate) then
+							thisRow:SetValue (oldPct)
+
 							thisRow.IsAnimating = true
 							if (thisRow.AnimationEnd > thisRow.AnimationStart) then
 								thisRow.AnimateFunc = ThreatMeter.AnimateRightWithAccel
 							else
 								thisRow.AnimateFunc = ThreatMeter.AnimateLeftWithAccel
 							end
+						
+						else
+							thisRow:SetValue (pct)
 						end
 
 					--set the bar color
