@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.69 (24th June 2020)
+-- 	Leatrix Plus 1.13.70 (1st July 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 	-- Version
-	LeaPlusLC["AddonVer"] = "1.13.69"
+	LeaPlusLC["AddonVer"] = "1.13.70"
 	LeaPlusLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -294,6 +294,7 @@
 		-- Get realm name or set to player's own realm (same realm does not return realm)
 		local void, myRealm = UnitFullName(name)
 		if not myRealm or myRealm == "" then void, myRealm = UnitFullName("player") end
+		if not myRealm or myRealm == "" then return end
 
 		-- Add realm name to character name
 		if not string.find(name, "-") then
@@ -6892,7 +6893,7 @@
 		local function SetInvKey()
 			local keytext = KeyBox:GetText()
 			if keytext and keytext ~= "" then
-				LeaPlusLC["InvKey"] = KeyBox:GetText()
+				LeaPlusLC["InvKey"] = strtrim(KeyBox:GetText())
 			else
 				LeaPlusLC["InvKey"] = "inv"
 			end
@@ -6905,6 +6906,11 @@
 
 		-- Save the keyword when it changes
 		KeyBox:SetScript("OnTextChanged", SetInvKey)
+
+		-- Refresh editbox with trimmed keyword when edit focus is lost (removes additional spaces)
+		KeyBox:SetScript("OnEditFocusLost", function()
+			KeyBox:SetText(LeaPlusLC["InvKey"])
+		end)
 
 		-- Help button hidden
 		InvPanel.h:Hide()
@@ -6978,7 +6984,7 @@
 		----------------------------------------------------------------------
 
 		if event == "CHAT_MSG_WHISPER" or event == "CHAT_MSG_BN_WHISPER" then
-			if (not UnitExists("party1") or UnitIsGroupLeader("player") or UnitIsGroupAssistant("player")) and strlower(arg1) == strlower(LeaPlusLC["InvKey"]) then
+			if (not UnitExists("party1") or UnitIsGroupLeader("player") or UnitIsGroupAssistant("player")) and strlower(strtrim(arg1)) == strlower(LeaPlusLC["InvKey"]) then
 				if event == "CHAT_MSG_WHISPER" then
 					if LeaPlusLC:FriendCheck(strsplit("-", arg2, 2)) or LeaPlusLC["InviteFriendsOnly"] == "Off" then
 						InviteUnit(arg2)
