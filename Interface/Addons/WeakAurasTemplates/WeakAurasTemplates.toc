@@ -4,7 +4,7 @@
 ## Title-zhTW: |CFFFF8000輔助|R 综合提示 範本
 ## X-Repple: 辅助
 ## Author: The WeakAuras Team
-## Version: 2.17.8
+## Version: 2.17.9
 ## Notes: Templates for WeakAuras
 ## X-Category: Interface Enhancements
 ## Globe-Main: WeakAuras

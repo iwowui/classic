@@ -388,6 +388,7 @@ end
 		gump:Fade (self.baseframe.cabecalho.ball, 1)
 		gump:Fade (self.baseframe, 1)
 		gump:Fade (self.rowframe, 1)
+		gump:Fade (self.windowSwitchButton, 1) --4th july 2020: fix for autohiding
 		
 		self:Desagrupar (-1)
 		
@@ -593,6 +594,7 @@ end
 		gump:Fade (self.baseframe.cabecalho.ball, 0)
 		gump:Fade (self.baseframe, 0)
 		gump:Fade (self.rowframe, 0)
+		gump:Fade (self.windowSwitchButton, 0) --4th july 2020: fix for autohiding
 		
 		self:SetMenuAlpha()
 		
