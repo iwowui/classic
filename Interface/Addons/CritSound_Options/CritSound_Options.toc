@@ -1,4 +1,4 @@
-﻿## Interface: 11304
+﻿## Interface: 11305
 ## Title: CritSound Options
 ## Title-zhCN: |CFFFF8000辅助|R 爆击音效 设置
 ## Title-zhTW: |CFFFF8000輔助|R 爆擊音效 設置

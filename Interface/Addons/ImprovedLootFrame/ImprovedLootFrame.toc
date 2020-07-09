@@ -1,4 +1,4 @@
-﻿## Interface: 11304
+﻿## Interface: 11305
 ## Title: Improved Loot Frame
 ## Notes: Expands the loot frame to fit all items onto one page.
 ## Title-zhCN: |CFFFF8000辅助|R 拾取增强

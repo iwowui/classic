@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: SilverDragon (Classic)
 ## Notes: Mobs for Classic
 ## Title-zhCN: |CFFFF8000地图|R 稀有怪追踪提醒 怀旧服

@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: ChatBar Classic
 ## Notes: Button Bar for openning chat messages of each type.
 ## Title-zhCN: |CFFFF8000辅助|R 聊天条

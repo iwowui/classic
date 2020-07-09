@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## X-Min-Interface: 11302
 ## Title: Postal Classic
 ## Version: v3.6.2

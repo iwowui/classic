@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.70 (1st July 2020)
+-- 	Leatrix Plus 1.13.71 (8th July 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 	-- Version
-	LeaPlusLC["AddonVer"] = "1.13.70"
+	LeaPlusLC["AddonVer"] = "1.13.71"
 	LeaPlusLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -942,6 +942,8 @@
 
 			LeaPlusLC:MakeTx(QuestPanel, "Settings", 16, -72)
 			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestShift", "Require shift key for quest automation", 16, -92, false, "If checked, you will need to hold the shift key down for quests to be automated.|n|nIf unchecked, holding shift will prevent quests from being automated.")
+			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestAvailable", "Accept available quests automatically", 16, -112, false, "If checked, available quests will be accepted automatically.")
+			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestCompleted", "Turn-in completed quests automatically", 16, -132, false, "If checked, completed quests will be turned-in automatically.")
 
 			-- Help button hidden
 			QuestPanel.h:Hide()
@@ -957,6 +959,8 @@
 
 				-- Reset checkboxes
 				LeaPlusLC["AutoQuestShift"] = "Off"
+				LeaPlusLC["AutoQuestAvailable"] = "On"
+				LeaPlusLC["AutoQuestCompleted"] = "On"
 
 				-- Refresh panel
 				QuestPanel:Hide(); QuestPanel:Show()
@@ -968,6 +972,8 @@
 				if IsShiftKeyDown() and IsControlKeyDown() then
 					-- Preset profile
 					LeaPlusLC["AutoQuestShift"] = "Off"
+					LeaPlusLC["AutoQuestAvailable"] = "On"
+					LeaPlusLC["AutoQuestCompleted"] = "On"
 				else
 					QuestPanel:Show()
 					LeaPlusLC:HideFrames()
@@ -1259,17 +1265,21 @@
 
 				-- Accept quests with a quest detail window
 				if event == "QUEST_DETAIL" then
-					-- Don't accept blocked quests
-					if isNpcBlocked("Accept") then return end
-					-- Accept quest
-					AcceptQuest()
-					HideUIPanel(QuestFrame)
+					if LeaPlusLC["AutoQuestAvailable"] == "On" then
+						-- Don't accept blocked quests
+						if isNpcBlocked("Accept") then return end
+						-- Accept quest
+						AcceptQuest()
+						HideUIPanel(QuestFrame)
+					end
 				end
 
 				-- Accept quests which require confirmation (such as sharing escort quests)
 				if event == "QUEST_ACCEPT_CONFIRM" then
-					ConfirmAcceptQuest() 
-					StaticPopup_Hide("QUEST_ACCEPT")
+					if LeaPlusLC["AutoQuestAvailable"] == "On" then
+						ConfirmAcceptQuest() 
+						StaticPopup_Hide("QUEST_ACCEPT")
+					end
 				end
 
 				----------------------------------------------------------------------
@@ -1278,35 +1288,41 @@
 
 				-- Turn-in progression quests
 				if event == "QUEST_PROGRESS" and IsQuestCompletable() then
-					-- Don't continue quests for blocked NPCs
-					if isNpcBlocked("Complete") then return end
-					-- Don't continue if quest requires blocked item
-					if QuestRequiresBlockedItem() then return end
-					-- Don't continue if quest requires gold
-					if QuestRequiresGold() then return end
-					-- Continue quest
-					CompleteQuest()
+					if LeaPlusLC["AutoQuestCompleted"] == "On" then
+						-- Don't continue quests for blocked NPCs
+						if isNpcBlocked("Complete") then return end
+						-- Don't continue if quest requires blocked item
+						if QuestRequiresBlockedItem() then return end
+						-- Don't continue if quest requires gold
+						if QuestRequiresGold() then return end
+						-- Continue quest
+						CompleteQuest()
+					end
 				end
 
 				-- Turn in completed quests if only one reward item is being offered
 				if event == "QUEST_COMPLETE" then
-					-- Don't complete quests for blocked NPCs
-					if isNpcBlocked("Complete") then return end
-					-- Don't complete if quest requires blocked item
-					if QuestRequiresBlockedItem() then return end
-					-- Don't complete if quest requires gold
-					if QuestRequiresGold() then return end
-					-- Complete quest
-					if GetNumQuestChoices() <= 1 then
-						GetQuestReward(GetNumQuestChoices())
+					if LeaPlusLC["AutoQuestCompleted"] == "On" then
+						-- Don't complete quests for blocked NPCs
+						if isNpcBlocked("Complete") then return end
+						-- Don't complete if quest requires blocked item
+						if QuestRequiresBlockedItem() then return end
+						-- Don't complete if quest requires gold
+						if QuestRequiresGold() then return end
+						-- Complete quest
+						if GetNumQuestChoices() <= 1 then
+							GetQuestReward(GetNumQuestChoices())
+						end
 					end
 				end
 
 				-- Show quest dialog for quests that use the objective tracker (it will be completed automatically)
 				if event == "QUEST_AUTOCOMPLETE" then
-					local index = GetQuestLogIndexByID(arg1)
-					if GetQuestLogIsAutoComplete(index) then
-						ShowQuestComplete(index)
+					if LeaPlusLC["AutoQuestCompleted"] == "On" then
+						local index = GetQuestLogIndexByID(arg1)
+						if GetQuestLogIsAutoComplete(index) then
+							ShowQuestComplete(index)
+						end
 					end
 				end
 
@@ -1325,32 +1341,40 @@
 						-- Select quests
 						if event == "QUEST_GREETING" then
 							-- Select quest greeting completed quests
-							for i = 1, GetNumActiveQuests() do
-								local title, isComplete = GetActiveTitle(i)
-								if title and isComplete then
-									return SelectActiveQuest(i)
+							if LeaPlusLC["AutoQuestCompleted"] == "On" then
+								for i = 1, GetNumActiveQuests() do
+									local title, isComplete = GetActiveTitle(i)
+									if title and isComplete then
+										return SelectActiveQuest(i)
+									end
 								end
 							end
 							-- Select quest greeting available quests
-							for i = 1, GetNumAvailableQuests() do
-								local title, isComplete = GetAvailableTitle(i)
-								if title and not isComplete then
-									return SelectAvailableQuest(i)
+							if LeaPlusLC["AutoQuestAvailable"] == "On" then
+								for i = 1, GetNumAvailableQuests() do
+									local title, isComplete = GetAvailableTitle(i)
+									if title and not isComplete then
+										return SelectAvailableQuest(i)
+									end
 								end
 							end
 						else
 							-- Select gossip completed quests
-							for i = 1, GetNumGossipActiveQuests() do
-								local title, level, isTrivial, isComplete, isLegendary, isIgnored = select(i * 6 - 5, GetGossipActiveQuests())
-								if title and isComplete then
-									return SelectGossipActiveQuest(i)
+							if LeaPlusLC["AutoQuestCompleted"] == "On" then
+								for i = 1, GetNumGossipActiveQuests() do
+									local title, level, isTrivial, isComplete, isLegendary, isIgnored = select(i * 6 - 5, GetGossipActiveQuests())
+									if title and isComplete then
+										return SelectGossipActiveQuest(i)
+									end
 								end
 							end
 							-- Select gossip available quests
-							for i = 1, GetNumGossipAvailableQuests() do
-								local title, level, isTrivial, isDaily, isRepeatable, isLegendary, isIgnored = select(i * 7 - 6, GetGossipAvailableQuests())
-								if title and DoesQuestHaveRequirementsMet(title) then
-									return SelectGossipAvailableQuest(i)
+							if LeaPlusLC["AutoQuestAvailable"] == "On" then
+								for i = 1, GetNumGossipAvailableQuests() do
+									local title, level, isTrivial, isDaily, isRepeatable, isLegendary, isIgnored = select(i * 7 - 6, GetGossipAvailableQuests())
+									if title and DoesQuestHaveRequirementsMet(title) then
+										return SelectGossipAvailableQuest(i)
+									end
 								end
 							end
 						end
@@ -7171,6 +7195,8 @@
 				-- Automation
 				LeaPlusLC:LoadVarChk("AutomateQuests", "Off")				-- Automate quests
 				LeaPlusLC:LoadVarChk("AutoQuestShift", "Off")				-- Automate quests requires shift
+				LeaPlusLC:LoadVarChk("AutoQuestAvailable", "On")			-- Accept available quests
+				LeaPlusLC:LoadVarChk("AutoQuestCompleted", "On")			-- Turn-in completed quests
 				LeaPlusLC:LoadVarChk("AutomateGossip", "Off")				-- Automate gossip
 				LeaPlusLC:LoadVarChk("AutoAcceptSummon", "Off")				-- Accept summon
 				LeaPlusLC:LoadVarChk("AutoAcceptRes", "Off")				-- Accept resurrection
@@ -7342,6 +7368,8 @@
 			-- Automation
 			LeaPlusDB["AutomateQuests"]			= LeaPlusLC["AutomateQuests"]
 			LeaPlusDB["AutoQuestShift"]			= LeaPlusLC["AutoQuestShift"]
+			LeaPlusDB["AutoQuestAvailable"]		= LeaPlusLC["AutoQuestAvailable"]
+			LeaPlusDB["AutoQuestCompleted"]		= LeaPlusLC["AutoQuestCompleted"]
 			LeaPlusDB["AutomateGossip"]			= LeaPlusLC["AutomateGossip"]
 			LeaPlusDB["AutoAcceptSummon"] 		= LeaPlusLC["AutoAcceptSummon"]
 			LeaPlusDB["AutoAcceptRes"] 			= LeaPlusLC["AutoAcceptRes"]
@@ -8693,6 +8721,8 @@
 				-- Automation
 				LeaPlusDB["AutomateQuests"] = "On"				-- Automate quests
 				LeaPlusDB["AutoQuestShift"] = "Off"				-- Automate quests requires shift
+				LeaPlusDB["AutoQuestAvailable"] = "On"			-- Accept available quests
+				LeaPlusDB["AutoQuestCompleted"] = "On"			-- Turn-in completed quests
 				LeaPlusDB["AutomateGossip"] = "On"				-- Automate gossip
 				LeaPlusDB["AutoAcceptSummon"] = "On"			-- Accept summon
 				LeaPlusDB["AutoAcceptRes"] = "On"				-- Accept resurrection

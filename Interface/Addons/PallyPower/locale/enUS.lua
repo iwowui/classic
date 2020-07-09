@@ -46,6 +46,8 @@ L["DRAGHANDLE"] = [=[|cffffffff[Left-Click]|r |cffff0000Lock|r/|cff00ff00Unlock|
 |cffffffff[Shift-Right-Click]|r Open Options]=]
 L["DRAGHANDLE_ENABLED"] = "Drag Handle"
 L["DRAGHANDLE_ENABLED_DESC"] = "[Enable/Disable] The Drag Handle"
+L["ENABLEPP"] = "Enable PallyPower"
+L["ENABLEPP_DESC"] = "[Enable/Disable] PallyPower"
 L["FREEASSIGN"] = "Free Assignment"
 L["FREEASSIGN_DESC"] = [=[Allow others to change your 
 blessings without being Party 
@@ -85,6 +87,8 @@ L["MAINTANKNBUFFDP"] = "...with Normal..."
 L["MAINTANKNBUFFDP_DESC"] = "Select the Normal Blessing you wish to use to over-write the Main Tank: Druids / Paladins."
 L["MAINTANKNBUFFW"] = "...with Normal..."
 L["MAINTANKNBUFFW_DESC"] = "Select the Normal Blessing you wish to use to over-write the Main Tank: Warriors."
+L["MINIMAPICON"] = [=[|cffffffff[Left-Click]|r Open Blessing Assignments
+|cffffffff[Right-Click]|r Open Options]=]
 L["None"] = "None"
 L["None Buffed"] = "None Buffed"
 L["OPTIONS"] = "Options"
@@ -99,7 +103,8 @@ assignments for Self,
 Party, and Raid Paladins.]=]
 L["PP_COLOR"] = "Change the status colors of the buff buttons"
 L["PP_LOOKS"] = "Change the way PallyPower looks"
-L["PP_NAME"] = "  PallyPower Classic"
+L["PP_MAIN"] = "Main PallyPower Settings"
+L["PP_NAME"] = "PallyPower Classic"
 L["PP_RAS1"] = "--- Paladin assignments ---"
 L["PP_RAS2"] = "--- End of assignments ---"
 L["PP_RAS3"] = "WARNING: There are more than 5 Paladins in raid."
@@ -110,7 +115,6 @@ assignments, Talents, and
 Symbol of Kings among Self, 
 Party, and Raid Paladins.]=]
 L["PP_RESET"] = "Just in case you mess up"
-L["PP_SHOW"] = "When to show PallyPower"
 L["PPMAINTANK"] = "Auto-Buff Main Tank"
 L["PPMAINTANK_DESC"] = "If you enable this option PallyPower will automatically over-write a Greater Blessing with a Normal Blessing on players marked with the |cffffd200Main Tank|r role in the Blizzard Raid Panel. This is useful to avoid blessing the |cffffd200Main Tank|r role with a Greater Blessing of Salvation."
 L["RAID"] = "Raid"
@@ -142,22 +146,22 @@ L["SEALTRACKER_DESC"] = "Select the Seal you want to track"
 L["SETTINGS"] = "Settings"
 L["SETTINGS_DESC"] = "Change global settings"
 L["SETTINGSBUFF"] = "What to buff with PallyPower"
-L["SHOWGLOBAL"] = "Show Globally"
-L["SHOWGLOBAL_DESC"] = "[Show/Hide] PallyPower"
-L["SHOWPARTY"] = "Show in Party"
-L["SHOWPARTY_DESC"] = "[Show/Hide] PallyPower in a Party"
+L["SHOWMINIMAPICON"] = "Show Minimap Icon"
+L["SHOWMINIMAPICON_DESC"] = "[Show/Hide] Minimap Icon"
 L["SHOWPETS"] = "Show Pets"
 L["SHOWPETS_DESC"] = [=[If you enable this option pets will appear under their own class.
 
 |cffffff00Note: Due to the way Greater Blessings work and the way that pets are classified, Pets will need to be buffed separately. Additionally, Warlock Imps will be hidden automatically unless Phase Shift is off.|r]=]
-L["SHOWSOLO"] = "Show when Solo"
-L["SHOWSOLO_DESC"] = "[Show/Hide] PallyPower while Solo"
 L["SHOWTIPS"] = "Show Tooltips"
 L["SHOWTIPS_DESC"] = "[Show/Hide] The PallyPower Tooltips"
 L["SKIN"] = "Background Textures"
 L["SKIN_DESC"] = "Change the Button Background Textures"
 L["SMARTBUFF"] = "Smart Buffs"
 L["SMARTBUFF_DESC"] = "If you enable this option you will not be allowed to assign Blessing of Wisdom to Warriors or Rogues and Blessing of Might to Mages, Warlocks and Hunters."
+L["USEPARTY"] = "Use in Party"
+L["USEPARTY_DESC"] = "[Enable/Disable] PallyPower in Party"
+L["USESOLO"] = "Use when Solo"
+L["USESOLO_DESC"] = "[Enable/Disable] PallyPower while Solo"
 L["VerDownLeft"] = "Vertical Down | Left"
 L["VerDownRight"] = "Vertical Down | Right"
 L["VerUpLeft"] = "Vertical Up | Left"

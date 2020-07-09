@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: UnitFramesPlus Cooldown
 ## Title-zhCN: |CFF7FFF7F界面|R 系统头像增强 冷却计时
 ## Title-zhTW: |CFF7FFF7F介面|R 系統頭像增強 冷卻計時

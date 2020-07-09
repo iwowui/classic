@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: Raid Ledger
 ## Title-zhCN: |CFFFF8000辅助|R 金团账本
 ## Title-zhTW: |CFFFF8000輔助|R 金團賬本

@@ -185,26 +185,21 @@ function UnitFramesPlus_TargetThreat()
 end
 
 function UnitFramesPlus_TargetThreatDisplayUpdate()
-    if UFPThreatLib then
-        local threat = UnitFramesPlus_GetRelativeThreat("target");
-        if threat then
-            local threatfix = threat;
-            if threatfix > 100 then threatfix = 100 end
-            local r, g, b = UnitFramesPlus_GetRGB(threatfix, 100, 1)
-            if UnitFramesPlusDB["target"]["threat"] == 1 then
-                TargetThreat:SetVertexColor(r, g, b);
-                TargetThreat:SetAlpha(1);
-            else
-                TargetThreat:SetAlpha(0);
-            end
-            if UnitFramesPlusDB["target"]["threattext"] == 1 then
-                TargetThreatText:SetText(floor(threat).."%");
-                TargetThreatText:SetTextColor(r, g, b);
-            else
-                TargetThreatText:SetText("");
-            end
+    local _, _, threat = UnitDetailedThreatSituation("player", "target");
+    if threat then
+        local threatfix = threat;
+        if threatfix > 100 then threatfix = 100 end
+        local r, g, b = UnitFramesPlus_GetRGB(threatfix, 100, 1)
+        if UnitFramesPlusDB["target"]["threat"] == 1 then
+            TargetThreat:SetVertexColor(r, g, b);
+            TargetThreat:SetAlpha(1);
         else
             TargetThreat:SetAlpha(0);
+        end
+        if UnitFramesPlusDB["target"]["threattext"] == 1 then
+            TargetThreatText:SetText(floor(threat).."%");
+            TargetThreatText:SetTextColor(r, g, b);
+        else
             TargetThreatText:SetText("");
         end
     else

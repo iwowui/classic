@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: Skada
 ## Notes: Modular damage meter.
 ## Title-zhCN: |CFF80FF80团队|R 伤害统计

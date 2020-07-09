@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Notes: Collects Herbs, Mines, Gas Clouds, Archaeology, Treasure and Fishing locations and adds them to the worldmap and minimap
 ## Title: GatherMate2
 ## Title-zhCN: |CFFFF8000地图|R 采集助手

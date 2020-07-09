@@ -1,4 +1,4 @@
-﻿## Interface: 11304
+﻿## Interface: 11305
 ## Title: QuestPlus
 ## Notes: Quest Announce, shows the quest level, quest auto track and move the Quest Tracker!
 ## Title-zhCN: |CFFFF8000辅助|R 系统任务增强

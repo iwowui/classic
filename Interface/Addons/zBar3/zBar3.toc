@@ -1,4 +1,4 @@
-﻿## Interface: 11304
+﻿## Interface: 11305
 
 ## Title: zBar3
 ## Notes: ZeroFire's ActionBar Mod. |n Third Edition.

@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: 德鲁伊蓝条
 ## Notes: DruidBarClassic
 ## Title-zhCN: |CFF8000FF职业|R 德鲁伊 变形蓝条

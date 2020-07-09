@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: Accountant Classic
 ## Title-zhCN: |CFFFF8000辅助|R 个人会计
 ## Title-zhTW: |CFFFF8000輔助|R 個人會計

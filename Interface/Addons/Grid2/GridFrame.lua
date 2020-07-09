@@ -136,9 +136,9 @@ function GridFramePrototype:Layout()
 	-- visible background
 	local container= self.container
 	container:SetPoint("CENTER", self, "CENTER")
-	-- visible background color
-	local cb = dbx.frameContentColor
-	container:SetVertexColor(cb.r, cb.g, cb.b, cb.a)
+	-- visible background color (commented because now this color is set by the background indicator)
+	-- local cb = dbx.frameContentColor
+	-- container:SetVertexColor(cb.r, cb.g, cb.b, cb.a)
 	-- shrink the background, showing part of the real frame background (that is behind) as a inner border.
 	local inset = (dbx.frameBorder+dbx.frameBorderDistance)*2
 	container:SetSize( w-inset, h-inset )
@@ -187,9 +187,10 @@ Grid2Frame = Grid2:NewModule("Grid2Frame")
 Grid2Frame.defaultDB = {
 	profile = {
 		-- theme options ( active theme options in: self.db.profile, first theme options in: self.dba.profile, extra themes in: self.dba.profile.extraThemes[] )
-		frameHeight = 32,
+		frameHeight = 48,
 		frameWidth  = 48,
 		frameBorder = 2,
+		frameBorderColor = {r=0, g=0, b=0, a=0},
 		frameBorderTexture = "Grid2 Flat",
 		frameBorderDistance= 1,
 		frameTexture = "Gradient",

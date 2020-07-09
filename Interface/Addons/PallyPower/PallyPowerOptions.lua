@@ -1,7 +1,13 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("PallyPower")
 
+local _, class = UnitClass("player")
+local PP_IsPally = false
+if (class == "PALADIN") then
+	PP_IsPally = true
+end
+
 PallyPower.options = {
-	name = L["PP_NAME"],
+	name = "  " .. L["PP_NAME"],
 	type = "group",
 	childGroups = "tab",
 	args = {
@@ -14,14 +20,14 @@ PallyPower.options = {
 			args = {
 				settings_show = {
 					order = 1,
-					name = L["PP_SHOW"],
+					name = L["PP_MAIN"],
 					type = "group",
 					inline = true,
 					args = {
 						globally = {
 							order = 1,
-							name = L["SHOWGLOBAL"],
-							desc = L["SHOWGLOBAL_DESC"],
+							name = L["ENABLEPP"],
+							desc = L["ENABLEPP_DESC"],
 							type = "toggle",
 							width = 1.0,
 							get = function(info)
@@ -38,10 +44,10 @@ PallyPower.options = {
 						},
 						showparty = {
 							order = 2,
-							name = L["SHOWPARTY"],
-							desc = L["SHOWPARTY_DESC"],
+							name = L["USEPARTY"],
+							desc = L["USEPARTY_DESC"],
 							type = "toggle",
-							width = 1.4,
+							width = 1.0,
 							disabled = function(info)
 								return PallyPower.opt.enabled == false
 							end,
@@ -53,14 +59,28 @@ PallyPower.options = {
 								PallyPower:UpdateRoster()
 							end
 						},
-						showsingle = {
+						showminimapicon = {
 							order = 3,
-							name = L["SHOWSOLO"],
-							desc = L["SHOWSOLO_DESC"],
+							name = L["SHOWMINIMAPICON"],
+							desc = L["SHOWMINIMAPICON_DESC"],
+							type = "toggle",
+							width = 1.0,
+							get = function(info)
+								return PallyPower.opt.minimap.show
+							end,
+							set = function(info, val)
+								PallyPower.opt.minimap.show = val
+								PallyPowerMinimapIcon_Toggle()
+							end
+						},
+						showsingle = {
+							order = 4,
+							name = L["USESOLO"],
+							desc = L["USESOLO_DESC"],
 							type = "toggle",
 							width = 1.0,
 							disabled = function(info)
-								return PallyPower.opt.enabled == false
+								return PallyPower.opt.enabled == false or not PP_IsPally
 							end,
 							get = function(info)
 								return PallyPower.opt.ShowWhenSolo
@@ -71,7 +91,7 @@ PallyPower.options = {
 							end
 						},
 						showtooltips = {
-							order = 4,
+							order = 5,
 							name = L["SHOWTIPS"],
 							desc = L["SHOWTIPS_DESC"],
 							type = "toggle",
@@ -88,13 +108,16 @@ PallyPower.options = {
 							end
 						},
 						reportchannel = {
-							order = 5,
+							order = 6,
 							type = "select",
 							name = L["REPORTCHANNEL"],
 							desc = L["REPORTCHANNEL_DESC"],
 							width = 1.0,
 							values = function()
 								return PallyPower:ReportChannels()
+							end,
+							disabled = function(info)
+								return PallyPower.opt.enabled == false
 							end,
 							get = function(info)
 								return PallyPower.opt.ReportChannel
@@ -148,6 +171,9 @@ PallyPower.options = {
 							name = L["SALVCOMBAT"],
 							desc = L["SALVCOMBAT_DESC"],
 							width = 1.0,
+							disabled = function(info)
+								return not PP_IsPally
+							end,
 							get = function(info)
 								return PallyPower.opt.SalvInCombat
 							end,
@@ -164,7 +190,7 @@ PallyPower.options = {
 					type = "group",
 					inline = true,
 					disabled = function(info)
-						return PallyPower.opt.enabled == false
+						return PallyPower.opt.enabled == false or not PP_IsPally
 					end,
 					args = {
 						buffscale = {
@@ -269,7 +295,7 @@ PallyPower.options = {
 					type = "group",
 					inline = true,
 					disabled = function(info)
-						return PallyPower.opt.enabled == false
+						return PallyPower.opt.enabled == false or not PP_IsPally
 					end,
 					args = {
 						color_good = {
@@ -329,7 +355,7 @@ PallyPower.options = {
 			type = "group",
 			cmdHidden = true,
 			disabled = function(info)
-				return PallyPower.opt.enabled == false
+				return PallyPower.opt.enabled == false or not PP_IsPally
 			end,
 			args = {
 				aura_button = {
@@ -590,7 +616,7 @@ PallyPower.options = {
 			type = "group",
 			cmdHidden = true,
 			disabled = function(info)
-				return (not PallyPower.opt.enabled)
+				return PallyPower.opt.enabled == false or not PP_IsPally
 			end,
 			args = {
 				mainroles = {

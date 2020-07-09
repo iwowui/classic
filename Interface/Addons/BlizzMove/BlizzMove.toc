@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: BlizzMove
 ## Notes: Move those blizzard windows
 ## Title-zhCN: |CFFFF8000辅助|R 移动窗口

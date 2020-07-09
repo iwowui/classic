@@ -48,9 +48,9 @@
     UFP_OP_BuiltinCooldowntext = "显示冷却计时数值";
     UFP_OP_BuiltinExactEnemyHP = "使用内置精确生命值";
     -- UFP_OP_BuiltinExactEnemyHPPrune = "精简内置数据";
-    UFP_OP_BuiltinThreat = "使用内置仇恨高亮";
+    UFP_OP_BuiltinThreat = "仇恨高亮";
     UFP_OP_BuiltinThreattext = "显示仇恨百分比";
-    UFP_OP_BuiltinThreatTooltip = "每个小队/团队成员都必须装有至少一个基于LibThreatClassic2的插件才能正常计算仇恨";
+    -- UFP_OP_BuiltinThreatTooltip = "每个小队/团队成员都必须装有至少一个基于LibThreatClassic2的插件才能正常计算仇恨";
     UFP_OP_ColorName = "名字职业染色";
     UFP_OP_Portrait_Indicator = "显示头像内战斗信息";
     UFP_OP_Portrait_3DBG = "显示3D头像背景";

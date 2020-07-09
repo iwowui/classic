@@ -1,4 +1,4 @@
-﻿## Interface: 11304
+﻿## Interface: 11305
 ## X-Min-Interface: 11302
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Zul'Gurub|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0祖尔格拉布|r
@@ -13,6 +13,7 @@
 ## X-DBM-Mod-MapID: 309
 localization.en.lua
 localization.cn.lua
+localization.tw.lua
 Venoxis.lua
 Jeklik.lua
 Marli.lua

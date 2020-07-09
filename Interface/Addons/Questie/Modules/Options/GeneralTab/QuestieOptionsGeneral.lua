@@ -40,8 +40,8 @@ function QuestieOptions.tabs.general:Initialize()
                 width = "full",
                 get = function () return Questie.db.char.enabled; end,
                 set = function (info, value)
-                    QuestieQuest:ToggleNotes(value);
                     Questie.db.char.enabled = value
+                    QuestieQuest:ToggleNotes(value);
                 end,
             },
             iconTypes = {
@@ -50,20 +50,6 @@ function QuestieOptions.tabs.general:Initialize()
                 inline = true,
                 name = function() return QuestieLocale:GetUIString('ICON_TYPE_HEADER'); end,
                 args = {
-                    --[[enableMinimalisticIcons = {
-                        type = "toggle",
-                        order = 0.9,
-                        name = function() return "(VERY VERY WORK IN PROGRESS!!!)"..QuestieLocale:GetUIString('ENABLE_MAP_ICONS_MINIMALISTIC'); end,
-                        desc = function() return "(VERY VERY WORK IN PROGRESS!!!)"..QuestieLocale:GetUIString('ENABLE_MAP_ICONS_DESC_MINIMALISTIC'); end,
-                        width = "full",
-                        disabled = function() return (not Questie.db.char.enabled); end,
-                        get = function () return Questie.db.char.enableMinimalisticIcons; end,
-                        set = function (info, value)
-                            Questie.db.char.enableMinimalisticIcons = value
-                            QuestieFramePool:SetIcons();
-                            QuestieQuest:SmoothReset();
-                        end,
-                    },]]--
                     enableMapToggle = {
                         type = "toggle",
                         order = 1,
@@ -74,7 +60,7 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function () return Questie.db.global.enableMapIcons; end,
                         set = function (info, value)
                             Questie.db.global.enableMapIcons = value
-                            QuestieQuest:UpdateHiddenNotes();
+                            QuestieQuest:ToggleNotes(value);
                         end,
                     },
                     enableMiniMapToggle = {
@@ -87,7 +73,7 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function () return Questie.db.global.enableMiniMapIcons; end,
                         set = function (info, value)
                             Questie.db.global.enableMiniMapIcons = value
-                            QuestieQuest:UpdateHiddenNotes();
+                            QuestieQuest:ToggleNotes(value);
                         end,
                     },
                     hideUnexploredMapIconsToggle = {
@@ -100,7 +86,7 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function() return Questie.db.char.hideUnexploredMapIcons; end,
                         set = function(info, value)
                             Questie.db.char.hideUnexploredMapIcons = value
-                            QuestieQuest:Reset()
+                            QuestieQuest:ToggleNotes(value);
                         end,
                     },
                     seperatingHeader1 = {
@@ -118,7 +104,7 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function () return Questie.db.global.enableObjectives; end,
                         set = function (info, value)
                             Questie.db.global.enableObjectives = value
-                            QuestieQuest:UpdateHiddenNotes();
+                            QuestieQuest:ToggleNotes(value)
                         end,
                     },
                     enableTurninsToggle = {
@@ -131,7 +117,7 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function () return Questie.db.global.enableTurnins; end,
                         set = function (info, value)
                             Questie.db.global.enableTurnins = value
-                            QuestieQuest:UpdateHiddenNotes();
+                            QuestieQuest:ToggleNotes(value)
                         end,
                     },
                     enableAvailableToggle = {
@@ -144,7 +130,7 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function () return Questie.db.global.enableAvailable; end,
                         set = function (info, value)
                             Questie.db.global.enableAvailable = value
-                            QuestieQuest:UpdateHiddenNotes();
+                            QuestieQuest:ToggleNotes(value)
                         end,
                     },
                     showRepeatableQuests = {
@@ -157,7 +143,7 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function(info) return Questie.db.char.showRepeatableQuests end,
                         set = function (info, value)
                             Questie.db.char.showRepeatableQuests = value
-                            QuestieQuest:Reset();
+                            QuestieQuest:ToggleNotes(value)
                         end,
                     },
                     showEventQuests = {
@@ -170,13 +156,7 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function(info) return Questie.db.char.showEventQuests end,
                         set = function (info, value)
                             Questie.db.char.showEventQuests = value
-
-                            if value then
-                                QuestieEvent:Load()
-                            else
-                                QuestieEvent:Unload()
-                            end
-                            QuestieQuest:Reset()
+                            QuestieQuest:ToggleNotes(value)
                         end,
                     },
                     showDungeonQuests = {
@@ -189,7 +169,20 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function(info) return Questie.db.char.showDungeonQuests end,
                         set = function (info, value)
                             Questie.db.char.showDungeonQuests = value
-                            QuestieQuest:Reset()
+                            QuestieQuest:ToggleNotes(value)
+                        end,
+                    },
+                    showRaidQuests = {
+                        type = "toggle",
+                        order = 10,
+                        name = function() return QuestieLocale:GetUIString('ENABLE_DUNGEON_RAID_ICONS'); end,
+                        desc = function() return QuestieLocale:GetUIString('ENABLE_DUNGEON_RAID_ICONS_DESC'); end,
+                        width = 1.5,
+                        disabled = function() return (not Questie.db.char.enabled); end,
+                        get = function(info) return Questie.db.char.showRaidQuests end,
+                        set = function (info, value)
+                            Questie.db.char.showRaidQuests = value
+                            QuestieQuest:ToggleNotes(value);
                         end,
                     },
                     showPvPQuests = {
@@ -202,7 +195,7 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function(info) return Questie.db.char.showPvPQuests end,
                         set = function (info, value)
                             Questie.db.char.showPvPQuests = value
-                            QuestieQuest:Reset()
+                            QuestieQuest:ToggleNotes(value);
                         end,
                     },
                 },
@@ -317,7 +310,23 @@ function QuestieOptions.tabs.general:Initialize()
                     Questie.db.char.acceptTrivial = value
                 end,
             },
-            Spacer_B = QuestieOptionsUtils:Spacer(1.99),
+            Spacer_B = QuestieOptionsUtils:Spacer(1.93),
+            shareQuestsNearby = {
+                type = "toggle",
+                order = 1.94,
+                name = function() return QuestieLocale:GetUIString('ENABLE_YELL'); end,
+                desc = function() return QuestieLocale:GetUIString('ENABLE_YELL_DESC'); end,
+                disabled = function() return false end,
+                width = 2,
+                get = function () return not Questie.db.global.disableYellComms end,
+                set = function (info, value)
+                    Questie.db.global.disableYellComms = not value
+                    if not value then
+                        QuestieLoader:ImportModule("QuestieComms"):RemoveAllRemotePlayers()
+                    end
+                end,
+            },
+            --Spacer_C = QuestieOptionsUtils:Spacer(1.99),
             quest_options = {
                 type = "header",
                 order = 2,
@@ -342,7 +351,7 @@ function QuestieOptions.tabs.general:Initialize()
                 name = function() return QuestieLocale:GetUIString('ENABLE_MANUAL_OFFSET'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_MANUAL_OFFSET_DESC'); end,
                 width = 1.5,
-                disabled = function() return Questie.db.char.lowlevel; end,
+                disabled = function() return Questie.db.char.lowlevel or Questie.db.char.absoluteLevelOffset; end,
                 get = function () return Questie.db.char.manualMinLevelOffset; end,
                 set = function (info, value)
                     Questie.db.char.manualMinLevelOffset = value
@@ -356,7 +365,7 @@ function QuestieOptions.tabs.general:Initialize()
                 name = function() return QuestieLocale:GetUIString('ENABLE_MANUAL_OFFSET_ABSOLUTE'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_MANUAL_OFFSET_ABSOLUTE_DESC'); end,
                 width = 1.5,
-                disabled = function() return Questie.db.char.lowlevel; end,
+                disabled = function() return Questie.db.char.lowlevel or Questie.db.char.manualMinLevelOffset; end,
                 get = function () return Questie.db.char.absoluteLevelOffset; end,
                 set = function (info, value)
                     Questie.db.char.absoluteLevelOffset = value
@@ -385,13 +394,7 @@ function QuestieOptions.tabs.general:Initialize()
                 min = 0,
                 max = 60,
                 step = 1,
-                disabled = function()
-                    if(Questie.db.char.manualMinLevelOffset and not Questie.db.char.lowlevel) then
-                        return false;
-                    else
-                        return true;
-                    end
-                end,
+                disabled = function() return (not Questie.db.char.manualMinLevelOffset) and (not Questie.db.char.absoluteLevelOffset); end,
                 get = function() return Questie.db.char.minLevelFilter; end,
                 set = function (info, value)
                     Questie.db.char.minLevelFilter = value;
@@ -402,24 +405,16 @@ function QuestieOptions.tabs.general:Initialize()
                 type = "range",
                 order = 2.6,
                 name = function()
-                    if Questie.db.char.absoluteLevelOffset then
-                        return QuestieLocale:GetUIString('LEVEL_TO');
-                    else
-                        return QuestieLocale:GetUIString('LOWLEVEL_ABOVE');
-                    end
+                    return QuestieLocale:GetUIString('LEVEL_TO');
                 end,
                 desc = function()
-                    if Questie.db.char.absoluteLevelOffset then
-                        return QuestieLocale:GetUIString('LEVEL_TO_DESC');
-                    else
-                        return QuestieLocale:GetUIString('LOWLEVEL_ABOVE_DESC', optionsDefaults.char.maxLevelFilter);
-                    end
+                    return QuestieLocale:GetUIString('LEVEL_TO_DESC');
                 end,
                 width = "normal",
                 min = 0,
                 max = 60,
                 step = 1,
-                disabled = function() return QuestiePlayer:GetPlayerLevel() == 60 and (not Questie.db.char.absoluteLevelOffset); end,
+                disabled = function() return (not Questie.db.char.absoluteLevelOffset); end,
                 get = function(info) return Questie.db.char.maxLevelFilter; end,
                 set = function (info, value)
                     Questie.db.char.maxLevelFilter = value;

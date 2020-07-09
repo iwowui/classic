@@ -1,8 +1,8 @@
-## Interface: 11304
+## Interface: 11305
 ## X-WoW-Project: classic
 ## Title: Grid2
 ## Author: Pastamancer & Maia, Jerry, Toadkiller
-## Version: r955
+## Version: r966
 ## Notes: A modular, lightweight and screen-estate saving grid of party/raid unit frames
 ## Title-zhCN: |CFF80FF80团队|R 团队面板
 ## Notes-zhCN: 小巧的轻量级模块化队伍框架
@@ -46,6 +46,7 @@ GridDefaultsClassic.lua
 # Indicators
 modules\IndicatorAlpha.lua
 modules\IndicatorBorder.lua
+modules\IndicatorBackground.lua
 modules\IndicatorBar.lua
 modules\IndicatorMultiBar.lua
 modules\IndicatorText.lua

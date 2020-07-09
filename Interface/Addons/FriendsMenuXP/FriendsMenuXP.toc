@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Author: Warbaby
 ## Title: FriendsMenuXP
 ## Notes: Greatly extends the player drop down menu without secure taint.

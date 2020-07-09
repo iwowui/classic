@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: NeatPlates Widgets
 ## Notes: Library of Widgets
 ## Title-zhCN: |CFFFF8000辅助|R 姓名版增强 小部件库

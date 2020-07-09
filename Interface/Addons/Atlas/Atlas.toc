@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: Atlas
 ## Notes: Instance Map Browser
 ## Title-zhCN: |CFFFF8000地图|R 副本地图浏览器 |cFF0099FF[主程序]|r

@@ -42,7 +42,7 @@ HBDPins.MinimapGroup = CreateFrame("Frame", "QuestieFrameGroup", Minimap)
 
 
 function QuestieFramePool:SetIcons()
-    if(Questie.db.char.enableMinimalisticIcons) then
+    if (Questie.db.char.enableMinimalisticIcons) then
         ICON_TYPE_SLAY =  QuestieLib.AddonPath.."Icons\\slay_tiny.blp"
         ICON_TYPE_LOOT =  QuestieLib.AddonPath.."Icons\\loot_tiny.blp"
         ICON_TYPE_EVENT =  QuestieLib.AddonPath.."Icons\\event_tiny.blp"
@@ -91,20 +91,20 @@ StaticPopupDialogs["QUESTIE_CONFIRMHIDE"] = {
 -- Global Functions --
 ---@return IconFrame
 function QuestieFramePool:GetFrame()
-    Questie:Debug(DEBUG_SPAM, "[QuestieFramePool:GetFrame]")
+    --Questie:Debug(DEBUG_SPAM, "[QuestieFramePool:GetFrame]")
 
     ---@type IconFrame
     local returnFrame = tremove(_QuestieFramePool.unusedFrames)
 
     if returnFrame and returnFrame.frameId and _QuestieFramePool.usedFrames[returnFrame.frameId] then
         -- something went horribly wrong (desync bug?) don't use this frame since its already in use
-        Questie:Debug(DEBUG_SPAM, "[QuestieFramePool:GetFrame] Tried to reuse frame, but that frame is already in use")
+        --Questie:Debug(DEBUG_SPAM, "[QuestieFramePool:GetFrame] Tried to reuse frame, but that frame is already in use")
         returnFrame = nil
     end
     if not returnFrame then
         returnFrame = _QuestieFramePool:QuestieCreateFrame()
     else
-        Questie:Debug(DEBUG_SPAM, "[QuestieFramePool:GetFrame] Reusing frame")
+        --Questie:Debug(DEBUG_SPAM, "[QuestieFramePool:GetFrame] Reusing frame")
     end
     if returnFrame ~= nil and returnFrame.hidden and returnFrame._show ~= nil and returnFrame._hide ~= nil then -- restore state to normal (toggle questie)
         returnFrame.hidden = false
@@ -149,7 +149,7 @@ function QuestieFramePool:GetFrame()
 end
 
 function QuestieFramePool:UnloadAll()
-    Questie:Debug(DEBUG_DEVELOP, "[QuestieFramePool] ".. QuestieLocale:GetUIString('DEBUG_UNLOAD_ALL', #_QuestieFramePool.allFrames))
+    --Questie:Debug(DEBUG_DEVELOP, "[QuestieFramePool] ".. QuestieLocale:GetUIString('DEBUG_UNLOAD_ALL', #_QuestieFramePool.allFrames))
 
     for i, frame in ipairs(_QuestieFramePool.allFrames) do
         --_QuestieFramePool:UnloadFrame(frame);
@@ -196,7 +196,7 @@ function QuestieFramePool:UpdateColorConfig(mini, enable)
 end
 
 function QuestieFramePool:RecycleFrame(frame)
-    Questie:Debug(DEBUG_SPAM, "[QuestieFramePool:RecycleFrame]")
+    --Questie:Debug(DEBUG_SPAM, "[QuestieFramePool:RecycleFrame]")
     _QuestieFramePool.usedFrames[frame.frameId] = nil
     tinsert(_QuestieFramePool.unusedFrames, frame)
 end
@@ -213,7 +213,7 @@ function _QuestieFramePool:UnloadFrame(frame)
     tinsert(_QuestieFramePool.unusedFrames, frame)
 end]]--
 function _QuestieFramePool:QuestieCreateFrame()
-    Questie:Debug(DEBUG_SPAM, "[QuestieFramePool:QuestieCreateFrame]")
+    --Questie:Debug(DEBUG_SPAM, "[QuestieFramePool:QuestieCreateFrame]")
     _QuestieFramePool.numberOfFrames = _QuestieFramePool.numberOfFrames + 1
     local newFrame = QuestieFramePool.Qframe:New(_QuestieFramePool.numberOfFrames, _QuestieFramePool.QuestieTooltip)
 
@@ -263,7 +263,7 @@ function QuestieFramePool:CreateWaypoints(iconFrame, waypointTable, lineWidth, c
     local col = color or _QuestieFramePool.wayPointColor
 
     for _, waypoint in pairs(waypointTable) do
-        if(lastPos == nil) then
+        if (lastPos == nil) then
             lastPos = waypoint;
         else
             local lineFrame = QuestieFramePool:CreateLine(iconFrame, lastPos[1], lastPos[2], waypoint[1], waypoint[2], lWidth, col)
@@ -291,7 +291,6 @@ function QuestieFramePool:CreateLine(iconFrame, startX, startY, endX, endY, line
     --Create the framepool for lines if it does not already exist.
     if not QuestieFramePool.Routes_Lines then
         QuestieFramePool.Routes_Lines={}
-        QuestieFramePool.Routes_Lines_Used={}
     end
     --Names are not stricktly needed, but it is nice for debugging.
     local frameName = "questieLineFrame"..lineFrames;
@@ -311,7 +310,7 @@ function QuestieFramePool:CreateLine(iconFrame, startX, startY, endX, endY, line
     lineFrame:SetWidth(height);
     lineFrame:SetPoint("TOPLEFT", WorldMapFrame:GetCanvas(), "TOPLEFT", 0, 0)
     local frameLevel = iconFrame:GetFrameLevel();
-    if(frameLevel > 1) then
+    if (frameLevel > 1) then
         frameLevel = frameLevel - 1;
     end
     lineFrame:SetFrameLevel(frameLevel)
@@ -321,31 +320,15 @@ function QuestieFramePool:CreateLine(iconFrame, startX, startY, endX, endY, line
     lineFrame.type = "line"
 
     --Include the line in the iconFrame.
-    if(iconFrame.data.lineFrames == nil) then
+    if (iconFrame.data.lineFrames == nil) then
         iconFrame.data.lineFrames = {};
     end
     tinsert(iconFrame.data.lineFrames, lineFrame);
     lineFrame.iconFrame = iconFrame;
 
-    --Set the line as used.
-    tinsert(QuestieFramePool.Routes_Lines_Used, lineFrame)
-    --QuestieFramePool.Routes_Lines_Used[lineFrame:GetName()] = lineFrame;
-
     function lineFrame:Unload()
         self:Hide();
         self.iconFrame = nil;
-        local debugFoundSelf = false;
-        for index, lineFrame in pairs(QuestieFramePool.Routes_Lines_Used) do
-            if(lineFrame:GetName() == self:GetName()) then
-                debugFoundSelf = true;
-                --Remove it from used frames...
-                QuestieFramePool.Routes_Lines_Used[index] = nil;
-                break;
-            end
-        end
-        if(not debugFoundSelf) then
-            --Questie:Error("lineFrame unload failed, could not find self in used frames when unloaded...", self:GetName());
-        end
         HBDPins:RemoveWorldMapIcon(Questie, self)
         tinsert(QuestieFramePool.Routes_Lines, self);
     end
@@ -376,7 +359,7 @@ function QuestieFramePool:CreateLine(iconFrame, startX, startY, endX, endY, line
     --Should we keep these frames in the questIdFrames? Currently it is also a child of the icon.
     --Maybe the unload of the parent should just unload the children.
     --For safety we check this here too.
-    --if(QuestieMap.questIdFrames[lineFrame.iconFrame.data.Id] == nil) then
+    --if (QuestieMap.questIdFrames[lineFrame.iconFrame.data.Id] == nil) then
     --    QuestieMap.questIdFrames[lineFrame.iconFrame.data.Id] = {}
     --end
     --tinsert(QuestieMap.questIdFrames[lineFrame.iconFrame.data.Id], lineFrame:GetName());
@@ -391,16 +374,17 @@ function _QuestieFramePool:GetAvailableOrCompleteTooltip(icon)
     if icon.data.Type == "complete" then
         tip.type = QuestieLocale:GetUIString("TOOLTIP_QUEST_COMPLETE");
     else
-        local questType, questTag = GetQuestTagInfo(icon.data.Id);
-        if(icon.data.QuestData.IsRepeatable) then
-            tip.type = QuestieLocale:GetUIString("TOOLTIP_QUEST_REPEATABLE");--"(Repeatable)"; --
-        elseif(questType == 41 or QuestieDB:IsPvPQuest(icon.data.Id)) then
-            tip.type = "(PvP)"
-        elseif(questType == 81 or questType == 83 or questType == 62 or questType == 1) then
+
+        local quest = icon.data.QuestData
+        local questType, questTag = quest:GetQuestTagInfo();
+
+        if (icon.data.QuestData.IsRepeatable) then
+            tip.type = QuestieLocale:GetUIString("TOOLTIP_QUEST_REPEATABLE");
+        elseif (questType == 41 or questType == 81 or questType == 83 or questType == 62 or questType == 1) then
             -- Dungeon or Legendary or Raid or Group(Elite)
             tip.type = "("..questTag..")";
-        elseif(QuestieEvent and QuestieEvent.activeQuests[icon.data.Id]) then
-            tip.type = QuestieLocale:GetUIString("TOOLTIP_QUEST_EVENT");--"(Event)";--QuestieLocale:GetUIString("TOOLTIP_QUEST_AVAILABLE");
+        elseif (QuestieEvent and QuestieEvent.activeQuests[icon.data.Id]) then
+            tip.type = QuestieLocale:GetUIString("TOOLTIP_QUEST_EVENT");
         else
             tip.type = QuestieLocale:GetUIString("TOOLTIP_QUEST_AVAILABLE");
         end
@@ -416,7 +400,7 @@ function _QuestieFramePool:GetEventObjectiveTooltip(icon)
     local tip = {
         [icon.data.ObjectiveData.Description] = {},
     }
-    if(icon.data.ObjectiveData.Index) then
+    if (icon.data.ObjectiveData.Index) then
         local objectiveDesc = icon.data.QuestData.Objectives[icon.data.ObjectiveData.Index].Description;
         tip[icon.data.ObjectiveData.Description][objectiveDesc] = true;
     end
@@ -443,14 +427,25 @@ function _QuestieFramePool:GetObjectiveTooltip(icon)
                     -.required = objective.numRequired;
                 ]]
                 local playerInfo = QuestiePlayer:GetPartyMemberByName(playerName)
+                local playerColor = nil
+                local playerType = ""
                 if playerInfo then
+                    playerColor = "|c" .. playerInfo.colorHex
+                else
+                    playerColor = QuestieComms.remotePlayerClasses[playerName]
+                    if playerColor then
+                        playerColor = Questie:GetClassColor(playerColor)
+                        playerType = " ("..QuestieLocale:GetUIString("Nearby")..")"
+                    end
+                end
+                if playerColor then
                     local objectiveEntry = objectiveData[iconData.ObjectiveIndex]
                     if not objectiveEntry then
                         Questie:Debug(DEBUG_DEVELOP, "[_QuestieFramePool:GetObjectiveTooltip]", "No objective data for quest", quest.Id)
                         objectiveEntry = {} -- This will make "GetRGBForObjective" return default color
                     end
                     local remoteColor = QuestieLib:GetRGBForObjective(objectiveEntry)
-                    local colorizedPlayerName = " (|c"..playerInfo.colorHex..playerName.."|r"..remoteColor..")|r"
+                    local colorizedPlayerName = " ("..playerColor..playerName.."|r"..remoteColor..")|r"..playerType
                     local remoteText = iconData.ObjectiveData.Description
 
                     if objectiveEntry and objectiveEntry.fulfilled and objectiveEntry.required then
@@ -512,10 +507,10 @@ function _QuestieFramePool:AddTooltipsForQuest(icon, tip, quest, usedText)
 end
 
 function _QuestieFramePool:QuestieTooltip()
-    Questie:Debug(DEBUG_DEVELOP, "[_QuestieFramePool:QuestieTooltip]", "minimapIcon =", self.miniMapIcon)
+    --Questie:Debug(DEBUG_DEVELOP, "[_QuestieFramePool:QuestieTooltip]", "minimapIcon =", self.miniMapIcon)
 
     local r, g, b, a = self.texture:GetVertexColor();
-    if(a == 0) then
+    if (a == 0) then
         Questie:Debug(DEBUG_DEVELOP, "[_QuestieFramePool:QuestieTooltip]", "Alpha of texture is 0, nothing to show")
         return
     end
@@ -542,11 +537,11 @@ function _QuestieFramePool:QuestieTooltip()
             maxDistCluster = 0.5 / (1+Minimap:GetZoom())
         end
     end
-
+    r, g, b, a = unpack(QuestieMap.zoneWaypointHoverColorOverrides[self.AreaID] or _QuestieFramePool.wayPointColorHover)
     --Highlight waypoints if they exist.
     for k, lineFrame in pairs(self.data.lineFrames or {}) do
       lineFrame.line:SetColorTexture(
-        unpack(_QuestieFramePool.wayPointColorHover)
+        r,g,b,a
         --   math.min(lineFrame.line.dR*1.4, 1), math.min(lineFrame.line.dG*1.4, 1), math.min(lineFrame.line.dB*1.4, 1), math.min(lineFrame.line.dA*1.4, 1)
         )
     end
@@ -615,7 +610,7 @@ function _QuestieFramePool:QuestieTooltip()
                         local add = true;
                         for index, data in pairs(questOrder[key]) do
                             for text, nameData in pairs(data) do
-                                if(text == iconData.ObjectiveData.Description) then
+                                if (text == iconData.ObjectiveData.Description) then
                                     add = false;
                                     break;
                                 end
@@ -659,17 +654,17 @@ function _QuestieFramePool:QuestieTooltip()
     Tooltip.manualOrder = manualOrder
     Tooltip.miniMapIcon = self.miniMapIcon
     Tooltip._Rebuild = function(self)
-        Questie:Debug(DEBUG_SPAM, "[Tooltip:_Rebuild]")
+        --Questie:Debug(DEBUG_SPAM, "[Tooltip:_Rebuild]")
         local xpString = QuestieLocale:GetUIString('XP');
         local shift = IsShiftKeyDown()
         local haveGiver = false -- hack
         local firstLine = true;
         for questTitle, quests in pairs(self.npcOrder) do -- this logic really needs to be improved
             haveGiver = true
-            if(firstLine and not shift) then
+            if (firstLine and not shift) then
                 self:AddDoubleLine(questTitle, "("..QuestieLocale:GetUIString('ICON_SHIFT_HOLD')..")", 0.2, 1, 0.2, 0.43, 0.43, 0.43); --"(Shift+click)"
                 firstLine = false;
-            elseif(firstLine and shift) then
+            elseif (firstLine and shift) then
                 --self:AddDoubleLine(questTitle, "(".."Click to hide"..")", 0.2, 1, 0.2, 0.43, 0.43, 0.43); --"(Shift+click)"
                 self:AddLine(questTitle, 0.2, 1, 0.2);
                 firstLine = false;
@@ -679,7 +674,7 @@ function _QuestieFramePool:QuestieTooltip()
             for k2, questData in pairs(quests) do
                 if questData.title ~= nil then
                     local quest = QuestieDB:GetQuest(questData.questId)
-                    if(quest and shift) then
+                    if (quest and shift) then
                         local rewardString = ""
                         local rewardXP = GetQuestLogRewardXP(questData.questId)
                         if rewardXP > 0 then -- Quest rewards XP
@@ -718,11 +713,11 @@ function _QuestieFramePool:QuestieTooltip()
                 self:AddDoubleLine(questTitle, QuestieLocale:GetUIString("TOOLTIP_QUEST_ACTIVE"), 1, 1, 1, 1, 1, 0);
                 haveGiver = false -- looks better when only the first one shows (active)
             else
-                if(quest and shift and QuestiePlayer:GetPlayerLevel() ~= 60) then
+                if (quest and shift and QuestiePlayer:GetPlayerLevel() ~= 60) then
                     local r, g, b = QuestieLib:GetDifficultyColorPercent(quest.level);
                     self:AddDoubleLine(questTitle, "("..GetQuestLogRewardXP(questId)..xpString..")", 0.2, 1, 0.2, r, g, b);
                     firstLine = false;
-                elseif(firstLine and not shift) then
+                elseif (firstLine and not shift) then
                     self:AddDoubleLine(questTitle, "("..QuestieLocale:GetUIString('ICON_SHIFT_HOLD')..")", 0.2, 1, 0.2, 0.43, 0.43, 0.43); --"(Shift+click)"
                     firstLine = false;
                 else

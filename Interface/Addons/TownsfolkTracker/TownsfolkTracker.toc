@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: Townsfolk Tracker
 ## Notes: Allows tracking of townsfolk NPCs on the map and minimap.
 ## Title-zhCN: |CFFFF8000地图|R 镇民追踪

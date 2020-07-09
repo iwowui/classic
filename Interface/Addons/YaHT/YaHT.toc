@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: YaHT
 ## Notes: Yet another Hunter Timer.
 ## Title-zhCN: |CFF8000FF职业|R 猎人 射击计时条

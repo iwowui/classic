@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: MinimapLine
 ## Notes: Draws a line extending from the player arrow on the minimap
 ## Title-zhCN: |CFFFF8000辅助|R 小地图指示线

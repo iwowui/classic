@@ -74,6 +74,10 @@ L["DRAGHANDLE_ENABLED"] = "Drag Handle"
 --[[Translation missing --]]
 L["DRAGHANDLE_ENABLED_DESC"] = "[Enable/Disable] The Drag Handle"
 --[[Translation missing --]]
+L["ENABLEPP"] = "Enable PallyPower"
+--[[Translation missing --]]
+L["ENABLEPP_DESC"] = "[Enable/Disable] PallyPower"
+--[[Translation missing --]]
 L["FREEASSIGN"] = "Free Assignment"
 --[[Translation missing --]]
 L["FREEASSIGN_DESC"] = [=[Allow others to change your 
@@ -138,6 +142,9 @@ L["MAINTANKNBUFFDP_DESC"] = "Select the Normal Blessing you wish to use to over-
 L["MAINTANKNBUFFW"] = "...with Normal..."
 --[[Translation missing --]]
 L["MAINTANKNBUFFW_DESC"] = "Select the Normal Blessing you wish to use to over-write the Main Tank: Warriors."
+--[[Translation missing --]]
+L["MINIMAPICON"] = [=[|cffffffff[Left-Click]|r Open Blessing Assignments
+|cffffffff[Right-Click]|r Open Options]=]
 L["None"] = "無"
 L["None Buffed"] = "沒有Buff"
 --[[Translation missing --]]
@@ -161,7 +168,9 @@ L["PP_COLOR"] = "Change the status colors of the buff buttons"
 --[[Translation missing --]]
 L["PP_LOOKS"] = "Change the way PallyPower looks"
 --[[Translation missing --]]
-L["PP_NAME"] = "  PallyPower Classic"
+L["PP_MAIN"] = "Main PallyPower Settings"
+--[[Translation missing --]]
+L["PP_NAME"] = "PallyPower Classic"
 --[[Translation missing --]]
 L["PP_RAS1"] = "--- Paladin assignments ---"
 --[[Translation missing --]]
@@ -178,8 +187,6 @@ assignments, Talents, and
 Symbol of Kings among Self, 
 Party, and Raid Paladins.]=]
 L["PP_RESET"] = "重設框架"
---[[Translation missing --]]
-L["PP_SHOW"] = "When to show PallyPower"
 --[[Translation missing --]]
 L["PPMAINTANK"] = "Auto-Buff Main Tank"
 --[[Translation missing --]]
@@ -229,19 +236,15 @@ L["SETTINGS_DESC"] = "Change global settings"
 --[[Translation missing --]]
 L["SETTINGSBUFF"] = "What to buff with PallyPower"
 --[[Translation missing --]]
-L["SHOWGLOBAL"] = "Show Globally"
+L["SHOWMINIMAPICON"] = "Show Minimap Icon"
 --[[Translation missing --]]
-L["SHOWGLOBAL_DESC"] = "[Show/Hide] PallyPower"
-L["SHOWPARTY"] = "隊伍時顯示"
-L["SHOWPARTY_DESC"] = "在隊伍中時顯示/隱藏Buff條"
+L["SHOWMINIMAPICON_DESC"] = "[Show/Hide] Minimap Icon"
 --[[Translation missing --]]
 L["SHOWPETS"] = "Show Pets"
 --[[Translation missing --]]
 L["SHOWPETS_DESC"] = [=[If you enable this option pets will appear under their own class.
 
 |cffffff00Note: Due to the way Greater Blessings work and the way that pets are classified, Pets will need to be buffed separately. Additionally, Warlock Imps will be hidden automatically unless Phase Shift is off.|r]=]
-L["SHOWSOLO"] = "單人時顯示"
-L["SHOWSOLO_DESC"] = "在單人時顯示/隱藏Buff條"
 --[[Translation missing --]]
 L["SHOWTIPS"] = "Show Tooltips"
 --[[Translation missing --]]
@@ -252,6 +255,10 @@ L["SKIN_DESC"] = "設定Buff 按鈕的自定義背景 "
 L["SMARTBUFF"] = "Smart Buffs"
 --[[Translation missing --]]
 L["SMARTBUFF_DESC"] = "If you enable this option you will not be allowed to assign Blessing of Wisdom to Warriors or Rogues and Blessing of Might to Mages, Warlocks and Hunters."
+L["USEPARTY"] = "隊伍時顯示"
+L["USEPARTY_DESC"] = "在隊伍中時顯示/隱藏Buff條"
+L["USESOLO"] = "單人時顯示"
+L["USESOLO_DESC"] = "在單人時顯示/隱藏Buff條"
 --[[Translation missing --]]
 L["VerDownLeft"] = "Vertical Down | Left"
 --[[Translation missing --]]

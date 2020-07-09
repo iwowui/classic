@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: oRA3
 ## Notes: Raid and Party Assist
 ## Title-zhCN: |CFF80FF80团队|R 团队助手oRA3

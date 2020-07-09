@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 ## Title: TranqRotate |cff00aa001.3.0-beta1|r
 ## Notes: A tranqshot rotation assistant
 ## Title-zhCN: |CFF8000FF职业|R 猎人 宁神通告

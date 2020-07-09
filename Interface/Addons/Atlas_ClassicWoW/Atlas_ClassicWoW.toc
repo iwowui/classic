@@ -1,4 +1,4 @@
-## Interface: 11304
+## Interface: 11305
 #@non-debug@
 ## Title: Atlas |r|cFF0099FF[Classic WoW]|r
 ## Notes: Classic WoW Instances' Maps

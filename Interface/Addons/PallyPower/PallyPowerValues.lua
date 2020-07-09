@@ -9,12 +9,6 @@ PALLYPOWER_NORMALBLESSINGDURATION = 5 * 60
 PALLYPOWER_GREATERBLESSINGDURATION = 15 * 60
 PALLYPOWER_MAXAURAS = 7
 
-PallyPower.CONFIG_DRAGHANDLE = L["DRAGHANDLE"]
-PallyPower.CONFIG_RESIZEGRIP = L["RESIZEGRIP"]
-PALLYPOWER_NAME = L["PP_NAME"]
-BINDING_NAME_AUTOKEY1 = L["AUTOKEY1"]
-BINDING_NAME_AUTOKEY2 = L["AUTOKEY2"]
-
 PALLYPOWER_DEFAULT_VALUES = {
 	profile = {
 		aura = 1,
@@ -56,6 +50,10 @@ PALLYPOWER_DEFAULT_VALUES = {
 		mainAssistSpellsDP = 5,
 		mainAssistGSpellsW = 4,
 		mainAssistSpellsW = 5,
+		minimap = {
+            ["minimapPos"] = 206,
+            ["show"] = true,
+		},
 		ReportChannel = 0,
 		rfbuff = true,
 		SalvInCombat = false,
@@ -144,7 +142,7 @@ PallyPower.AuraIcons = {
 }
 
 -- XML Aliases
-PALLYPOWER_NAME = L["PP_NAME"] .. " (" .. string.trim(GetAddOnMetadata("PallyPower", "Version")) .. ")"
+PALLYPOWER_NAME = "  " .. L["PP_NAME"] .. " (" .. string.trim(GetAddOnMetadata("PallyPower", "Version")) .. ")"
 PALLYPOWER_CLEAR = L["PP_CLEAR"]
 PALLYPOWER_CLEAR_DESC = L["PP_CLEAR_DESC"]
 PALLYPOWER_REFRESH = L["PP_REFRESH"]
@@ -161,6 +159,12 @@ PALLYPOWER_ASSIGNMENTS3 = L["PP_RAS3"]
 PALLYPOWER_ASSIGNMENTS4 = L["PP_RAS4"]
 PALLYPOWER_OPTIONS = L["OPTIONS"]
 PALLYPOWER_OPTIONS_DESC = L["OPTIONS_DESC"]
+
+PallyPower.CONFIG_DRAGHANDLE = L["DRAGHANDLE"]
+PallyPower.CONFIG_RESIZEGRIP = L["RESIZEGRIP"]
+
+BINDING_NAME_AUTOKEY1 = L["AUTOKEY1"]
+BINDING_NAME_AUTOKEY2 = L["AUTOKEY2"]
 
 -- get translations directly
 PallyPower.Spells = {
@@ -182,6 +186,27 @@ PallyPower.GSpells = {
 	[4] = GetSpellInfo(25895), --BS["Greater Blessing of Salvation"],
 	[5] = GetSpellInfo(25890), --BS["Greater Blessing of Light"],
 	[6] = GetSpellInfo(25899) --BS["Greater Blessing of Sanctuary"],
+}
+
+-- down rank
+PallyPower.NormalBuffs = {
+	[1] = {{50, 25290}, {44, 19854}, {34, 19853}, {24, 19852}, {14, 19850}, {4, 19742}},
+	[2] = {{50, 25291}, {42, 19838}, {32, 19837}, {22, 19836}, {12, 19835}, {4, 19834}, {0, 19740}},
+	[3] = {{10, 20217}},
+	[4] = {{16, 1038}},
+	[5] = {{50, 19979}, {40, 19978}, {30, 19977}},
+	[6] = {{50, 20914}, {40, 20913}, {30, 20912}, {20, 20911}},
+	[7] = {{44, 20729}, {36, 6940}}
+}
+
+PallyPower.GreaterBuffs = {
+	[1] = {{50, 25918}, {44, 25894}},
+	[2] = {{50, 25916}, {42, 25782}},
+	[3] = {{50, 25898}},
+	[4] = {{50, 25895}},
+	[5] = {{50, 25890}},
+	[6] = {{50, 25899}},
+	[7] = {{44, 20729}, {36, 6940}}
 }
 
 PallyPower.RFSpell = GetSpellInfo(25780) --BS["Righteous Fury"]
