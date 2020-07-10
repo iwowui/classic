@@ -376,7 +376,7 @@ local function CreateInspectTalentButton()
         InspectTalentButton:SetScript("OnClick", function()
             local name, realm = UnitName("target");
             if name and name ~= "" then
-                if not realm or realm == "" then realm = UnitName("player") end
+                if not realm or realm == "" then realm = GetRealmName() end
                 __ala_meta__.emu.Emu_Query(name, realm);
             end
         end)
