@@ -76,17 +76,19 @@ local function updateFriends()
 			if button.buttonType == FRIENDS_BUTTON_TYPE_WOW then
 				local info = C_FriendList.GetFriendInfoByIndex(button.id)
 				if info and info.connected then
-					local name = colorString(info.name, BC[info.className])
-					local level = colorString(info.level)
-					local class = colorString(info.className, BC[info.className])
-					nameText = name .. " (" .. level .. ")"
+					if info.name and info.name ~= "" and info.level and info.level ~= "" then
+						local name = colorString(info.name, BC[info.className])
+						local level = colorString(info.level)
+						-- local class = colorString(info.className, BC[info.className])
+						nameText = name .. " (" .. level .. ")"
+					end
 					if info.area and info.area == myZone then infoText = format("|cff00ff00%s|r", info.area) end
 				end
 			elseif button.buttonType == FRIENDS_BUTTON_TYPE_BNET then
 				local _, presenceName, _, _, _, toonID, client, isOnline = BNGetFriendInfo(button.id)
 				if isOnline and client == BNET_CLIENT_WOW then
 					local _, toonName, _, realm, realmID, faction, race, class, _, zoneName, level, gameText = BNGetGameAccountInfo(toonID)
-					if presenceName and toonName then
+					if presenceName and presenceName ~= "" and toonName and toonName ~= "" and level and level ~= "" and class and class ~= "" then
 						level = colorString(level)
 						if BC[class] then
 							toonName = colorString(toonName, BC[class])
@@ -104,7 +106,11 @@ local function updateFriends()
 							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. string.gsub(EXPANSION_NAME0, "\n", "") .. " " .. (zoneName or UNKNOWN) .. " - " .. (realm or UNKNOWN)
 						end
 					else
-						infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. (gameText or UNKNOWN)
+						if faction and faction ~= "" then
+							infoText = "\124Tinterface\\worldstateframe\\" .. strlower(faction) .. "icon:20\124t" .. (gameText or UNKNOWN)
+						else
+							infoText = (gameText or UNKNOWN)
+						end
 					end
 				end
 			end

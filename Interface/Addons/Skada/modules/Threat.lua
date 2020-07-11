@@ -4,8 +4,6 @@ Skada:AddLoadableModule("Threat", nil, function(Skada, L)
 
 	local media = LibStub("LibSharedMedia-3.0")
 
-	SkadaThreatLib = LibStub:GetLibrary("LibThreatClassic2");
-
 	-- This mode is a bit special.
 	local mod = Skada:NewModule(L["Threat"])
 
@@ -119,8 +117,7 @@ Skada:AddLoadableModule("Threat", nil, function(Skada, L)
 		-- Add our feed.
 		Skada:AddFeed(L["Threat: Personal Threat"], function()
 			if Skada.current and UnitExists("target") then
-				-- local isTanking, status, threatpct, rawthreatpct, threatvalue = UnitDetailedThreatSituation("player", "target")
-				local isTanking, status, threatpct, rawthreatpct, threatvalue = SkadaThreatLib:UnitDetailedThreatSituation("player", "target")
+				local isTanking, status, threatpct, rawthreatpct, threatvalue = UnitDetailedThreatSituation("player", "target");
 				if threatpct then
 					return ("%02.1f%%"):format(threatpct)
 				end
@@ -145,8 +142,7 @@ Skada:AddLoadableModule("Threat", nil, function(Skada, L)
 
 	local function add_to_threattable(win, name, target)
 		if name and UnitExists(name) then
-			-- local isTanking, status, threatpct, rawthreatpct, threatvalue = UnitDetailedThreatSituation(name, target)
-			local isTanking, status, threatpct, rawthreatpct, threatvalue = SkadaThreatLib:UnitDetailedThreatSituation(name, target)
+			local isTanking, status, threatpct, rawthreatpct, threatvalue = UnitDetailedThreatSituation(name, target)
 
 			if Skada.db.profile.modules.threatraw then
 				if threatvalue then
