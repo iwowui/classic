@@ -45,6 +45,7 @@ L["Disable Cast Bars"] = true
 L["Force Multi-Lingual Font (Requires /reload)"] = true
 L["Use Frequent Health Updates"] = true
 L["Use Blizzard Scaling"] = true
+L["Use Blizzard Name Visibility"] = true
 L["Outline Override"] = true
 	L["Thin Outline"] = true
 	L["Thick Outline"] = true
@@ -56,6 +57,8 @@ L["Enforce required CVars"] = true
 L["Always keep Target Nameplate on Screen"] = true
 L["Stacking Nameplates"] = true
 L["Nameplate Max Distance"] = true
+L["Nameplate Occluded Alpha Multiplier"] = true
+L["The opacity multiplier for units occluded by line of sight"] = true -- Tooltip
 L["Nameplate Horizontal Overlap"] = true
 L["Nameplate Vertical Overlap"] = true
 L["Clickable Width of Nameplates"] = true
@@ -376,7 +379,6 @@ L["Threat Mode"] = true
 	L["DPS/Healer"] = true
 
 L["Enable Warning Glow"] = true
-L["Enable Threat while Solo"] = true
 L["Use Safe Color while Solo"] = true
 
 L["Threat Colors"] = true
