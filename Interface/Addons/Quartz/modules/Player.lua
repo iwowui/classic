@@ -134,8 +134,8 @@ function Player:ApplySettings()
 		CastingBarFrame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
 		CastingBarFrame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
 		CastingBarFrame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE")
-		CastingBarFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTIBLE")
-		CastingBarFrame:RegisterEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE")
+		-- CastingBarFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTIBLE")
+		-- CastingBarFrame:RegisterEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE")
 		CastingBarFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 	end
 	
