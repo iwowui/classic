@@ -187,7 +187,7 @@ Grid2Frame = Grid2:NewModule("Grid2Frame")
 Grid2Frame.defaultDB = {
 	profile = {
 		-- theme options ( active theme options in: self.db.profile, first theme options in: self.dba.profile, extra themes in: self.dba.profile.extraThemes[] )
-		frameHeight = 48,
+		frameHeight = 32,
 		frameWidth  = 48,
 		frameBorder = 2,
 		frameBorderColor = {r=0, g=0, b=0, a=0},
