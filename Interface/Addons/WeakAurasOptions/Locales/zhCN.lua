@@ -120,10 +120,6 @@ local L = WeakAuras.L
 	L["Bar Inner"] = "进度条内部"
 	L["Bar Texture"] = "进度条材质"
 	L["Big Icon"] = "大图标"
-	L["Blacklisted Aura Name"] = "忽略的光环名称"
-	L["Blacklisted Exact Spell ID(s)"] = "忽略的精确法术 ID"
-	L["Blacklisted Name(s)"] = "忽略的名称"
-	L["Blacklisted Spell ID"] = "忽略的法术ID"
 	L["Blend Mode"] = "混合模式"
 	L["Blue Rune"] = "蓝色符文"
 	L["Blue Sparkle Orb"] = "蓝色闪光球"
@@ -392,6 +388,14 @@ Supports multiple entries, separated by commas
 	L["Ignore Self"] = "忽略自身"
 	L["Ignore self"] = "忽略自身"
 	L["Ignored"] = "被忽略"
+	--[[Translation missing --]]
+	L["Ignored Aura Name"] = "Ignored Aura Name"
+	--[[Translation missing --]]
+	L["Ignored Exact Spell ID(s)"] = "Ignored Exact Spell ID(s)"
+	--[[Translation missing --]]
+	L["Ignored Name(s)"] = "Ignored Name(s)"
+	--[[Translation missing --]]
+	L["Ignored Spell ID"] = "Ignored Spell ID"
 	L["Import"] = "导入"
 	L["Import a display from an encoded string"] = "从字串导入一个图示"
 	L["Inner"] = "内部"

@@ -15,19 +15,21 @@ and their available Blessings.
 
 |cffffffff[Shift-Left-Click]|r Use Battleground
 assignment template instead of Raid
-assignement template.]=]
+assignment template.]=]
 L["AUTOBTN"] = "Auto Buff Button"
 L["AUTOBTN_DESC"] = "[Enable/Disable] The Auto Buff Button"
 L["AUTOKEY1"] = "Auto Normal Blessing Key"
 L["AUTOKEY1_DESC"] = "Key Binding for automated buffing of normal blessings."
 L["AUTOKEY2"] = "Auto Greater Blessing Key"
 L["AUTOKEY2_DESC"] = "Key Binding for automated buffing of greater blessings."
+L["BAP"] = "Blessing Assignments Scale"
+L["BAP_DESC"] = "This allows you to adjust the overall size of the Blessing Assignments Panel"
 L["BRPT"] = "Blessings Report"
-L["BRPT_DESC"] = [=[Report all Blessing 
-assignments to the 
+L["BRPT_DESC"] = [=[Report all Blessing
+assignments to the
 Raid or Party channel.]=]
-L["BSC"] = "Buff Scale"
-L["BSC_DESC"] = "Set the Buff Bar scale"
+L["BSC"] = "PallyPower Buttons Scale"
+L["BSC_DESC"] = "This allows you to adjust the overall size of the PallyPower Buttons"
 L["BUFFDURATION"] = "Buff Duration"
 L["BUFFDURATION_DESC"] = "If this option is disabled then Class and Player buttons will ignore a buffs duration allowing a buff to be reapplied at will. This is especially useful for Protection Paladins when they spam Greater Blessings to generate more threat."
 L["BUTTONS"] = "Buttons"
@@ -40,25 +42,25 @@ L["DISPEDGES"] = "Borders"
 L["DISPEDGES_DESC"] = "Change the Button Borders"
 L["DRAG"] = "Drag Handle Button"
 L["DRAG_DESC"] = "[|cffffd200Enable|r/|cffffd200Disable|r] The Drag Handle Button."
-L["DRAGHANDLE"] = [=[|cffffffff[Left-Click]|r |cffff0000Lock|r/|cff00ff00Unlock|r PallyPower 
-|cffffffff[Left-Click-Hold]|r Move PallyPower 
-|cffffffff[Right-Click]|r Open Blessing Assignments 
+L["DRAGHANDLE"] = [=[|cffffffff[Left-Click]|r |cffff0000Lock|r/|cff00ff00Unlock|r PallyPower
+|cffffffff[Left-Click-Hold]|r Move PallyPower
+|cffffffff[Right-Click]|r Open Blessing Assignments
 |cffffffff[Shift-Right-Click]|r Open Options]=]
 L["DRAGHANDLE_ENABLED"] = "Drag Handle"
 L["DRAGHANDLE_ENABLED_DESC"] = "[Enable/Disable] The Drag Handle"
 L["ENABLEPP"] = "Enable PallyPower"
 L["ENABLEPP_DESC"] = "[Enable/Disable] PallyPower"
 L["FREEASSIGN"] = "Free Assignment"
-L["FREEASSIGN_DESC"] = [=[Allow others to change your 
-blessings without being Party 
+L["FREEASSIGN_DESC"] = [=[Allow others to change your
+blessings without being Party
 Leader / Raid Assistant.]=]
-L["Fully Buffed"] = "Fully Buffed"
-L["HorLeftDown"] = "Horizontal Left | Down"
-L["HorLeftUp"] = "Horizontal Left | Up"
-L["HorRightDown"] = "Horizontal Right | Down"
-L["HorRightUp"] = "Horizontal Right | Up"
+L["FULLY_BUFFED"] = "Fully Buffed"
+L["HORLEFTDOWN"] = "Horizontal Left | Down"
+L["HORLEFTUP"] = "Horizontal Left | Up"
+L["HORRIGHTDOWN"] = "Horizontal Right | Down"
+L["HORRIGHTUP"] = "Horizontal Right | Up"
 L["LAYOUT"] = "Buff Button | Player Button Layout"
-L["LAYOUT_DESC"] = [=[Vertical [Left/Right] 
+L["LAYOUT_DESC"] = [=[Vertical [Left/Right]
 Horizontal [Up/Down]]=]
 L["MAINASSISTANT"] = "Auto-Buff Main Assistant"
 L["MAINASSISTANT_DESC"] = "If you enable this option PallyPower will automatically over-write a Greater Blessing with a Normal Blessing on players marked with the |cffffd200Main Assistant|r role in the Blizzard Raid Panel. This is useful to avoid blessing the |cffffd200Main Assistant|r role with a Greater Blessing of Salvation."
@@ -71,14 +73,11 @@ L["MAINASSISTANTNBUFFDP_DESC"] = "Select the Normal Blessing you wish to use to 
 L["MAINASSISTANTNBUFFW"] = "...with Normal..."
 L["MAINASSISTANTNBUFFW_DESC"] = "Select the Normal Blessing you wish to use to over-write the Main Tank: Warriors."
 L["MAINROLES"] = "Main Tank / Main Assist Roles"
-L["MAINROLES_DESC"] = [=[These options can be used to automatically assign alternate Normal Blessings for any Greater Blessing assigned to Warriors, Druids or Paladins |cffff0000only|r. 
+L["MAINROLES_DESC"] = [=[These options can be used to automatically assign alternate Normal Blessings for any Greater Blessing assigned to Warriors, Druids or Paladins |cffff0000only|r.
 
-Normally the Main Tank and the Main Assist roles have been used to identify Main Tanks and Off-Tanks (Main Assist) however, some guilds assign the Main Tank role to both Main Tanks and Off-Tanks and assign the Main Assist role to Healers. 
+Normally the Main Tank and the Main Assist roles have been used to identify Main Tanks and Off-Tanks (Main Assist) however, some guilds assign the Main Tank role to both Main Tanks and Off-Tanks and assign the Main Assist role to Healers.
 
-By having a separate setting for both roles it will allow Paladin Class Leaders or Raid Leaders to remove, as an example, Greater Blessing of Salvation from Tanking classes or if Druid or Paladin Healers are marked with the Main Assist role they could be setup to get Normal Blessing of Wisdom vs Greater Blessing of Might which would allow assigning Greater Blessing of Might for DPS spec'd Druids and Paladins and Normal Blessing of Wisdom to Healing spec'd Druids and Paladins. 
-
-|cffffff00Note: When there are 5 or more Paladins in a Raid (enough to assign all the Greater Blessings), these settings will automatically be disabled. Tanking Classes will have to manually switch off Blessing of Salvation.|r
-]=]
+By having a separate setting for both roles it will allow Paladin Class Leaders or Raid Leaders to remove, as an example, Greater Blessing of Salvation from Tanking classes or if Druid or Paladin Healers are marked with the Main Assist role they could be setup to get Normal Blessing of Wisdom vs Greater Blessing of Might which would allow assigning Greater Blessing of Might for DPS spec'd Druids and Paladins and Normal Blessing of Wisdom to Healing spec'd Druids and Paladins.]=]
 L["MAINTANKGBUFFDP"] = "Override Druids / Paladins..."
 L["MAINTANKGBUFFDP_DESC"] = "Select the Greater Blessing assignment you wish to over-write on Main Tank: Druids / Paladins."
 L["MAINTANKGBUFFW"] = "Override Warriors..."
@@ -89,17 +88,17 @@ L["MAINTANKNBUFFW"] = "...with Normal..."
 L["MAINTANKNBUFFW_DESC"] = "Select the Normal Blessing you wish to use to over-write the Main Tank: Warriors."
 L["MINIMAPICON"] = [=[|cffffffff[Left-Click]|r Open Blessing Assignments
 |cffffffff[Right-Click]|r Open Options]=]
-L["None"] = "None"
-L["None Buffed"] = "None Buffed"
+L["NONE"] = "None"
+L["NONE_BUFFED"] = "None Buffed"
 L["OPTIONS"] = "Options"
-L["OPTIONS_DESC"] = [=[Opens the PallyPower 
+L["OPTIONS_DESC"] = [=[Opens the PallyPower
 addon options panel.]=]
-L["Partially Buffed"] = "Partially Buffed"
+L["PARTIALLY_BUFFED"] = "Partially Buffed"
 L["PLAYERBTNS"] = "Player Buttons"
 L["PLAYERBTNS_DESC"] = "If this option is disabled then you will no longer see the pop out buttons showing individual players and you will not be able to reapply Normal Blessings while in combat."
 L["PP_CLEAR"] = "Clear"
-L["PP_CLEAR_DESC"] = [=[Clears all Blessing 
-assignments for Self, 
+L["PP_CLEAR_DESC"] = [=[Clears all Blessing
+assignments for Self,
 Party, and Raid Paladins.]=]
 L["PP_COLOR"] = "Change the status colors of the buff buttons"
 L["PP_LOOKS"] = "Change the way PallyPower looks"
@@ -110,9 +109,9 @@ L["PP_RAS2"] = "--- End of assignments ---"
 L["PP_RAS3"] = "WARNING: There are more than 5 Paladins in raid."
 L["PP_RAS4"] = "Tanks, manually switch off Blessing of Salvation!"
 L["PP_REFRESH"] = "Refresh"
-L["PP_REFRESH_DESC"] = [=[Refreshes all Blessing 
-assignments, Talents, and 
-Symbol of Kings among Self, 
+L["PP_REFRESH_DESC"] = [=[Refreshes all Blessing
+assignments, Talents, and
+Symbol of Kings among Self,
 Party, and Raid Paladins.]=]
 L["PP_RESET"] = "Just in case you mess up"
 L["PPMAINTANK"] = "Auto-Buff Main Tank"
@@ -129,7 +128,7 @@ L["REPORTCHANNEL_DESC"] = [=[Set the desired chennel to broadcast the Bliessings
 |cffffff00Note: If you change your Channel Order then you will need to reload your UI and verify that it is broadcasting to the correct channel.|r]=]
 L["RESET"] = "Reset Frames"
 L["RESET_DESC"] = "Reset all PallyPower frames back to center"
-L["RESIZEGRIP"] = [=[Left-Click-Hold to resize 
+L["RESIZEGRIP"] = [=[Left-Click-Hold to resize
 Right-Click resets default size]=]
 L["RFM"] = "Righteous Fury"
 L["RFM_DESC"] = "[Enable/Disable] Righteous Fury"
@@ -162,10 +161,10 @@ L["USEPARTY"] = "Use in Party"
 L["USEPARTY_DESC"] = "[Enable/Disable] PallyPower in Party"
 L["USESOLO"] = "Use when Solo"
 L["USESOLO_DESC"] = "[Enable/Disable] PallyPower while Solo"
-L["VerDownLeft"] = "Vertical Down | Left"
-L["VerDownRight"] = "Vertical Down | Right"
-L["VerUpLeft"] = "Vertical Up | Left"
-L["VerUpRight"] = "Vertical Up | Right"
+L["VERDOWNLEFT"] = "Vertical Down | Left"
+L["VERDOWNRIGHT"] = "Vertical Down | Right"
+L["VERUPLEFT"] = "Vertical Up | Left"
+L["VERUPRIGHT"] = "Vertical Up | Right"
 L["WAIT"] = "Wait for Players"
-L["WAIT_DESC"] = "If this option is enabled then the Auto Buff Button and the Class Buff Button(s) will not auto buff a Greater Blessing if recipient(s) are AFK or not within the Paladins range."
+L["WAIT_DESC"] = "If this option is enabled then the Auto Buff Button and the Class Buff Button(s) will not auto buff a Greater Blessing if recipient(s) are not within the Paladins range (100yds). This range check excludes AFK, Dead and Offline players."
  

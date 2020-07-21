@@ -42,22 +42,80 @@ PALLYPOWER_DEFAULT_VALUES = {
 		layout = "Layout 2",
 		mainTank = true,
 		mainTankGSpellsDP = 4,
-		mainTankSpellsDP = 5,
+		mainTankSpellsDP = 7,
 		mainTankGSpellsW = 4,
-		mainTankSpellsW = 5,
+		mainTankSpellsW = 7,
 		mainAssist = false,
 		mainAssistGSpellsDP = 4,
-		mainAssistSpellsDP = 5,
+		mainAssistSpellsDP = 7,
 		mainAssistGSpellsW = 4,
-		mainAssistSpellsW = 5,
+		mainAssistSpellsW = 7,
 		minimap = {
-            ["minimapPos"] = 206,
+            ["minimapPos"] = 190,
             ["show"] = true,
 		},
 		ReportChannel = 0,
 		rfbuff = true,
 		SalvInCombat = false,
 		seal = 4,
+		ShowInParty = true,
+		ShowPets = true,
+		ShowTooltips = true,
+		ShowWhenSolo = true,
+		skin = "Smooth",
+		SmartBuffs = true
+	}
+}
+
+PALLYPOWER_OTHER_VALUES = {
+	profile = {
+		aura = 0,
+		auras = false,
+		autobuff = {
+			autobutton = false,
+			waitforpeople = false
+		},
+		border = "Blizzard Tooltip",
+		buffscale = 0.90,
+		cBuffNeedAll = {r = 1.0, g = 0.0, b = 0.0, t = 0.5},
+		cBuffNeedSome = {r = 1.0, g = 1.0, b = 0.5, t = 0.5},
+		cBuffNeedSpecial = {r = 0.0, g = 0.0, b = 1.0, t = 0.5},
+		cBuffGood = {r = 0.0, g = 0.7, b = 0.0, t = 0.5},
+		configscale = 0.90,
+		display = {
+			buffDuration = false,
+			buttonWidth = 100,
+			buttonHeight = 34,
+			enableDragHandle = false,
+			frameLocked = false,
+			HideKeyText = false,
+			HideCount = false,
+			HideCountText = false,
+			HideTimerText = false,
+			LockBuffBars = false,
+			showPlayerButtons = false,
+			showClassButtons = false
+		},
+		enabled = true,
+		layout = "Layout 2",
+		mainTank = false,
+		mainTankGSpellsDP = 0,
+		mainTankSpellsDP = 0,
+		mainTankGSpellsW = 0,
+		mainTankSpellsW = 0,
+		mainAssist = false,
+		mainAssistGSpellsDP = 0,
+		mainAssistSpellsDP = 0,
+		mainAssistGSpellsW = 0,
+		mainAssistSpellsW = 0,
+		minimap = {
+            ["minimapPos"] = 190,
+            ["show"] = true,
+		},
+		ReportChannel = 0,
+		rfbuff = false,
+		SalvInCombat = false,
+		seal = 0,
 		ShowInParty = true,
 		ShowPets = true,
 		ShowTooltips = true,
@@ -188,7 +246,7 @@ PallyPower.GSpells = {
 	[6] = GetSpellInfo(25899) --BS["Greater Blessing of Sanctuary"],
 }
 
--- down rank
+-- spell ranks
 PallyPower.NormalBuffs = {
 	[1] = {{50, 25290}, {44, 19854}, {34, 19853}, {24, 19852}, {14, 19850}, {4, 19742}},
 	[2] = {{50, 25291}, {42, 19838}, {32, 19837}, {22, 19836}, {12, 19835}, {4, 19834}, {0, 19740}},
@@ -246,6 +304,12 @@ PallyPower.Auras = {
 	[6] = GetSpellInfo(19891), --BS["Fire Resistance Aura"],
 	[7] = GetSpellInfo(20218) --BS["Sanctity Aura"],
 }
+
+PallyPower.Cooldowns = {
+	[1] = {633, 2800, 10310}, -- Improved Lay On Hands
+	[2] = {19752} -- Divine Intervention
+}
+
 -- Buff templates
 -- Table [1] is for a single Paladin but not all Paladins have Kings and if it's not there it defaults to the next prio so something gets assigned so on and so forth down the list of tables.
 

@@ -284,7 +284,9 @@ end
 function f:FanoutEvent(event, ...)
     for frame, _ in pairs(registeredFrames) do
         local eventHandler = frame:GetScript("OnEvent")
-        eventHandler(frame, event, ...)
+        if eventHandler then
+            eventHandler(frame, event, ...)
+        end
     end
 end
 

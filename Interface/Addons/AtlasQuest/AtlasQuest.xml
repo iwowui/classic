@@ -36,6 +36,10 @@
 <!-- <Script file="Locale/global-deDE.lua" />
 <Script file="Locale/classic-deDE.lua" /> -->
 
+<!--  KOREAN LOCALIZATION -->
+<!-- <Script file="Locale/global-koKR.lua" />
+<Script file="Locale/classic-koKR.lua" /> -->
+
 <!--  SPANISH LOCALIZATION -->
 <!-- <Script file="Locale/global-esMX.lua" />
 <Script file="Locale/classic-esMX.lua" />

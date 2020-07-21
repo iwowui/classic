@@ -16,13 +16,13 @@ L["AUTOKEY1"] = "[自动]普通祝福快捷键"
 L["AUTOKEY1_DESC"] = "普通祝福的快捷键"
 L["AUTOKEY2"] = "[自动]强效祝福快捷键"
 L["AUTOKEY2_DESC"] = "强效祝福的快捷键"
+L["BAP"] = "Blessing Assignments Scale"
+L["BAP_DESC"] = "This allows you to adjust the overall size of the Blessing Assignments Panel"
 L["BRPT"] = "祝福报告"
 L["BRPT_DESC"] = "报告所有祝福到团队或小队频道"
 L["BSC"] = "主窗口大小"
 L["BSC_DESC"] = "设置祝福施加窗口的大小"
---[[Translation missing --]]
 L["BUFFDURATION"] = "Buff Duration"
---[[Translation missing --]]
 L["BUFFDURATION_DESC"] = "If this option is disabled then Class and Player buttons will ignore a buffs duration allowing a buff to be reapplied at will. This is especially useful for Protection Paladins when they spam Greater Blessings to generate more threat."
 L["BUTTONS"] = "按钮"
 L["BUTTONS_DESC"] = "更改按钮设置"
@@ -41,65 +41,45 @@ L["ENABLEPP"] = "全局显示"
 L["ENABLEPP_DESC"] = "[显示/隐藏] PallyPower"
 L["FREEASSIGN"] = "自由分配"
 L["FREEASSIGN_DESC"] = "允许其他人更改你释放的祝福"
-L["Fully Buffed"] = "已完整Buff"
-L["HorLeftDown"] = "水平 左 | 下"
-L["HorLeftUp"] = "水平 左 | 上"
-L["HorRightDown"] = "水平 右 | 下"
-L["HorRightUp"] = "水平 右 | 上"
+L["FULLY_BUFFED"] = "Fully Buffed"
+L["HORLEFTDOWN"] = "Horizontal Left | Down"
+L["HORLEFTUP"] = "Horizontal Left | Up"
+L["HORRIGHTDOWN"] = "Horizontal Right | Down"
+L["HORRIGHTUP"] = "Horizontal Right | Up"
 L["LAYOUT"] = "Buff按钮 | 玩家按钮布局"
 L["LAYOUT_DESC"] = "自定义布局"
 L["MAINASSISTANT"] = "自动Buff主助理"
 L["MAINASSISTANT_DESC"] = "启用后，PallyPower将自动对标记为| cffffd200主助理|r的人物施放更高级的普通祝福。"
---[[Translation missing --]]
 L["MAINASSISTANTGBUFFDP"] = "Override Druids / Paladins..."
---[[Translation missing --]]
 L["MAINASSISTANTGBUFFDP_DESC"] = "Select the Greater Blessing assignment you wish to over-write on Main Tank: Druids / Paladins."
---[[Translation missing --]]
 L["MAINASSISTANTGBUFFW"] = "Override Warriors..."
---[[Translation missing --]]
 L["MAINASSISTANTGBUFFW_DESC"] = "Select the Greater Blessing assignment you wish to over-write on Main Tank: Warriors."
---[[Translation missing --]]
 L["MAINASSISTANTNBUFFDP"] = "...with Normal..."
---[[Translation missing --]]
 L["MAINASSISTANTNBUFFDP_DESC"] = "Select the Normal Blessing you wish to use to over-write the Main Tank: Druids / Paladins."
---[[Translation missing --]]
 L["MAINASSISTANTNBUFFW"] = "...with Normal..."
---[[Translation missing --]]
 L["MAINASSISTANTNBUFFW_DESC"] = "Select the Normal Blessing you wish to use to over-write the Main Tank: Warriors."
-L["MAINROLES"] = "主坦克/助理人物"
---[[Translation missing --]]
+L["MAINROLES"] = "Main Tank / Main Assist Roles"
 L["MAINROLES_DESC"] = [=[These options can be used to automatically assign alternate Normal Blessings for any Greater Blessing assigned to Warriors, Druids or Paladins |cffff0000only|r. 
 
 Normally the Main Tank and the Main Assist roles have been used to identify Main Tanks and Off-Tanks (Main Assist) however, some guilds assign the Main Tank role to both Main Tanks and Off-Tanks and assign the Main Assist role to Healers. 
 
-By having a separate setting for both roles it will allow Paladin Class Leaders or Raid Leaders to remove, as an example, Greater Blessing of Salvation from Tanking classes or if Druid or Paladin Healers are marked with the Main Assist role they could be setup to get Normal Blessing of Wisdom vs Greater Blessing of Might which would allow assigning Greater Blessing of Might for DPS spec'd Druids and Paladins and Normal Blessing of Wisdom to Healing spec'd Druids and Paladins. 
-
-|cffffff00Note: When there are 5 or more Paladins in a Raid (enough to assign all the Greater Blessings), these settings will automatically be disabled. Tanking Classes will have to manually switch off Blessing of Salvation.|r
-]=]
---[[Translation missing --]]
+By having a separate setting for both roles it will allow Paladin Class Leaders or Raid Leaders to remove, as an example, Greater Blessing of Salvation from Tanking classes or if Druid or Paladin Healers are marked with the Main Assist role they could be setup to get Normal Blessing of Wisdom vs Greater Blessing of Might which would allow assigning Greater Blessing of Might for DPS spec'd Druids and Paladins and Normal Blessing of Wisdom to Healing spec'd Druids and Paladins.]=]
 L["MAINTANKGBUFFDP"] = "Override Druids / Paladins..."
---[[Translation missing --]]
 L["MAINTANKGBUFFDP_DESC"] = "Select the Greater Blessing assignment you wish to over-write on Main Tank: Druids / Paladins."
---[[Translation missing --]]
 L["MAINTANKGBUFFW"] = "Override Warriors..."
---[[Translation missing --]]
 L["MAINTANKGBUFFW_DESC"] = "Select the Greater Blessing assignment you wish to over-write on Main Tank: Warriors."
---[[Translation missing --]]
 L["MAINTANKNBUFFDP"] = "...with Normal..."
---[[Translation missing --]]
 L["MAINTANKNBUFFDP_DESC"] = "Select the Normal Blessing you wish to use to over-write the Main Tank: Druids / Paladins."
---[[Translation missing --]]
 L["MAINTANKNBUFFW"] = "...with Normal..."
 L["MAINTANKNBUFFW_DESC"] = [=[选择您想用来覆盖主坦克的普通祝福：战士。
 ]=]
---[[Translation missing --]]
 L["MINIMAPICON"] = [=[|cffffffff[Left-Click]|r Open Blessing Assignments
 |cffffffff[Right-Click]|r Open Options]=]
-L["None"] = "无"
-L["None Buffed"] = "没有被Buff"
-L["OPTIONS"] = "选项"
+L["NONE"] = "None"
+L["NONE_BUFFED"] = "None Buffed"
+L["OPTIONS"] = "Options"
 L["OPTIONS_DESC"] = "打开PallyPower选项面板"
-L["Partially Buffed"] = "已部分被Buff"
+L["PARTIALLY_BUFFED"] = "Partially Buffed"
 L["PLAYERBTNS"] = "启用玩家按钮"
 L["PLAYERBTNS_DESC"] = "禁用后，将不再看到显示单个玩家的弹出按钮， 并且在战斗中将无法释放祝福。"
 L["PP_CLEAR"] = "清除"
@@ -119,9 +99,7 @@ L["PPMAINTANK"] = "自动Buff主坦克"
 L["PPMAINTANK_DESC"] = "启用后，PallyPower将自动对标记为主坦克的人物施放最高级的祝福，防止被更高级的祝福覆盖。"
 L["RAID"] = "团队"
 L["RAID_DESC"] = "团队选项"
---[[Translation missing --]]
 L["REPORTCHANNEL"] = "Blessings Report Channel"
---[[Translation missing --]]
 L["REPORTCHANNEL_DESC"] = [=[Set the desired chennel to broadcast the Bliessings Report to:
 
 |cffffd200[None]|r Selects channel based on group makeup. (Party/Raid)
@@ -134,9 +112,7 @@ L["RESET_DESC"] = "将所有PallyPower窗口的位置重置回屏幕中央"
 L["RESIZEGRIP"] = "按住左键调整大小 ，右键重置默认大小"
 L["RFM"] = "激活正义之怒"
 L["RFM_DESC"] = "[激活/禁用]正义之怒"
---[[Translation missing --]]
 L["SALVCOMBAT"] = "Salv in Combat"
---[[Translation missing --]]
 L["SALVCOMBAT_DESC"] = [=[If you enable this option you will be able to buff Warriors, Druids and Paladins with Greater Blessing of Salvation while in combat.
 
 |cffffff00Note: This setting ONLY applies to raid groups because in our current culture, a lot of tanks use scripts/addons to cancel buffs which can only be done while not in combat. This option is basically a safety to prevent buffing a Tank with Salvation accidentally during combat.|r]=]
@@ -146,13 +122,10 @@ L["SEALBTN"] = "启用圣印按钮"
 L["SEALBTN_DESC"] = "[启用/禁用] 圣印按钮"
 L["SEALTRACKER"] = "圣印监视器"
 L["SEALTRACKER_DESC"] = "选择你想监视的圣印"
-L["SETTINGS"] = "设置"
+L["SETTINGS"] = "Settings"
 L["SETTINGS_DESC"] = "更改全局设置"
---[[Translation missing --]]
 L["SETTINGSBUFF"] = "What to buff with PallyPower"
---[[Translation missing --]]
 L["SHOWMINIMAPICON"] = "Show Minimap Icon"
---[[Translation missing --]]
 L["SHOWMINIMAPICON_DESC"] = "[Show/Hide] Minimap Icon"
 L["SHOWPETS"] = "显示宠物"
 L["SHOWPETS_DESC"] = "启用后，宠物将会出现在对应的职业下面。|cffffff00(提示：由于强效祝福的工作方式和宠物的分类方式，宠物需要单独Buff。此外，除非关闭相位变换，否则术士小鬼将自动隐藏).|r"
@@ -166,10 +139,10 @@ L["USEPARTY"] = "在小队时显示"
 L["USEPARTY_DESC"] = "当加入一个小队后显示/隐藏祝福施加窗口"
 L["USESOLO"] = "在单独时显示"
 L["USESOLO_DESC"] = "当单独一人显示/隐藏祝福施加窗口"
-L["VerDownLeft"] = "垂直 下 | 左"
-L["VerDownRight"] = "垂直 下 | 右"
-L["VerUpLeft"] = "垂直 上 | 左"
-L["VerUpRight"] = "垂直 上 | 右"
+L["VERDOWNLEFT"] = "Vertical Down | Left"
+L["VERDOWNRIGHT"] = "Vertical Down | Right"
+L["VERUPLEFT"] = "Vertical Up | Left"
+L["VERUPRIGHT"] = "Vertical Up | Right"
 L["WAIT"] = "启用等待玩家"
 L["WAIT_DESC"] = "启用后，如果玩家死亡、离线或者不在施法范围中，那么自动Buff按钮不会自动给对应的职业加强效祝福。"
  

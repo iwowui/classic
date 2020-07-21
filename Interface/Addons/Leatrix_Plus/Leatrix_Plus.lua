@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.71 (8th July 2020)
+-- 	Leatrix Plus 1.13.72 (15th July 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 	-- Version
-	LeaPlusLC["AddonVer"] = "1.13.71"
+	LeaPlusLC["AddonVer"] = "1.13.72"
 	LeaPlusLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -365,6 +365,7 @@
 		LeaPlusLC:LockOption("TipModEnable", "MoveTooltipButton", true)				-- Manage tooltip
 		LeaPlusLC:LockOption("ShowCooldowns", "CooldownsButton", true)				-- Show cooldowns
 		LeaPlusLC:LockOption("FrmEnabled", "MoveFramesButton", true)				-- Manage frames
+		LeaPlusLC:LockOption("ManageBuffs", "ManageBuffsButton", true)				-- Manage buffs
 		LeaPlusLC:LockOption("ClassColFrames", "ClassColFramesBtn", true)			-- Class colored frames
 		LeaPlusLC:LockOption("ShowPlayerChain", "ModPlayerChain", true)				-- Show player chain
 		LeaPlusLC:LockOption("SetWeatherDensity", "SetWeatherDensityBtn", false)	-- Set weather density
@@ -417,6 +418,7 @@
 
 		-- Frames
 		or	(LeaPlusLC["FrmEnabled"]			~= LeaPlusDB["FrmEnabled"])				-- Manage frames
+		or	(LeaPlusLC["ManageBuffs"]			~= LeaPlusDB["ManageBuffs"])			-- Manage buffs
 		or	(LeaPlusLC["ClassColFrames"]		~= LeaPlusDB["ClassColFrames"])			-- Class colored frames
 		or	(LeaPlusLC["ClassIconPortraits"]	~= LeaPlusDB["ClassIconPortraits"])		-- Class icon portraits
 		or	(LeaPlusLC["ShowPlayerChain"]		~= LeaPlusDB["ShowPlayerChain"])		-- Show player chain
@@ -4038,6 +4040,145 @@
 		end
 
 		----------------------------------------------------------------------
+		-- L41: Manage buffs
+		----------------------------------------------------------------------
+
+		if LeaPlusLC["ManageBuffs"] == "On" then
+
+			-- Allow buff frame to be moved
+			BuffFrame:SetMovable(true)
+			BuffFrame:SetUserPlaced(true)
+			BuffFrame:SetDontSavePosition(true)
+			BuffFrame:SetClampedToScreen(true)
+
+			-- Set buff frame position at startup
+			BuffFrame:ClearAllPoints()
+			BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+			BuffFrame:SetScale(LeaPlusLC["BuffFrameScale"])
+			TemporaryEnchantFrame:SetScale(LeaPlusLC["BuffFrameScale"])
+
+			-- Set buff frame position when the game resets it
+			hooksecurefunc("UIParent_UpdateTopFramePositions", function()
+				BuffFrame:SetMovable(true)
+				BuffFrame:ClearAllPoints()
+				BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+			end)
+
+			-- Create drag frame
+			local dragframe = CreateFrame("FRAME")
+			dragframe:SetPoint("TOPRIGHT", BuffFrame, "TOPRIGHT", 0, 2.5)
+			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
+			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
+			dragframe:SetToplevel(true)
+			dragframe:Hide()
+			dragframe:SetScale(LeaPlusLC["BuffFrameScale"])
+
+			dragframe.t = dragframe:CreateTexture()
+			dragframe.t:SetAllPoints()
+			dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetAlpha(0.5)
+
+			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
+			dragframe.f:SetPoint('CENTER', 0, 0)
+			dragframe.f:SetText(L["Buffs"])
+
+			-- Click handler
+			dragframe:SetScript("OnMouseDown", function(self, btn)
+				-- Start dragging if left clicked
+				if btn == "LeftButton" then
+					BuffFrame:StartMoving()
+				end
+			end)
+
+			dragframe:SetScript("OnMouseUp", function()
+				-- Save frame positions
+				BuffFrame:StopMovingOrSizing()
+				LeaPlusLC["BuffFrameA"], void, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"] = BuffFrame:GetPoint()
+				BuffFrame:SetMovable(true)
+				BuffFrame:ClearAllPoints()
+				BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+			end)
+
+			-- Create configuration panel
+			local BuffPanel = LeaPlusLC:CreatePanel("Manage buffs", "BuffPanel")
+
+			LeaPlusLC:MakeTx(BuffPanel, "Scale", 16, -72)
+			LeaPlusLC:MakeSL(BuffPanel, "BuffFrameScale", "Drag to set the buffs frame scale.", 0.5, 2, 0.05, 16, -92, "%.2f")
+
+			-- Set scale when slider is changed
+			LeaPlusCB["BuffFrameScale"]:HookScript("OnValueChanged", function()
+				BuffFrame:SetScale(LeaPlusLC["BuffFrameScale"])
+				TemporaryEnchantFrame:SetScale(LeaPlusLC["BuffFrameScale"])
+				dragframe:SetScale(LeaPlusLC["BuffFrameScale"])
+				-- Show formatted slider value
+				LeaPlusCB["BuffFrameScale"].f:SetFormattedText("%.0f%%", LeaPlusLC["BuffFrameScale"] * 100)
+			end)
+
+			-- Help button tooltip
+			BuffPanel.h.tiptext = L["Drag the frame overlay to position the frame."]
+
+			-- Back button handler
+			BuffPanel.b:SetScript("OnClick", function()
+				BuffPanel:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page6"]:Show()
+				return
+			end)
+
+			-- Reset button handler
+			BuffPanel.r:SetScript("OnClick", function()
+
+				-- Reset position and scale
+				LeaPlusLC["BuffFrameA"] = "TOPRIGHT"
+				LeaPlusLC["BuffFrameR"] = "TOPRIGHT"
+				LeaPlusLC["BuffFrameX"] = -205
+				LeaPlusLC["BuffFrameY"] = -13
+				LeaPlusLC["BuffFrameScale"] = 1
+				BuffFrame:ClearAllPoints()
+				BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+
+				-- Refresh configuration panel
+				BuffPanel:Hide(); BuffPanel:Show()
+				dragframe:Show()
+
+			end)
+
+			-- Show configuration panel when options panel button is clicked
+			LeaPlusCB["ManageBuffsButton"]:SetScript("OnClick", function()
+				if IsShiftKeyDown() and IsControlKeyDown() then
+					-- Preset profile
+					LeaPlusLC["BuffFrameA"] = "TOPRIGHT"
+					LeaPlusLC["BuffFrameR"] = "TOPRIGHT"
+					LeaPlusLC["BuffFrameX"] = -271
+					LeaPlusLC["BuffFrameY"] = 0
+					LeaPlusLC["BuffFrameScale"] = 0.80
+					BuffFrame:ClearAllPoints()
+					BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+					BuffFrame:SetScale(LeaPlusLC["BuffFrameScale"])
+					TemporaryEnchantFrame:SetScale(LeaPlusLC["BuffFrameScale"])
+				else
+					-- Find out if the UI has a non-standard scale
+					if GetCVar("useuiscale") == "1" then
+						LeaPlusLC["gscale"] = GetCVar("uiscale")
+					else
+						LeaPlusLC["gscale"] = 1
+					end
+
+					-- Set drag frame size according to UI scale
+					dragframe:SetWidth(280 * LeaPlusLC["gscale"])
+					dragframe:SetHeight(225 * LeaPlusLC["gscale"])
+
+					-- Show configuration panel
+					BuffPanel:Show()
+					LeaPlusLC:HideFrames()
+					dragframe:Show()
+				end
+			end)
+
+			-- Hide drag frame when configuration panel is closed
+			BuffPanel:HookScript("OnHide", function() dragframe:Hide() end)
+
+		end
+
+		----------------------------------------------------------------------
 		-- L42: Manage frames
 		----------------------------------------------------------------------
 
@@ -4073,7 +4214,7 @@
 			end)
 
 			-- Create frame table (used for local traversal)
-			local FrameTable = {DragPlayerFrame = PlayerFrame, DragTargetFrame = TargetFrame, DragMirrorTimer1 = MirrorTimer1, DragLeaPlusTopCenterContainerHolder = LeaPlusTopCenterContainerHolder, DragBuffFrame = BuffFrame}
+			local FrameTable = {DragPlayerFrame = PlayerFrame, DragTargetFrame = TargetFrame, DragMirrorTimer1 = MirrorTimer1, DragLeaPlusTopCenterContainerHolder = LeaPlusTopCenterContainerHolder}
 
 			-- Create main table structure in saved variables if it doesn't exist
 			if (LeaPlusDB["Frames"]) == nil then
@@ -4112,7 +4253,6 @@
 				LeaFramesSetPos(TargetFrame						, "TOPLEFT"	, UIParent, "TOPLEFT"	, 250, -4)
 				LeaFramesSetPos(MirrorTimer1					, "TOP"		, UIParent, "TOP"		, -5, -96)
 				LeaFramesSetPos(LeaPlusTopCenterContainerHolder	, "TOP"		, UIParent, "TOP"		, 0, -15)
-				LeaFramesSetPos(BuffFrame						, "TOPRIGHT", UIParent, "TOPRIGHT"	, -205, -13)
 			end
 
 			-- Create configuration panel
@@ -4152,10 +4292,6 @@
 					-- If target frame scale is changed, also change combo point frame
 					if currentframe == "TargetFrame" then
 						ComboFrame:SetScale(LeaPlusDB["Frames"]["TargetFrame"]["Scale"])
-					end
-					-- If buff frame scale is changed, also change temporary enchant frame
-					if currentframe == "BuffFrame" then
-						TemporaryEnchantFrame:SetScale(LeaPlusDB["Frames"]["BuffFrame"]["Scale"])
 					end
 					-- If widget top holder scale is changed, also change real widget top center frame
 					if currentframe == "LeaPlusTopCenterContainerHolder" then
@@ -4215,8 +4351,6 @@
 					end
 					-- Set combo frame scale to match target frame scale
 					ComboFrame:SetScale(LeaPlusDB["Frames"]["TargetFrame"]["Scale"])
-					-- Set temporary enchant frame scale to match buff frame scale
-					TemporaryEnchantFrame:SetScale(LeaPlusDB["Frames"]["BuffFrame"]["Scale"])
 					-- Set real widget top center frame scale to match holder frame
 					UIWidgetTopCenterContainerFrame:SetScale(LeaPlusDB["Frames"]["LeaPlusTopCenterContainerHolder"]["Scale"])
 					LeaPlusTopCenterContainerHolder:SetScale(LeaPlusDB["Frames"]["LeaPlusTopCenterContainerHolder"]["Scale"])
@@ -4272,11 +4406,7 @@
 				local dragframe = CreateFrame("Frame", nil)
 				LeaPlusLC[dragframe] = dragframe
 				dragframe:SetSize(realframe:GetSize())
-				if realframe:GetName() == "BuffFrame" then
-					dragframe:SetPoint("TOPRIGHT", realframe, "TOPRIGHT", 0, 2.5)
-				else
-					dragframe:SetPoint("TOP", realframe, "TOP", 0, 2.5)
-				end
+				dragframe:SetPoint("TOP", realframe, "TOP", 0, 2.5)
 				dragframe:SetBackdropColor(0.0, 0.5, 1.0);
 				dragframe:SetBackdrop({ 
 					edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
@@ -4286,11 +4416,7 @@
 				dragframe:SetFrameStrata("HIGH")
 
 				-- Set frame clamps
-				if realframe:GetName() == "BuffFrame" then
-					realframe:SetClampedToScreen(true)
-				else
-					realframe:SetClampedToScreen(false)
-				end
+				realframe:SetClampedToScreen(false)
 
 				-- Hide the drag frame and make real frame movable
 				dragframe:Hide()
@@ -4335,7 +4461,6 @@
 				if realframe:GetName() == "TargetFrame" 					then dragframe.f:SetText(L["Target"]) end
 				if realframe:GetName() == "MirrorTimer1" 					then dragframe.f:SetText(L["Timer"]) end
 				if realframe:GetName() == "LeaPlusTopCenterContainerHolder" then dragframe.f:SetText(L["Widget"] .. "|n" .. L["Top Center"]) end
-				if realframe:GetName() == "BuffFrame" 						then dragframe.f:SetText(L["Buffs"]) end
 				return LeaPlusLC[dragframe]
 
 			end
@@ -4351,7 +4476,6 @@
 				LeaPlusLC[k]:SetScale(LeaPlusDB["Frames"][vf]["Scale"])
 			end
 			ComboFrame:SetScale(LeaPlusDB["Frames"]["TargetFrame"]["Scale"])
-			TemporaryEnchantFrame:SetScale(LeaPlusDB["Frames"]["BuffFrame"]["Scale"])
 			UIWidgetTopCenterContainerFrame:SetScale(LeaPlusDB["Frames"]["LeaPlusTopCenterContainerHolder"]["Scale"])
 			LeaPlusTopCenterContainerHolder:SetScale(LeaPlusDB["Frames"]["LeaPlusTopCenterContainerHolder"]["Scale"])
 
@@ -4370,15 +4494,6 @@
 				end
 			end
 
-			-- Set buff frame position when the game resets it
-			hooksecurefunc("UIParent_UpdateTopFramePositions", function()
-				if LeaPlusDB["Frames"]["BuffFrame"]["Point"] and LeaPlusDB["Frames"]["BuffFrame"]["Relative"] and LeaPlusDB["Frames"]["BuffFrame"]["XOffset"] and LeaPlusDB["Frames"]["BuffFrame"]["YOffset"] then
-					BuffFrame:SetMovable(true)
-					BuffFrame:ClearAllPoints()
-					BuffFrame:SetPoint(LeaPlusDB["Frames"]["BuffFrame"]["Point"], UIParent, LeaPlusDB["Frames"]["BuffFrame"]["Relative"], LeaPlusDB["Frames"]["BuffFrame"]["XOffset"], LeaPlusDB["Frames"]["BuffFrame"]["YOffset"])
-				end
-			end)
-
 			-- Add move button
 			LeaPlusCB["MoveFramesButton"]:SetScript("OnClick", function()
 				if LeaPlusLC:PlayerInCombat() then
@@ -4390,7 +4505,6 @@
 						LeaFramesSetPos(TargetFrame						, "TOPLEFT"	, UIParent, "TOPLEFT"	,	"190"	, "-14")
 						LeaFramesSetPos(MirrorTimer1					, "TOP"		, UIParent, "TOP"		,	"0"		, "-120")
 						LeaFramesSetPos(LeaPlusTopCenterContainerHolder	, "TOP"		, UIParent, "TOP"		,	"0"		, "-432")
-						LeaFramesSetPos(BuffFrame						, "TOPRIGHT", UIParent, "TOPRIGHT"	,	"-271"	, "0")
 						-- Player
 						LeaPlusDB["Frames"]["PlayerFrame"]["Scale"] = 1.20
 						PlayerFrame:SetScale(LeaPlusDB["Frames"]["PlayerFrame"]["Scale"])
@@ -4404,10 +4518,6 @@
 						UIWidgetTopCenterContainerFrame:SetScale(LeaPlusDB["Frames"]["LeaPlusTopCenterContainerHolder"]["Scale"])
 						LeaPlusTopCenterContainerHolder:SetScale(LeaPlusDB["Frames"]["LeaPlusTopCenterContainerHolder"]["Scale"])
 						LeaPlusLC["DragLeaPlusTopCenterContainerHolder"]:SetScale(LeaPlusDB["Frames"]["LeaPlusTopCenterContainerHolder"]["Scale"])
-						-- Buff
-						LeaPlusDB["Frames"]["BuffFrame"]["Scale"] = 0.80
-						BuffFrame:SetScale(LeaPlusDB["Frames"]["BuffFrame"]["Scale"])
-						LeaPlusLC["DragBuffFrame"]:SetScale(LeaPlusDB["Frames"]["BuffFrame"]["Scale"])
 						-- Set the slider to the selected frame (if there is one)
 						if currentframe then LeaPlusCB["FrameScale"]:SetValue(LeaPlusDB["Frames"][currentframe]["Scale"]); end
 						-- Save locations
@@ -4447,7 +4557,6 @@
 						-- Set specific scaled sizes for stubborn frames
 						LeaPlusLC["DragMirrorTimer1"]:SetSize(206 * LeaPlusLC["gscale"], 50 * LeaPlusLC["gscale"]);
 						LeaPlusLC["DragLeaPlusTopCenterContainerHolder"]:SetSize(160 * LeaPlusLC["gscale"], 79 * LeaPlusLC["gscale"]);
-						LeaPlusLC["DragBuffFrame"]:SetSize(280 * LeaPlusLC["gscale"], 225 * LeaPlusLC["gscale"]);
 					end
 				end
 			end)
@@ -7284,6 +7393,12 @@
 
 				-- Frames
 				LeaPlusLC:LoadVarChk("FrmEnabled", "Off")					-- Manage frames
+				LeaPlusLC:LoadVarChk("ManageBuffs", "Off")					-- Manage buffs
+				LeaPlusLC:LoadVarAnc("BuffFrameA", "TOPRIGHT")				-- Manage buffs anchor
+				LeaPlusLC:LoadVarAnc("BuffFrameR", "TOPRIGHT")				-- Manage buffs relative
+				LeaPlusLC:LoadVarNum("BuffFrameX", -205, -5000, 5000)		-- Manage buffs position X
+				LeaPlusLC:LoadVarNum("BuffFrameY", -13, -5000, 5000)		-- Manage buffs position Y
+				LeaPlusLC:LoadVarNum("BuffFrameScale", 1, 0.5, 2)			-- Manage buffs position Y
 				LeaPlusLC:LoadVarChk("ClassColFrames", "Off")				-- Class colored frames
 				LeaPlusLC:LoadVarChk("ClassColPlayer", "On")				-- Class colored player frame
 				LeaPlusLC:LoadVarChk("ClassColTarget", "On")				-- Class colored target frame
@@ -7457,6 +7572,12 @@
 
 			-- Frames
 			LeaPlusDB["FrmEnabled"]				= LeaPlusLC["FrmEnabled"]
+			LeaPlusDB["ManageBuffs"]			= LeaPlusLC["ManageBuffs"]
+			LeaPlusDB["BuffFrameA"]				= LeaPlusLC["BuffFrameA"]
+			LeaPlusDB["BuffFrameR"]				= LeaPlusLC["BuffFrameR"]
+			LeaPlusDB["BuffFrameX"]				= LeaPlusLC["BuffFrameX"]
+			LeaPlusDB["BuffFrameY"]				= LeaPlusLC["BuffFrameY"]
+			LeaPlusDB["BuffFrameScale"]			= LeaPlusLC["BuffFrameScale"]
 			LeaPlusDB["ClassColFrames"]			= LeaPlusLC["ClassColFrames"]
 			LeaPlusDB["ClassColPlayer"]			= LeaPlusLC["ClassColPlayer"]
 			LeaPlusDB["ClassColTarget"]			= LeaPlusLC["ClassColTarget"]
@@ -8816,12 +8937,12 @@
 				LeaPlusDB["Frames"]["LeaPlusTopCenterContainerHolder"]["YOffset"] = -432
 				LeaPlusDB["Frames"]["LeaPlusTopCenterContainerHolder"]["Scale"] = 1.25
 
-				LeaPlusDB["Frames"]["BuffFrame"] = {}
-				LeaPlusDB["Frames"]["BuffFrame"]["Point"] = "TOPRIGHT"
-				LeaPlusDB["Frames"]["BuffFrame"]["Relative"] = "TOPRIGHT"
-				LeaPlusDB["Frames"]["BuffFrame"]["XOffset"] = -271
-				LeaPlusDB["Frames"]["BuffFrame"]["YOffset"] = 0
-				LeaPlusDB["Frames"]["BuffFrame"]["Scale"] = 0.80
+				LeaPlusDB["ManageBuffs"] = "On"					-- Manage buffs
+				LeaPlusDB["BuffFrameA"] = "TOPRIGHT"			-- Manage buffs anchor
+				LeaPlusDB["BuffFrameR"] = "TOPRIGHT"			-- Manage buffs relative
+				LeaPlusDB["BuffFrameX"] = -271					-- Manage buffs position X
+				LeaPlusDB["BuffFrameY"] = 0						-- Manage buffs position Y
+				LeaPlusDB["BuffFrameScale"] = 0.8				-- Manage buffs scale
 
 				LeaPlusDB["ClassColFrames"] = "On"				-- Class colored frames
 				LeaPlusDB["ClassIconPortraits"] = "On"			-- Class icon portraits
@@ -9147,18 +9268,20 @@
 	pg = "Page6";
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Features"					, 	146, -72);
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "FrmEnabled"				,	"Manage frames"					, 	146, -92, 	true,	"If checked, you will be able to change the position and scale of the following frames:|n|n- Player frame|n- Target frame|n- Buffs frame|n- Widget top center frame|n- Timer bar")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ClassColFrames"			, 	"Class colored frames"			,	146, -112, 	true,	"If checked, class coloring will be used in the player frame and target frame.")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ClassIconPortraits"		, 	"Class icon portraits"			,	146, -132, 	true,	"If checked, class icons will be shown in the portrait frames.")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowPlayerChain"			, 	"Show player chain"				,	146, -152, 	true,	"If checked, you will be able to show a rare, elite or rare elite chain around the player frame.")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowRaidToggle"			, 	"Raid frame toggle"				,	146, -172, 	true,	"If checked, the button to toggle the raid container frame will be shown just above the raid management frame (left side of the screen) instead of in the raid management frame itself.|n|nThis allows you to toggle the raid container frame without needing to open the raid management frame.")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "CombatPlates"				, 	"Combat plates"					,	146, -192, 	true,	"If checked, enemy nameplates will be shown during combat and hidden when combat ends.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "FrmEnabled"				,	"Manage frames"					, 	146, -92, 	true,	"If checked, you will be able to change the position and scale of the following frames:|n|n- Player frame|n- Target frame|n- Widget top center frame|n- Timer bar")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ManageBuffs"				,	"Manage buffs"					, 	146, -112, 	true,	"If checked, you will be able to change the position and scale of the buffs frame.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ClassColFrames"			, 	"Class colored frames"			,	146, -132, 	true,	"If checked, class coloring will be used in the player frame and target frame.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ClassIconPortraits"		, 	"Class icon portraits"			,	146, -152, 	true,	"If checked, class icons will be shown in the portrait frames.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowPlayerChain"			, 	"Show player chain"				,	146, -172, 	true,	"If checked, you will be able to show a rare, elite or rare elite chain around the player frame.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowRaidToggle"			, 	"Raid frame toggle"				,	146, -192, 	true,	"If checked, the button to toggle the raid container frame will be shown just above the raid management frame (left side of the screen) instead of in the raid management frame itself.|n|nThis allows you to toggle the raid container frame without needing to open the raid management frame.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "CombatPlates"				, 	"Combat plates"					,	146, -212, 	true,	"If checked, enemy nameplates will be shown during combat and hidden when combat ends.")
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Visibility"				, 	340, -72);
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoGryphons"				,	"Hide gryphons"					, 	340, -92, 	true,	"If checked, the main bar gryphons will not be shown.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoClassBar"				,	"Hide stance bar"				, 	340, -112, 	true,	"If checked, the stance bar will not be shown.")
 
 	LeaPlusLC:CfgBtn("MoveFramesButton", LeaPlusCB["FrmEnabled"])
+	LeaPlusLC:CfgBtn("ManageBuffsButton", LeaPlusCB["ManageBuffs"])
 	LeaPlusLC:CfgBtn("ClassColFramesBtn", LeaPlusCB["ClassColFrames"])
 	LeaPlusLC:CfgBtn("ModPlayerChain", LeaPlusCB["ShowPlayerChain"])
 

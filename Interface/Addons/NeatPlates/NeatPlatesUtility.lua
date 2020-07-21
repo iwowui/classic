@@ -605,7 +605,6 @@ local function CreateSliderFrame(self, reference, parent, label, val, minval, ma
 	local value, multiplier, minimum, maximum, current
 	local slider = CreateFrame("Slider", reference, parent, 'OptionsSliderTemplate')
 	local EditBox = CreateFrame("EditBox", reference, slider)
-
 	slider.isActual = (mode and mode == "ACTUAL")
 
 	slider:SetWidth(width or 100)
@@ -686,8 +685,8 @@ local function CreateSliderFrame(self, reference, parent, label, val, minval, ma
 		local value = val or self.ceil(self:GetValue(self))
 		if infinite then
 			NeatPlatesHubRapidPanel.SetSliderMechanics(self, value, minimum+value, maximum+value, step)
-		else
-			NeatPlatesHubRapidPanel.SetSliderMechanics(self, value, minimum, maximum, step)
+		elseif slider.isActual then
+			NeatPlatesHubRapidPanel.SetSliderMechanics(self, value, minimum, maximum, step) -- Only breaks stuff?
 		end
 		if parent.OnValueChanged then parent.OnValueChanged(slider) end
 		if slider.OnValueChanged then slider.OnValueChanged(slider) end

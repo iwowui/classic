@@ -34,7 +34,7 @@ function TomTom:Initialize(event, addon)
                 corpse_arrow = true,
             },
             block = {
-                enable = false,
+                enable = true,
                 accuracy = 2,
                 bordercolor = {1, 0.8, 0, 0.8},
                 bgcolor = {0, 0, 0, 0.4},
@@ -415,8 +415,16 @@ function TomTom:ShowHideCoordBlock()
             TomTomBlock:SetScript("OnDragStop", Block_OnDragStop)
             TomTomBlock:SetScript("OnDragStart", Block_OnDragStart)
             TomTomBlock:RegisterEvent("PLAYER_ENTERING_WORLD")
+            if not self.CLASSIC then
+                TomTomBlock:RegisterEvent("PET_BATTLE_OPENING_START")
+                TomTomBlock:RegisterEvent("PET_BATTLE_CLOSE")
+            end
             TomTomBlock:SetScript("OnEvent", Block_OnEvent)
         end
+        if self.profile.arrow.hideDuringPetBattles and C_PetBattles and C_PetBattles.IsInBattle() then
+			TomTomBlock:Hide()
+			return
+		end
         -- Show the frame
         TomTomBlock:Show()
 
@@ -1075,7 +1083,7 @@ do
     end
 
     function Block_OnEvent(self, event, ...)
-        if (event == "PLAYER_ENTERING_WORLD") then
+        if (event == "PLAYER_ENTERING_WORLD") or (event == "PET_BATTLE_OPENING_START") or (event == "PET_BATTLE_CLOSE") then
             TomTom:ShowHideCoordBlock()
         end
     end
