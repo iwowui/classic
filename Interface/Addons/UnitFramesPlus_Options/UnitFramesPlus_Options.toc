@@ -3,7 +3,7 @@
 ## Title-zhCN: |CFF7FFF7F界面|R 系统头像增强 设置
 ## Title-zhTW: |CFF7FFF7F介面|R 系統頭像增強 設置
 ## X-Repple: 界面
-## Version: 1.36.4
+## Version: 1.36.5
 ## Author: Isler
 ## LoadOnDemand: 1
 ## RequiredDeps: UnitFramesPlus
