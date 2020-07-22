@@ -110,7 +110,7 @@ function GetLink_Command(msg)
 					if GLOptions["type"] == -1 or (tonumber(itemtype) == GLOptions["type"] and (tonumber(itemsubtype) == GLOptions["subtype"] or GLOptions["subtype"] == -1) and (GLOptions["type"] ~= 4 or (itemloc == GLOptions["loc"] or GLOptions["loc"] == "all"))) then
 						if (tonumber(itemrarity) < 6 and GLOptions["quality"] < 6 and tonumber(itemrarity) <= qualityfix[GLOptions["quality"]]) or (tonumber(itemrarity) > 5 and tonumber(itemrarity) >= qualityfix[GLOptions["quality"]]) then
 							if GLOptions["extra"] == 1 then
-								if msg:len() == 0 or string.find(itemname:lower(), msg, 2) then
+								if msg:len() == 0 or string.find(itemname:lower(), msg) then
 									if not _G["GetLinkGui"]:IsShown() then
 										if string.find(itemname, "|") then
 											print(name)
@@ -129,7 +129,7 @@ function GetLink_Command(msg)
 								local found = 1
 								if msg:len() ~= 0 then
 									for k, v in pairs(tb) do
-										if not string.find(itemname:lower(), v, 2) then
+										if not string.find(itemname:lower(), v) then
 											found = 0
 											break
 										end

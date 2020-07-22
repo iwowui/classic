@@ -164,3 +164,17 @@ ItemRefTooltip:HookScript("OnTooltipSetItem", function(tt)
 		end
 	end
 end)
+
+--ManyItemTooltips
+function MITVendorPrice(tt)
+	local item = select(2, tt:GetItem())
+	if item then --and not VP:HasAuctionator("OnTooltipSetItem") then
+		local sellPrice, classID = select(11, GetItemInfo(item))
+		if sellPrice and sellPrice > 0 and not CheckRecipe(tt, classID, true) then
+			SetTooltipMoney(tt, sellPrice, nil, SELL_PRICE_TEXT)
+		end
+	end
+end
+
+ItemRefShoppingTooltip1:HookScript("OnTooltipSetItem", MITVendorPrice)
+ItemRefShoppingTooltip2:HookScript("OnTooltipSetItem", MITVendorPrice)

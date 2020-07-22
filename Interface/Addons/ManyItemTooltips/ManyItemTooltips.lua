@@ -139,6 +139,17 @@ function MIT:CreateTooltip(link)
     end
     tooltips[n] = frame
     checkHook("OnCreate", frame)
+
+    if MITAddItemlevelToTooltip then
+        frame:HookScript("OnTooltipSetItem", MITAddItemlevelToTooltip)
+    end
+    if MITVendorPrice then
+        frame:HookScript("OnTooltipSetItem", MITVendorPrice)
+    end
+    if MITgetItemIdFromTooltip then
+        frame:HookScript("OnTooltipSetItem", MITgetItemIdFromTooltip)
+    end
+
     return frame
 end
 

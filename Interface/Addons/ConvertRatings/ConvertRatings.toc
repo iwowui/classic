@@ -1,0 +1,11 @@
+## Interface: 11305
+## Title: ConvertRatings
+## Notes: Shows Combat Rating Percentages in tooltips
+## Title-zhCN: |CFFFF8000辅助|R 装备属性换算
+## Title-zhTW: |CFFFF8000輔助|R 裝備屬性換算
+## X-Repple: 辅助
+## Version: 1.21
+## SavedVariables: cvred, cvgreen, cvblue, cvalpha
+
+Localization.lua
+ConvertRatings.lua

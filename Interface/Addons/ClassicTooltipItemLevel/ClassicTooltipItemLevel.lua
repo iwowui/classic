@@ -49,6 +49,11 @@ local function HookTooltips()
 	ShoppingTooltip1:HookScript( "OnTooltipSetItem", AddItemlevelToTooltip )
 	ShoppingTooltip2:HookScript( "OnTooltipSetItem", AddItemlevelToTooltip )
 	--ShoppingTooltip3:HookScript( "OnTooltipSetItem", AddItemlevelToTooltip )
+    ItemRefShoppingTooltip1:HookScript("OnTooltipSetItem", AddItemlevelToTooltip);
+    ItemRefShoppingTooltip2:HookScript("OnTooltipSetItem", AddItemlevelToTooltip);
 end
 
 HookTooltips()
+
+--ManyItemTooltips
+MITAddItemlevelToTooltip = AddItemlevelToTooltip
