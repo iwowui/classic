@@ -76,7 +76,7 @@ do
 			name = L["Delete"],
 			desc = L["Delete this element"],
 			func = DeleteStatus,
-			confirm = function() return "Are you sure you want to delete this status ?" end,
+			confirm = function() return "你确定删除这个状态吗?" end,
 			disabled = function() return next(status.indicators)~=nil or status:IsSuspended() end,
 			arg = { status = status },
 		}
