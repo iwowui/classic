@@ -326,6 +326,7 @@ local function fConvertStat(mode, value, statweight)
 
 	if (mode == "mult") then
 		value = value * statweight;
+		value = mathround(value, 2);
 	elseif (mode == "div") then
 		value = value / statweight;
 		value = mathround(value, 2);
@@ -437,6 +438,7 @@ local function getItemIdFromTooltip(self)
    	--Get itemLink of mouseover :L
 	local name, itemLink = self:GetItem();
 	--Check to make sure an itemLink is actually returned
+	
 	if(itemLink == nil) then
 		return;
 	end
@@ -496,12 +498,12 @@ local function getItemIdFromTooltip(self)
 	local numLines = self:NumLines()
 
 	--Set output values in the same line as the rating in tooltip :L
-	for i=2, self:NumLines() do		
+	for i=4, self:NumLines() do	
 		local line = _G[self:GetName().."TextLeft"..i]
 		local text = line:GetText()
 		local bFound = false;
 		if text then
-
+			--print(text)
 
 			-- because wow is dumb, and sometimes we need to correct it....
 			local stat;
@@ -644,12 +646,207 @@ local function getItemIdFromTooltip(self)
 
 end
 
---Hooks to mbcake the addon function :L
+local function ConverSpellTooltips(self)
+	local name, id = self:GetSpell()
+	if id then
+		local name, rank, icon, castTime, minRange, maxRange = GetSpellInfo(id)
+        self:AddLine("    ")
+		self:AddLine("ID: " .. tostring(id), 1, 1, 1)
+		line:SetText(text .. " " .. hexcolor .. "" .. stringBuilder);
+    end
+end
+
+local function convertStrength(self, allstat)
+	stringBuilder = " (";
+	if (strAP~=0) then
+		stringBuilder = stringBuilder .. "+" .. fConvertStat("mult", allstat, strAP) .. " " .. L["AP"]
+	end
+	if (strBLK~=0) then
+		if strlen(stringBuilder) > 3 then stringSep = ", +" else stringSep = "" end
+		stringBuilder = stringBuilder .. stringSep .. fConvertStat("div", allstat, strBLK) .. " " .. L["BLOCK"]
+	end
+	stringBuilder = stringBuilder .. ")";
+	self:AddLine(white .. "+" .. mathround(allstat, 2) .. " ".. _G["SPELL_STAT1_NAME"] .. " " .. hexcolor .. "" .. stringBuilder);
+	self:Show();
+end
+local function convertAgility(self, allstat)
+	stringBuilder = " (";
+	if (agilAP~=0) then
+		stringBuilder = stringBuilder .. "+" .. fConvertStat("mult", allstat, agilAP) .. " " .. L["AP"]
+	end
+	if (agilCRIT~=0) then
+		if strlen(stringBuilder) > 3 then stringSep = ", " else stringSep = "" end
+		stringBuilder = stringBuilder .. stringSep .. fConvertStat("div", allstat, agilCRIT) .. "% " .. L["CRIT"]
+	end
+	if (agilDODGE~=0) then
+		if strlen(stringBuilder) > 3 then stringSep = ", " else stringSep = "" end
+		stringBuilder = stringBuilder .. stringSep .. fConvertStat("div", allstat, agilDODGE) .. "% " .. L["DODGE"]
+	end
+	stringBuilder = stringBuilder .. ")";
+	self:AddLine(white .. "+" .. mathround(allstat, 2) .. " ".. _G["SPELL_STAT2_NAME"] .. " " .. hexcolor .. "" .. stringBuilder);
+	self:Show();
+end
+
+local function convertIntellect(self, allstat)
+	stringBuilder = " (";
+	if (intCRIT~=0) then
+		stringBuilder = stringBuilder .. fConvertStat("div", allstat, intCRIT) .. "% " .. L["SPELLCRIT"]
+	end	
+	if (intMANA~=0) then
+		if strlen(stringBuilder) > 3 then stringSep = ", +" else stringSep = "" end
+		stringBuilder = stringBuilder .. stringSep .. fConvertStat("mult", allstat, intMANA) .. " " .. L["MANA"]
+	end
+	stringBuilder = stringBuilder .. ")";
+	self:AddLine(white .. "+" .. mathround(allstat, 2) .. " ".. _G["SPELL_STAT4_NAME"] .. " " .. hexcolor .. "" .. stringBuilder);
+	self:Show();
+end
+local function convertStamina(self, allstat)
+	stringBuilder = " (";
+	if (stamHP~=0) then
+		stringBuilder = stringBuilder .. "+" .. fConvertStat("mult", allstat, stamHP) .. " " .. L["HEALTH"]
+	end
+	stringBuilder = stringBuilder .. ")";
+	self:AddLine(white .. "+" .. mathround(allstat, 2) .. " ".. _G["SPELL_STAT3_NAME"] .. " " .. hexcolor .. "" .. stringBuilder);
+	self:Show();
+end
+local function convertSpirit(self, allstat)
+	stringBuilder = " (";
+	if (spiritREGEN~=0) then
+		stringBuilder = stringBuilder .. "+" .. fConvertStat("spirit", allstat, spiritREGEN) .. " " .. L["MANAREGEN"]
+	end
+	stringBuilder = stringBuilder .. ")";
+	self:AddLine(white .. "+" .. mathround(allstat, 2) .. " ".. _G["SPELL_STAT5_NAME"] .. " " .. hexcolor .. "" .. stringBuilder);
+	self:Show();
+end
+
+
+local function convertAllStatsToTooltip(self, allstat)
+	
+	convertStrength(self, allstat)
+	convertAgility(self, allstat)
+	convertIntellect(self, allstat)
+	convertStamina(self, allstat)
+	convertSpirit(self, allstat)
+	
+end
+
+hooksecurefunc(GameTooltip, "SetUnitAura", function(self, unit, index, filter)
+	local spellId = select(10,UnitAura(unit, index, filter))
+	
+	--print(spellId)
+	
+	if (unit ~= "player") then return end
+
+	local localizedClass, englishClass, classIndex = UnitClass("Player");
+	
+	--Select the level based rating amounts
+	strAP = str_to_ap[englishClass];
+	strBLK = str_to_block[englishClass];
+	agilAP = agil_to_ap[englishClass];
+	agilCRIT = agil_to_crit[englishClass];
+	agilDODGE = agil_to_dodge[englishClass];
+	intCRIT = int_to_crit[englishClass];
+	intMANA = int_to_mana[englishClass];
+	stamHP = stam_to_health[englishClass];
+	spiritREGEN = spirit_to_regen[englishClass];
+	spiritREGENCLASS = spirit_to_regen_class[englishClass];
+
+	--Convert text color from decimal to hex
+	hexcolor = string.format("|cff%02x%02x%02x", cvred*255, cvgreen*255, cvblue*255)
+	white = string.format("|cff%02x%02x%02x", 255, 255, 255)
+
+	if ((spellId == 20217) or (spellId == 24425) or (spellId == 25898)) then
+
+		if ((spellId == 20217) or (spellId == 25898)) then
+			stat = 1.1;
+			statpercent = 0.1;
+		elseif (spellId == 24425) then
+			stat = 1.15;
+			statpercent = 0.15;
+		end
+
+		local strength = select(2,UnitStat("player",1))
+		local agility = select(2,UnitStat("player",2))
+		local stamina = select(2,UnitStat("player",3))
+		local intellect = select(2,UnitStat("player",4))
+		local spirit = select(2,UnitStat("player",5))
+
+		strength = (strength / stat) * statpercent;
+		agility = (agility / stat) * statpercent;
+		stamina = (stamina / stat) * statpercent;
+		intellect = (intellect / stat) * statpercent;
+		spirit = (spirit / stat) * statpercent;
+
+		convertStrength(self, strength)
+		convertAgility(self, agility)
+		convertIntellect(self, stamina)
+		convertStamina(self, intellect)
+		convertSpirit(self, spirit)
+		
+	elseif (spellId == 15366) then
+		local allstat = 15;
+		convertAllStatsToTooltip(self, allstat)
+	else
+		-- Store the number of lines for after ClearLines().
+		local numLines = self:NumLines()
+		
+		--Set output values in the same line as the rating in tooltip :L
+		for i=2, self:NumLines() do	
+			local line = _G[self:GetName().."TextLeft"..i]
+			local text = line:GetText()
+			local bFound = false;
+			if text then
+				--print(text)
+
+				-- because wow is dumb, and sometimes we need to correct it....
+				local stat, stat2, stat3;
+				local stringBuilder, stringSep;
+
+				if string.find(text, _G["SPELL_STAT1_NAME"]) then
+					stat = string.match(text,"%d+")
+					convertStrength(self, stat)
+				elseif string.find(text, _G["SPELL_STAT2_NAME"]) then
+					stat = string.match(text,"%d+")
+					convertAgility(self, stat)
+				elseif string.find(text, _G["SPELL_STAT3_NAME"]) then
+					stat = string.match(text,"%d+")
+					convertStamina(self, stat)
+				elseif string.find(text, _G["SPELL_STAT4_NAME"]) then
+					stat = string.match(text,"%d+")
+					convertIntellect(self, stat)
+				elseif string.find(text, _G["SPELL_STAT5_NAME"]) then
+					stat = string.match(text,"%d+")
+					convertSpirit(self, stat)
+				elseif string.find(text, string.lower(_G["STAT_CATEGORY_ATTRIBUTES"])) then
+					buff = {}
+					i = 1;
+					for num in string.gmatch(text,"%d+") do buff[i] = num; i=i+1; end
+
+					if (buff[2] ~= nil) then
+						local allstat = buff[2]
+						if (allstat ~= nil) then
+							convertAllStatsToTooltip(self, allstat)
+						end
+					end
+
+				end
+
+			end
+		end
+	end
+
+end)
+
+--Hooks to item tooltips
 GameTooltip:HookScript("OnTooltipSetItem", getItemIdFromTooltip);
 ItemRefTooltip:HookScript("OnTooltipSetItem", getItemIdFromTooltip);
 ShoppingTooltip1:HookScript("OnTooltipSetItem", getItemIdFromTooltip);
 ShoppingTooltip2:HookScript("OnTooltipSetItem", getItemIdFromTooltip);
 WorldMapTooltip.ItemTooltip.Tooltip:HookScript("OnTooltipSetItem", getItemIdFromTooltip);
+
+--Hooks to spell tooltips
+--GameTooltip:HookScript("OnTooltipSetSpell", ConverSpellTooltips);
+--GameTooltip:HookScript("SetUnitAura", ConvertAuraTips);
 
 ItemRefShoppingTooltip1:HookScript("OnTooltipSetItem", getItemIdFromTooltip);
 ItemRefShoppingTooltip2:HookScript("OnTooltipSetItem", getItemIdFromTooltip);

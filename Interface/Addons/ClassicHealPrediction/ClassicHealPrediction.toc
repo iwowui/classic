@@ -4,7 +4,7 @@
 ## Title-zhCN: |CFFFF8000辅助|R 治疗预估
 ## Title-zhTW: |CFFFF8000輔助|R 治療預估
 ## X-Repple: 辅助
-## Version: v1.6.6
+## Version: v1.6.7
 ## Author: dev7355608
 ## SavedVariablesPerCharacter: ClassicHealPredictionSettings
 ## OptionalDeps: ClassicInstantHealth
