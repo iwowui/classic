@@ -963,12 +963,14 @@ do
 
     local compactRaidFrameReservation_GetFrame
 
-    hooksecurefunc(
-        "CompactRaidFrameReservation_GetFrame",
-        function(self, key)
-            compactRaidFrameReservation_GetFrame = self.reservations[key]
-        end
-    )
+    if CompactRaidFrameReservation_GetFrame then
+        hooksecurefunc(
+            "CompactRaidFrameReservation_GetFrame",
+            function(self, key)
+                compactRaidFrameReservation_GetFrame = self.reservations[key]
+            end
+        )
+    end
 
     local frameCreationSpecifiers = {
         raid = {mapping = UnitGUID, setUpFunc = defaultCompactUnitFrameSetup},
@@ -977,24 +979,26 @@ do
         target = {setUpFunc = defaultCompactMiniFrameSetup}
     }
 
-    hooksecurefunc(
-        "CompactRaidFrameContainer_GetUnitFrame",
-        function(self, unit, frameType)
-            if not compactRaidFrameReservation_GetFrame then
-                local info = frameCreationSpecifiers[frameType]
-                local mapping
+    if CompactRaidFrameContainer_GetUnitFrame then
+        hooksecurefunc(
+            "CompactRaidFrameContainer_GetUnitFrame",
+            function(self, unit, frameType)
+                if not compactRaidFrameReservation_GetFrame then
+                    local info = frameCreationSpecifiers[frameType]
+                    local mapping
 
-                if info.mapping then
-                    mapping = info.mapping(unit)
-                else
-                    mapping = unit
+                    if info.mapping then
+                        mapping = info.mapping(unit)
+                    else
+                        mapping = unit
+                    end
+
+                    local frame = self.frameReservations[frameType].reservations[mapping]
+                    info.setUpFunc(frame)
                 end
-
-                local frame = self.frameReservations[frameType].reservations[mapping]
-                info.setUpFunc(frame)
             end
-        end
-    )
+        )
+    end
 
     hooksecurefunc(
         "DefaultCompactNamePlateFrameSetup",
