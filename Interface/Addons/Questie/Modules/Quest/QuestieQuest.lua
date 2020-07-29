@@ -190,8 +190,7 @@ function QuestieQuest:AddAllNotes()
 
     -- draw available quests
     QuestieQuest:GetAllQuestIdsNoObjectives()
-    QuestieQuest:CalculateAvailableQuests()
-    QuestieQuest:DrawAllAvailableQuests()
+    QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
 
     -- draw quests
     for quest in pairs (QuestiePlayer.currentQuestlog) do
@@ -238,8 +237,7 @@ function QuestieQuest:SmoothReset() -- use timers to reset progressively instead
             -- draw available quests
             QuestieQuest:GetAllQuestIdsNoObjectives()
         end,
-        QuestieQuest.CalculateAvailableQuests,
-        QuestieQuest.DrawAllAvailableQuests,
+        QuestieQuest.CalculateAndDrawAvailableQuestsIterative,
         function()
             -- bit of a hack here too
             local mod = 0
@@ -265,8 +263,7 @@ end
 
 function QuestieQuest:UnhideQuest(id)
     Questie.db.char.hidden[id] = nil
-    QuestieQuest:CalculateAvailableQuests()
-    QuestieQuest:DrawAllAvailableQuests()
+    QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
 end
 
 function QuestieQuest:GetRawLeaderBoardDetails(QuestLogIndex)
@@ -329,8 +326,7 @@ function QuestieQuest:AcceptQuest(questId)
             function() QuestieHash:AddNewQuestHash(questId) end,
             function() QuestieQuest:PopulateQuestLogInfo(quest) end,
             function() QuestieQuest:PopulateObjectiveNotes(quest) end,
-            QuestieQuest.CalculateAvailableQuests,
-            QuestieQuest.DrawAllAvailableQuests
+            QuestieQuest.CalculateAndDrawAvailableQuestsIterative
         )
 
         --Broadcast an update.
@@ -361,8 +357,7 @@ function QuestieQuest:CompleteQuest(quest)
     end)
 
     --This should probably be done first, because DrawAllAvailableQuests looks at QuestieMap.questIdFrames[QuestId] to add available
-    QuestieQuest:CalculateAvailableQuests()
-    QuestieQuest:DrawAllAvailableQuests()
+    QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
 
     Questie:Debug(DEBUG_INFO, "[QuestieQuest]: ".. QuestieLocale:GetUIString("DEBUG_COMPLETE_QUEST", questId))
 end
@@ -410,8 +405,7 @@ function QuestieQuest:AbandonedQuest(questId)
             QuestieTracker:Update()
         end)
 
-        QuestieQuest:CalculateAvailableQuests()
-        QuestieQuest:DrawAllAvailableQuests()
+        QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
 
         Questie:Debug(DEBUG_INFO, "[QuestieQuest]: ".. QuestieLocale:GetUIString("DEBUG_ABANDON_QUEST", questId));
     end
@@ -1289,10 +1283,6 @@ function _QuestieQuest:DrawAvailableQuest(quest) -- prevent recursion
     end
 end
 
-function QuestieQuest:DrawAllAvailableQuests() -- deprecated
-
-end
-
 ---@param quest Quest
 function _QuestieQuest:GetQuestIcon(quest)
     local icon = {}
@@ -1330,6 +1320,7 @@ function QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
     local showDungeonQuests = Questie.db.char.showDungeonQuests
     local showRaidQuests = Questie.db.char.showRaidQuests
     local showPvPQuests = Questie.db.char.showPvPQuests
+    local showAQWarEffortQuests = Questie.db.char.showAQWarEffortQuests
 
     QuestieQuest.availableQuests = {}
 
@@ -1348,31 +1339,30 @@ function QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
                     (showRepeatableQuests or (not QuestieDB:IsRepeatable(questId))) and  -- Show repeatable quests if the quest is repeatable and the option is enabled
                     (showDungeonQuests or (not QuestieDB:IsDungeonQuest(questId))) and  -- Show dungeon quests only with the option enabled
                     (showRaidQuests or (not QuestieDB:IsRaidQuest(questId))) and  -- Show Raid quests only with the option enabled
-                    (showPvPQuests or (not QuestieDB:IsPvPQuest(questId))) -- Show PvP quests only with the option enabled
+                    (showPvPQuests or (not QuestieDB:IsPvPQuest(questId))) and -- Show PvP quests only with the option enabled
+                    (showAQWarEffortQuests or (not QuestieDB:IsAQWarEffortQuest(questId))) -- Don't show AQ War Effort quests with the option enabled
                 ) then
 
-                    if QuestieDB:IsLevelRequirementsFulfilled(questId, minLevel, maxLevel) then
-                        if QuestieDB:IsDoable(questId) then
-                            QuestieQuest.availableQuests[questId] = questId
-                            --If the quest is not drawn draw the quest, otherwise skip.
-                            if (not QuestieMap.questIdFrames[questId]) then
-                                ---@type Quest
-                                local quest = QuestieDB:GetQuest(questId)
-                                if (not quest.tagInfoWasCached) then
-                                    Questie:Debug(DEBUG_INFO, "Caching for quest", quest.Id)
-                                    quest:GetQuestTagInfo() -- cache to load in the tooltip
-                                    quest.tagInfoWasCached = true
-                                end
-                                --Draw a specific quest through the function
-                                _QuestieQuest:DrawAvailableQuest(quest)
-                            else
-                                --We might have to update the icon in this situation (config changed/level up)
-                                for _, frame in ipairs(QuestieMap:GetFramesForQuest(questId)) do
-                                    if frame and frame.data and frame.data.QuestData then
-                                        local newIcon = _QuestieQuest:GetQuestIcon(frame.data.QuestData)
-                                        if newIcon ~= frame.data.Icon then
-                                            frame:UpdateTexture(newIcon)
-                                        end
+                    if QuestieDB:IsLevelRequirementsFulfilled(questId, minLevel, maxLevel) and QuestieDB:IsDoable(questId) then
+                        QuestieQuest.availableQuests[questId] = questId
+                        --If the quest is not drawn draw the quest, otherwise skip.
+                        if (not QuestieMap.questIdFrames[questId]) then
+                            ---@type Quest
+                            local quest = QuestieDB:GetQuest(questId)
+                            if (not quest.tagInfoWasCached) then
+                                Questie:Debug(DEBUG_INFO, "Caching for quest", quest.Id)
+                                quest:GetQuestTagInfo() -- cache to load in the tooltip
+                                quest.tagInfoWasCached = true
+                            end
+                            --Draw a specific quest through the function
+                            _QuestieQuest:DrawAvailableQuest(quest)
+                        else
+                            --We might have to update the icon in this situation (config changed/level up)
+                            for _, frame in ipairs(QuestieMap:GetFramesForQuest(questId)) do
+                                if frame and frame.data and frame.data.QuestData then
+                                    local newIcon = _QuestieQuest:GetQuestIcon(frame.data.QuestData)
+                                    if newIcon ~= frame.data.Icon then
+                                        frame:UpdateTexture(newIcon)
                                     end
                                 end
                             end
@@ -1390,10 +1380,6 @@ function QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
             index = next(data, index)
         end
     end)
-end
-
-function QuestieQuest:CalculateAvailableQuests() -- deprecated
-    QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -1449,6 +1435,7 @@ local function QuestsFilter(chatFrame, event, msg, playerName, languageName, cha
                             :gsub("%+", "%%+")
                             :gsub("%-", "%%-")
                             :gsub("%?", "%%?")
+                            :gsub("%|", "%%|")
                         )
                     end
 

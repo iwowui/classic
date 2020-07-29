@@ -104,13 +104,11 @@ end
 
 
 local function _Hack_prime_log() -- this seems to make it update the data much quicker
-  for i=1, GetNumQuestLogEntries() + 1 do
-    GetQuestLogTitle(i)
-    QuestieQuest:GetRawLeaderBoardDetails(i)
-  end
+    for i=1, GetNumQuestLogEntries() + 1 do
+        GetQuestLogTitle(i)
+        QuestieQuest:GetRawLeaderBoardDetails(i)
+    end
 end
-
-
 
 _PLAYER_LOGIN = function()
 
@@ -131,8 +129,7 @@ _PLAYER_LOGIN = function()
         QuestieJourney:Initialize()
         QuestieQuest:Initialize()
         QuestieQuest:GetAllQuestIdsNoObjectives()
-        QuestieQuest:CalculateAvailableQuests()
-        QuestieQuest:DrawAllAvailableQuests()
+        QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
         QuestieNameplate:Initialize()
         Questie:Debug(DEBUG_ELEVATED, "PLAYER_ENTERED_WORLD")
         didPlayerEnterWorld = true
@@ -142,6 +139,17 @@ _PLAYER_LOGIN = function()
         end
         -- Initialize the tracker
         QuestieTracker:Initialize()
+
+        local dateToday = date("%y-%m-%d")
+
+        if Questie.db.char.showAQWarEffortQuests and (Questie.db.char.aqWarningPrintDate == nil or Questie.db.char.aqWarningPrintDate < dateToday) then
+            Questie.db.char.aqWarningPrintDate = dateToday
+            C_Timer.After(2, function()
+                print("|cffff0000-----------------------------|r")
+                Questie:Print("|cffff0000The AQ War Effort quests are shown for you. If your server is done you can hide those quests in the General settings of Questie!|r");
+                print("|cffff0000-----------------------------|r")
+            end)
+        end
     end
 
     if QuestieLib:GetAddonVersionString() ~= QuestieConfig.dbCompiledOnVersion or (Questie.db.global.questieLocaleDiff and Questie.db.global.questieLocale or GetLocale()) ~= QuestieConfig.dbCompiledLang then
@@ -161,8 +169,8 @@ _PLAYER_LOGIN = function()
             end)
         end)
     end
-
 end
+
 
 --Fires when a quest is accepted in anyway.
 _QUEST_ACCEPTED = function(self, questLogIndex, questId)
@@ -254,7 +262,7 @@ _QUEST_TURNED_IN = function(self, questID, xpReward, moneyReward)
     -- Therefore we have to check here to make sure the next QLU updates the state.
     ---@type Quest
     local quest = QuestieDB:GetQuest(questID)
-    if quest and ((quest.parentQuest and quest.IsRepeatable) or quest.Description == nil) then
+    if quest and ((quest.parentQuest and quest.IsRepeatable) or quest.Description == nil or table.getn(quest.Description) == 0) then
         Questie:Debug(DEBUG_DEVELOP, "Enabling shouldRunQLU")
         shouldRunQLU = true
     end
@@ -269,6 +277,7 @@ _QUEST_LOG_UPDATE = function()
         C_Timer.After(1, function ()
             Questie:Debug(DEBUG_DEVELOP, "---> Player entered world, DONE.")
             QuestieQuest:GetAllQuestIds()
+            QuestieTracker:ResetLinesForChange()
             QuestieTracker:Update()
             _GROUP_JOINED()
         end)
@@ -312,8 +321,7 @@ _PLAYER_LEVEL_UP = function(self, level, hitpoints, manapoints, talentpoints, ..
     C_Timer.After(3, function()
         QuestiePlayer:SetPlayerLevel(level)
 
-        QuestieQuest:CalculateAvailableQuests()
-        QuestieQuest:DrawAllAvailableQuests()
+        QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
     end)
     QuestieJourney:PlayerLevelUp(level)
 end
@@ -341,8 +349,7 @@ _CHAT_MSG_SKILL = function()
     local isProfUpdate = QuestieProfessions:Update()
     -- This needs to be done to draw new quests that just came available
     if isProfUpdate then
-        QuestieQuest:CalculateAvailableQuests()
-        QuestieQuest:DrawAllAvailableQuests()
+        QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
     end
 end
 
@@ -351,9 +358,9 @@ _CHAT_MSG_COMBAT_FACTION_CHANGE = function()
     Questie:Debug(DEBUG_DEVELOP, "CHAT_MSG_COMBAT_FACTION_CHANGE")
     local factionChanged = QuestieReputation:Update(false)
     if factionChanged then
+        QuestieTracker:ResetLinesForChange()
         QuestieTracker:Update()
-        QuestieQuest:CalculateAvailableQuests()
-        QuestieQuest:DrawAllAvailableQuests()
+        QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
     end
 end
 

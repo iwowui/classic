@@ -209,6 +209,9 @@ function QuestieItemFixes:Load()
             [itemKeys.npcDrops] = {2530},
             [itemKeys.objectDrops] = {},
         },
+        [3917] = {
+            [itemKeys.npcDrops] = {674,675,676,677},
+        },
         [4016] = {
             [itemKeys.npcDrops] = {1488,1489,1490,1491,2530,2534,2535,2536,2537},
         },
@@ -784,11 +787,17 @@ function QuestieItemFixes:Load()
             [itemKeys.npcDrops] = {6556,6557,6559,},
             [itemKeys.objectDrops] = {},
         },
+        [12234] = {
+            [itemKeys.name] = "Corrupted Felwood Sample",
+            [itemKeys.relatedQuests] = {4293},
+            [itemKeys.npcDrops] = {},
+            [itemKeys.objectDrops] = {174848},
+        },
         [12236] = {
             [itemKeys.name] = "Pure Un'Goro Sample",
             [itemKeys.relatedQuests] = {4294},
             [itemKeys.npcDrops] = {},
-            [itemKeys.objectDrops] = {},
+            [itemKeys.objectDrops] = {175265},
         },
         [12283] = {
             [itemKeys.npcDrops] = {7047,7048,7049,},
@@ -823,6 +832,12 @@ function QuestieItemFixes:Load()
         },
         [12366] = {
             [itemKeys.npcDrops] = {7457,7458},
+        },
+        [12368] = {
+            [itemKeys.name] = "Dawn's Gambit",
+            [itemKeys.relatedQuests] = {4771},
+            [itemKeys.npcDrops] = {},
+            [itemKeys.objectDrops] = {},
         },
         [12567] = {
             [itemKeys.name] = "Filled Flasket",

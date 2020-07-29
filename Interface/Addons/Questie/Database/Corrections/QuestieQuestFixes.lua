@@ -69,6 +69,9 @@ function QuestieQuestFixes:Load()
         --[104] = { -- bad race data (actually this is correct)
         --    [questKeys.requiredRaces] = 77,
         --},
+        [109] = {
+            [questKeys.startedBy] = {{233,237,240,261,294,963,},nil,nil,}, --#2158
+        },
         [123] = {
             [questKeys.startedBy] = {{100},nil,{1307}},
         },
@@ -95,6 +98,9 @@ function QuestieQuestFixes:Load()
         },
         [254] = {
             [questKeys.parentQuest] = 253,
+            [questKeys.specialFlags] = 1,
+            [questKeys.exclusiveTo] = {253}, --#2173
+            [questKeys.preQuestSingle] = {252},
         },
         [273] = {
             [questKeys.triggerEnd] = {"Find Huldar, Miran, and Saean",{[zoneIDs.LOCH_MODAN]={{51.16, 68.96},},},},
@@ -187,6 +193,7 @@ function QuestieQuestFixes:Load()
         },
         [473] = {
             [questKeys.preQuestSingle] = {455}, -- #809
+            [questKeys.exclusiveTo] = {464}, -- #2173
         },
         [484] = {
             [questKeys.requiredMinRep] = {72,0}, -- #1501
@@ -264,6 +271,9 @@ function QuestieQuestFixes:Load()
         [667] = {
             [questKeys.triggerEnd] = {"Defend Shakes O'Breen", {[zoneIDs.ARATHI_HIGHLANDS]={{31.93,81.82},},},},
         },
+        [676] = {
+            [questKeys.exclusiveTo] = {677},
+        },
         [677] = {
             [questKeys.preQuestSingle] = {}, --#1162
         },
@@ -280,7 +290,6 @@ function QuestieQuestFixes:Load()
             [questKeys.exclusiveTo] = {738}, --#2069
         },
         [715] = {
-            [QuestieDB.questKeys.preQuestGroup] = {712,714,},
             [QuestieDB.questKeys.requiredSkill] = {},
         },
         [717] = {
@@ -382,18 +391,28 @@ function QuestieQuestFixes:Load()
         [911] = {
             [questKeys.triggerEnd] = {"Go to the Mor'shan Rampart in the Barrens.", {[zoneIDs.THE_BARRENS]={{47.9,5.36},},},},
         },
+        [918] = {
+            [questKeys.preQuestSingle] = {},
+        },
         [924] = {
             [questKeys.requiredSourceItems] = {4986},
         },
         [926] = {
             [questKeys.parentQuest] = 924, -- #806
             [questKeys.preQuestSingle] = {809}, --#606
+            [questKeys.exclusiveTo] = {924}, -- #2195
         },
         [927] = {
             [questKeys.startedBy] = {{3535},nil,{5179}},
         },
         [930] = {
-            [questKeys.preQuestSingle] = {918,919}, -- #971
+            [questKeys.preQuestSingle] = {918}, -- #971
+        },
+        [931] = {
+            [questKeys.preQuestSingle] = {918},
+        },
+        [936] = {
+            [questKeys.exclusiveTo] = {3762,3784,3761},
         },
         [938] = {
             [questKeys.triggerEnd] = {"Lead Mist safely to Sentinel Arynia Cloudsbreak", {[zoneIDs.TELDRASSIL]={{38.33,34.39},},},},
@@ -780,11 +799,17 @@ function QuestieQuestFixes:Load()
         [1955] = {
             [questKeys.triggerEnd] = {"Kill the Demon of the Orb", {[zoneIDs.DUSTWALLOW_MARSH]={{45.6,57,2},},},},
         },
+        [1959] = {
+            [questKeys.startedBy] = {{2128,3049,5880,7311},nil,nil,},
+        },
         [2039] = {
             [questKeys.exclusiveTo] = {2038},
         },
         [2041] = {
             [questKeys.exclusiveTo] = {2040}, --#2068
+        },
+        [2198] = {
+            [questKeys.startedBy] = {{4852},nil,{7666}},
         },
         [2201] = {
             [questKeys.childQuests] = {3375},
@@ -1027,8 +1052,23 @@ function QuestieQuestFixes:Load()
         [3702] = {
             [questKeys.triggerEnd] = {"Story of Thaurissan", {[zoneIDs.IRONFORGE]={{38.62,55.44},},},},
         },
+        [3763] = {
+            [questKeys.exclusiveTo] = {3789,3790,3764},
+        },
+        [3762] = {
+            [questKeys.exclusiveTo] = {936,3784,3761},
+        },
         [3765] = {
             [questKeys.exclusiveTo] = {1275}, -- corruption abroad breadcrumb
+        },
+        [3789] = {
+            [questKeys.exclusiveTo] = {3763,3790,3764},
+        },
+        [3790] = {
+            [questKeys.exclusiveTo] = {3763,3789,3764},
+        },
+        [3784] = {
+            [questKeys.exclusiveTo] = {936,3762,3761},
         },
         [3791] = {
             [questKeys.preQuestSingle] = {3787,3788}, -- #885
@@ -1144,6 +1184,12 @@ function QuestieQuestFixes:Load()
         [4288] = {
             [questKeys.triggerEnd] = {"Discover and examine the Western Crystal Pylon",{[zoneIDs.UN_GORO_CRATER]={{23,59},},},},
         },
+        [4294] = {
+            [questKeys.requiredSourceItems] = {12235,12236},
+        },
+        [4293] = {
+            [questKeys.requiredSourceItems] = {12230,12234},
+        },
         [4322] = {
             [questKeys.triggerEnd] = {"Jail Break!", {[zoneIDs.BLACKROCK_DEPTHS]={{-1,-1}},},},
         },
@@ -1221,6 +1267,9 @@ function QuestieQuestFixes:Load()
         },
         [4770] = {
             [questKeys.triggerEnd] = {"Escort Pao'ka from Highperch", {[zoneIDs.THOUSAND_NEEDLES]={{15.15,32.65},},},},
+        },
+        [4771] = {
+            [questKeys.triggerEnd] = {"Place Dawn's Gambit",{[zoneIDs.SCHOLOMANCE]={{-1,-1},},},},
         },
         [4784] = {
             [questKeys.childQuests] = {4785}, -- #1367
@@ -1475,6 +1524,7 @@ function QuestieQuestFixes:Load()
             [questKeys.exclusiveTo] = {6065,6066,6061},
         },
         [6068] = {
+            [questKeys.startedBy] = {{3407,},nil,nil,}, -- #2167
             [questKeys.exclusiveTo] = {6069,6070,6062}, -- #1795
         },
         [6069] = {
@@ -1663,7 +1713,6 @@ function QuestieQuestFixes:Load()
         },
         [7001] = {
             [questKeys.triggerEnd] = {"Frostwolf Muzzled and Returned", {
-                [zoneIDs.ORGRIMMAR]={{79.18,31.12},{32.63,63.29},{59.27,53.14}},
                 [zoneIDs.ALTERAC_MOUNTAINS]={{67,51.78},},},
             },
         },
@@ -1689,9 +1738,7 @@ function QuestieQuestFixes:Load()
         },
         [7027] = {
             [questKeys.triggerEnd] = {"Ram Collared and Returned", {
-                [zoneIDs.IRONFORGE]={{70.1,90.32},{66.54,86.33}},
-                [zoneIDs.ALTERAC_MOUNTAINS]={{34.58,74.94}},
-                [zoneIDs.STORMWIND_CITY]={{82.34,12.46},},},
+                [zoneIDs.ALTERAC_MOUNTAINS]={{34.58,74.94},},},
             },
         },
         [7046] = {
@@ -1854,6 +1901,12 @@ function QuestieQuestFixes:Load()
             [questKeys.nextQuestInChain] = 7637,
             [questKeys.exclusiveTo] = {7638,},
             [questKeys.zoneOrSort] = -141,
+        },
+        [7735] = {
+            [questKeys.startedBy] = {{5299},nil,{18969}},
+        },
+        [7738] = {
+            [questKeys.startedBy] = {{5299},nil,{18972}},
         },
         [7761] = {
             [questKeys.startedBy] = {{9046},nil,{18987}},
@@ -2051,68 +2104,171 @@ function QuestieQuestFixes:Load()
         [8430] = {
             [questKeys.exclusiveTo] = {8368,8426,8427,8428,8429},
         },
+        [8447] = {
+            [questKeys.triggerEnd] = {"Waking Legends.",{[zoneIDs.MOONGLADE]={{40.0,48.6},},},},
+        },
         [8484] = {
             [questKeys.preQuestSingle] = {8481},
         },
         [8485] = {
             [questKeys.preQuestSingle] = {8481},
         },
-        [8493] = { -- bad race data
+        [8492] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8495] = { -- bad race data
+        [8493] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8504] = { -- bad race data
+        [8494] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8506] = { -- bad race data
+        [8495] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8510] = { -- bad race data
+        [8499] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8512] = { -- bad race data
+        [8500] = {
+            [questKeys.requiredLevel] = 1,
+        },
+        [8503] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8514] = { -- bad race data
+        [8504] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8516] = { -- bad race data
+        [8505] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8518] = { -- bad race data
+        [8506] = {
             [questKeys.requiredRaces] = 77,
         },
-        [8521] = { -- bad race data
+        [8509] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8523] = { -- bad race data
+        [8510] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8525] = { -- bad race data
+        [8511] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8527] = { -- bad race data
+        [8512] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8529] = { -- bad race data
+        [8513] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 77,
         },
-        [8533] = { -- bad race data
+        [8514] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8515] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8516] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8517] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8518] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8520] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.preQuestSingle] = {},
+            [questKeys.requiredRaces] = 77,
+        },
+        [8521] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8522] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8523] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8524] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8525] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8526] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8527] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8528] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8529] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+        },
+        [8532] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8543] = { -- bad race data
+        [8533] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8546] = { -- bad race data
+        [8542] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8543] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8545] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8546] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
         [8548] = {
             [questKeys.preQuestSingle] = {8800},
         },
-        [8550] = { -- bad race data
+        [8549] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
+        },
+        [8550] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8551] = {
+            [questKeys.requiredLevel] = 35,
         },
         [8552] = {
             [questKeys.startedBy] = {{1493},nil,{3985,},},
@@ -2126,37 +2282,92 @@ function QuestieQuestFixes:Load()
         [8574] = {
             [questKeys.preQuestSingle] = {8800},
         },
-        [8581] = { -- bad race data
+        [8580] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8583] = { -- bad race data
+        [8581] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8589] = { -- bad race data
+        [8582] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8591] = { -- bad race data
+        [8583] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8601] = { -- bad race data
+        [8588] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8605] = { -- bad race data
+        [8589] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8608] = { -- bad race data
+        [8590] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8610] = { -- bad race data
+        [8591] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8612] = { -- bad race data
+        [8600] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8614] = { -- bad race data
+        [8601] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
-        [8616] = { -- bad race data
+        [8604] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8605] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8607] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8608] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8609] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8610] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8611] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8612] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8613] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8614] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8615] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 178,
+        },
+        [8616] = {
+            [questKeys.requiredLevel] = 1,
             [questKeys.requiredRaces] = 178,
         },
         [8767] = {
@@ -2169,8 +2380,78 @@ function QuestieQuestFixes:Load()
             [questKeys.requiredClasses] = 0,
             [questKeys.exclusiveTo] = {8767},
         },
+        [8792] = {
+            [questKeys.requiredLevel] = 1,
+        },
+        [8793] = {
+            [questKeys.requiredLevel] = 1,
+        },
+        [8794] = {
+            [questKeys.requiredLevel] = 1,
+        },
+        [8795] = {
+            [questKeys.requiredLevel] = 1,
+            [questKeys.requiredRaces] = 77,
+            [questKeys.exclusiveTo] = {8796,8797},
+        },
+        [8796] = {
+            [questKeys.requiredRaces] = 77,
+            [questKeys.exclusiveTo] = {8795,8797},
+        },
+        [8797] = {
+            [questKeys.requiredRaces] = 77,
+            [questKeys.exclusiveTo] = {8795,8796},
+        },
         [8798] = {
             [questKeys.requiredSkill] = {202,250},
+        },
+        [8846] = {
+            [questKeys.specialFlags] = 1,
+        },
+        [8847] = {
+            [questKeys.startedBy] = {{15701,},nil,nil,},
+            [questKeys.finishedBy] = {{15701,},nil,},
+            [questKeys.specialFlags] = 1,
+        },
+        [8848] = {
+            [questKeys.startedBy] = {{15701,},nil,nil,},
+            [questKeys.finishedBy] = {{15701,},nil,},
+            [questKeys.specialFlags] = 1,
+        },
+        [8849] = {
+            [questKeys.startedBy] = {{15701,},nil,nil,},
+            [questKeys.finishedBy] = {{15701,},nil,},
+            [questKeys.specialFlags] = 1,
+        },
+        [8850] = {
+            [questKeys.startedBy] = {{15701,},nil,nil,},
+            [questKeys.finishedBy] = {{15701,},nil,},
+            [questKeys.specialFlags] = 1,
+        },
+        [8851] = {
+            [questKeys.startedBy] = {{15700,},nil,nil,},
+            [questKeys.finishedBy] = {{15700,},nil,},
+            [questKeys.specialFlags] = 1,
+        },
+        [8852] = {
+            [questKeys.startedBy] = {{15700,},nil,nil,},
+            [questKeys.finishedBy] = {{15700,},nil,},
+            [questKeys.specialFlags] = 1,
+        },
+        [8853] = {
+            [questKeys.startedBy] = {{15700,},nil,nil,},
+            [questKeys.finishedBy] = {{15700,},nil,},
+            [questKeys.specialFlags] = 1,
+        },
+        [8854] = {
+            [questKeys.startedBy] = {{15700,},nil,nil,},
+            [questKeys.finishedBy] = {{15700,},nil,},
+            [questKeys.specialFlags] = 1,
+        },
+        [8855] = {
+            [questKeys.startedBy] = {{15700,},nil,nil,},
+            [questKeys.finishedBy] = {{15700,},nil,},
+            [questKeys.specialFlags] = 1,
         },
         [8863] = {
             [questKeys.specialFlags] = 1,
@@ -2313,6 +2594,9 @@ function QuestieQuestFixes:LoadFactionFixes()
         [5050] = {
             [questKeys.startedBy] = {{8403,},nil,nil}
         },
+        [6681] = {
+            [questKeys.startedBy] = {{3328,4583},nil,{17126}}
+        },
         [7562] = {
             [questKeys.startedBy] = {{5753,5815,},nil,nil}
         },
@@ -2375,6 +2659,9 @@ function QuestieQuestFixes:LoadFactionFixes()
         },
         [5050] = {
             [questKeys.startedBy] = {{3520,},nil,nil}
+        },
+        [6681] = {
+            [questKeys.startedBy] = {{918,4163,5165},nil,{17126}}
         },
         [7562] = {
             [questKeys.startedBy] = {{5520,6382,},nil,nil}

@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
--- 	Leatrix Plus 1.13.73 (21st July 2020)
+-- 	Leatrix Plus 1.13.74 (29th July 2020)
 ----------------------------------------------------------------------
 
 --	01:Functions	20:Live			50:RunOnce		70:Logout			
@@ -20,7 +20,7 @@
 	local void
 
 	-- Version
-	LeaPlusLC["AddonVer"] = "1.13.73"
+	LeaPlusLC["AddonVer"] = "1.13.74"
 	LeaPlusLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -1581,6 +1581,7 @@
 		----------------------------------------------------------------------
 
 		if LeaPlusLC["NoCombatLogTab"] == "On" then
+
 			-- Ensure combat log is docked
 			if ChatFrame2.isDocked then
 				-- Set combat log attributes when chat windows are updated
@@ -1595,6 +1596,44 @@
 					LeaPlusLC:Print("Combat log cannot be hidden while undocked.")
 				end)
 			end
+
+			-- ElvUI Fix
+			local eFixFuncApplied, eFixHookApplied
+			local function ElvUIFix()
+				if eFixFuncApplied then return end
+				local E = unpack(ElvUI)
+				if E.private.chat.enable then
+					C_Timer.After(2, function()
+						LeaPlusLC:Print("To hide the combat log, you need to disable the chat module in ElvUI.")
+						return
+					end)
+				end
+				hooksecurefunc(E, "PLAYER_ENTERING_WORLD", function()
+					if eFixHookApplied then return end
+					ChatFrame2Tab:EnableMouse(false)
+					ChatFrame2Tab:SetText(" ")
+					ChatFrame2Tab:SetScale(0.01)
+					ChatFrame2Tab:SetWidth(0.01)
+					ChatFrame2Tab:SetHeight(0.01)
+					eFixHookApplied = true
+				end)
+				eFixFuncApplied = true
+			end
+
+			-- Run ElvUI fix when ElvUI has loaded
+			if IsAddOnLoaded("ElvUI") then
+				ElvUIFix()
+			else
+				local waitFrame = CreateFrame("FRAME")
+				waitFrame:RegisterEvent("ADDON_LOADED")
+				waitFrame:SetScript("OnEvent", function(self, event, arg1)
+					if arg1 == "ElvUI" then
+						ElvUIFix()
+						waitFrame:UnregisterAllEvents()
+					end
+				end)
+			end
+
 		end
 
 		----------------------------------------------------------------------
