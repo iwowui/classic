@@ -19,7 +19,7 @@ L:SetGeneralLocalization{
 L = DBM:GetModLocalization("ThreeBugs")
 
 L:SetGeneralLocalization{
-	name = "异种蝎皇族"
+	name = "安其拉三宝"
 }
 L:SetMiscLocalization{
 	Yauj = "亚尔基公主",
@@ -116,7 +116,8 @@ L:SetOptionLocalization{
 }
 L:SetMiscLocalization{
 	Eye			= "克苏恩之眼",
-	Weakened 	= "变弱了"
+	Weakened 	= "变弱了",
+    NotValid	= "AQ40 击杀信息： %s 首领未击杀。"
 }
 ----------------
 -- Ouro --
@@ -146,5 +147,5 @@ L:SetOptionLocalization{
 L = DBM:GetModLocalization("AQ40Trash")
 
 L:SetGeneralLocalization{
-	name = "AQ40 全程计时"
+	name = "AQ40：全程计时"
 }

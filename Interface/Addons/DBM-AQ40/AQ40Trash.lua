@@ -1,16 +1,21 @@
 local mod	= DBM:NewMod("AQ40Trash", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200710050304")
---mod:SetModelID(47785)
+mod:SetRevision("20200726194349")
+mod:SetModelID(15347)-- Anubisath Sentinel
 mod:SetZone()
 mod:SetMinSyncRevision(20200710000000)--2020, 7, 10
 
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"ENCOUNTER_END"
+	"ENCOUNTER_END",
+	"SPELL_AURA_APPLIED 22997",
+	"SPELL_AURA_REMOVED 22997",
+	"SPELL_MISSED"
 )
+
+mod:AddRangeFrameOption(10, 22997)
 
 --TODO, meteor those big guys use, maybe some other stuff
 --local specWarnPrimalRampage			= mod:NewSpecialWarningDodge(198379, "Melee", nil, nil, 1, 2)
@@ -19,14 +24,12 @@ mod:AddSpeedClearOption("AQ40", true)
 
 --Speed Clear variables
 mod.vb.firstEngageTime = nil
-mod.vb.OuroDefeated = false
-mod.vb.ViscidusDefeated = false
-mod.vb.RoyaltyDefeated = false
+mod.vb.requiredBosses = 0
 
 --Register all damage events on mod load
+local eventsRegistered = true
 mod:RegisterShortTermEvents(
 	"SPELL_DAMAGE",
-	"SPELL_MISSED",
 	"SWING_DAMAGE",
 	"SWING_MISSED",
 	"SPELL_PERIODIC_DAMAGE",
@@ -53,13 +56,13 @@ do
 			end
 			--Unregister high CPU combat log events
 			self:UnregisterShortTermEvents()
+			eventsRegistered = false
 		end
 	end
 
 	function mod:SPELL_DAMAGE(_, _, _, _, destGUID)
 		checkFirstPull(self, destGUID or 0)
 	end
-	mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 	function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID)
 		checkFirstPull(self, destGUID or 0)
@@ -98,11 +101,84 @@ end
 
 function mod:ENCOUNTER_END(encounterID, _, _, _, success)
 	if success == 0 then return end--wipe
-	if encounterID == 716 then
-		self.vb.OuroDefeated = true
-	elseif encounterID == 713 then
-		self.vb.ViscidusDefeated = true
-	elseif encounterID == 710 then
-		self.vb.RoyaltyDefeated = true
+	--All the required bosses for the raid to be full cleared.
+	if encounterID == 710 or encounterID == 713 or encounterID == 716 or encounterID == 717 then
+		self.vb.requiredBosses = self.vb.requiredBosses + 1
+		if self.vb.requiredBosses == 4 then
+			DBM.Bars:CancelBar(DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT)
+			if self.vb.firstEngageTime then
+				local thisTime = GetServerTime() - self.vb.firstEngageTime
+				if thisTime and thisTime > 0 then
+					if not self.Options.FastestClear then
+						--First clear, just show current clear time
+						DBM:AddMsg(DBM_CORE_L.RAID_DOWN:format("AQ40", DBM:strFromTime(thisTime)))
+						self.Options.FastestClear = thisTime
+					elseif (self.Options.FastestClear > thisTime) then
+						--Update record time if this clear shorter than current saved record time and show users new time, compared to old time
+						DBM:AddMsg(DBM_CORE_L.RAID_DOWN_NR:format("AQ40", DBM:strFromTime(thisTime), DBM:strFromTime(self.Options.FastestClear)))
+						self.Options.FastestClear = thisTime
+					else
+						--Just show this clear time, and current record time (that you did NOT beat)
+						DBM:AddMsg(DBM_CORE_L.RAID_DOWN_L:format("AQ40", DBM:strFromTime(thisTime), DBM:strFromTime(self.Options.FastestClear)))
+					end
+				end
+				self.vb.firstEngageTime = nil
+			end
+		end
+	end
+end
+
+do-- Anubisath Plague - keep in sync - AQ40/AQ40Trash.lua AQ20/AQ20Trash.lua
+	local warnPlague                    = mod:NewTargetAnnounce(22997, 2)--Not excempt from filter since it could be spammy
+	local specWarnPlague                = mod:NewSpecialWarningMoveAway(22997, nil, nil, nil, 1, 2)
+	local yellPlague                    = mod:NewYell(22997)
+
+	local Plague = DBM:GetSpellInfo(22997)
+
+	-- aura applied didn't seem to catch the reflects and other buffs
+	function mod:SPELL_AURA_APPLIED(args)
+		if args.spellName == Plague then
+			if args:IsPlayer() then
+				specWarnPlague:Show()
+				specWarnPlague:Play("runout")
+				yellPlague:Yell()
+				if self.Options.RangeFrame then
+					DBM.RangeCheck:Show(10)
+				end
+			else
+				warnPlague:Show(args.destName)
+			end
+		end
+	end
+
+	function mod:SPELL_AURA_REMOVED(args)
+		if args.spellName == Plague then
+			if args:IsPlayer() and self.Options.RangeFrame then
+				DBM.RangeCheck:Hide()
+			end
+		end
+	end
+end
+
+do-- Anubisath Reflect - keep in sync - AQ40/AQ40Trash.lua AQ20/AQ20Trash.lua
+	local ShadowFrostReflect 			= DBM:GetSpellInfo(19595)
+	local FireArcaneReflect 			= DBM:GetSpellInfo(13022)
+	local specWarnShadowFrostReflect    = mod:NewSpecialWarningReflect(19595)
+	local specWarnFireArcaneReflect     = mod:NewSpecialWarningReflect(13022)
+
+	-- todo: thorns, shadow storm
+
+	local playerGUID = UnitGUID("player")
+	function mod:SPELL_MISSED(sourceGUID, _, _, _, destGUID, destName, _, _, _, _, spellSchool, missType)
+		if (missType == "REFLECT" or missType == "DEFLECT") and sourceGUID == playerGUID then
+			if spellSchool == 32 or spellSchool == 16 then
+				specWarnShadowFrostReflect:Show(destName)
+			elseif spellSchool == 4 or spellSchool == 64 then
+				specWarnFireArcaneReflect:Show(destName)
+			end
+		end
+		if eventsRegistered then-- for AQ40 timer
+			self:SPELL_DAMAGE(nil, nil, nil, nil, destGUID)
+		end
 	end
 end
