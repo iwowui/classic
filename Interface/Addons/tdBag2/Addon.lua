@@ -2,7 +2,6 @@
 -- @Author : Dencer (tdaddon@163.com)
 -- @Link   : https://dengsir.github.io
 -- @Date   : 9/17/2019, 12:04:55 AM
-
 ---- LUA
 local ipairs, pairs, nop, tinsert, sort = ipairs, pairs, nop, tinsert, sort
 
@@ -11,6 +10,10 @@ local ShowUIPanel = ShowUIPanel
 local HideUIPanel = HideUIPanel
 local CreateFrame = CreateFrame
 local GetItemClassInfo = GetItemClassInfo
+local GetNumAddOns = GetNumAddOns
+local GetAddOnInfo = GetAddOnInfo
+local GetAddOnMetadata = GetAddOnMetadata
+local LoadAddOn = LoadAddOn
 
 ---- UI
 local BankFrame = BankFrame
@@ -26,6 +29,7 @@ local UIParent = UIParent
 ---@field Cache tdBag2Cache
 ---@field Current tdBag2Current
 ---@field Cacher tdBag2Cacher
+---@field Thread tdBag2Thread
 ---@field Tooltip tdBag2Tooltip
 ---@field GlobalSearch tdBag2GlobalSearch
 local ns = select(2, ...)
@@ -115,6 +119,7 @@ Addon.BAG_ID = BAG_ID
 
 function Addon:OnInitialize()
     self.styles = {}
+    self.demandStyles = {}
     self.frames = {}
 
     self:SetupBankHider()
@@ -127,6 +132,7 @@ function Addon:OnEnable()
     ns.PLAYER, ns.REALM = UnitFullName('player')
 
     self:SetupDatabase()
+    self:ScanStyleAddons()
     self:SetupCurrentStyle()
     self:SetupDefaultOptions()
     self:CleanDeprecatedOptions()
@@ -163,9 +169,26 @@ function Addon:OnProfileChanged()
     self:UpdateAll()
 end
 
+function Addon:ScanStyleAddons()
+    for i = 1, GetNumAddOns() do
+        local name, _, _, _, reason = GetAddOnInfo(i)
+        if reason == 'DEMAND_LOADED' then
+            local styleName = GetAddOnMetadata(i, 'X-tdBag2-Style')
+            if styleName then
+                self.demandStyles[styleName] = name
+            end
+        end
+    end
+end
+
 function Addon:SetupCurrentStyle()
     local style
-    for _, styleName in ipairs{self.db.profile.style, ns.DEFAULT_STYLE} do
+    for _, styleName in ipairs {self.db.profile.style, ns.DEFAULT_STYLE} do
+        local addon = self.demandStyles[styleName]
+        if addon then
+            LoadAddOn(addon)
+        end
+
         style = self.styles[styleName]
         if style then
             self.styleName = styleName
@@ -502,6 +525,7 @@ function Addon:RegisterPluginButton(opts)
 end
 
 function Addon:RegisterStyle(styleName, style)
+    self.demandStyles[styleName] = nil
     self.styles[styleName] = style
 end
 
