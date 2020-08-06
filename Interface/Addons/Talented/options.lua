@@ -7,7 +7,7 @@ Talented.defaults = {
 	profile = {
 
 -- Always Edit the template, never lock
-		-- always_edit = nil,
+		always_edit = nil,
 
 -- Manually confirm each talent before learning
 		confirmlearn = true,
@@ -86,13 +86,13 @@ Talented.options = {
 					type = "header",
 					order = 1,
 				},
-				-- always_edit = {
-				-- 	name = L["Always edit"],
-				-- 	desc = L["Always allow templates and the current build to be modified, instead of having to Unlock them first."],
-				-- 	type = "toggle",
-				-- 	arg = "UpdateView",
-				-- 	order = 100,
-				-- },
+				always_edit = {
+					name = L["Always edit"],
+					desc = L["Always allow templates and the current build to be modified, instead of having to Unlock them first."],
+					type = "toggle",
+					arg = "SetMode",
+					order = 100,
+				},
 				confirmlearn = {
 					name = L["Confirm Learning"],
 					desc = L["Ask for user confirmation before learning any talent."],
@@ -172,8 +172,8 @@ Talented.options = {
 			desc = "Apply the specified template",
 			type = "input",
 			dialogHidden = true,
-			set = function (_, name)
-				local template = Talented.db.global.templates[name]
+			set = function (_, class, name)
+				local template = Talented.db.global.templates[class][name]
 				if not template then
 					Talented:Print(L["Can not apply, unknown template \"%s\""], name)
 					return

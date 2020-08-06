@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Viscidus", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200725045328")
+mod:SetRevision("20200805041102")
 mod:SetCreatureID(15299)
 mod:SetEncounterID(713)
 mod:SetModelID(15686)
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 
 --TODO, frost damage counter on infoframe (if I recall, it was 250k frost damage to freeze)
 --TODO, melee hit counter on infoframe (x number of melee hits to shatter)
-local warnFreeze		= mod:NewAnnounce("WarnFreeze", 2, 33395)
+local warnFreeze		= mod:NewAnnounce("WarnFreeze", 2, 16350)
 local warnShatter		= mod:NewAnnounce("WarnShatter", 2, 12982)
 local specWarnGTFO	= mod:NewSpecialWarningGTFO(25989, nil, nil, nil, 1, 8)
 
