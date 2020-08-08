@@ -381,14 +381,14 @@ Grid2Options.AdvancedProfileOptions = { type = "group", order= 200, name = L["Im
 	header3 ={
 		type = "header",
 		order = 90,
-		name = "配置文件数据库维护",
+		name = "Profile database maintenance",
 	},
 	cleanDatabase = {
 		type = "execute",
 		order= 100,
 		width = "full",
-		name = "清空当前配置",
-		desc = "从当前配置文件数据库中删除错误或过时的对象(指示器、状态等)。",
+		name = "Clean Current Profile",
+		desc = "Remove wrong or obsolete objects (indicators, statuses, etc) from the current profile database.",
 		func = function()
 			CleanDatabaseItems( "status", Grid2.db.profile.statuses )
 			CleanDatabaseItems( "indicator", Grid2.db.profile.indicators )
