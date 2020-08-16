@@ -16,6 +16,8 @@ end
 --{{{ Class for group headers
 
 local NUM_HEADERS = 0
+local FRAMES_TEMPLATE = "SecureUnitButtonTemplate"                        .. (BackdropTemplateMixin and ",BackdropTemplate" or "")
+local FRAMEC_TEMPLATE = "ClickCastUnitTemplate,SecureUnitButtonTemplate"  .. (BackdropTemplateMixin and ",BackdropTemplate" or "")
 
 local GridLayoutHeaderClass = {
 	prototype = {},
@@ -26,11 +28,11 @@ local GridLayoutHeaderClass = {
 			frame[name] = func
 		end
 		if ClickCastHeader then
-			frame:SetAttribute("template", "ClickCastUnitTemplate,SecureUnitButtonTemplate")
+			frame:SetAttribute("template", FRAMEC_TEMPLATE)
 			SecureHandler_OnLoad(frame)
 			frame:SetFrameRef("clickcast_header", Clique.header)
 		else
-			frame:SetAttribute("template", "SecureUnitButtonTemplate")
+			frame:SetAttribute("template", FRAMES_TEMPLATE)
 		end
 		frame.initialConfigFunction = GridHeader_InitialConfigFunction
 		frame:SetAttribute("initialConfigFunction", [[
@@ -184,7 +186,7 @@ function Grid2Layout:OnModuleInitialize()
 	self.frame:SetScript("OnHide", function () self:StopMoveFrame() end)
 	self.frame:SetScript("OnMouseDown", function (_, button) self:StartMoveFrame(button) end)
 	-- extra frame for background and border textures, to be able to resize in combat
-	self.frameBack = CreateFrame("Frame", "Grid2LayoutFrameBack", self.frame)
+	self.frameBack = CreateFrame("Frame", "Grid2LayoutFrameBack", self.frame, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	-- custom defaults
 	self.customDefaults = self.db.global.customDefaults
 	-- add custom layouts
@@ -608,8 +610,8 @@ function Grid2Layout:UpdateSize()
 		local child = g:GetAttribute("child1")
 		remSize = child and child:IsVisible() and 0 or remSize + col
 	end
-	local col = curCol - remSize + p.Spacing*2 - p.Padding
-	local row = maxRow + p.Spacing*2
+	local col = math.max( curCol - remSize + p.Spacing*2 - p.Padding, 1 )
+	local row = math.max( maxRow + p.Spacing*2, 1 )
 	if p.horizontal then col,row = row,col end
 	self.frameBack:SetSize(col,row)
 	if not Grid2:RunSecure(6, self, "UpdateSize") then

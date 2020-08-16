@@ -46,6 +46,8 @@ local myheals_cache = setmetatable( {}, {__index = function() return 0 end} )
 local overheals_enabled = false
 local overheals_minimum = 1
 
+local healthdeficit_enabled = false
+
 -- Health statuses update function
 local statuses = {}
 
@@ -63,9 +65,11 @@ end
 -- Events management
 local RegisterEvent, UnregisterEvent
 do
+	local isWoW90 = Grid2.isWoW90
 	local frame
 	local Events = {}
 	function RegisterEvent(event, func)
+		if isWoW90 and event == 'UNIT_HEALTH_FREQUENT' then return end
 		if not frame then
 			frame = CreateFrame("Frame", nil, Grid2LayoutFrame)
 			frame:SetScript( "OnEvent",  function(_, event, ...) Events[event](...) end )
@@ -138,9 +142,9 @@ do
 		if HealthCurrent.dbx.quickHealth then
 			RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", CombatLogEvent)
 			RegisterEvent("GROUP_ROSTER_UPDATE", RosterUpdateEvent)
-			RegisterEvent("UNIT_HEALTH_FREQUENT", HealthChangedEvent)
 			RegisterEvent("UNIT_HEALTH", HealthChangedEvent)
 			RegisterEvent("UNIT_MAXHEALTH", HealthChangedEvent)
+			RegisterEvent("UNIT_HEALTH_FREQUENT", HealthChangedEvent)
 			UnitHealth = UnitQuickHealth
 		end
 	end
@@ -313,9 +317,24 @@ Grid2.setupFunc["feign-death"] = CreateFeignDeath
 Grid2:DbSetStatusDefaultValue( "feign-death", {type = "feign-death", color1 = {r=1,g=.5,b=1,a=1}})
 
 -- health-deficit status
-HealthDeficit.OnEnable  = Health_Enable
-HealthDeficit.OnDisable = Health_Disable
 HealthDeficit.GetColor  = Grid2.statusLibrary.GetColor
+
+function HealthDeficit:OnEnable()
+	self:UpdateDB()
+	Health_Enable(self)
+	healthdeficit_enabled = self.dbx.addIncomingHeals~=nil
+	if healthdeficit_enabled and not Heals.enabled then
+		Heals:OnEnable()
+	end
+end
+
+function HealthDeficit:OnDisable()
+	Health_Disable(self)
+	if healthdeficit_enabled and not Heals.enabled then
+		Heals:OnDisable()
+	end
+	healthdeficit_enabled = false
+end
 
 function HealthDeficit:IsActive(unit)
 	return self:GetPercent(unit) >= self.dbx.threshold
@@ -329,29 +348,49 @@ if Grid2.isClassic then
 	function HealthDeficit:GetText2(unit)
 		return tostring(UnitHealth(unit) - UnitHealthMax(unit))
 	end
+	function HealthDeficit:GetTextH1(unit)
+		local h = UnitHealth(unit) - UnitHealthMax(unit) + heals_cache[unit]
+		return h>-1000 and fmt("%d",h) or fmt("%.1fk",h/1000)
+	end
+	function HealthDeficit:GetTextH2(unit)
+		return tostring(UnitHealth(unit) - UnitHealthMax(unit) + heals_cache[unit])
+	end
 else
 	function HealthDeficit:GetText1(unit)
 		return fmt("%.1fk", (UnitHealth(unit) - UnitHealthMax(unit)) / 1000)
 	end
+	function HealthDeficit:GetTextH1(unit)
+		return fmt("%.1fk", (UnitHealth(unit) - UnitHealthMax(unit)  + heals_cache[unit]) / 1000)
+	end
 end
 HealthDeficit.GetText = HealthDeficit.GetText1
 
-function HealthDeficit:GetPercent(unit)
+function HealthDeficit:GetPercent1(unit)
 	local m = UnitHealthMax(unit)
 	return m == 0 and 1 or ( m - UnitHealth(unit) ) / m
 end
+function HealthDeficit:GetPercent2(unit)
+	local m = UnitHealthMax(unit)
+	return m == 0 and 1 or max( ( m - UnitHealth(unit) - heals_cache[unit] ) / m, 0)
+end
+HealthDeficit.GetPercent = HealthDeficit.GetPercent1
 
 function HealthDeficit:GetPercentText(unit)
 	return fmt( "%.0f%%", -self:GetPercent(unit)*100 )
 end
 
 function HealthDeficit:UpdateDB()
-	self.GetText = self.dbx.displayRawNumbers and self.GetText2 or self.GetText1
+	if self.dbx.addIncomingHeals then
+		self.GetPercent = HealthDeficit.GetPercent2
+		self.GetText = self.dbx.displayRawNumbers and self.GetTextH2 or self.GetTextH1
+	else
+		self.GetPercent = HealthDeficit.GetPercent1
+		self.GetText = self.dbx.displayRawNumbers and self.GetText2 or self.GetText1
+	end
 end
 
 local function CreateHealthDeficit(baseKey, dbx)
 	Grid2:RegisterStatus(HealthDeficit, { "percent", "color", "text"}, baseKey, dbx)
-	HealthDeficit:UpdateDB()
 	return HealthDeficit
 end
 
@@ -469,12 +508,14 @@ if Grid2.isClassic then -- This code block can be safety be removed for retail
 		HealComm.RegisterCallback( Grid2, "HealComm_HealStarted", HealUpdated )
 		HealComm.RegisterCallback( Grid2, "HealComm_HealUpdated", HealUpdated )
 		HealComm.RegisterCallback( Grid2, "HealComm_HealStopped", HealUpdated )
+		HealComm.RegisterCallback( Grid2, "HealComm_HealDelayed", HealUpdated )
 		HealComm.RegisterCallback( Grid2, "HealComm_ModifierChanged", HealModifier)
 	end
 	UnregisterEvent = function(event)
 		HealComm.UnregisterCallback( Grid2, "HealComm_HealStarted" )
 		HealComm.UnregisterCallback( Grid2, "HealComm_HealUpdated" )
 		HealComm.UnregisterCallback( Grid2, "HealComm_HealStopped" )
+		HealComm.UnregisterCallback( Grid2, "HealComm_HealDelayed" )
 		HealComm.UnregisterCallback( Grid2, "HealComm_ModifierChanged")
 	end
 	function HealsPlayer(unit)
@@ -529,6 +570,9 @@ HealsUpdateEvent = function(unit)
 			end
 			if overheals_enabled then
 				OverHeals:UpdateIndicators(unit)
+			end
+			if healthdeficit_enabled then
+				HealthDeficit:UpdateIndicators(unit)
 			end
 		end
 	end
@@ -585,10 +629,10 @@ end
 if Grid2.isClassic then
 	function Heals:GetText1(unit)
 		local h = heals_cache[unit]
-		return h<1000 and fmt("%d",h) or fmt("%.1fk",h/1000)
+		return h<1000 and fmt("+%d",h) or fmt("+%.1fk",h/1000)
 	end
 	function Heals:GetText2(unit)
-		return tostring(heals_cache[unit])
+		return fmt("+%d",heals_cache[unit])
 	end
 else
 	function Heals:GetText1(unit)
@@ -641,11 +685,11 @@ end
 
 function OverHeals:GetText1(unit)
 	local h = heals_cache[unit]+UnitHealth(unit)-UnitHealthMax(unit)
-	return h<1000 and fmt("%d",h) or fmt("%.1fk",h/1000)
+	return h<1000 and fmt("+%d",h) or fmt("+%.1fk",h/1000)
 end
 
 function OverHeals:GetText2(unit)
-	return tostring( heals_cache[unit]+UnitHealth(unit)-UnitHealthMax(unit) )
+	return fmt("+%d", heals_cache[unit]+UnitHealth(unit)-UnitHealthMax(unit) )
 end
 
 OverHeals.GetText = GetText1
@@ -678,6 +722,7 @@ function MyHeals:UpdateDB()
 		myheals_bitflag  = self.dbx.healTypeFlags or HealComm.ALL_HEALS
 		myheals_timeband = self.dbx.healTimeBand
 	end
+	self.GetText = self.dbx.displayRawNumbers and self.GetText2 or self.GetText1
 end
 
 function MyHeals:OnEnable()
@@ -701,15 +746,19 @@ function MyHeals:IsActive(unit)
 end
 
 if Grid2.isClassic then
-	function MyHeals:GetText(unit)
+	function MyHeals:GetText1(unit)
 		local h = myheals_cache[unit]
-		return h<1000 and fmt("%d",h) or fmt("%.1fk",h/1000)
+		return h<1000 and fmt("+%d",h) or fmt("+%.1fk",h/1000)
+	end
+	function MyHeals:GetText2(unit)
+		return fmt("+%d",myheals_cache[unit])
 	end
 else
-	function MyHeals:GetText(unit)
+	function MyHeals:GetText1(unit)
 		return fmt("+%.1fk", myheals_cache[unit] / 1000)
 	end
 end
+MyHeals.GetText = MyHeals.GetText1
 
 function MyHeals:GetPercent(unit)
 	local m = UnitHealthMax(unit)

@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod("AQ40Trash", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200805041427")
+mod:SetRevision("20200811005840")
 mod:SetModelID(15347)-- Anubisath Sentinel
-mod:SetZone()
-mod:SetMinSyncRevision(20200804000000)--2020, 8, 04
+mod:SetMinSyncRevision(20200810000000)--2020, 8, 10
 
 mod.isTrashMod = true
 
@@ -41,16 +40,17 @@ mod:SendSync("IsAQ40Started")
 
 do
 	local startCreatureIds = {
-		[15264] = true--Anubisath Sentinel
+		[15264] = true,--Anubisath Sentinel
+		[15262] = true--Obsidian Eradicator
 	}
 	local function checkFirstPull(self, GUID)
 		local cid = self:GetCIDFromGUID(GUID)
 		if startCreatureIds[cid] then
 			if not self.vb.firstEngageTime then
 				self.vb.firstEngageTime = GetServerTime()
-				if self.Options.FastestClear2 and self.Options.SpeedClearTimer then
+				if self.Options.FastestClear3 and self.Options.SpeedClearTimer then
 					--Custom bar creation that's bound to core, not mod, so timer doesn't stop when mod stops it's own timers
-					DBM.Bars:CreateBar(self.Options.FastestClear2, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT, "136106")
+					DBM.Bars:CreateBar(self.Options.FastestClear3, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT, "136106")
 				end
 				self:SendSync("AQ40Started", self.vb.firstEngageTime)--Also sync engage time
 			end
@@ -81,10 +81,10 @@ do
 			if not self.vb.firstEngageTime then
 				self.vb.firstEngageTime = tonumber(startTime)
 			end
-			if self.Options.FastestClear2 and self.Options.SpeedClearTimer then
+			if self.Options.FastestClear3 and self.Options.SpeedClearTimer then
 				--Custom bar creation that's bound to core, not mod, so timer doesn't stop when mod stops it's own timers
 				local adjustment = GetServerTime() - self.vb.firstEngageTime
-				DBM.Bars:CreateBar(self.Options.FastestClear2 - adjustment, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT)
+				DBM.Bars:CreateBar(self.Options.FastestClear3 - adjustment, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT)
 			end
 			--Unregister high CPU combat log events
 			self:UnregisterShortTermEvents()
@@ -109,17 +109,17 @@ function mod:ENCOUNTER_END(encounterID, _, _, _, success)
 			if self.vb.firstEngageTime then
 				local thisTime = GetServerTime() - self.vb.firstEngageTime
 				if thisTime and thisTime > 0 then
-					if not self.Options.FastestClear2 then
+					if not self.Options.FastestClear3 then
 						--First clear, just show current clear time
 						DBM:AddMsg(DBM_CORE_L.RAID_DOWN:format("AQ40", DBM:strFromTime(thisTime)))
-						self.Options.FastestClear2 = thisTime
-					elseif (self.Options.FastestClear2 > thisTime) then
+						self.Options.FastestClear3 = thisTime
+					elseif (self.Options.FastestClear3 > thisTime) then
 						--Update record time if this clear shorter than current saved record time and show users new time, compared to old time
-						DBM:AddMsg(DBM_CORE_L.RAID_DOWN_NR:format("AQ40", DBM:strFromTime(thisTime), DBM:strFromTime(self.Options.FastestClear2)))
-						self.Options.FastestClear2 = thisTime
+						DBM:AddMsg(DBM_CORE_L.RAID_DOWN_NR:format("AQ40", DBM:strFromTime(thisTime), DBM:strFromTime(self.Options.FastestClear3)))
+						self.Options.FastestClear3 = thisTime
 					else
 						--Just show this clear time, and current record time (that you did NOT beat)
-						DBM:AddMsg(DBM_CORE_L.RAID_DOWN_L:format("AQ40", DBM:strFromTime(thisTime), DBM:strFromTime(self.Options.FastestClear2)))
+						DBM:AddMsg(DBM_CORE_L.RAID_DOWN_L:format("AQ40", DBM:strFromTime(thisTime), DBM:strFromTime(self.Options.FastestClear3)))
 					end
 				end
 				self.vb.firstEngageTime = nil
@@ -132,7 +132,7 @@ do-- Anubisath Plague/Explode - keep in sync - AQ40/AQ40Trash.lua AQ20/AQ20Trash
 	local warnPlague                    = mod:NewTargetNoFilterAnnounce(22997, 2)
 	local specWarnPlague                = mod:NewSpecialWarningMoveAway(22997, nil, nil, nil, 1, 2)
 	local yellPlague                    = mod:NewYell(22997)
-	local specWarnExplode               = mod:NewSpecialWarningRun(25698, nil, nil, nil, 4, 2)
+	local specWarnExplode               = mod:NewSpecialWarningRun(25698, false, nil, 2, 4, 2)
 	local warnCauseInsanity             = mod:NewTargetNoFilterAnnounce(26079, 2)
 
 	local Plague = DBM:GetSpellInfo(22997)
@@ -181,10 +181,10 @@ do-- Anubisath Reflect - keep in sync - AQ40/AQ40Trash.lua AQ20/AQ20Trash.lua
 	local playerGUID = UnitGUID("player")
 	function mod:SPELL_MISSED(sourceGUID, _, _, _, destGUID, destName, _, _, _, _, spellSchool, missType)
 		if (missType == "REFLECT" or missType == "DEFLECT") and sourceGUID == playerGUID then
-			if spellSchool == 32 or spellSchool == 16 then
+			if (spellSchool == 32 or spellSchool == 16) and self:AntiSpam(3, 1) then
 				specWarnShadowFrostReflect:Show(destName)
 				specWarnShadowFrostReflect:Play("stopattack")
-			elseif spellSchool == 4 or spellSchool == 64 then
+			elseif (spellSchool == 4 or spellSchool == 64) and self:AntiSpam(3, 2) then
 				specWarnFireArcaneReflect:Show(destName)
 				specWarnFireArcaneReflect:Play("stopattack")
 			end

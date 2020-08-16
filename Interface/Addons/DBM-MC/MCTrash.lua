@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod("MCTrash", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200713232113")
+mod:SetRevision("20200805234921")
 --mod:SetModelID(47785)
-mod:SetZone()
 mod:SetMinSyncRevision(20200710000000)--2020, 7, 10
 
 mod.isTrashMod = true

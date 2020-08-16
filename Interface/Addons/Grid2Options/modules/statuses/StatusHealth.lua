@@ -2,7 +2,7 @@ local L = Grid2Options.L
 
 if Grid2.isClassic then
 	local TIME_VALUES = { [0] = L['None'] }
-	for i=1,5 do TIME_VALUES[i] = string.format(L["%d seconds"], i)	end
+	for i=1,15 do TIME_VALUES[i] = string.format(L["%d seconds"], i)	end
 	function Grid2Options:MakeStatusHealsClassicOptions(status, options)
 		local LHC = LibStub("LibHealComm-4.0")
 		options.classicTimeBand = {
@@ -69,7 +69,7 @@ Grid2Options:RegisterStatusOptions("health-current", "health", function(self, st
 			type = "toggle",
 			tristate = false,
 			width = "full",
-			order = 36,
+			order = 350,
 			name = L["Shorten Health Numbers"],
 			desc = L["Shorten Health Numbers"],
 			get = function () return not status.dbx.displayRawNumbers end,
@@ -275,6 +275,20 @@ Grid2Options:RegisterStatusOptions("health-deficit", "health", function(self, st
 			end,
 		}
 	end
+	options.addIncomingHeals = {
+		type = "toggle",
+		order = 99,
+		width = "full",
+		name = L["Add Incoming Heals"],
+		desc = L["Add incoming heals to health deficit."],
+		tristate = false,
+		get = function () return status.dbx.addIncomingHeals end,
+		set = function (_, v)
+			if status.enabled then status:OnDisable() end
+			status.dbx.addIncomingHeals = v or nil
+			if status.enabled then status:OnEnable() end
+		end,
+	}
 end, {
 	titleIcon = "Interface\\Icons\\Spell_shadow_lifedrain"
 })

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ouro", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200805201820")
+mod:SetRevision("20200806195413")
 mod:SetCreatureID(15517)
 mod:SetEncounterID(716)
 mod:SetModelID(15509)
@@ -28,7 +28,7 @@ local warnBerserkSoon	= mod:NewSoonAnnounce(26615, 2)
 
 local specWarnBlast		= mod:NewSpecialWarningSpell(26102, nil, nil, nil, 2, 2)
 
---local timerSubmerge		= mod:NewTimer(30, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, nil, 6)
+local timerSubmerge		= mod:NewTimer(30, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, nil, 6)
 local timerEmerge		= mod:NewTimer(30, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp", nil, nil, 6)
 local timerSweepCD		= mod:NewNextTimer(20.5, 26103, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerBlastCD		= mod:NewNextTimer(23, 26102, nil, nil, nil, 2)
@@ -41,13 +41,15 @@ function mod:OnCombatStart(delay)
 	self.vb.Berserked = false
 	timerSweepCD:Start(22-delay)--22-25
 	timerBlastCD:Start(20-delay)--20-26
-	DBM:AddMsg("Submerge is not timer based. No actual timers are missing")
+	timerSubmerge:Start(184-delay)
+	DBM:AddMsg("DBM will now show submerge timer for natural submerge timing if he remains in melee range of his current target. If at anytime he can't reach his current target it triggers an automatic submerge")
 end
 
 function mod:Emerge()
 	warnEmerge:Show()
 	timerSweepCD:Start(23)--23-24 (it might be 22-25 like pull)
 	timerBlastCD:Start(24)--24-26 (it might be 20-26 like pull)
+	timerSubmerge:Start(184)
 end
 
 do
@@ -57,6 +59,7 @@ do
 		if args.spellName == Berserk and args:IsDestTypeHostile() then
 			self.vb.Berserked = true
 			warnBerserk:Show()
+			timerSubmerge:Stop()
 		end
 	end
 end
@@ -84,6 +87,7 @@ do
 		if args.spellName == SummonOuroMounds and not self.vb.Berserked then
 			timerBlastCD:Stop()
 			timerSweepCD:Stop()
+			timerSubmerge:Stop()
 			warnSubmerge:Show()
 			timerEmerge:Start()
 			self:ScheduleMethod(30, "Emerge")

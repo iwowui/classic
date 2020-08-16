@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "AceGUI-3.0-Search-EditBox", 1
+local MAJOR, MINOR = "AceGUI-3.0-Search-EditBox", 2
 local lib, oldminor = LibStub:NewLibrary(MAJOR,MINOR)
 if not lib then return end
 

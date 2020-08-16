@@ -1,7 +1,7 @@
 local AceGUI = LibStub("AceGUI-3.0")
 
 local Type = "SearchEditBox_Base"
-local Version = 1
+local Version = 2
 local PREDICTOR_ROWS = 15
 local predictorBackdrop = {
   bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
@@ -19,8 +19,8 @@ local function Fire(self, method, ...)
 		local handler = options.handler or options
 		if type(func)=="string" then func = handler[func] end
 		return func(handler, ...)
-	end	
-end	
+	end
+end
 
 local function OnAcquire(self)
 	self:SetWidth(200)
@@ -100,10 +100,10 @@ local function ValidateValue(self, text, key)
 	if self.options.GetValue then
 		local value
 		key, value = Fire(self, "GetValue", text, key)
-		if key and value then text = value end	
-	elseif not key then	
+		if key and value then text = value end
+	elseif not key then
 		key = text
-	end	
+	end
 	return key, text
 end
 
@@ -118,7 +118,7 @@ local function Predictor_OnShow(self)
 	-- If the user is using an edit box in a configuration, they will live without arrow keys while the predictor
 	-- is opened, this also is the only way of getting up/down arrow for browsing the predictor to work.
 	self.obj.editBox:SetAltArrowKeyMode(true)
-	
+
 	local name = self:GetName()
 	SetOverrideBindingClick(self, true, "DOWN", name, 1)
 	SetOverrideBindingClick(self, true, "UP", name, -1)
@@ -138,7 +138,7 @@ local function Predictor_OnHide(self)
 		end
 		-- Reset all bindings set on this predictor
 		ClearOverrideBindings(self)
-	end	
+	end
 end
 
 local function Predictor_OnMouseDown(self, direction)
@@ -149,35 +149,35 @@ local function Predictor_OnMouseDown(self, direction)
 		self.obj.editBox:SetCursorPosition(self.obj.editBox:GetCursorPosition() + (direction == "RIGHT" and 1 or -1))
 		return
 	end
-	
+
 	if self.selectedButton then
 		local button = self.buttons[self.selectedButton]
 		button:UnlockHighlight()
 		if GameTooltip:IsOwned(button) then	GameTooltip:Hide() end
 	end
-	
+
 	self.selectedButton = (self.selectedButton or 0) + direction
 	if self.selectedButton > self.activeButtons then
 		self.selectedButton = 1
 	elseif self.selectedButton <= 0 then
 		self.selectedButton = self.activeButtons
 	end
-	
+
 	local button = self.buttons[self.selectedButton]
 	button:LockHighlight()
 	GameTooltip:SetOwner(button, "ANCHOR_BOTTOMRIGHT", 3)
 	local hyperlink = Fire( self.obj, "GetHyperlink", button.key )
-	if hyperlink then GameTooltip:SetHyperlink( hyperlink )	end	
+	if hyperlink then GameTooltip:SetHyperlink( hyperlink )	end
 end
-		
+
 local function PredictorButton_OnClick(self)
 	local obj = self.parent.obj
 	local value, text = ValidateValue(obj, obj.editBox:GetText(), self.key )
 	if value then
 		SetText(obj, text)
 		self.parent.selectedButton = nil
-		obj:Fire("OnEnterPressed", value ) 
-	end	
+		obj:Fire("OnEnterPressed", value )
+	end
 end
 
 local function PredictorButton_OnEnter(self)
@@ -186,7 +186,7 @@ local function PredictorButton_OnEnter(self)
 	local hyperlink = Fire( self.parent.obj, "GetHyperlink", self.key )
 	if hyperlink then
 		GameTooltip:SetHyperlink( hyperlink )
-	end	
+	end
 end
 
 local function PredictorButton_OnLeave(self)
@@ -194,7 +194,7 @@ local function PredictorButton_OnLeave(self)
 	if not predictor.selectedButton or predictor.buttons[predictor.selectedButton] ~= self then
 		self:UnlockHighlight()
 		GameTooltip:Hide()
-	end	
+	end
 end
 
 local function Predictor_Reset(self, object)
@@ -205,14 +205,14 @@ local function Predictor_Reset(self, object)
 		self:SetPoint("TOPRIGHT", object.editBox, "BOTTOMRIGHT", 0, 0)
 	end
 	-- hiding predictor buttons
-	for _, button in pairs(self.buttons) do 
+	for _, button in pairs(self.buttons) do
 		button:UnlockHighlight()
-		button:Hide() 
+		button:Hide()
 	end
 	-- already done in EditBox FocusGained event, but some times its not fire there (i dont know why)
-	if not object.initialized then 
-		Initialize(object) 
-	end	
+	if not object.initialized then
+		Initialize(object)
+	end
 	wipe(queryResult)
 end
 
@@ -259,13 +259,13 @@ local function EditBox_OnEnterPressed(this)
 	if value then
 		if text ~= obj.lastText then
 			SetText(obj, text)
-		end	
+		end
 		-- Fire the event
-		if not obj:Fire("OnEnterPressed", value) then 
+		if not obj:Fire("OnEnterPressed", value) then
 			HideButton(obj)
 			return
 		end
-	end	
+	end
 	this:SetFocus()
 end
 
@@ -299,14 +299,14 @@ local function EditBox_OnEditFocusLost(self)
 	local predictor = self.obj.predictor
 	if predictor:IsVisible() then
 		predictor:Hide()
-	end	
+	end
 end
 
 local function EditBox_OnEditFocusGained(self)
 	local obj = self.obj
 	if not obj.initialized then
 		Initialize(obj)
-	end	
+	end
 	if obj.predictor:IsVisible() then
 		Predictor_OnShow(obj.predictor)
 	elseif obj.lastText then
@@ -323,7 +323,7 @@ end
 
 -- This function is only executed once and them removed, because the same predictor frame is used for all widgets
 local function CreatePredictorFrame(num)
-	local predictor = CreateFrame("Frame", "AceGUI30SearchEditBox" .. num .. "Predictor", UIParent)
+	local predictor = CreateFrame("Frame", "AceGUI30SearchEditBox" .. num .. "Predictor", UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	predictor:SetBackdrop(predictorBackdrop)
 	predictor:SetBackdropColor(0, 0, 0, 0.85)
 	predictor:SetFrameStrata("TOOLTIP")
@@ -339,7 +339,7 @@ local function CreatePredictorFrame(num)
 		button:SetScript("OnLeave", PredictorButton_OnLeave)
 		button.parent = predictor
 		button:Hide()
-		
+
 		if( i > 1 ) then
 			button:SetPoint("TOPLEFT", predictor.buttons[i - 1], "BOTTOMLEFT", 0, 0)
 			button:SetPoint("TOPRIGHT", predictor.buttons[i - 1], "BOTTOMRIGHT", 0, 0)
@@ -354,7 +354,7 @@ local function CreatePredictorFrame(num)
 		text:SetJustifyH("LEFT")
 		text:SetJustifyV("MIDDLE")
 		button:SetFontString(text)
-		
+
 		-- Setup the highlighting
 		local texture = button:CreateTexture(nil, "ARTWORK")
 		texture:SetTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
@@ -366,9 +366,9 @@ local function CreatePredictorFrame(num)
 		button:SetHighlightTexture(texture)
 		button:SetHighlightFontObject(GameFontHighlight)
 		button:SetNormalFontObject(GameFontNormal)
-		
+
 		table.insert(predictor.buttons, button)
-	end	
+	end
 	-- EditBoxes override the OnKeyUp/OnKeyDown events so that they can function, meaning in order to make up and down
 	-- arrow navigation of the menu work, I have to do some trickery with temporary bindings.
 	predictor:SetScript("OnMouseDown", Predictor_OnMouseDown)
@@ -417,7 +417,7 @@ local function Constructor()
 	button:SetSize(40,20)
 	button:SetText(OKAY)
 	button:Hide()
-	-- AceGUI object 
+	-- AceGUI object
 	self.type = Type
 	self.num = num
 	self.alignoffset = 30
