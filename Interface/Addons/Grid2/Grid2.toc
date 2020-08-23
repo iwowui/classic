@@ -2,7 +2,7 @@
 ## X-WoW-Project: classic
 ## Title: Grid2
 ## Author: Pastamancer & Maia, Jerry, Toadkiller
-## Version: r975
+## Version: r978
 ## Notes: A modular, lightweight and screen-estate saving grid of party/raid unit frames
 ## Title-zhCN: |CFF80FF80团队|R 团队面板
 ## Notes-zhCN: 小巧的轻量级模块化队伍框架

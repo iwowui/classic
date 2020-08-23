@@ -11,7 +11,7 @@ function QuestieOptionsDefaults:Load()
             eventScale = 1.35,
             lootScale = 1,
             iconFadeLevel = 0.3,
-            trackerLocked = false,
+            trackerLocked = true,
             monsterScale = 1,
             objectScale = 1,
             globalScale = 0.7,
@@ -67,7 +67,7 @@ function QuestieOptionsDefaults:Load()
             hookTracking = true,
             trackerHeaderEnabled = true,
             trackerHeaderAutoMove = false,
-            stickyDurabilityFrame = false,
+            stickyDurabilityFrame = true,
             hideTrackerInCombat = false,
             trackerFadeMinMaxButtons = true,
             trackerFadeQuestItemButtons = false,
@@ -119,7 +119,7 @@ function QuestieOptionsDefaults:Load()
             showDungeonQuests = true,
             showRaidQuests = true,
             showPvPQuests = true,
-            showAQWarEffortQuests = true,
+            showAQWarEffortQuests = false,
         },
         profile = {minimap = {hide = false}}
     }

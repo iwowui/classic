@@ -31,10 +31,6 @@ QuestieLocale.locale['enUS'] = {
     ['ENABLE_TURNINS_DESC'] = "When this is enabled, the quest turn-in locations will be shown on the map/minimap.",
     ['ENABLE_AVAILABLE'] = "Enable Available Quest Icons",
     ['ENABLE_AVAILABLE_DESC'] = "When this is enabled, the locations of available quest will be shown on the map/minimap.",
-    ['ENABLE_TOOLTIPS'] = "Enable Tooltips",
-    ['ENABLE_TOOLTIPS_DESC'] = "When this is enabled, quest info will be added to relevant mob/item tooltips.",
-    ['ENABLE_TOOLTIPS_QUEST_LEVEL'] = "Show Quest Level in Tooltips",
-    ['ENABLE_TOOLTIPS_QUEST_LEVEL_DESC'] = "When this is checked, the level of quests will show in the tooltips.",
     ['ICON_TYPE_HEADER'] = "Icon Types",
     ['ENABLE_MAP_ICONS'] = "Enable Map Icons",
     ['ENABLE_MAP_ICONS_DESC'] = "Show/hide all icons from the main map.",
@@ -69,7 +65,7 @@ QuestieLocale.locale['enUS'] = {
     ['AUTO_MODIFIER'] = "Auto Modifier",
     ['AUTO_MODIFIER_DESC'] = "The modifier to NOT auto-accept/-complete quests when either option is enabled and you interact with a quest NPC.",
     ['ENABLE_YELL'] = "Share quest progress with nearby players",
-    ['ENABLE_YELL_DESC'] = "Your quest progress will be periodically sent to nearby players",
+    ['ENABLE_YELL_DESC'] = "Your quest progress will be periodically sent to nearby players. Disabling this doesn't affect sharing progress with party members.",
 
     -- Minimap tab
     ['MINIMAP_TAB'] = "Minimap",
@@ -168,6 +164,16 @@ QuestieLocale.locale['enUS'] = {
     ['TARGET_SCALE_DESC'] = "Scale the size of the quest icons on creature nameplates. ( Default: %s )",
     ['TARGET_RESET_BTN'] = "Reset Target Frame",
     ['TARGET_RESET_BTN_DESC'] = "Reset to default target frame position and scale.",
+
+    -- Tooltip tab
+    ['TOOLTIP_TAB'] = "Tooltips",
+    ['TOOLTIP_OPTIONS_HEADER'] = "Tooltip options",
+    ['ENABLE_TOOLTIPS'] = "Enable Tooltips",
+    ['ENABLE_TOOLTIPS_DESC'] = "When this is enabled, quest info will be added to relevant mob/item tooltips.",
+    ['ENABLE_TOOLTIPS_QUEST_LEVEL'] = "Show Quest Level in Tooltips",
+    ['ENABLE_TOOLTIPS_QUEST_LEVEL_DESC'] = "When this is checked, the level of quests will show in the tooltips.",
+    ['SHARED_TOOLTIP_PARTY_ONLY'] = "Only show party members",
+    ['SHARED_TOOLTIP_PARTY_ONLY_DESC'] = "When this is enabled, shared quest info will only show players in your party.",
 
     -- Advanced tab
     ['ADVANCED_TAB'] = "Advanced",

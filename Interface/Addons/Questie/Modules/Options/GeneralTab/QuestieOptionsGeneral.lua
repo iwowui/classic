@@ -101,6 +101,7 @@ function QuestieOptions.tabs.general:Initialize()
                         set = function (info, value)
                             Questie.db.global.enableObjectives = value
                             QuestieQuest:ToggleNotes(value)
+                            QuestieQuest:SmoothReset()
                         end,
                     },
                     enableTurninsToggle = {
@@ -114,6 +115,7 @@ function QuestieOptions.tabs.general:Initialize()
                         set = function (info, value)
                             Questie.db.global.enableTurnins = value
                             QuestieQuest:ToggleNotes(value)
+                            QuestieQuest:SmoothReset()
                         end,
                     },
                     enableAvailableToggle = {
@@ -127,6 +129,7 @@ function QuestieOptions.tabs.general:Initialize()
                         set = function (info, value)
                             Questie.db.global.enableAvailable = value
                             QuestieQuest:ToggleNotes(value)
+                            QuestieQuest:SmoothReset()
                         end,
                     },
                     showRepeatableQuests = {
@@ -140,6 +143,7 @@ function QuestieOptions.tabs.general:Initialize()
                         set = function (info, value)
                             Questie.db.char.showRepeatableQuests = value
                             QuestieQuest:ToggleNotes(value)
+                            QuestieQuest:SmoothReset()
                         end,
                     },
                     showEventQuests = {
@@ -153,6 +157,7 @@ function QuestieOptions.tabs.general:Initialize()
                         set = function (info, value)
                             Questie.db.char.showEventQuests = value
                             QuestieQuest:ToggleNotes(value)
+                            QuestieQuest:SmoothReset()
                         end,
                     },
                     showDungeonQuests = {
@@ -166,6 +171,7 @@ function QuestieOptions.tabs.general:Initialize()
                         set = function (info, value)
                             Questie.db.char.showDungeonQuests = value
                             QuestieQuest:ToggleNotes(value)
+                            QuestieQuest:SmoothReset()
                         end,
                     },
                     showRaidQuests = {
@@ -178,7 +184,8 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function(info) return Questie.db.char.showRaidQuests end,
                         set = function (info, value)
                             Questie.db.char.showRaidQuests = value
-                            QuestieQuest:ToggleNotes(value);
+                            QuestieQuest:ToggleNotes(value)
+                            QuestieQuest:SmoothReset()
                         end,
                     },
                     showPvPQuests = {
@@ -191,7 +198,8 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function(info) return Questie.db.char.showPvPQuests end,
                         set = function (info, value)
                             Questie.db.char.showPvPQuests = value
-                            QuestieQuest:ToggleNotes(value);
+                            QuestieQuest:ToggleNotes(value)
+                            QuestieQuest:SmoothReset()
                         end,
                     },
                     showAQWarEffortQuests = {
@@ -204,7 +212,8 @@ function QuestieOptions.tabs.general:Initialize()
                         get = function(info) return Questie.db.char.showAQWarEffortQuests end,
                         set = function (info, value)
                             Questie.db.char.showAQWarEffortQuests = value
-                            QuestieQuest:ToggleNotes(value);
+                            QuestieQuest:ToggleNotes(value)
+                            QuestieQuest:SmoothReset()
                         end,
                     },
                 },
@@ -242,36 +251,9 @@ function QuestieOptions.tabs.general:Initialize()
                     end
                 end,
             },
-            enableTooltipsToggle = {
-                type = "toggle",
-                order = 1.5,
-                name = function() return QuestieLocale:GetUIString('ENABLE_TOOLTIPS'); end,
-                desc = function() return QuestieLocale:GetUIString('ENABLE_TOOLTIPS_DESC'); end,
-                width = 1.5,
-                get = function () return Questie.db.global.enableTooltips; end,
-                set = function (info, value)
-                    Questie.db.global.enableTooltips = value
-                end,
-            },
-            showQuestLevels = {
-                type = "toggle",
-                order = 1.6,
-                name = function() return QuestieLocale:GetUIString('ENABLE_TOOLTIPS_QUEST_LEVEL'); end,
-                desc = function() return QuestieLocale:GetUIString('ENABLE_TOOLTIPS_QUEST_LEVEL_DESC'); end,
-                width = 1.5,
-                disabled = function() return not Questie.db.global.enableTooltips; end,
-                get = function() return Questie.db.global.enableTooltipsQuestLevel; end,
-                set = function (info, value)
-                    Questie.db.global.enableTooltipsQuestLevel = value
-                    if value and not Questie.db.global.trackerShowQuestLevel then
-                        Questie.db.global.trackerShowQuestLevel = true
-                        QuestieTracker:Update()
-                    end
-                end
-            },
             autoaccept = {
                 type = "toggle",
-                order = 1.7,
+                order = 1.5,
                 name = function() return QuestieLocale:GetUIString('ENABLE_AUTO_ACCEPT_QUESTS'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_AUTO_ACCEPT_QUESTS_DESC'); end,
                 width = 1.5,
@@ -283,7 +265,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             autocomplete = {
                 type = "toggle",
-                order = 1.8,
+                order = 1.6,
                 name = function() return QuestieLocale:GetUIString('ENABLE_AUTO_COMPLETE'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_AUTO_COMPLETE_DESC'); end,
                 width = 1.5,
@@ -295,7 +277,7 @@ function QuestieOptions.tabs.general:Initialize()
             },
             autoModifier = {
                 type = "select",
-                order = 1.9,
+                order = 1.7,
                 values = _GetShortcuts(),
                 style = 'dropdown',
                 name = function() return QuestieLocale:GetUIString('AUTO_MODIFIER') end,
@@ -306,10 +288,10 @@ function QuestieOptions.tabs.general:Initialize()
                     Questie.db.char.autoModifier = key
                 end,
             },
-            Spacer_H = QuestieOptionsUtils:HorizontalSpacer(1.91, 0.5),
+            Spacer_H = QuestieOptionsUtils:HorizontalSpacer(1.71, 0.5),
             acceptTrivial = {
                 type = "toggle",
-                order = 1.92,
+                order = 1.72,
                 name = function() return QuestieLocale:GetUIString('ENABLE_ACCEPT_TRIVIAL'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_ACCEPT_TRIVIAL_DESC'); end,
                 disabled = function() return (not Questie.db.char.autoaccept) end,
@@ -319,10 +301,10 @@ function QuestieOptions.tabs.general:Initialize()
                     Questie.db.char.acceptTrivial = value
                 end,
             },
-            Spacer_B = QuestieOptionsUtils:Spacer(1.93),
+            Spacer_B = QuestieOptionsUtils:Spacer(1.73),
             shareQuestsNearby = {
                 type = "toggle",
-                order = 1.94,
+                order = 1.74,
                 name = function() return QuestieLocale:GetUIString('ENABLE_YELL'); end,
                 desc = function() return QuestieLocale:GetUIString('ENABLE_YELL_DESC'); end,
                 disabled = function() return false end,
@@ -335,7 +317,6 @@ function QuestieOptions.tabs.general:Initialize()
                     end
                 end,
             },
-            --Spacer_C = QuestieOptionsUtils:Spacer(1.99),
             quest_options = {
                 type = "header",
                 order = 2,

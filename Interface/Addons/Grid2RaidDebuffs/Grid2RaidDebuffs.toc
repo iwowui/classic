@@ -7,7 +7,7 @@
 ## DefaultState: Disabled
 
 ## Dependencies: Grid2
-## Version:r975
+## Version:r978
 ## X-Category: UnitFrame
 ## X-Website: http://wowace.com/projects/grid2/
 

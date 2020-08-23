@@ -52,6 +52,7 @@ local questTagCorrections = {
     [7842] = {0, ""},
     [7843] = {0, ""},
     [8122] = {41, "PvP"},
+    [8386] = {41, "PvP"},
     [8404] = {41, "PvP"},
     [8405] = {41, "PvP"},
     [8406] = {41, "PvP"},
@@ -800,7 +801,11 @@ end
 
 ---@param quest Quest
 ---@return table<string, table> @List of creature names with their min-max level and rank
+QuestieDB._CreatureLevelCache = {}
 function QuestieDB:GetCreatureLevels(quest)
+    if quest and quest.Id and QuestieDB._CreatureLevelCache[quest.Id] then
+        return QuestieDB._CreatureLevelCache[quest.Id]
+    end
     local creatureLevels = {}
 
     local function _CollectCreatureLevels(npcList)
@@ -824,12 +829,15 @@ function QuestieDB:GetCreatureLevels(quest)
         end
         if quest.objectives[3] then -- Looting items from creatures
             for _, itemObjective in pairs(quest.objectives[3]) do
-                local item = QuestieDB:GetItem(itemObjective[1])
-                if item and item.npcDrops then
-                    _CollectCreatureLevels(item.npcDrops)
+                local drops = QuestieDB.QueryItemSingle(itemObjective[1], "npcDrops")
+                if drops then
+                    _CollectCreatureLevels(drops)
                 end
             end
         end
+    end
+    if quest.Id then
+        QuestieDB._CreatureLevelCache[quest.Id] = creatureLevels
     end
     return creatureLevels
 end
