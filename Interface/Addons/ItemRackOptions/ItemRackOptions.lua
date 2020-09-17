@@ -22,6 +22,7 @@ ItemRack.CheckButtonLabels = {
 	["ItemRackOptEventEditBuffAnyMountText"] = "Any mount",
 	["ItemRackOptEventEditBuffUnequipText"] = "Unequip when buff fades",
 	["ItemRackOptEventEditBuffNotInPVPText"] = "Except in PVP instances",
+	["ItemRackOptEventEditBuffNotInPVEText"] = "Except in PVE instances",
 	["ItemRackOptEventEditStanceUnequipText"] = "Unequip on leaving stance",
 	["ItemRackOptEventEditZoneUnequipText"] = "Unequip on leaving zone",
 	["ItemRackOptEventEditStanceNotInPVPText"] = "Except in PVP instances",
@@ -37,6 +38,7 @@ if GetLocale() == "zhCN" then
 		["ItemRackOptEventEditBuffAnyMountText"] = "坐骑检查",
 		["ItemRackOptEventEditBuffUnequipText"] = "当Buff消失时解除装备",
 		["ItemRackOptEventEditBuffNotInPVPText"] = "在pvp场景中除外",
+		["ItemRackOptEventEditBuffNotInPVEText"] = "在pve场景中除外",
 		["ItemRackOptEventEditStanceUnequipText"] = "解除姿态时同时解除装备",
 		["ItemRackOptEventEditZoneUnequipText"] = "离开区域时解除装备",
 		["ItemRackOptEventEditStanceNotInPVPText"] = "在pvp场景中除外",
@@ -52,6 +54,7 @@ elseif GetLocale() == "zhTW" then
 		["ItemRackOptEventEditBuffAnyMountText"] = "坐騎檢查",
 		["ItemRackOptEventEditBuffUnequipText"] = "當Buff消失時解除裝備",
 		["ItemRackOptEventEditBuffNotInPVPText"] = "在pvp場景中除外",
+		["ItemRackOptEventEditBuffNotInPVEText"] = "在pve場景中除外",
 		["ItemRackOptEventEditStanceUnequipText"] = "解除姿態時同時解除裝備",
 		["ItemRackOptEventEditZoneUnequipText"] = "離開區域時解除裝備",
 		["ItemRackOptEventEditStanceNotInPVPText"] = "在pvp場景中除外",
@@ -1777,6 +1780,7 @@ function ItemRackOpt.EventEditClearFrame()
 	ItemRackOptEventEditBuffAnyMount:SetChecked(false)
 	ItemRackOptEventEditBuffUnequip:SetChecked(false)
 	ItemRackOptEventEditBuffNotInPVP:SetChecked(false)
+	ItemRackOptEventEditBuffNotInPVE:SetChecked(false)
 	ItemRackOptEventEditStanceName:SetText("")
 	ItemRackOptEventEditStanceUnequip:SetChecked(false)
 	ItemRackOptEventEditStanceNotInPVP:SetChecked(false)
@@ -1803,6 +1807,7 @@ function ItemRackOpt.EventEditPopulateFrame()
 		end
 		ItemRackOptEventEditBuffUnequip:SetChecked(event.Unequip)
 		ItemRackOptEventEditBuffNotInPVP:SetChecked(event.NotInPVP)
+		ItemRackOptEventEditBuffNotInPVE:SetChecked(event.NotInPVE)
 		ItemRackOptEventEditStanceName:SetText(event.Stance or "")
 		ItemRackOptEventEditStanceUnequip:SetChecked(event.Unequip)
 		ItemRackOptEventEditStanceNotInPVP:SetChecked(event.NotInPVP)
@@ -1954,6 +1959,7 @@ function ItemRackOpt.EventEditSave(override)
 		event.Buff = ItemRackOptEventEditBuffName:GetText()
 		event.Unequip = ItemRackOptEventEditBuffUnequip:GetChecked()
 		event.NotInPVP = ItemRackOptEventEditBuffNotInPVP:GetChecked()
+		event.NotInPVE = ItemRackOptEventEditBuffNotInPVE:GetChecked()
 	elseif event.Type=="Stance" then
 		event.Stance = ItemRackOptEventEditStanceName:GetText()
 		if tonumber(event.Stance) then

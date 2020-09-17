@@ -16,12 +16,11 @@ eventFrame:SetScript(
         if (event == "PLAYER_LOGIN") then
             TranqRotate:init()
             self:UnregisterEvent("PLAYER_LOGIN")
-        elseif (event == "PLAYER_TARGET_CHANGED") then
-            -- Ugly hack to initialize hunter list when player login right into raid
-            -- Raid members data is unreliable on PLAYER_LOGIN and PLAYER_ENTERING_WORLD events
-            TranqRotate:updateRaidStatus()
-            TranqRotate:sendSyncOrderRequest()
-            self:UnregisterEvent("PLAYER_TARGET_CHANGED")
+
+            -- Delayed raid update because raid data is unreliable at PLAYER_LOGIN
+            C_Timer.After(5, function()
+                TranqRotate:updateRaidStatus()
+            end)
         else
             TranqRotate[event](TranqRotate, ...)
         end
@@ -29,6 +28,12 @@ eventFrame:SetScript(
 )
 
 function TranqRotate:COMBAT_LOG_EVENT_UNFILTERED()
+
+    -- @todo : Improve this with register / unregister event to save ressources
+    -- Avoid parsing combat log when not able to use it
+    if not TranqRotate.raidInitialized then return end
+    -- Avoid parsing combat log when outside instance if test mode isn't enabled
+    if not TranqRotate.testMode and not IsInInstance() then return end
 
     local timestamp, event, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()
     local spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand = select(12, CombatLogGetCurrentEventInfo())
@@ -49,6 +54,10 @@ function TranqRotate:COMBAT_LOG_EVENT_UNFILTERED()
                 TranqRotate:sendAnnounceMessage(TranqRotate.db.profile.announceFailMessage, destName)
             end
         end
+    elseif (event == "SPELL_AURA_APPLIED" and TranqRotate:isBossFrenzy(spellName, sourceGUID) and TranqRotate:isPlayerNextTranq()) then
+        TranqRotate:throwTranqAlert()
+    elseif event == "UNIT_DIED" and TranqRotate:isTranqableBoss(destGUID) then
+        TranqRotate:resetRotation()
     end
 end
 
@@ -63,8 +72,11 @@ function TranqRotate:PLAYER_REGEN_ENABLED()
 end
 
 function TranqRotate:PLAYER_TARGET_CHANGED()
-    TranqRotate:updateRaidStatus()
-    self:UnregisterEvent("PLAYER_TARGET_CHANGED")
+    if (TranqRotate.db.profile.showWindowWhenTargetingBoss) then
+        if (TranqRotate:isTranqableBoss(UnitGUID("target")) and not UnitIsDead('target')) then
+            TranqRotate.mainFrame:Show()
+        end
+    end
 end
 
 -- Register single unit events for a given hunter
@@ -79,7 +91,7 @@ function TranqRotate:registerUnitEvents(hunter)
     hunter.frame:SetScript(
         "OnEvent",
         function(self, event, ...)
-            TranqRotate:updateHuntersStatus()
+            TranqRotate:updateHunterStatus(hunter)
         end
     )
 

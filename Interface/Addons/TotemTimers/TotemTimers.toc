@@ -7,7 +7,7 @@
 ## Notes-zhTW: 提供薩滿方面施放圖騰和計時的功能
 ## X-Repple: 职业
 ## LoadOnDemand: 1
-## Version: 1.06
+## Version: 1.08
 ## SavedVariables: TotemTimers_GlobalSettings, TotemTimers_Profiles
 ## OptionalDeps: cyCircled, Masque, !ClassColors, rActionButtonStyler
 ## LoadManagers: AddonLoader

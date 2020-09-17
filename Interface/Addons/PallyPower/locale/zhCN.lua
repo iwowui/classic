@@ -1,5 +1,9 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("PallyPower", "zhCN", false, false)
 if not L then return end 
+--[[Translation missing --]]
+L["ALTMENU_LINE1"] = "can be assigned"
+--[[Translation missing --]]
+L["ALTMENU_LINE2"] = "a Normal Blessing from:"
 L["AURA"] = "光环"
 L["AURA_DESC"] = "已监视的光环"
 L["AURABTN"] = "显示光环/圣印按钮"
@@ -26,6 +30,8 @@ L["BUFFDURATION"] = "Buff Duration"
 L["BUFFDURATION_DESC"] = "If this option is disabled then Class and Player buttons will ignore a buffs duration allowing a buff to be reapplied at will. This is especially useful for Protection Paladins when they spam Greater Blessings to generate more threat."
 L["BUTTONS"] = "按钮"
 L["BUTTONS_DESC"] = "更改按钮设置"
+--[[Translation missing --]]
+L["CANCEL"] = "Cancel"
 L["CLASSBTN"] = "启用职业按钮"
 L["CLASSBTN_DESC"] = "禁用后，也将禁用玩家按钮，并且您只能使用“自动Buff按钮”释放Buff"
 L["CPBTNS"] = "职业和玩家按钮"

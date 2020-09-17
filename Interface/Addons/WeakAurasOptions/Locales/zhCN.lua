@@ -689,7 +689,7 @@ Supports multiple entries, separated by commas
 	L["Update this Aura"] = "更新此光环"
 	L["Use Custom Color"] = "使用自定义颜色"
 	L["Use Display Info Id"] = "使用显示信息 ID"
-	L["Use Full Scan (High CPU)"] = "使用完整扫描(高CPU)"
+	L["Use Full Scan (High CPU)"] = "使用完整扫描（高CPU占用）"
 	L["Use nth value from tooltip:"] = "使用第X个鼠标提示的值："
 	L["Use SetTransform"] = "使用 SetTransform 方法"
 	L["Use tooltip \"size\" instead of stacks"] = "使用来自鼠标提示的层数信息"

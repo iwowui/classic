@@ -91,7 +91,8 @@ local L = WeakAuras.L
 	L["Animations"] = "動畫"
 	L["Any of"] = "任何的"
 	L["Apply Template"] = "套用範本"
-	L["Arc Length"] = "弧長"
+	--[[Translation missing --]]
+	L["Arc Length"] = "Arc Length"
 	L["Arcane Orb"] = "祕法光球"
 	L["At a position a bit left of Left HUD position."] = "比左方 HUD 更左一點的位置"
 	L["At a position a bit left of Right HUD position"] = "比右方 HUD 更右一點的位置"
@@ -183,7 +184,8 @@ local L = WeakAuras.L
 	L["Copy"] = "複製"
 	L["Copy settings..."] = "複製設定..."
 	L["Copy to all auras"] = "複製到全部的光環"
-	L["Copy URL"] = "複製 URL"
+	--[[Translation missing --]]
+	L["Copy URL"] = "Copy URL"
 	L["Count"] = "數量"
 	L["Counts the number of matches over all units."] = "計算所有單位中符合的數量。"
 	L["Creating buttons: "] = "建立按鈕: "
@@ -405,7 +407,8 @@ Supports multiple entries, separated by commas
 	L["Left"] = "左"
 	L["Left 2 HUD position"] = "左2 HUD 位置"
 	L["Left HUD position"] = "左方 HUD 位置"
-	L["Legacy Aura Trigger"] = "傳統光環觸發"
+	--[[Translation missing --]]
+	L["Legacy Aura Trigger"] = "Legacy Aura Trigger"
 	L["Length"] = "長度"
 	L["Limit"] = "限制"
 	L["Lines & Particles"] = "直線 & 粒子"
@@ -552,7 +555,8 @@ Supports multiple entries, separated by commas
 	L["Separator text"] = "分隔線文字"
 	L["Set Parent to Anchor"] = "對齊到上一層"
 	L["Set Thumbnail Icon"] = "設定縮圖圖示"
-	L["Set tooltip description"] = "設定滑鼠提示說明"
+	--[[Translation missing --]]
+	L["Set tooltip description"] = "Set tooltip description"
 	L["Sets the anchored frame as the aura's parent, causing the aura to inherit attributes such as visibility and scale."] = "將對齊到的框架設為提醒效果的上一層框架，讓提醒效果能夠繼承像是顯示和縮放大小等屬性。"
 	L["Settings"] = "設定"
 	L["Shadow Color"] = "陰影顏色"
@@ -642,7 +646,8 @@ Supports multiple entries, separated by commas
 	L["Then "] = "(then) 則 "
 	L["Thickness"] = "粗細"
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "這會加入 %tooltip, %tooltip1, %tooltip2, %tooltip3 用來替換文字。"
-	L["This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"] = "這個提醒效果包含傳統的光環觸發，將它們轉換成新的系統以獲得效能和功能增強的好處。"
+	--[[Translation missing --]]
+	L["This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"] = "This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"
 	L["This display is currently loaded"] = "這個提醒效果已經載入"
 	L["This display is not currently loaded"] = "這個提醒效果尚未載入"
 	L["This region of type \"%s\" is not supported."] = "不支援的地區類型 \"%s\"。"

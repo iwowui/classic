@@ -85,7 +85,7 @@ function TranqRotate:sendRotationSetupBroacastMessage(message)
         TranqRotate:sendMessage(
             message,
             nil,
-            TranqRotate.db.profile.setupBroadcastChannelType,
+            TranqRotate.db.profile.rotationReportChannelType,
             TranqRotate.db.profile.setupBroadcastTargetChannel
         )
     end
@@ -117,6 +117,8 @@ SlashCmdList["TRANQROTATE"] = function(msg)
         TranqRotate:testRotation()
     elseif (cmd == 'test') then -- @todo: remove this
         TranqRotate:test()
+    elseif (cmd == 'report') then
+        TranqRotate:printRotationSetup()
     elseif (cmd == 'settings') then
         TranqRotate:openSettings()
     else
@@ -149,16 +151,30 @@ end
 function TranqRotate:printRotationSetup()
 
     if (IsInRaid()) then
-        TranqRotate:sendRotationSetupBroacastMessage('--- ' .. L['BROADCAST_HEADER_TEXT'] .. ' ---', channel)
-        TranqRotate:sendRotationSetupBroacastMessage(
-            TranqRotate:buildGroupMessage(L['BROADCAST_ROTATION_PREFIX'] .. ' : ', TranqRotate.rotationTables.rotation)
-        )
+        TranqRotate:sendRotationSetupBroacastMessage('--- ' .. TranqRotate.constants.printPrefix .. L['BROADCAST_HEADER_TEXT'] .. ' ---', channel)
+
+        if (TranqRotate.db.profile.useMultilineRotationReport) then
+            TranqRotate:printMultilineRotation(TranqRotate.rotationTables.rotation)
+        else
+            TranqRotate:sendRotationSetupBroacastMessage(
+                TranqRotate:buildGroupMessage(L['BROADCAST_ROTATION_PREFIX'] .. ' : ', TranqRotate.rotationTables.rotation)
+            )
+        end
 
         if (#TranqRotate.rotationTables.backup > 0) then
             TranqRotate:sendRotationSetupBroacastMessage(
                 TranqRotate:buildGroupMessage(L['BROADCAST_BACKUP_PREFIX'] .. ' : ', TranqRotate.rotationTables.backup)
             )
         end
+    end
+end
+
+-- Print the main rotation on multiple lines
+function TranqRotate:printMultilineRotation(rotationTable, channel)
+    local position = 1;
+    for key, hunt in pairs(rotationTable) do
+        TranqRotate:sendRotationSetupBroacastMessage(tostring(position) .. ' - ' .. hunt.name)
+        position = position + 1;
     end
 end
 
@@ -181,6 +197,7 @@ function TranqRotate:printHelp()
     TranqRotate:printMessage(spacing .. TranqRotate:colorText('lock') .. ' : Lock the main window position')
     TranqRotate:printMessage(spacing .. TranqRotate:colorText('unlock') .. ' : Unlock the main window position')
     TranqRotate:printMessage(spacing .. TranqRotate:colorText('settings') .. ' : Open TranqRotate settings')
+    TranqRotate:printMessage(spacing .. TranqRotate:colorText('report') .. ' : Print the rotation setup to the configured channel')
     TranqRotate:printMessage(spacing .. TranqRotate:colorText('backup') .. ' : Whispers backup hunters to immediately tranq')
 end
 
@@ -212,7 +229,7 @@ function TranqRotate:toggleArcaneShotTesting(disable)
         TranqRotate:printPrefixedMessage(L['ARCANE_SHOT_TESTING_ENABLED'])
         TranqRotate.testMode = true
 
-        -- Disable testing in 10 minutes
+        -- Disable testing after 10 minutes
         C_Timer.After(600, function()
             TranqRotate:toggleArcaneShotTesting(true)
         end)

@@ -29,7 +29,7 @@ function TranqRotate:CreateConfig()
                 order = 1,
                 args = {
 					descriptionText = {
-						name = "TranqRotate v" .. TranqRotate.version .. " by Slivo\n",
+						name = "TranqRotate v" .. TranqRotate.version .. " by Slivo-Sulfuron\n",
 						type = "description",
 						width = "full",
 						order = 1,
@@ -40,32 +40,53 @@ function TranqRotate:CreateConfig()
 						width = "full",
 						order = 2,
 					},
+                    -- @todo : find a way to space widget properly
+					spacer3 = {
+						name = ' ',
+						type = "description",
+						width = "full",
+						order = 3,
+					},
 					baseVersion = {
 						name = L['SETTING_GENERAL_DESC'],
 						type = "description",
 						width = "full",
-						order = 3,
+						order = 4,
 					},
                     -- @todo : find a way to space widget properly
 					spacer4 = {
 						name = ' ',
 						type = "description",
 						width = "full",
-						order = 4,
+						order = 5,
 					},
                     lock = {
                         name = L["LOCK_WINDOW"],
                         desc = L["LOCK_WINDOW_DESC"],
                         type = "toggle",
-                        order = 5,
+                        order = 6,
                         width = "double",
                     },
                     hideNotInRaid = {
                         name = L["HIDE_WINDOW_NOT_IN_RAID"],
                         desc = L["HIDE_WINDOW_NOT_IN_RAID_DESC"],
                         type = "toggle",
-                        order = 6,
+                        order = 7,
                         width = "double",
+                    },
+                    doNotShowWindowOnRaidJoin = {
+                        name = L["DO_NOT_SHOW_WHEN_JOINING_RAID"],
+                        desc = L["DO_NOT_SHOW_WHEN_JOINING_RAID_DESC"],
+                        type = "toggle",
+                        order = 8,
+                        width = "full",
+                    },
+                    showWindowWhenTargetingBoss = {
+                        name = L["SHOW_WHEN_TARGETING_BOSS"],
+                        desc = L["SHOW_WHEN_TARGETING_BOSS_DESC"],
+                        type = "toggle",
+                        order = 9,
+                        width = "full",
                     },
                     testHeader = {
                         name = L["TEST_MODE_HEADER"],
@@ -151,7 +172,7 @@ function TranqRotate:CreateConfig()
                         type = "header",
                         order = 30,
                     },
-                    setupBroadcastChannelType = {
+                    rotationReportChannelType = {
                         name = L["MESSAGE_CHANNEL_TYPE"],
                         type = "select",
                         order = 31,
@@ -170,7 +191,14 @@ function TranqRotate:CreateConfig()
                         desc = L["MESSAGE_CHANNEL_NAME_DESC"],
                         type = "input",
                         order = 32,
-                        hidden = function() return not (TranqRotate.db.profile.setupBroadcastChannelType == "CHANNEL") end,
+                        hidden = function() return not (TranqRotate.db.profile.rotationReportChannelType == "CHANNEL") end,
+                    },
+                    useMultilineRotationReport = {
+                        name = L["USE_MULTILINE_ROTATION_REPORT"],
+                        desc = L["USE_MULTILINE_ROTATION_REPORT_DESC"],
+                        type = "toggle",
+                        order = 40,
+                        width = "full",
                     },
                 }
             },
@@ -184,7 +212,32 @@ function TranqRotate:CreateConfig()
                         desc = L["ENABLE_NEXT_TO_TRANQ_SOUND"],
                         type = "toggle",
                         order = 1,
-                        width = "double",
+                        width = "full",
+                    },
+                    enableTranqNowSound = {
+                        name = L["ENABLE_TRANQ_NOW_SOUND"],
+                        desc = L["ENABLE_TRANQ_NOW_SOUND"],
+                        type = "toggle",
+                        order = 2,
+                        width = "full",
+                    },
+                    tranqNowSound = {
+                        name = L["TRANQ_NOW_SOUND_CHOICE"],
+                        desc = L["TRANQ_NOW_SOUND_CHOICE"],
+                        type = "select",
+                        style = "dropdown",
+                        order = 3,
+                        values = TranqRotate.constants.tranqNowSounds,
+                        set = function(info, value)
+                            set(info, value)
+                            PlaySoundFile(TranqRotate.constants.sounds.alarms[value])
+                        end
+                    },
+                    baseVersion = {
+                        name = L['DBM_SOUND_WARNING'],
+                        type = "description",
+                        width = "full",
+                        order = 4,
                     },
                 }
             }

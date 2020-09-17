@@ -8,12 +8,16 @@ local L = {
     -- Settings
     ["SETTING_GENERAL"] = "General",
     ["SETTING_GENERAL_REPORT"] = "Please report any issue at",
-    ["SETTING_GENERAL_DESC"] = "New : TranqRotate now display hunters cooldowns and play a sound when it's your turn! There's also a new test mode\n",
+    ["SETTING_GENERAL_DESC"] = "New : TranqRotate will now play a sound when you need to shoot your tranqshot ! There are also few more display options to make the addon less intrusive.",
 
     ["LOCK_WINDOW"] = "Lock window",
     ["LOCK_WINDOW_DESC"] = "Lock window",
     ["HIDE_WINDOW_NOT_IN_RAID"] = "Hide the window when not in a raid",
     ["HIDE_WINDOW_NOT_IN_RAID_DESC"] = "Hide the window when not in a raid",
+    ["DO_NOT_SHOW_WHEN_JOINING_RAID"] = "Do not show window when joining a raid",
+    ["DO_NOT_SHOW_WHEN_JOINING_RAID_DESC"] = "Check this if you don't want the window to show up each time you join a raid",
+    ["SHOW_WHEN_TARGETING_BOSS"] = "Show window when you target a tranq-able boss",
+    ["SHOW_WHEN_TARGETING_BOSS_DESC"] = "Show window when you target a tranq-able boss",
     ["WINDOW_LOCKED"] = "TranqRotate: Window locked",
     ["WINDOW_UNLOCKED"] = "TranqRotate: Window unlocked",
 
@@ -55,11 +59,18 @@ local L = {
     ['DEFAULT_FAIL_ANNOUNCE_MESSAGE'] = "!!! TRANQSHOT FAILED ON %s !!!",
     ['DEFAULT_FAIL_WHISPER_MESSAGE'] = "TRANQSHOT FAILED ! TRANQ NOW !",
 
+    ['TRANQ_NOW_LOCAL_ALERT_MESSAGE'] = "USE TRANQSHOT NOW !",
+
     ["BROADCAST_MESSAGE_HEADER"] = "Rotation setup text broadcast",
+    ["USE_MULTILINE_ROTATION_REPORT"] = "Use multiline for main rotation when reporting",
+    ["USE_MULTILINE_ROTATION_REPORT_DESC"] = "Check this option if you want more comprehensible order display",
 
     --- Sounds
     ["SETTING_SOUNDS"] = "Sounds",
     ["ENABLE_NEXT_TO_TRANQ_SOUND"] = "Play a sound when you are the next to shoot",
+    ["ENABLE_TRANQ_NOW_SOUND"] = "Play a sound when you have to shoot your tranq",
+    ["TRANQ_NOW_SOUND_CHOICE"] = "Select the sound you want to use for the 'tranq now' alert",
+    ["DBM_SOUND_WARNING"] = "DBM is playing the 'flag taken' sound on each frenzy, it may prevent you from earing gentle sounds from TranqRotate. I would either suggest to pick a strong sound or disable DBM frenzy sound.",
 
     --- Profiles
     ["SETTING_PROFILES"] = "Profiles",
