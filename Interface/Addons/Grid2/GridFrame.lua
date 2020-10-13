@@ -227,7 +227,6 @@ function Grid2Frame:OnModuleEnable()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", "UpdateFrameUnits")
 	self:RegisterMessage("Grid_UnitUpdate")
 	self:UpdateMenu()
-	self:UpdateBlink()
 	self:CreateIndicators()
 	self:RefreshIndicators()
 	self:LayoutFrames()
@@ -246,7 +245,6 @@ end
 
 function Grid2Frame:OnModuleUpdate()
 	self:UpdateMenu()
-	self:UpdateBlink()
 	self:CreateIndicators()
 	self:RefreshTheme()
 end
@@ -341,37 +339,6 @@ do
 	end
 	function Grid2Frame:WithAllFrames( param , ... )
 		with[type(param)](self, param, ...)
-	end
-end
-
--- Frames blink animations management
-do
-	local blinkDuration
-	function Grid2Frame:SetBlinkEffect(frame, enabled)
-		local anim = frame.blinkAnim
-		if enabled then
-			if not anim then
-				anim = frame:CreateAnimationGroup()
-				local alpha = anim:CreateAnimation("Alpha")
-				alpha:SetOrder(1)
-				alpha:SetFromAlpha(1)
-				alpha:SetToAlpha(0.1)
-				anim:SetLooping("REPEAT")
-				anim.alpha = alpha
-				frame.blinkAnim = anim
-			end
-			if not anim:IsPlaying() then
-				anim.alpha:SetDuration(blinkDuration)
-				anim:Play()
-			end
-		elseif anim then
-			anim:Stop()
-		end
-	end
-	function Grid2Frame:UpdateBlink()
-		local indicator = Grid2.indicatorPrototype
-		indicator.Update = self.db.shared.blinkType~="None" and indicator.UpdateBlink or indicator.UpdateNoBlink
-		blinkDuration = 1/self.db.shared.blinkFrequency
 	end
 end
 

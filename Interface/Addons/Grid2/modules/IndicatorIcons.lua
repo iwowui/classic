@@ -16,7 +16,6 @@ local function Icon_Create(self, parent)
 	f.visibleCount = 0
 end
 
--- Warning: This is an overrided indicator:Update() NOT the standard indicator:OnUpdate()
 local function Icon_OnFrameUpdate(f)
 	local unit = f.myFrame.unit
 	if not unit then return end
@@ -65,7 +64,7 @@ local function Icon_OnFrameUpdate(f)
 				end
 				if useStatus then
 					local r,g,b,a = status:GetColor(unit)
-					aura:SetBackdropBorderColor(r,g,b, min(a,self.borderOpacity) )
+					aura:SetBackdropBorderColor(r,g,b, min(a or 1,self.borderOpacity) )
 				end
 				aura:Show()
 				i = i + 1
@@ -93,6 +92,7 @@ local EnableDelayedUpdates = function()
 	EnableDelayedUpdates = Grid2.Dummy
 end
 
+-- Warning: This is an overrided indicator:Update() NOT the standard indicator:OnUpdate()
 local function Icon_Update(self, parent)
 	updates[#updates+1] = parent[self.name]
 end
@@ -177,7 +177,7 @@ end
 
 local pointsX = { TOPLEFT =  1,	TOPRIGHT = -1, BOTTOMLEFT = 1, BOTTOMRIGHT = -1 }
 local pointsY = { TOPLEFT = -1, TOPRIGHT = -1, BOTTOMLEFT = 1, BOTTOMRIGHT =  1 }
-local function Icon_UpdateDB(self)
+local function Icon_LoadDB(self)
 	local dbx = self.dbx
 	local theme = Grid2Frame.db.profile
 	-- location
@@ -231,11 +231,9 @@ Grid2.setupFunc["icons"] = function(indicatorKey, dbx)
 	indicator.dbx      = dbx
 	indicator.Create   = Icon_Create
 	indicator.Layout   = Icon_Layout
-	indicator.OnUpdate = Icon_OnUpdate
 	indicator.Disable  = Icon_Disable
 	indicator.Update   = Icon_Update
-	indicator.UpdateDB = Icon_UpdateDB
-	Icon_UpdateDB(indicator)
+	indicator.LoadDB   = Icon_LoadDB
 	EnableDelayedUpdates()
 	Grid2:RegisterIndicator(indicator, { "icon", "icons" })
 	return indicator

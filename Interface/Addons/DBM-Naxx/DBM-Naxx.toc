@@ -12,13 +12,14 @@
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: Classic
-## X-DBM-Mod-Has-Single-Format: 1
+## X-DBM-StatTypes: normal
 ## X-DBM-Mod-SubCategories: Arachnid Quarter,Construct Quarter,Plague Quarter,Military Quarter,Frostwyrm Lair
 ## X-DBM-Mod-SubCategories-zhTW: 蜘蛛區,傀儡區,瘟疫區,軍事區,冰霜巨龍巢穴
 ## X-DBM-Mod-SubCategories-zhCN: 蜘蛛区,构造区,瘟疫区,军事区,冰霜巨龙的巢穴
 ## X-DBM-Mod-MapID: 533
 ## X-DBM-Mod-Sort: 8
 ## X-DBM-Mod-MinCoreRevision: 12473
+## X-DBM-Mod-MinExpansion: 0
 localization.en.lua
 localization.tw.lua
 localization.cn.lua

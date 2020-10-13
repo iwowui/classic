@@ -113,6 +113,23 @@ do
 	Grid2Options.FONT_FLAGS_DEFAULT       = FONT_FLAGS_DEFAULT
 end
 
+-- Grid2Option:UnpackColor()
+function Grid2Options:UnpackColor( color, colorKey )
+	color = color or Grid2.defaultColors[colorKey or "TRANSPARENT"]
+	return color.r, color.g, color.b, color.a
+end
+
+-- Grid2Option:PackColor()
+function Grid2Options:PackColor( r,g,b,a, dbx, key )
+	if dbx then
+		local c = dbx[key]
+		if not c then c={}; dbx[key]=c;	end
+		c.r,c.g,c.b,c.a = r,g,b,a
+		return c
+	end
+	return { r=r, g=g, b=b, a=a }
+end
+
 -- Grid2Options:EnableLoadOnDemand()
 -- Delays the creation of indicators and statuses options, until the user clicks on each option,
 -- reducing initial memory usage and load time. Instead of the real options, a "description" type option
@@ -179,7 +196,9 @@ do
 		Location   = { type = "header", order = 2,   name = L["Location"]   },
 		Appearance = { type = "header", order = 10,  name = L["Appearance"] },
 		Icon	   = { type = "header", order = 10,  name = L["Icon"] },
+		Shape	   = { type = "header", order = 10,  name = L["Shape"] },
 		Border     = { type = "header", order = 20,  name = L["Border"]     },
+		Shadow     = { type = "header", order = 30,  name = L["Shadow"]     },		
 		Background = { type = "header", order = 60,  name = L["Background"] },
 		Special    = { type = "header", order = 70,  name = L["Special"] },
 		Display    = { type = "header", order = 80,  name = L["Display"]    },

@@ -231,21 +231,12 @@ function Grid2Options:MakeIndicatorAuraIconsCustomOptions(indicator, options)
 		order = 110,
 		name = L["Color"],
 		desc = L["Color"],
-		get = function()
-			local c = indicator.dbx.colorStack
-			if c then 	return c.r, c.g, c.b, c.a
-			else		return 1,1,1,1
-			end
-		end,
+		hasAlpha = true,
+		get = function() return self:UnpackColor( indicator.dbx.colorStack, "WHITE" ) end,
 		set = function( info, r,g,b,a )
-			local c = indicator.dbx.colorStack
-			if c then c.r, c.g, c.b, c.a = r, g, b, a
-			else	  indicator.dbx.colorStack= { r=r, g=g, b=b, a=a}
-			end
-			local indicatorKey = indicator.name
+			self:PackColor( r,g,b,a, indicator.dbx, "colorStack" )
 			self:RefreshIndicator(indicator, "Layout" )
 		 end,
-		hasAlpha = true,
 		hidden= function() return indicator.dbx.disableStack end,
 	}
 	self:MakeHeaderOptions( options, "Cooldown" )

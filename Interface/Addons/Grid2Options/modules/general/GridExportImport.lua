@@ -381,14 +381,14 @@ Grid2Options.AdvancedProfileOptions = { type = "group", order= 200, name = L["Im
 	header3 ={
 		type = "header",
 		order = 90,
-		name = "Profile database maintenance",
+		name = L["Profile database maintenance"],
 	},
 	cleanDatabase = {
 		type = "execute",
 		order= 100,
 		width = "full",
-		name = "Clean Current Profile",
-		desc = "Remove wrong or obsolete objects (indicators, statuses, etc) from the current profile database.",
+		name = L["Clean Current Profile"],
+		desc = L["Remove invalid or obsolete objects (indicators, statuses, etc) from the current profile database."],
 		func = function()
 			CleanDatabaseItems( "status", Grid2.db.profile.statuses )
 			CleanDatabaseItems( "indicator", Grid2.db.profile.indicators )

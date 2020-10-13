@@ -12,7 +12,7 @@ Grid2Options.indicatorIconPath = "Interface\\Addons\\Grid2Options\\media\\indica
 Grid2Options.indicatorTypes = {}
 
 -- Indicators sort order
-Grid2Options.indicatorTypesOrder= { tooltip = 1, alpha = 2, background = 3, border = 4, multibar = 5, bar = 6, text = 7, square = 8, icon = 9, icons = 10, portrait = 11 }
+Grid2Options.indicatorTypesOrder= { tooltip = 1, alpha = 2, background = 3, border = 4, multibar = 5, bar = 6, text = 7, square = 8, shape = 9, icon = 10, icons = 11, portrait = 12 }
 
 do
 	-- ban these indicator names
@@ -33,6 +33,7 @@ do
 	Grid2Options.indicatorDefaultValues = {
 		icon   = { size = 16, fontSize = 8 },
 		square = { size = 5 },
+		shape  = { size = 5 },
 		text   = { duration = true, stack= false, textlength = 12, fontSize = 11, font = "Friz Quadrata TT" },
 	}
 
@@ -57,7 +58,6 @@ do
 				dbx.level = 7
 				dbx.textlength= defaults.text.textlength
 				dbx.fontSize= defaults.text.fontSize
-				-- dbx.font= defaults.text.font
 				Grid2:DbSetIndicator( newIndicatorName.."-color" , { type="text-color" })
 			elseif (newIndicatorValues.type == "bar") then
 				dbx.level = 3
@@ -86,6 +86,9 @@ do
 				dbx.level = 8
 			elseif (newIndicatorValues.type == "portrait") then
 				dbx.level = 4
+			elseif (newIndicatorValues.type == "shape") then
+				dbx.level = 6
+				dbx.size = defaults.shape.size
 			end
 			Grid2:DbSetIndicator(newIndicatorName,dbx)
 			-- Create runtime indicator

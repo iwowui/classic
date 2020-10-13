@@ -159,7 +159,7 @@ function Grid2Options:MakeStatusTitleOptions(status, options, optionParams)
 	if not (options.title or (optionParams and optionParams.hideTitle) ) then
 		local name, desc, icon, iconCoords, _
 		local group = self:GetStatusGroup(status)
-		if group and false then
+		if group and false then -- TODO, i dont remember why this false condition :(
 			name, desc, icon, iconCoords = group.name, group.desc, group.icon, group.iconCoords
 		else
 			_, name, desc, icon, iconCoords = self:GetStatusInfo(status)
