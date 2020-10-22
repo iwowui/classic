@@ -255,13 +255,15 @@ function QuestieSearchResults:SpawnDetailsFrame(f, spawn, spawnType)
         for i in pairs(spawns) do
             if spawns[i][1] then
                 startindex = i;
+                break;
             end
         end
 
         local continent = 'UNKNOWN ZONE';
-        for i, v in ipairs(QuestieJourney.zones) do
-            if v[startindex] then
-                continent = QuestieJourney.zones[i][startindex];
+        for category, data in pairs(LangZoneLookup) do
+            if data[startindex] then
+                continent = LangZoneLookup[category][startindex];
+                break;
             end
         end
 
@@ -361,7 +363,6 @@ function QuestieSearchResults:SpawnDetailsFrame(f, spawn, spawnType)
 end
 
 -- draws a list of results of a certain type, e.g. "quest"
-local searchTreeFrame = nil
 function QuestieSearchResults:DrawResultTab(container, resultType)
     -- probably already done by `JourneySelectTabGroup`, doesn't hurt to be safe though
     container:ReleaseChildren();
@@ -413,8 +414,17 @@ function QuestieSearchResults:DrawResultTab(container, resultType)
     resultTree.treeframe:SetWidth(260);
     resultTree:SetTree(results);
     resultTree:SetCallback("OnGroupSelected", function(resultType)
-        -- if they clicked on the header, don't do anything
-        local sel = resultType.localstatus.selected;
+        -- This is either the questId, npcId, objectId or itemId
+        local selectedId = tonumber(resultType.localstatus.selected)
+        if IsShiftKeyDown() and lastOpenSearch == "quest" then
+            local questLevel, questName = unpack(QuestieDB.QueryQuest(selectedId, "questLevel", "name"))
+
+            if Questie.db.global.trackerShowQuestLevel then
+                ChatEdit_InsertLink("[[" .. questLevel .. "] " .. questName .. " (" .. selectedId .. ")]")
+            else
+                ChatEdit_InsertLink("[" .. questName .. " (" .. selectedId .. ")]")
+            end
+        end
 
         -- get master frame and create scroll frame inside
         local master = resultType.frame.obj;
@@ -426,22 +436,18 @@ function QuestieSearchResults:DrawResultTab(container, resultType)
         local details = AceGUI:Create("ScrollFrame");
         details:SetLayout("Flow");
         master:AddChild(details);
-        local id = tonumber(sel);
 
         if lastOpenSearch == "quest" then
-            QuestieSearchResults:QuestDetailsFrame(details, id);
+            QuestieSearchResults:QuestDetailsFrame(details, selectedId);
         elseif lastOpenSearch == "npc" then
-            -- NPCs
-            --local npc = QuestieDB:GetNPC(id);
-            QuestieSearchResults:SpawnDetailsFrame(details, id, 'npc');
+            QuestieSearchResults:SpawnDetailsFrame(details, selectedId, 'npc');
         elseif lastOpenSearch == "object" then
-            QuestieSearchResults:SpawnDetailsFrame(details, id, 'object')
+            QuestieSearchResults:SpawnDetailsFrame(details, selectedId, 'object')
         end
     end);
 
     resultFrame:AddChild(resultTree)
     container:AddChild(resultFrame);
-    searchTreeFrame = resultFrame
 end
 
 local function SelectTabGroup(container, event, resultType)
@@ -492,22 +498,22 @@ function QuestieSearchResults:DrawSearchResultTab(searchGroup, searchType, query
         searchResultTabs:SetLayout("Flow");
         searchResultTabs:SetTabs({
             {
-                text = "Quests ("..resultCounts.quest..")",
+                text = QuestieLocale:GetUIString('JOURNEY_SEARCH_QUESTS') .. " ("..resultCounts.quest..")",
                 value = "quest",
                 disabled = resultCounts.quest == 0,
             },
             {
-                text = "Mobs ("..resultCounts.npc..")",
+                text = QuestieLocale:GetUIString('JOURNEY_SEARCH_NPCS') .. " ("..resultCounts.npc..")",
                 value = "npc",
                 disabled = resultCounts.npc == 0,
             },
             {
-                text = "Objects ("..resultCounts.object..")",
+                text = QuestieLocale:GetUIString('JOURNEY_SEARCH_OBJECTS') .. " ("..resultCounts.object..")",
                 value = "object",
                 disabled = resultCounts.object == 0,
             },
             {
-                text = "Items ("..resultCounts.item..")",
+                text = QuestieLocale:GetUIString('JOURNEY_SEARCH_ITEMS') .. " ("..resultCounts.item..")",
                 value = "item",
                 disabled = resultCounts.item == 0,
             },
@@ -555,7 +561,7 @@ function QuestieSearchResults:DrawSearchTab(container)
     -- search input field
     searchBox:SetFocus();
     searchBox:SetRelativeWidth(0.6);
-    searchBox:SetLabel(QuestieLocale:GetUIString('JOURNEY_SEARCH_TAB'));
+    searchBox:SetLabel(QuestieLocale:GetUIString('JOURNEY_SEARCH_TAB') .. " (".. QuestieLocale:GetUIString('JOURNEY_SEARCH_QUESTS') .. ", ".. QuestieLocale:GetUIString('JOURNEY_SEARCH_NPCS') .. ", ".. QuestieLocale:GetUIString('JOURNEY_SEARCH_OBJECTS') .. ", ".. QuestieLocale:GetUIString('JOURNEY_SEARCH_ITEMS') .. ")");
     searchBox:DisableButton(true);
     searchBox:SetCallback("OnTextChanged", function()
         if not (searchBox:GetText() == '') then
@@ -568,6 +574,7 @@ function QuestieSearchResults:DrawSearchTab(container)
         if not (searchBox:GetText() == '') then
             local text = string.trim(searchBox:GetText(), " \n\r\t[]");
             QuestieSearchResults:DrawSearchResultTab(searchGroup, Questie.db.char.searchType, text, false);
+            searchBox:ClearFocus()
         end
     end);
     -- Check for existence of previous search, if present use its text

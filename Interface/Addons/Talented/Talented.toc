@@ -8,7 +8,7 @@
 ## Notes-zhTW: 支持任意職業的天賦模擬配點、配點方案共用
 ## X-Repple: 辅助
 ## Author: Jerry,Lethay
-## Version: v200804
+## Version: v201014
 ## OptionalDeps: Ace3
 ## SavedVariables: TalentedDB
 ## X-Category: Interface Enhancements

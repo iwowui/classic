@@ -10,7 +10,7 @@ local QuestieSearchResults = QuestieLoader:ImportModule("QuestieSearchResults")
 local QuestieDB = QuestieLoader:ImportModule("QuestieDB")
 
 _QuestieJourney.containerCache = nil
-_QuestieJourney.treeChache = nil
+_QuestieJourney.treeCache = nil
 
 
 function _QuestieJourney:ShowJourneyTooltip()
@@ -59,7 +59,7 @@ function _QuestieJourney:CreateObjectiveText(desc)
     return objText
 end
 
-function _QuestieJourney:JourneySelectTabGroup(container, event, group)
+function _QuestieJourney:HandleTabChange(container, event, group)
     if not _QuestieJourney.containerCache then
         _QuestieJourney.containerCache = container
     end

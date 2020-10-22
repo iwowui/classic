@@ -4,6 +4,8 @@
 ## Title-zhTW: |CFFFF8000輔助|R 综合提示 數據存檔
 ## X-Repple: 辅助
 ## LoadOnDemand: 1
+## Author: The WeakAuras Team
+## LoadOnDemand: 1
 ## SavedVariables: WeakAurasArchive
 ## Dependencies: WeakAuras
 

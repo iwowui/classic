@@ -6,6 +6,8 @@ local QuestieMap = QuestieLoader:ImportModule("QuestieMap")
 local QuestieDBMIntegration = QuestieLoader:ImportModule("QuestieDBMIntegration")
 ---@type QuestieDB
 local QuestieDB = QuestieLoader:ImportModule("QuestieDB")
+---@type QuestieQuestBlacklist
+local QuestieQuestBlacklist = QuestieLoader:ImportModule("QuestieQuestBlacklist")
 
 local HBDPins = LibStub("HereBeDragonsQuestie-Pins-2.0")
 
@@ -135,7 +137,8 @@ function _Qframe:OnLeave()
     end
 
     if self.data.touchedPins then
-        for _, entry in pairs(self.data.touchedPins) do
+        for i=#self.data.touchedPins,1,-1 do
+            local entry = self.data.touchedPins[i]
             local icon = entry.icon;
             icon.texture:SetVertexColor(unpack(entry.color));
         end
@@ -144,7 +147,6 @@ function _Qframe:OnLeave()
 end
 
 function _Qframe:OnClick(button)
-    --_QuestieFramePool:Questie_Click(self)
     if self and self.UiMapID and WorldMapFrame and WorldMapFrame:IsShown() then
         if button == "RightButton" then
             local currentMapParent = WorldMapFrame:GetMapID()
@@ -164,7 +166,7 @@ function _Qframe:OnClick(button)
         if self.data.Type == "available" and IsShiftKeyDown() then
             StaticPopupDialogs["QUESTIE_CONFIRMHIDE"]:SetQuest(self.data.QuestData.Id)
             StaticPopup_Show ("QUESTIE_CONFIRMHIDE")
-        elseif self.data.Type == "manual" and IsShiftKeyDown() then
+        elseif self.data.Type == "manual" and IsShiftKeyDown() and not self.data.ManualTooltipData.disableShiftToRemove then
             QuestieMap:UnloadManualFrames(self.data.id)
         end
     end
@@ -268,6 +270,12 @@ function _Qframe:UpdateTexture(texture)
 end
 
 function _Qframe:Unload()
+    if not self._loaded then
+        self._needsUnload = true
+        return -- icon is still in the draw queue
+    end
+    self._needsUnload = nil
+    self._loaded = nil
     --Questie:Debug(DEBUG_SPAM, "[_Qframe:Unload]")
     self:SetScript("OnUpdate", nil)
     self:SetScript("OnShow", nil)
@@ -318,7 +326,6 @@ function _Qframe:Unload()
     self:Hide()
     self.glow:Hide()
     self.data = nil -- Just to be safe
-    self.loaded = nil
     self.x = nil
     self.y = nil
     self.AreaID = nil
@@ -399,7 +406,7 @@ function _Qframe:ShouldBeHidden()
         or ((not Questie.db.char.showDungeonQuests) and QuestieDB:IsDungeonQuest(self.data.Id))
         or ((not Questie.db.char.showRaidQuests) and QuestieDB:IsRaidQuest(self.data.Id))
         or ((not Questie.db.char.showPvPQuests) and QuestieDB:IsPvPQuest(self.data.Id))
-        or ((not Questie.db.char.showAQWarEffortQuests) and QuestieDB:IsAQWarEffortQuest(self.data.Id))
+        or ((not Questie.db.char.showAQWarEffortQuests) and QuestieQuestBlacklist.AQWarEffortQuests[self.data.Id])
         or ((not questieGlobalDB.enableMapIcons) and (not self.miniMapIcon))
         or ((not questieGlobalDB.enableMiniMapIcons) and (self.miniMapIcon))
         or (self.data.ObjectiveData and self.data.ObjectiveData.HideIcons)

@@ -340,7 +340,9 @@ do
 			end
 			frame:SetScript('OnEvent', MainFrameWMOnEvent)
 		else
-			frame:SetScript("OnClick", ClearRaidMarker)
+			frame:SetScript("OnClick",  function()
+				ClearRaidMarker()
+			end)
 		end
 	
 		frame.t = frame:CreateTexture(nil, "BACKGROUND")
@@ -403,7 +405,9 @@ for i=1,9 do
 		end
 		frame:SetScript('OnEvent', MainFrameWMOnEvent)
 	else
-		frame:SetScript("OnClick", ClearRaidMarker)
+		frame:SetScript("OnClick", function()
+			ClearRaidMarker()
+		end)
 	end
 end
 
@@ -934,7 +938,7 @@ function module.options:Load()
 		modifymarkbars()
 	end)
 	
-	self.SliderScale = ELib:Slider(self,L.marksbarscale):Size(660):Point("TOP",0,-340):Range(5,200):SetTo(VExRT.MarksBar.Scale or 100):OnChange(function(self,event) 
+	self.SliderScale = ELib:Slider(self,L.marksbarscale):Size(660):Point("TOP",0,-365):Range(5,200):SetTo(VExRT.MarksBar.Scale or 100):OnChange(function(self,event) 
 		event = event - event%1
 		VExRT.MarksBar.Scale = event
 		ExRT.F.SetScaleFix(module.frame,event/100)
@@ -942,7 +946,7 @@ function module.options:Load()
 		self:tooltipReload(self)
 	end)
 	
-	self.SliderAlpha = ELib:Slider(self,L.marksbaralpha):Size(660):Point("TOP",0,-370):Range(0,100):SetTo(VExRT.MarksBar.Alpha or 100):OnChange(function(self,event) 
+	self.SliderAlpha = ELib:Slider(self,L.marksbaralpha):Size(660):Point("TOP",0,-395):Range(0,100):SetTo(VExRT.MarksBar.Alpha or 100):OnChange(function(self,event) 
 		event = event - event%1
 		VExRT.MarksBar.Alpha = event
 		module.frame:SetAlpha(event/100)

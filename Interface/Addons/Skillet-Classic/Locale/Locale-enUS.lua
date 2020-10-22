@@ -110,6 +110,7 @@ L["Ignored Materials Clear"] = true
 L["Ignored Materials List"] = true
 L["IGNORELISTDESC"] = "Open the Ignored Materials list frame."
 L["Illusions"] = true
+L["in your bank"] = true
 L["in your inventory"] = true
 L["Include alts"] = true
 L["Include bank"] = true

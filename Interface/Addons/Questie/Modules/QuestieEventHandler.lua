@@ -39,6 +39,14 @@ local QuestieCleanup = QuestieLoader:ImportModule("Cleanup")
 local QuestieDBCompiler = QuestieLoader:ImportModule("DBCompiler")
 ---@type ZoneDB
 local ZoneDB = QuestieLoader:ImportModule("ZoneDB")
+---@type QuestieCorrections
+local QuestieCorrections = QuestieLoader:ImportModule("QuestieCorrections")
+---@type QuestieMenu
+local QuestieMenu = QuestieLoader:ImportModule("QuestieMenu")
+---@type QuestieAnnounce
+local QuestieAnnounce = QuestieLoader:ImportModule("QuestieAnnounce")
+---@type QuestieCombatQueue
+local QuestieCombatQueue = QuestieLoader:ImportModule("QuestieCombatQueue")
 
 --- LOCAL ---
 --False -> true -> nil
@@ -100,6 +108,23 @@ function QuestieEventHandler:RegisterAllEvents()
     Questie:RegisterEvent("NAME_PLATE_UNIT_ADDED", QuestieNameplate.NameplateCreated)
     Questie:RegisterEvent("NAME_PLATE_UNIT_REMOVED", QuestieNameplate.NameplateDestroyed)
     Questie:RegisterEvent("PLAYER_TARGET_CHANGED", QuestieNameplate.DrawTargetFrame)
+
+    -- dropdown fix
+    Questie:RegisterEvent("CURSOR_UPDATE", function() pcall(LQuestie_CloseDropDownMenus) end)
+
+    -- quest announce
+    Questie:RegisterEvent("CHAT_MSG_LOOT", QuestieAnnounce.ItemLooted)
+
+    -- since icon updates are disabled in instances, we need to reset on P_E_W
+    Questie:RegisterEvent("PLAYER_ENTERING_WORLD", function()
+        if Questie.started then
+            QuestieMap:InitializeQueue()
+            if not IsInInstance() then
+                QuestieQuest:SmoothReset()
+            end
+        end
+    end)
+
 end
 
 
@@ -126,6 +151,7 @@ _PLAYER_LOGIN = function()
         QuestieMap:InitializeQueue()
         _Hack_prime_log()
         QuestiePlayer:Initialize()
+        QuestieLocale:PostBoot()
         QuestieJourney:Initialize()
         QuestieQuest:Initialize()
         QuestieQuest:GetAllQuestIdsNoObjectives()
@@ -150,6 +176,20 @@ _PLAYER_LOGIN = function()
                 print("|cffff0000-----------------------------|r")
             end)
         end
+
+        if QuestieEventHandler._needTownsfolkUpdate then -- bad code
+            QuestieEventHandler._needTownsfolkUpdate = nil
+            QuestieCorrections:PopulateTownsfolkPostBoot()
+        end
+
+        QuestieMenu:OnLogin()
+
+        if Questie.db.global.debugEnabled then
+            QuestieLoader:PopulateGlobals()
+        end
+
+        Questie.started = true
+
     end
 
     if QuestieLib:GetAddonVersionString() ~= QuestieConfig.dbCompiledOnVersion or (Questie.db.global.questieLocaleDiff and Questie.db.global.questieLocale or GetLocale()) ~= QuestieConfig.dbCompiledLang then
@@ -157,15 +197,37 @@ _PLAYER_LOGIN = function()
     end
 
     if QuestieConfig.dbIsCompiled then -- todo: check for updates or language change and recompile
+        
+        if not Questie.db.char.townsfolk then
+            -- we havent compiled townsfolk on this character
+            QuestieCorrections:Initialize()
+            QuestieCorrections:PopulateTownsfolk()
+            -- bad code
+            QuestieEventHandler._needTownsfolkUpdate = true
+        else
+            QuestieCorrections:MinimalInit()
+        end
         C_Timer.After(1, stage1)
         C_Timer.After(4, stage2)
     else
+        -- reset townsfolk on all characters before compile
+        for _, char in pairs(QuestieConfig.char) do
+            char.townsfolk = nil
+        end
         Questie.minimapConfigIcon:Hide("Questie") -- prevent opening journey / settings while compiling
+        QuestieCorrections:Initialize()
+        QuestieCorrections:PopulateTownsfolk()
+        QuestieLocale:Initialize()
         C_Timer.After(4, function()
-            QuestieDBCompiler:Compile(function()
-                stage1()
-                stage2()
-                Questie.minimapConfigIcon:Show("Questie")
+            print(QuestieLocale:GetUIString("\124cFFAAEEFFQuestie DB has updated!\124r\124cFFFF6F22 Data is being processed, this may take a few moments and cause some lag..."))
+            QuestieDB.private:DeleteGatheringNodes()
+            QuestieCorrections:PreCompile(function()
+                QuestieDBCompiler:Compile(function()
+                    stage1()
+                    QuestieCorrections:PopulateTownsfolkPostBoot()
+                    stage2()
+                    Questie.minimapConfigIcon:Show("Questie")
+                end)
             end)
         end)
     end
@@ -277,8 +339,10 @@ _QUEST_LOG_UPDATE = function()
         C_Timer.After(1, function ()
             Questie:Debug(DEBUG_DEVELOP, "---> Player entered world, DONE.")
             QuestieQuest:GetAllQuestIds()
-            QuestieTracker:ResetLinesForChange()
-            QuestieTracker:Update()
+            QuestieCombatQueue:Queue(function()
+                QuestieTracker:ResetLinesForChange()
+                QuestieTracker:Update()
+            end)
             _GROUP_JOINED()
         end)
         didPlayerEnterWorld = nil
@@ -338,7 +402,9 @@ _MODIFIER_STATE_CHANGED = function(self, key, down)
     end
     if Questie.db.global.trackerLocked then
         if QuestieTracker.private.baseFrame ~= nil then
-            QuestieTracker.private.baseFrame:Update()
+            QuestieCombatQueue:Queue(function()
+                QuestieTracker.private.baseFrame:Update()
+            end)
         end
     end
 end
@@ -358,8 +424,10 @@ _CHAT_MSG_COMBAT_FACTION_CHANGE = function()
     Questie:Debug(DEBUG_DEVELOP, "CHAT_MSG_COMBAT_FACTION_CHANGE")
     local factionChanged = QuestieReputation:Update(false)
     if factionChanged then
-        QuestieTracker:ResetLinesForChange()
-        QuestieTracker:Update()
+        QuestieCombatQueue:Queue(function()
+            QuestieTracker:ResetLinesForChange()
+            QuestieTracker:Update()
+        end)
         QuestieQuest:CalculateAndDrawAvailableQuestsIterative()
     end
 end
@@ -411,7 +479,9 @@ _PLAYER_REGEN_DISABLED = function()
     Questie:Debug(DEBUG_DEVELOP, "[EVENT] PLAYER_REGEN_DISABLED")
     if Questie.db.global.hideTrackerInCombat then
         previousTrackerState = Questie.db.char.isTrackerExpanded
-        QuestieTracker:Collapse()
+        QuestieCombatQueue:Queue(function()
+            QuestieTracker:Collapse()
+        end)
     end
     if InCombatLockdown() then
         if QuestieConfigFrame:IsShown() then
@@ -423,7 +493,9 @@ end
 _PLAYER_REGEN_ENABLED = function()
     Questie:Debug(DEBUG_DEVELOP, "[EVENT] PLAYER_REGEN_ENABLED")
     if Questie.db.global.hideTrackerInCombat and (previousTrackerState == true) then
-        QuestieTracker:Expand()
+        QuestieCombatQueue:Queue(function()
+            QuestieTracker:Expand()
+        end)
     end
 end
 

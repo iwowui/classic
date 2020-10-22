@@ -7,6 +7,6 @@
 ## Notes-zhTW: 顯示物品和技能的冷卻倒計時
 ## X-Repple: 辅助
 ## Author: Tuller
-## Version: 8.3.6
+## Version: 9.0.1
 ## SavedVariables: OmniCCDB, OmniCC4Config
 main\main.xml

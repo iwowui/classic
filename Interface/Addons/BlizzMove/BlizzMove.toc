@@ -1,6 +1,6 @@
 ## Interface: 11305
 ## Title: BlizzMove
-## Notes: Move those blizzard windows
+## Notes: Makes blizzard frames movable
 ## Title-zhCN: |CFFFF8000辅助|R 移动窗口
 ## Notes-zhCN: 允许移动系统窗口.
 ## Title-zhTW: |CFFFF8000輔助|R 移動視窗
@@ -8,7 +8,17 @@
 ## X-Repple: 辅助
 ## Author: the-rebel-Mermaid - github.com/the-rebel-Mermaid/BlizzMove/
 ## X-WoWI-ID: 23875
-## Version: 2.1.6
+## Version: v3.0.1
+## OptionalDeps: Ace3
+## X-Embeds: Ace3
+## SavedVariables: BlizzMoveDB
 
-Handle.lua
+# Libraries
+Libs\Libs.xml
+
+# Add-On
 BlizzMove.lua
+BlizzMoveAPI.lua
+BlizzMoveConfig.lua
+Frames.lua
+

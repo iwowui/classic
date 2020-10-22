@@ -11,6 +11,8 @@ local QuestieOptions = QuestieLoader:ImportModule("QuestieOptions");
 local QuestieJourney = QuestieLoader:ImportModule("QuestieJourney");
 ---@type QuestieLib
 local QuestieLib = QuestieLoader:ImportModule("QuestieLib");
+---@type QuestieMenu
+local QuestieMenu = QuestieLoader:ImportModule("QuestieMenu")
 
 local minimapIconLDB = nil
 
@@ -22,7 +24,7 @@ function QuestieOptionsMinimapIcon:Initialize()
 
         OnClick = function (self, button)
             if button == "LeftButton" then
-                if IsShiftKeyDown() then
+                if IsShiftKeyDown() and IsControlKeyDown() then
                     Questie.db.char.enabled = (not Questie.db.char.enabled)
                     QuestieQuest:ToggleNotes(Questie.db.char.enabled)
 
@@ -34,11 +36,7 @@ function QuestieOptionsMinimapIcon:Initialize()
                     return
                 end
 
-                if InCombatLockdown() then
-                    QuestieOptions:HideFrame()
-                else
-                    QuestieOptions:OpenConfigWindow()
-                end
+                QuestieMenu:Show()
 
                 if QuestieJourney:IsShown() then
                     QuestieJourney.ToggleJourneyWindow();
@@ -62,7 +60,7 @@ function QuestieOptionsMinimapIcon:Initialize()
 
         OnTooltipShow = function (tooltip)
             tooltip:AddLine("Questie ".. QuestieLib:GetAddonVersionString(), 1, 1, 1);
-            tooltip:AddLine(Questie:Colorize(QuestieLocale:GetUIString('ICON_LEFT_CLICK') , 'gray') .. ": ".. QuestieLocale:GetUIString('ICON_TOGGLE'));
+            tooltip:AddLine(Questie:Colorize(QuestieLocale:GetUIString('ICON_LEFT_CLICK') , 'gray') .. ": ".. QuestieLocale:GetUIString('MENU_TOGGLE'));
             tooltip:AddLine(Questie:Colorize(QuestieLocale:GetUIString('ICON_SHIFTLEFT_CLICK') , 'gray') .. ": ".. QuestieLocale:GetUIString('ICON_TOGGLE_QUESTIE'));
             tooltip:AddLine(Questie:Colorize(QuestieLocale:GetUIString('ICON_RIGHT_CLICK') , 'gray') .. ": ".. QuestieLocale:GetUIString('ICON_JOURNEY'));
             tooltip:AddLine(Questie:Colorize(QuestieLocale:GetUIString('ICON_CTRLRIGHT_CLICK') , 'gray') .. ": ".. QuestieLocale:GetUIString('ICON_HIDE'));

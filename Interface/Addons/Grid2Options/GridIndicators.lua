@@ -27,7 +27,19 @@ do
 		["Layout"] = true,
 		["menu"] = true,
 		["container"] = true,
+		["currentBackdrop"] = true,
+		["backdropInfo"] = true,
+		["Center"] = true,
+		["TopEdge"] = true,
+		["BottomEdge"] = true,
+		["LeftEdge"] = true,
+		["RightEdge"] = true,
+		["TopLeftCorner"] = true,
+		["TopRightCorner"] = true,
+		["BottomLeftCorner"] = true,
+		["BottomRightCorner"] = true,
 	}
+	Grid2Options.indicatorBlacklistNames = indicator_name_blacklist
 
 	-- Default values for new or morphed indicators
 	Grid2Options.indicatorDefaultValues = {
@@ -106,21 +118,16 @@ do
 
 	local function NewIndicatorDisabled()
 		local name = Grid2Options:GetValidatedName(newIndicatorValues.name)
-		if name and name ~= "" then
-			if not Grid2.indicators[name] then
-				local _,frame= next(Grid2Frame.registeredFrames)
-				if frame then
-					-- Check if the name is in use by any unit frame child object
-					for key,value in pairs(frame) do
-						if name==key and type(value)~="table" then
-							return true
-						end
+		if name and name ~= "" and not Grid2.indicators[name] then
+			local _,frame = next(Grid2Frame.registeredFrames)
+			if frame then -- Check if the name is in use by any unit frame child object
+				for key,value in pairs(frame) do
+					if name==key and type(value)~="table" then
+						return true
 					end
-					return false
-				else
-					return indicator_name_blacklist[name] == true
 				end
 			end
+			return indicator_name_blacklist[name] == true
 		end
 		return true
 	end

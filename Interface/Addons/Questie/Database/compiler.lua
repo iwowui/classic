@@ -181,6 +181,30 @@ QuestieDBCompiler.readers = {
 
         return ret
     end,
+    ["waypointlist"] = function(stream)
+        local count = stream:ReadByte()
+        local waypointlist = {}
+        for i = 1, count do
+            local lists = {}
+            local zone = stream:ReadShort()
+            local listCount = stream:ReadByte()
+            for e = 1, listCount do
+                local spawnCount = stream:ReadShort()
+                local list = {}
+                for e = 1, spawnCount do
+                    local x, y = stream:ReadInt12Pair()
+                    if x == 0 and y == 0 then
+                        tinsert(list, {-1, -1})
+                    else
+                        tinsert(list, {x / 40.90, y / 40.90}) 
+                    end
+                end
+                tinsert(lists, list)
+            end
+            waypointlist[zone] = lists
+        end
+        return waypointlist
+    end,
 }
 
 QuestieDBCompiler.writers = {
@@ -261,7 +285,7 @@ QuestieDBCompiler.writers = {
                 stream:WriteShort(v)
             end
         else
-            stream:WriteByte(0)
+            stream:WriteShort(0)
         end
     end,
     ["u8u24array"] = function(stream, value)
@@ -366,6 +390,31 @@ QuestieDBCompiler.writers = {
             stream:WriteInt24(0)
             stream:WriteInt24(0)
         end
+    end,
+    ["waypointlist"] = function(stream, value)
+        if value then
+            local count = 0 for _ in pairs(value) do count = count + 1 end
+            stream:WriteByte(count)
+            for zone, spawnlists in pairs(value) do
+                stream:WriteShort(zone)
+                count = 0 for _ in pairs(spawnlists) do count = count + 1 end
+                stream:WriteByte(count)
+                for _, spawnlist in pairs(spawnlists) do
+                    count = 0 for _ in pairs(spawnlist) do count = count + 1 end
+                    stream:WriteShort(count)
+                    for _, spawn in pairs(spawnlist) do
+                        if spawn[1] == -1 and spawn[2] == -1 then -- instance spawn
+                            stream:WriteInt24(0) -- 0 instead
+                        else
+                            stream:WriteInt12Pair(math.floor(spawn[1] * 40.90), math.floor(spawn[2] * 40.90))
+                        end
+                    end
+                end
+            end
+        else
+            --print("Missing spawnlist for " .. QuestieDBCompiler.currentEntry)
+            stream:WriteByte(0)
+        end
     end
 }
 
@@ -383,6 +432,16 @@ QuestieDBCompiler.skippers = {
     ["u8u16array"] = function(stream) stream._pointer = stream:ReadByte() * 2 + stream._pointer end,
     ["u16u16array"] = function(stream) stream._pointer = stream:ReadShort() * 2 + stream._pointer end,
     ["u8u24array"] = function(stream) stream._pointer = stream:ReadByte() * 3 + stream._pointer end,
+    ["waypointlist"]  = function(stream)
+        local count = stream:ReadByte()
+        for i = 1, count do
+            stream._pointer = stream._pointer + 2
+            local listCount = stream:ReadByte()
+            for e = 1, listCount do
+                stream._pointer = stream:ReadShort() * 3 + stream._pointer
+            end
+        end
+    end,
     ["u8u16stringarray"] = function(stream) 
         local count = stream:ReadByte()
         for i=1,count do
@@ -436,7 +495,8 @@ QuestieDBCompiler.dynamics = {
     ["trigger"] = true, 
     ["objective"] = true,
     ["objectives"] = true,
-    ["questgivers"] = true
+    ["questgivers"] = true,
+    ["waypointlist"] = true,
 }
 
 QuestieDBCompiler.statics = {
@@ -543,7 +603,7 @@ function QuestieDBCompiler:CompileTableTicking(tbl, types, order, lookup, after)
     QuestieDBCompiler.stream = QuestieStream:GetStream("raw")
 
     QuestieDBCompiler.ticker = C_Timer.NewTicker(0.01, function()
-        for i=0,48 do
+        for i=0,Questie.db.global.debugEnabled and 4000 or 48 do
             QuestieDBCompiler.index = QuestieDBCompiler.index + 1
             if QuestieDBCompiler.index == count then
                 QuestieDBCompiler.ticker:Cancel()
@@ -559,6 +619,7 @@ function QuestieDBCompiler:CompileTableTicking(tbl, types, order, lookup, after)
             for _, key in pairs(order) do
                 QuestieDBCompiler.writers[types[key]](QuestieDBCompiler.stream, entry[lookup[key]])
             end
+            tbl[id] = nil -- quicker gabage collection later
         end
     end)
 end
@@ -594,6 +655,13 @@ end
 
 function QuestieDBCompiler:Compile(finalize)
     --print("Compiling NPCs...")
+    
+    if QuestieDBCompiler._isCompiling then
+        return
+    end
+    
+    QuestieDBCompiler._isCompiling = true -- some unknown addon that is popular in china causes player_logged_in event to fire many times which triggers db compile multiple times
+
 
     local function DynamicHashTableSize(entries)
         if (entries == 0) then
@@ -604,7 +672,6 @@ function QuestieDBCompiler:Compile(finalize)
     end
     QuestieDBCompiler.startTime = GetTime()
     QuestieDBCompiler.totalSize = 0
-    print(QuestieLocale:GetUIString("\124cFFAAEEFFQuestie DB has updated!\124r\124cFFFF6F22 Data is being processed, this may take a few moments and cause some lag..."))
     print(QuestieLocale:GetUIString("\124cFF4DDBFF [1/4] Updating NPCs..."))
     QuestieDBCompiler:CompileNPCs(function(bin, ptrs)
         QuestieConfig.npcBin = bin 
@@ -642,6 +709,17 @@ function QuestieDBCompiler:Compile(finalize)
                     --print("Compiled DB total memory size: " .. math.floor(QuestieDBCompiler.totalSize/1024) .. "K")
                     --print("Finished! Please /reload to reduce memory usage") -- no need to reload
                     print(QuestieLocale:GetUIString("\124cFFAAEEFFQuestie DB update complete!"))
+
+                    QuestieDBCompiler._isCompiling = nil
+
+                    if Questie.db.global.debugEnabled then
+                        print("Validating objects...")
+                        QuestieDBCompiler:Validate()
+                        print("Validating items...")
+                        QuestieDBCompiler:ValidateItems()
+                        print("Validating quests...")
+                        QuestieDBCompiler:ValidateQuests()
+                    end
 
                     if finalize then finalize() end
                 end)

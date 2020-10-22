@@ -257,24 +257,27 @@ end
 ---@param lineWidth integer @Width of the line.
 ---@param color integer[] @A table consisting of 4 variable {1, 1, 1, 1} RGB-Opacity
 ---@return LineFrame[]
-function QuestieFramePool:CreateWaypoints(iconFrame, waypointTable, lineWidth, color)
+function QuestieFramePool:CreateWaypoints(iconFrame, waypointTable, lineWidth, color, aeraID)
     local lineFrameList = {}
     local lastPos = nil
     --Set defaults if needed.
     local lWidth = lineWidth or 1.5;
     local col = color or _QuestieFramePool.wayPointColor
 
-    for _, waypoint in pairs(waypointTable) do
-        if (lastPos == nil) then
-            lastPos = waypoint;
-        else
-            local lineFrame = QuestieFramePool:CreateLine(iconFrame, lastPos[1], lastPos[2], waypoint[1], waypoint[2], lWidth, col)
-            tinsert(lineFrameList, lineFrame);
-            lastPos = waypoint;
+    for _, waypointSubtable in pairs(waypointTable) do
+        lastPos = nil
+        for _, waypoint in pairs(waypointSubtable) do
+            if (lastPos == nil) then
+                lastPos = waypoint;
+            else
+                local lineFrame = QuestieFramePool:CreateLine(iconFrame, lastPos[1], lastPos[2], waypoint[1], waypoint[2], lWidth, col, aeraID)
+                tinsert(lineFrameList, lineFrame);
+                lastPos = waypoint;
+            end
         end
     end
-    local lineFrame = QuestieFramePool:CreateLine(iconFrame, lastPos[1], lastPos[2], waypointTable[1][1], waypointTable[1][2], lWidth, col)
-    tinsert(lineFrameList, lineFrame);
+    --local lineFrame = QuestieFramePool:CreateLine(iconFrame, lastPos[1], lastPos[2], waypointTable[1][1], waypointTable[1][2], lWidth, col)
+    --tinsert(lineFrameList, lineFrame);
     return lineFrameList;
 end
 
@@ -288,7 +291,7 @@ end
 ---@return LineFrame
 ---@class LineFrame @A frame that contains the line used in waypoints.
 local lineFrames = 1;
-function QuestieFramePool:CreateLine(iconFrame, startX, startY, endX, endY, lineWidth, color)
+function QuestieFramePool:CreateLine(iconFrame, startX, startY, endX, endY, lineWidth, color, aeraID)
 
     --Create the framepool for lines if it does not already exist.
     if not QuestieFramePool.Routes_Lines then
@@ -298,19 +301,18 @@ function QuestieFramePool:CreateLine(iconFrame, startX, startY, endX, endY, line
     local frameName = "questieLineFrame"..lineFrames;
 
     --tremove default always picks the last element, however counting arrays is kinda bugged? So just get index 1 instead.
-    local lineFrame = tremove(QuestieFramePool.Routes_Lines, 1) or CreateFrame("Frame", frameName, iconFrame);
+    local lineFrame = tremove(QuestieFramePool.Routes_Lines, 1) or CreateFrame("Button", frameName, iconFrame);
     if not lineFrame.frameId then
         lineFrame.frameId = lineFrames;
     end
 
-    local width = WorldMapFrame:GetCanvas():GetWidth();
-    local height = WorldMapFrame:GetCanvas():GetHeight();
+    local canvas = WorldMapFrame:GetCanvas()
+
+    local width = canvas:GetWidth();
+    local height = canvas:GetHeight();
 
     --Setting the parent is required to get the correct frame levels.
-    lineFrame:SetParent(iconFrame);
-    lineFrame:SetHeight(width);
-    lineFrame:SetWidth(height);
-    lineFrame:SetPoint("TOPLEFT", WorldMapFrame:GetCanvas(), "TOPLEFT", 0, 0)
+
     local frameLevel = iconFrame:GetFrameLevel();
     if (frameLevel > 1) then
         frameLevel = frameLevel - 1;
@@ -327,6 +329,11 @@ function QuestieFramePool:CreateLine(iconFrame, startX, startY, endX, endY, line
     end
     tinsert(iconFrame.data.lineFrames, lineFrame);
     lineFrame.iconFrame = iconFrame;
+    lineFrame.data = iconFrame.data
+    lineFrame.x = (startX + endX) / 2
+    lineFrame.y = (startY + endY) / 2
+    lineFrame.AreaID = aeraID or iconFrame.AreaID
+    lineFrame.texture = iconFrame.texture
 
     function lineFrame:Unload()
         if not self.iconFrame then
@@ -334,6 +341,11 @@ function QuestieFramePool:CreateLine(iconFrame, startX, startY, endX, endY, line
         end
         self:Hide();
         self.iconFrame = nil;
+        self.x = nil
+        self.y = nil
+        self.data = nil
+        self.texture = nil
+        self.AreaID = nil
         HBDPins:RemoveWorldMapIcon(Questie, self)
         tinsert(QuestieFramePool.Routes_Lines, self);
     end
@@ -346,16 +358,82 @@ function QuestieFramePool:CreateLine(iconFrame, startX, startY, endX, endY, line
     line.dA = color[4];
     line:SetColorTexture(color[1],color[2],color[3],color[4]);
 
+    local lineBorder = lineFrame.lineBorder or lineFrame:CreateLine();
+    lineFrame.lineBorder = lineBorder;
+
+    lineBorder.dR = color[1];
+    lineBorder.dG = color[2];
+    lineBorder.dB = color[3];
+    lineBorder.dA = color[4];
+    lineBorder:SetColorTexture(0,0,0,color[4]/2);
+
     -- Set texture coordinates and anchors
     --line:ClearAllPoints();
 
-    local calcX = width/100;
-    local calcY = height/100;
+    startX = startX * width / 100
+    startY = startY * height / -100 -- We do by / -100 due to using the top left point
+    endX = endX * width / 100
+    endY = endY * height / -100
+
+    width = abs(startX - endX) + lineWidth * 4
+    height = abs(startY - endY) + lineWidth * 4
+
+    local framePosX = max(startX, endX) - lineWidth * 2 - width / 2
+    local framePosY = min(startY, endY) + lineWidth * 2 + height / 2
+
+    --lineFrame:SetParent(iconFrame);
+    lineFrame:SetHeight(height);
+    lineFrame:SetWidth(width);
+    lineFrame:SetPoint("TOPLEFT", canvas, "TOPLEFT", framePosX, framePosY)
 
     line:SetDrawLayer("OVERLAY", -5)
-    line:SetStartPoint("TOPLEFT", startX*calcX, (startY*calcY)*-1) -- We do by *-1 due to using the top left point
-    line:SetEndPoint("TOPLEFT", endX*calcX, (endY*calcY)*-1) -- We do by *-1 due to using the top left point
+    line:SetStartPoint("TOPLEFT", startX - framePosX, startY - framePosY)
+    line:SetEndPoint("TOPLEFT", endX - framePosX, endY - framePosY)
     line:SetThickness(lineWidth);
+
+    lineBorder:SetDrawLayer("OVERLAY", -6)
+    lineBorder:SetStartPoint("TOPLEFT", startX - framePosX, startY - framePosY)
+    lineBorder:SetEndPoint("TOPLEFT", endX - framePosX, endY - framePosY)
+    lineBorder:SetThickness(lineWidth+2);
+
+
+
+    lineFrame:EnableMouse(true)
+
+    --lineFrame:SetBackdrop({ -- mouseover debugging
+    --    bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+    --    edgeFile = nil,
+    --    edgeSize = 0,
+    --    insets = { left = 0, right = 0, top = 0, bottom = 0 },
+    --})
+
+    --lineFrame:SetBackdropColor(1,0,1,1)
+
+    lineFrame:SetScript("OnEnter", function(self)
+        if self and self.iconFrame then
+            local script = self.iconFrame:GetScript("OnEnter")
+            if script then
+                script(self.iconFrame)
+            end
+        end
+    end)
+    lineFrame:SetScript("OnLeave", function(self)
+        if self and self.iconFrame then
+            local script = self.iconFrame:GetScript("OnLeave")
+            if script then
+                script(self.iconFrame)
+            end
+        end
+    end)
+    lineFrame:RegisterForClicks("RightButtonUp", "LeftButtonUp")
+    lineFrame:SetScript("OnClick", function(self, button)
+        if self and self.iconFrame then
+            local script = self.iconFrame:GetScript("OnClick")
+            if script then
+                script(self.iconFrame, button)
+            end
+        end
+    end)
 
     --line:Hide()
     lineFrame:Hide();
@@ -645,7 +723,7 @@ function _QuestieFramePool:QuestieTooltip()
                     questOrder[iconData.CustomTooltipData.Title] = {}
                     tinsert(questOrder[iconData.CustomTooltipData.Title], iconData.CustomTooltipData.Body);
                 elseif iconData.ManualTooltipData then
-                    manualOrder[iconData.ManualTooltipData.Title] = iconData.ManualTooltipData.Body
+                    manualOrder[iconData.ManualTooltipData.Title] = iconData.ManualTooltipData
                 end
             end
         end
@@ -658,6 +736,11 @@ function _QuestieFramePool:QuestieTooltip()
     else
         for pin in HBDPins.worldmapProvider:GetMap():EnumeratePinsByTemplate("HereBeDragonsPinsTemplateQuestie") do
             handleMapIcon(pin.icon)
+            if pin.icon.data.lineFrames then
+                for _, line in pairs(pin.icon.data.lineFrames) do
+                    handleMapIcon(line)
+                end
+            end
         end
     end
 
@@ -785,7 +868,8 @@ function _QuestieFramePool:QuestieTooltip()
                 end
             end
         end
-        for title, body in pairs(self.manualOrder) do
+        for title, data in pairs(self.manualOrder) do
+            local body = data.Body
             self:AddLine(title)
             for _, stringOrTable in ipairs(body) do
                 local dataType = type(stringOrTable)
@@ -795,7 +879,7 @@ function _QuestieFramePool:QuestieTooltip()
                     self:AddDoubleLine(stringOrTable[1], '|cFFffffff'..stringOrTable[2]..'|r') --normal, white
                 end
             end
-            if self.miniMapIcon == false then
+            if self.miniMapIcon == false and not data.disableShiftToRemove then
                 self:AddLine('|cFFa6a6a6Shift-click to hide|r') -- grey
             end
         end
@@ -804,12 +888,5 @@ function _QuestieFramePool:QuestieTooltip()
     --Tooltip:AddDoubleLine("" .. self:GetFrameStrata(), ""..self:GetFrameLevel())
     --Tooltip:AddDoubleLine("" .. self.glow:GetFrameStrata(), ""..self.glow:GetFrameLevel())
     Tooltip:SetFrameStrata("TOOLTIP");
-    QuestieTooltips.lastTooltipTime = GetTime() -- hack for object tooltips
     Tooltip:Show();
-end
-
-function _QuestieFramePool:Questie_Click(self)
-    Questie:Print("Click!");
-    --TODO Logic for click!
-    -- Preferably call something outside, keep it "abstract" here
 end

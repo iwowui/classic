@@ -205,7 +205,7 @@ QuestieLocale.locale['zhTW'] = {
     ['ICON_LEFT_CLICK_HOLD'] = "左鍵單擊並按住",
     ['ICON_DRAG_LOCKED'] = "鎖定時拖動",
     ['ICON_TOGGLE'] = "設定",
-    ['ICON_SHIFTLEFT_CLICK'] = "Shift + 左鍵點擊",
+    ['ICON_SHIFTLEFT_CLICK'] = "Ctrl + Shift + 左鍵點擊",
     ['ICON_TOGGLE_QUESTIE'] = "打開　Questie",
     ['ICON_CTRLRIGHT_CLICK'] = "Ctrl + 右鍵點擊",
     ['ICON_CTRLLEFT_CLICK'] = "Ctrl + 左鍵點擊",
@@ -225,6 +225,8 @@ QuestieLocale.locale['zhTW'] = {
     ['TOOLTIP_QUEST_REPEATABLE'] = "(可重複)",
     ['TOOLTIP_QUEST_EVENT'] = "（事件）",
     ['XP'] = "經驗值";
+    ['COMPLETE'] = "Complete";
+    ['FAILED'] = "Failed";
 
     -- Slash Commands
     ['SLASH_INVALID'] = "無效指令，要查看指令列表請輸入：",
@@ -377,6 +379,8 @@ QuestieLocale.locale['zhTW'] = {
     ['JOURNEY_SELECT_HEAD'] = "選擇大陸與區域",
     ['JOURNEY_SELECT_CONT'] = "選擇大陸",
     ['JOURNEY_SELECT_ZONE'] = "選擇區域",
+    ['JOURNEY_SELECT_PROFESSION'] = "Select Your Profession",
+    ['JOURNEY_NO_QUESTS_FOUND'] = "No Quests found",
     ['JOURNEY_QUESTS'] = "區域任務",
     ['JOURNEY_QUESTINFO'] = "任務資訊",
     ['JOURNEY_START_NPC'] = "任務起始NPC資訊",
@@ -405,7 +409,7 @@ QuestieLocale.locale['zhTW'] = {
     ['JOURNEY_NOTE_DESC'] = "替你的魔獸升級之旅創建一個條目，紀錄特別的時刻。只要輸入標題和內容，Questie就會替你保存下來！",
     ['JOURNEY_NOTE_TITLE'] = "新筆記：%s",
     ['JOURNEY_NOTE_ENTRY_TITLE'] = "輸入標題",
-    ['JOUNREY_NOTE_ENTRY_BODY'] = "輸入遊記",
+    ['JOURNEY_NOTE_ENTRY_BODY'] = "輸入遊記",
     ['JOURNEY_NOTE_SUBMIT_BTN'] = "添加條目",
     ['JOURNEY_ERR_NOTITLE'] = "標題不可為空",
     ['JOURNEY_ERR_NONOTE'] = "內容不可為空",
@@ -425,6 +429,10 @@ QuestieLocale.locale['zhTW'] = {
     ['JOURNEY_SEARCH_EXE'] = "搜尋",
     ['JOURNEY_SEARCH_RESULTS'] = "搜尋規則",
     ['JOURNEY_SEARCH_NOMATCH'] = "沒有符合的結果：%s",
+    ['JOURNEY_SEARCH_QUESTS'] = "Quests",
+    ['JOURNEY_SEARCH_NPCS'] = "NPCs",
+    ['JOURNEY_SEARCH_OBJECTS'] = "Objects",
+    ['JOURNEY_SEARCH_ITEMS'] = "Items",
 
     -- Debug Messages
     ['DEBUG_LOWLEVEL'] = "Gray Quests toggled to:",
@@ -449,8 +457,49 @@ QuestieLocale.locale['zhTW'] = {
     ['DEBUG_DRAW'] = "%s available quests drawn. PlayerLevel = %s",
     ['DEBUG_UNLOAD_QFRAMES'] = "Unloading quest frames: %s",
     ['DEBUG_UNLOAD_ALL'] = "Unloading all frames, count: %s",
-    ['QUESTIE_ACCEPT_NIL'] = "|cFFFF0000Questie錯誤：|r你嘗試接受任務時返回空值，請輸入 /questie reload 重新載入Quesite",
+    ['QUESTIE_ACCEPT_NIL'] = "|cFFFF0000Questie錯誤：|r你嘗試接受任務時返回空值，請輸入 /questie reload 重新載入Questie",
     ['QUESTIE_UPDATED_RESTART'] = "|cFFFF0000警告！|r你沒有重開遊戲就更新了Questie，這可能會使Questie出現某些錯誤。請完全關閉魔獸世界再重新啟動遊戲，確保Questie能正常運作",
+
+    -- Townsfolk related strings
+    ["Repair"] = "修理",
+    ["Auctioneer"] = "拍賣師",
+    ["Banker"] = "拍賣師",
+    ["Battlemaster"] = "戰場軍官",
+    ["Flight Master"] = "飛行管理員",
+    ["Innkeeper"] = "旅店老闆",
+    ["Weapon Master"] = "武器大師",
+    ["Reagents"] = "材料",
+    ["Class Trainer"] = "職業訓練師",
+    ["Stable Master"] = "獸欄管理員",
+    ["Mailbox"] = "郵箱",
+    ["Spirit Healer"] = "靈魂醫者",
+    ["Available Quest"] = "可用任務",
+    ["Trivial Quest"] = "低等級任務",
+    ["Objective"] = "目標",
+    ["Vendor"] = "正在購買物品",
+    ["Profession Trainer"] = "專業技能訓練師",
+    ["Questie Options"] = "打開 Questie",
+    ["Ammo"] = "彈藥",
+    ["Pet Food"] = "餵養寵物",
+    ["Portal Trainer"] = "傳送門訓練師",
+    ["Bags"] = "背包", 	
+    ["Trade Goods"] = "商品",
+    ["Food"] = "進食",
+    ["Drink"] = "喝水",
+
+    -- professions use their ID as the key for a much cleaner implementation. Translations for these are alerady in QuestieProfessions.lua
+    ["129"] = "急救",
+    ["164"] = "鍛造",
+    ["165"] = "製皮",
+    ["171"] = "鍊金術",
+    ["182"] = "草藥學",
+    ["185"] = "烹飪",
+    ["186"] = "採礦",
+    ["197"] = "裁縫",
+    ["202"] = "工程學",
+    ["333"] = "附魔",
+    ["356"] = "釣魚",
+    ["393"] = "剝皮",
 
     -- TODO finally switch all keys to this style for code readability:  aero:makes a lot more sense and also allows returning the input key if there is no value in the lang db
     ['Show on Map'] = "在地圖上顯示",

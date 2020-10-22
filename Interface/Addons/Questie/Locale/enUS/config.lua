@@ -66,6 +66,11 @@ QuestieLocale.locale['enUS'] = {
     ['AUTO_MODIFIER_DESC'] = "The modifier to NOT auto-accept/-complete quests when either option is enabled and you interact with a quest NPC.",
     ['ENABLE_YELL'] = "Share quest progress with nearby players",
     ['ENABLE_YELL_DESC'] = "Your quest progress will be periodically sent to nearby players. Disabling this doesn't affect sharing progress with party members.",
+    ['QUEST_ANNOUNCE'] = "Quest Announce",
+    ['QUEST_ANNOUNCE_DESC'] = "Announce objective completion to party members",
+    ['QUEST_ANNOUNCE_ENABLED'] = "Enabled",
+    ['QUEST_ANNOUNCE_OBJECTIVE'] = "{rt1} Questie : %s for %s!",
+    ['QUEST_ANNOUNCE_QUESTITEM'] = "{rt1} Questie : Picked up %s which starts %s!",
 
     -- Minimap tab
     ['MINIMAP_TAB'] = "Minimap",
@@ -205,7 +210,8 @@ QuestieLocale.locale['enUS'] = {
     ['ICON_LEFT_CLICK_HOLD'] = "Left Click + Hold",
     ['ICON_DRAG_LOCKED'] = "Drag while Locked",
     ['ICON_TOGGLE'] = "Toggle Options",
-    ['ICON_SHIFTLEFT_CLICK'] = "Shift + Left Click",
+    ['MENU_TOGGLE'] = "Toggle Menu",
+    ['ICON_SHIFTLEFT_CLICK'] = "Ctrl + Shift + Left Click",
     ['ICON_TOGGLE_QUESTIE'] = "Toggle Questie",
     ['ICON_CTRLRIGHT_CLICK'] = "Ctrl + Right Click",
     ['ICON_CTRLLEFT_CLICK'] = "Ctrl + Left Click",
@@ -225,6 +231,8 @@ QuestieLocale.locale['enUS'] = {
     ['TOOLTIP_QUEST_REPEATABLE'] = "(Repeatable)",
     ['TOOLTIP_QUEST_EVENT'] = "(Event)",
     ['XP'] = "xp";
+    ['COMPLETE'] = "Complete";
+    ['FAILED'] = "Failed";
 
     -- Slash Commands
     ['SLASH_INVALID'] = "Invalid command. For a list of options please type: ",
@@ -377,6 +385,8 @@ QuestieLocale.locale['enUS'] = {
     ['JOURNEY_SELECT_HEAD'] = "Select Your Continent and Zone",
     ['JOURNEY_SELECT_CONT'] = "Select Your Continent",
     ['JOURNEY_SELECT_ZONE'] = "Select Your Zone",
+    ['JOURNEY_SELECT_PROFESSION'] = "Select Your Profession",
+    ['JOURNEY_NO_QUESTS_FOUND'] = "No Quests found",
     ['JOURNEY_QUESTS'] = "Zone Quests",
     ['JOURNEY_QUESTINFO'] = "Quest Information",
     ['JOURNEY_START_NPC'] = "Quest Start NPC Information",
@@ -405,10 +415,10 @@ QuestieLocale.locale['enUS'] = {
     ['JOURNEY_NOTE_DESC'] = "Create an entry in your journal to remember a specific moment. Simply supply a title and description and Questie will remember it for you!",
     ['JOURNEY_NOTE_TITLE'] = "New Note For: %s",
     ['JOURNEY_NOTE_ENTRY_TITLE'] = "Entry Title",
-    ['JOUNREY_NOTE_ENTRY_BODY'] = "Journal Entry",
+    ['JOURNEY_NOTE_ENTRY_BODY'] = "Journal Entry",
     ['JOURNEY_NOTE_SUBMIT_BTN'] = "Add Entry",
-    ['JOURNEY_ERR_NOTITLE'] = "No Title was Entered. You must enter a title before submitting your note.",
-    ['JOURNEY_ERR_NONOTE'] = "No Note was Entered. You must enter a note before submitting.",
+    ['JOURNEY_ERR_NOTITLE'] = "No Title was entered. You must enter a title before submitting your note.",
+    ['JOURNEY_ERR_NONOTE'] = "No Note was entered. You must enter a note before submitting.",
     ['JOURNEY_TABLE_YEAR'] = "Year %s",
     ['JOURNEY_TABLE_NOTE'] = "Note: %s",
     ['JOURNEY_TABLE_QUEST'] = "Quest %s: %s",
@@ -425,6 +435,10 @@ QuestieLocale.locale['enUS'] = {
     ['JOURNEY_SEARCH_EXE'] = "Search",
     ['JOURNEY_SEARCH_RESULTS'] = "Search Results",
     ['JOURNEY_SEARCH_NOMATCH'] = "No Match for Search Results: %s",
+    ['JOURNEY_SEARCH_QUESTS'] = "Quests",
+    ['JOURNEY_SEARCH_NPCS'] = "NPCs",
+    ['JOURNEY_SEARCH_OBJECTS'] = "Objects",
+    ['JOURNEY_SEARCH_ITEMS'] = "Items",
 
     -- Debug Messages
     ['DEBUG_LOWLEVEL'] = "Gray Quests toggled to:",
@@ -451,6 +465,42 @@ QuestieLocale.locale['enUS'] = {
     ['DEBUG_UNLOAD_ALL'] = "Unloading all frames, count: %s",
     ['QUESTIE_ACCEPT_NIL'] = "|cFFFF0000Questie ERROR:|r Attempt to accept nil quest! You may need to run /questie reload",
     ['QUESTIE_UPDATED_RESTART'] = "|cFFFF0000WARNING!|r You have updated Questie without restarting the game, this will likely cause problems. Please restart the game before continuing",
+    ['QUESTIE_DATABASE_ERROR'] = "There was a problem initializing Questie's database. This can usually be fixed by recompiling the database.",
+    ['DONT_SHOW_AGAIN'] = "Don't show again",
+
+    -- Townsfolk related strings
+    ["Repair"] = "Repair",
+    ["Auctioneer"] = "Auctioneer",
+    ["Banker"] = "Banker",
+    ["Battlemaster"] = "Battlemaster",
+    ["Flight Master"] = "Flight Master",
+    ["Innkeeper"] = "Innkeeper",
+    ["Weapon Master"] = "Weapon Master",
+    ["Reagents"] = "Reagents",
+    ["Class Trainer"] = "Class Trainer",
+    ["Stable Master"] = "Stable Master",
+    ["Mailbox"] = "Mailbox",
+    ["Spirit Healer"] = "Spirit Healer",
+    ["Available Quest"] = "Available Quest",
+    ["Trivial Quest"] = "Trivial Quest",
+    ["Objective"] = "Objective",
+    ["Vendor"] = "Vendor",
+    ["Profession Trainer"] = "Profession Trainer",
+    ["Questie Options"] = "Questie Options",
+
+    -- professions use their ID as the key for a much cleaner implementation. Translations for these are alerady in QuestieProfessions.lua
+    ["129"] = "First Aid",
+    ["164"] = "Blacksmithing",
+    ["165"] = "Leatherworking",
+    ["171"] = "Alchemy",
+    ["182"] = "Herbalism",
+    ["185"] = "Cooking",
+    ["186"] = "Mining",
+    ["197"] = "Tailoring",
+    ["202"] = "Engineering",
+    ["333"] = "Enchanting",
+    ["356"] = "Fishing",
+    ["393"] = "Skinning",
 
     -- TODO finally switch all keys to this style for code readability:  aero:makes a lot more sense and also allows returning the input key if there is no value in the lang db
     ['Show on Map'] = "Show on Map",

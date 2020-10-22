@@ -298,6 +298,15 @@ do
 		end
 	end
 
+	function ShouldShowBlizzardPlate(plate)
+		if plate.UnitFrame then
+			if plate.showBlizzardPlate then
+				plate.UnitFrame:Show()
+				plate.extended:Hide()
+			else plate.UnitFrame:Hide() end
+		end
+	end
+
         -- OnUpdate; This function is run frequently, on every clock cycle
 	function OnUpdate(self, e)
 		-- Poll Loop
@@ -331,9 +340,6 @@ do
 				plate.UpdateMe = false
 				plate.UpdateHealth = false
 
-				--local children = plate:GetChildren()
-				--if children then children:Hide() end
-
 				if plate.UpdateCastbar then -- Check if spell is being cast
 					if unit and unit.unitid then
 						local unitGUID = UnitGUID(unit.unitid)
@@ -346,7 +352,7 @@ do
 				OnHideNameplate(plate, unitid)  -- If the 'NAME_PLATE_UNIT_REMOVED' event didn't trigger
 			end
 
-			if plate.UnitFrame then plate.UnitFrame:Hide() end
+			ShouldShowBlizzardPlate(plate)
 
 		-- This would be useful for alpha fades
 		-- But right now it's just going to get set directly
@@ -1362,6 +1368,7 @@ do
 	local CoreEvents = {}
 
 	local function EventHandler(self, event, ...)
+		-- print(event)
 		CoreEvents[event](event, ...)
 	end
 
@@ -1399,11 +1406,22 @@ do
 
 		if plate then
 			if UnitIsUnit("player", unitid) then
+				plate.showBlizzardPlate = true
+				ShouldShowBlizzardPlate(plate)
 				OnHideNameplate(plate, unitid)
 			else
-				local children = plate:GetChildren()
-				if children then children:Hide() end --Avoids errors incase the plate has no children
+				plate.showBlizzardPlate = false
+				--local children = plate:GetChildren() -- Do children even need to be hidden anymore when UnitFrame is unhooked
+				--if children then children:Hide() end
+				--if plate._frame then plate._frame:Show() end -- Show Questplates frame
 				if NeatPlatesTarget and unitid and UnitGUID(unitid) == NeatPlatesTarget.unitGUID then toggleNeatPlatesTarget(false) end
+
+				-- Unhook UnitFrame events
+				if plate.UnitFrame then
+					plate.UnitFrame:Hide()
+					plate.UnitFrame:UnregisterAllEvents()
+				end
+
 		 		OnShowNameplate(plate, unitid)
 			end
 		end
@@ -1665,6 +1683,8 @@ do
 	NeatPlatesCore:SetFrameStrata("TOOLTIP") 	-- When parented to WorldFrame, causes OnUpdate handler to run close to last
 	NeatPlatesCore:SetScript("OnEvent", EventHandler)
 	for eventName in pairs(CoreEvents) do NeatPlatesCore:RegisterEvent(eventName) end
+	-- NeatPlatesCore:RegisterAllEvents() --Debugging
+
 end
 
 

@@ -2,7 +2,7 @@
 
 local indicatorPrototype = Grid2.indicatorPrototype
 
--- Zoom in/out effect, not using animation BOUNCE looping method because is bugged (display glitches)
+-- Zoom in/out effect, not using animation BOUNCE looping method because is bugged (generate glitches)
 local function CreateScaleAnimation(frame, dbx)
 	local scale  = dbx.animScale or 1.5
 	local durat  = (dbx.animDuration or 0.7) / 2

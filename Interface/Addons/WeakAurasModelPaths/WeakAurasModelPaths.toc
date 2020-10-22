@@ -3,8 +3,8 @@
 ## Title-zhCN: |CFFFF8000辅助|R 综合提示 模块路径
 ## Title-zhTW: |CFFFF8000輔助|R 综合提示 模組路徑
 ## X-Repple: 辅助
-## Author: Mirrored and the WeakAuras Team
-## Version: 2.18.4
+## Author: The WeakAuras Team
+## Version: 3.0.4
 ## Notes: Model paths for WeakAuras
 ## Notes-zhCN: WeakAuras的模块路径
 ## Notes-zhTW: WeakAuras的模組路徑

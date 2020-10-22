@@ -1,13 +1,13 @@
 ## Interface: 11305
-## Title: |cFFFFFFFFQuestie|r|cFF00FF00 v6.0.5|r
+## Title: |cFFFFFFFFQuestie|r|cFF00FF00 v6.1.0|r
 ## Author: Aero/Logon/Muehe/TheCrux(BreakBB)/Dyaxler/Schaka/Zoey/Everyone else
 ## Notes: A standalone Classic QuestHelper
-## Title-zhCN: |CFFFF8000辅助|R 任务助手Questie v6.0.5
+## Title-zhCN: |CFFFF8000辅助|R 任务助手Questie v6.1.0
 ## Notes-zhCN: 全能型任务数据库
-## Title-zhTW: |CFFFF8000輔助|R 任務助手Questie v6.0.5
+## Title-zhTW: |CFFFF8000輔助|R 任務助手Questie v6.1.0
 ## Notes-zhTW: 全能型任務資料庫
 ## X-Repple: 辅助
-## Version: 6.0.5
+## Version: 6.1.0
 ## RequiredDeps:
 ## OptionalDeps: Ace3, LibDataBroker-1.1, LibCompress
 ## SavedVariables: QuestieConfig
@@ -27,26 +27,29 @@ Modules\Libs\QuestieLoader.lua
 #stream module (used by DB)
 Modules\QuestieStream.lua
 
+#Zones
+Database\Zones\zoneDB.lua
+Database\Zones\zoneTables.lua
+
 #Databases
 Database\QuestieDB.lua
 Database\questDB.lua
 Database\objectDB.lua
 Database\spawnDB.lua
 Database\itemDB.lua
+Database\Constants.lua
+Database\updates.lua
 
 #Corrections
 Database\Corrections\QuestieCorrections.lua
 Database\Corrections\QuestieItemBlacklist.lua
 Database\Corrections\QuestieItemFixes.lua
+Database\Corrections\QuestieNPCBlacklist.lua
 Database\Corrections\QuestieNPCFixes.lua
 Database\Corrections\QuestieObjectFixes.lua
 Database\Corrections\QuestieQuestBlacklist.lua
 Database\Corrections\QuestieQuestFixes.lua
 Database\Corrections\QuestieEvent.lua
-
-#Zones
-Database\Zones\zoneDB.lua
-Database\Zones\zoneTables.lua
 
 #Compiler
 Database\compiler.lua
@@ -66,9 +69,17 @@ Modules\Libs\QuestieCombatQueue.lua
 Modules\Libs\QuestieHash.lua
 
 ##Modules
-Modules\QuestieTooltips.lua
+Modules\QuestieProfessions.lua
+Modules\QuestieReputation.lua
 Modules\QuestieEventHandler.lua
 Modules\Migration.lua
+Modules\QuestieMenu.lua
+Modules\QuestieAnnounce.lua
+
+##Tooltips
+Modules\Tooltips\Tooltip.lua
+Modules\Tooltips\TooltipHandler.lua
+Modules\Tooltips\Link.lua
 
 #Auto
 Modules\Auto\QuestieAuto.lua
@@ -100,6 +111,7 @@ Modules\Journey\QuestieJourneyPrivates.lua
 Modules\Journey\QuestieJourneyUtils.lua
 Modules\Journey\History.lua
 Modules\Journey\QuestDetailsFrame.lua
+Modules\Journey\tabs\MyJourney\Note.lua
 Modules\Journey\tabs\MyJourney\MyJourney.lua
 Modules\Journey\tabs\MyJourney\MyJourneyTab.lua
 Modules\Journey\tabs\QuestsByZone\QuestsByZone.lua
@@ -116,8 +128,6 @@ Modules\Tracker\QuestieTrackerMenu.lua
 Modules\Tracker\QuestieTrackerPrivates.lua
 Modules\Tracker\QuestieQuestTimers.lua
 
-Modules\QuestieProfessions.lua
-Modules\QuestieReputation.lua
 Modules\QuestieDBMIntegration.lua
 Modules\QuestieSlash.lua
 
