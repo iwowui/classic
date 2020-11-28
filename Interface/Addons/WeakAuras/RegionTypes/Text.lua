@@ -75,8 +75,6 @@ local function modify(parent, region, data)
   WeakAuras.regionPrototype.modify(parent, region, data);
   local text = region.text;
 
-  region.useAuto = Private.CanHaveAuto(data);
-
   local fontPath = SharedMedia:Fetch("font", data.font);
   text:SetFont(fontPath, data.fontSize, data.outline);
   if not text:GetFont() then -- Font invalid, set the font but keep the setting
@@ -96,6 +94,21 @@ local function modify(parent, region, data)
   region.height = text:GetStringHeight();
   region:SetWidth(region.width);
   region:SetHeight(region.height);
+
+  local tooltipType = Private.CanHaveTooltip(data);
+  if(tooltipType and data.useTooltip) then
+    if not region.tooltipFrame then
+      region.tooltipFrame = CreateFrame("frame", nil, region);
+      region.tooltipFrame:SetAllPoints(region);
+      region.tooltipFrame:SetScript("OnEnter", function()
+        Private.ShowMouseoverTooltip(region, region);
+      end);
+      region.tooltipFrame:SetScript("OnLeave", Private.HideTooltip);
+    end
+    region.tooltipFrame:EnableMouse(true);
+  elseif region.tooltipFrame then
+    region.tooltipFrame:EnableMouse(false);
+  end
 
   text:SetTextHeight(data.fontSize);
   text:SetShadowColor(unpack(data.shadowColor))

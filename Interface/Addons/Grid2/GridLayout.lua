@@ -18,6 +18,22 @@ end
 local NUM_HEADERS = 0
 local FRAMES_TEMPLATE = "SecureUnitButtonTemplate"                        .. (BackdropTemplateMixin and ",BackdropTemplate" or "")
 local FRAMEC_TEMPLATE = "ClickCastUnitTemplate,SecureUnitButtonTemplate"  .. (BackdropTemplateMixin and ",BackdropTemplate" or "")
+local SECURE_INIT_TMP =  [[
+	RegisterUnitWatch(self)
+	self:SetAttribute("*type1", "target")
+	self:SetAttribute("*type2", "togglemenu")
+	self:SetAttribute("useparent-toggleForVehicle", true)
+	self:SetAttribute("useparent-allowVehicleTarget", true)
+	self:SetAttribute("useparent-unitsuffix", true)
+	local header = self:GetParent()
+	local clickcast = header:GetFrameRef("clickcast_header")
+	if clickcast then
+		clickcast:SetAttribute("clickcast_button", self)
+		clickcast:RunAttribute("clickcast_register")
+	end
+	header:CallMethod("initialConfigFunction", self:GetName())
+]]
+local SECURE_INIT = SECURE_INIT_TMP
 
 local GridLayoutHeaderClass = {
 	prototype = {},
@@ -35,21 +51,7 @@ local GridLayoutHeaderClass = {
 			frame:SetAttribute("template", FRAMES_TEMPLATE)
 		end
 		frame.initialConfigFunction = GridHeader_InitialConfigFunction
-		frame:SetAttribute("initialConfigFunction", [[
-			RegisterUnitWatch(self)
-			self:SetAttribute("*type1", "target")
-			self:SetAttribute("*type2", "menu")
-			self:SetAttribute("useparent-toggleForVehicle", true)
-			self:SetAttribute("useparent-allowVehicleTarget", true)
-			self:SetAttribute("useparent-unitsuffix", true)
-			local header = self:GetParent()
-			local clickcast = header:GetFrameRef("clickcast_header")
-			if clickcast then
-				clickcast:SetAttribute("clickcast_button", self)
-				clickcast:RunAttribute("clickcast_register")
-			end
-			header:CallMethod("initialConfigFunction", self:GetName())
-		]])
+		frame:SetAttribute("initialConfigFunction", SECURE_INIT)
 		frame:Reset()
 		frame:SetOrientation()
 		return frame
@@ -194,6 +196,7 @@ function Grid2Layout:OnModuleInitialize()
 end
 
 function Grid2Layout:OnModuleEnable()
+	self:UpdateMenu()
 	self:FixLayouts()
 	self:UpdateFrame()
 	self:UpdateTextures()
@@ -218,6 +221,7 @@ function Grid2Layout:OnModuleDisable()
 end
 
 function Grid2Layout:OnModuleUpdate()
+	self:UpdateMenu()
 	self:FixLayouts()
 	self:RefreshTheme()
 end
@@ -269,6 +273,16 @@ function Grid2Layout:PetBattleTransition(event)
 	end
 end
 --}}}
+
+-- PopupMenu
+function Grid2Layout:UpdateMenu()
+	local v = Grid2Frame.db.profile.menuDisabled
+	if v ~= self.RightClickMenuDisabled then
+		self.RightClickMenuDisabled = v
+		SECURE_INIT = v and gsub( SECURE_INIT_TMP, '"togglemenu"', 'nil' ) or SECURE_INIT_TMP
+		Grid2Frame:WithAllFrames( function(f) f:SetAttribute("*type2",(not v) and "togglemenu" or nil); end )
+	end
+end
 
 -- Workaround to a blizzard bug in SecureGroupHeaders.lua (see: https://www.wowace.com/projects/grid2/issues/628 )
 -- In patch 8.1 SecureTemplates code do not display "unknown entities" because GetRaidRosterInfo() returns nil for these units:

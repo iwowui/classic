@@ -1,17 +1,18 @@
 ## Interface: 11305
-## Title: |cFFFFFFFFQuestie|r|cFF00FF00 v6.1.0|r
+## Title: |cFFFFFFFFQuestie|r|cFF00FF00 v6.2.2|r
 ## Author: Aero/Logon/Muehe/TheCrux(BreakBB)/Dyaxler/Schaka/Zoey/Everyone else
 ## Notes: A standalone Classic QuestHelper
-## Title-zhCN: |CFFFF8000辅助|R 任务助手Questie v6.1.0
+## Title-zhCN: |CFFFF8000辅助|R 任务助手Questie v6.2.2
 ## Notes-zhCN: 全能型任务数据库
-## Title-zhTW: |CFFFF8000輔助|R 任務助手Questie v6.1.0
+## Title-zhTW: |CFFFF8000輔助|R 任務助手Questie v6.2.2
 ## Notes-zhTW: 全能型任務資料庫
 ## X-Repple: 辅助
-## Version: 6.1.0
+## Version: 6.2.2
 ## RequiredDeps:
 ## OptionalDeps: Ace3, LibDataBroker-1.1, LibCompress
 ## SavedVariables: QuestieConfig
 ## SavedVariablesPerCharacter: QuestieConfigCharacter
+## X-Curse-Project-ID: 334372
 
 
 Modules\VersionCheck.lua
@@ -79,6 +80,7 @@ Modules\QuestieAnnounce.lua
 ##Tooltips
 Modules\Tooltips\Tooltip.lua
 Modules\Tooltips\TooltipHandler.lua
+Modules\Tooltips\ChatFilter.lua
 Modules\Tooltips\Link.lua
 
 #Auto

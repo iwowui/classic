@@ -291,7 +291,7 @@ function ItemRack.ProcessingFrameOnEvent(self,event,...)
 	local enabled = ItemRackUser.Events.Enabled
 	local events = ItemRackEvents
 	local startBuff, startZone, startStance, eventType
-	local arg1,arg2 = ...;
+	local arg1, arg2 = ...;
 
 	for eventName in pairs(enabled) do
 		eventType = events[eventName].Type
@@ -299,7 +299,9 @@ function ItemRack.ProcessingFrameOnEvent(self,event,...)
 			startBuff = 1
 		elseif event=="UPDATE_SHAPESHIFT_FORM" and eventType=="Stance" then
 			startStance = 1
-		elseif (event=="ZONE_CHANGED_NEW_AREA" or event=="ZONE_CHANGED_INDOORS")  and eventType=="Zone" then
+		elseif event=="ZONE_CHANGED_NEW_AREA" and eventType=="Zone" then -- if player move to a new area, toggle set change.
+			startZone = 1
+		elseif event == "ZONE_CHANGED_INDOORS" and eventType == "Zone" and select(2, IsInInstance()) == "raid" then -- if player change subzone in raid instance, toggle set change, else not.
 			startZone = 1
 		elseif eventType=="Script" and events[eventName].Trigger==event then
 			local method = loadstring(events[eventName].Script)

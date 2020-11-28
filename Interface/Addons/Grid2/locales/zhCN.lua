@@ -13,19 +13,19 @@ L["Elemental"] = "元素"
 --}}}
 
 --{{{ Health
-L["DEAD"] = "死亡"
-L["GHOST"] = "灵魂"
-L["FD"] = "假死"
-L["Offline"] = "离线"
+L["DEAD"] = "死"
+L["GHOST"] = "魂"
+L["FD"] = "假"
+L["Offline"] = "离"
 --}}}
 
 --{{{ Pvp
 L["PvP"] = "PvP"
-L["FFA"] = "自有拾取"
+L["FFA"] = "自由拾取"
 --}}}
 
 --{{{ Range
-L["OOR"] = "超出距离"
+L["OOR"] = "远"
 --}}}
 
 --{{{ ReadyCheck

@@ -9,7 +9,7 @@
 ## DefaultState: Disabled
 ## Author: Dennis-Florian Herr (dfherr)
 ## X-Curse-Project-ID: 355497
-## Version: 2.24
+## Version: 2.25
 ## SavedVariables: ThreatClassic2DB
 ## SavedVariablesPerCharacter: TC2_Options
 

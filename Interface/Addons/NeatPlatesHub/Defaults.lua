@@ -136,9 +136,9 @@ NeatPlatesHubDefaults = {
 
 	-- Text
 	---------------------------------------
-	TextShowLevel = true,
+	TextShowLevel = false,
 	TextStatusForceShadow = false,
-	TextUseBlizzardFont = true,
+	TextUseBlizzardFont = false,
 	TextHealthTextMode = 1,
 	TextShowOnlyOnTargets = false,
 	TextShowServerIndicator = true,
@@ -282,7 +282,7 @@ NeatPlatesHubDefaults = {
 
 	-- Aura Widget
 	---------------------------------------
-	WidgetDebuff = false,
+	WidgetDebuff = true,
 	WidgetDebuffStyle = 1,
 	--WidgetAuraMode = 1,
 	--WidgetAllAuras = false,
@@ -290,7 +290,9 @@ NeatPlatesHubDefaults = {
 	--WidgetMyBuff = false,
 	SpacerSlots = 1,
 	AuraScale = 1,
+	EmphasizedAuraScale = 2,
 	WidgetAuraScaleOptions = {x = 1, y = 1, offset = {x = 0, y = 0}},
+	WidgetEmphasizedAuraScaleOptions = {x = 1, y = 1, offset = {x = 0, y = 0}},
 	EmphasizedSlots = 1,
 	PreciseAuraThreshold = 10,
 	WidgetDebuffTrackList = "My Rake\nMy Rip\nMy Moonfire\nAll 339\nMy Regrowth\nMy Rejuvenation\nNot Facepalm Bolt",
@@ -303,6 +305,7 @@ NeatPlatesHubDefaults = {
 	WidgetAuraTrackPoison = true,
 	WidgetAuraSort = 1,
 	WidgetAuraAlignment = 1,
+	BuffSeparationMode = 1,
 	EmphasizedAuraList = "",
 	EmphasizedAuraLookup = {},
 	EmphasizedAuraPriority = {},

@@ -436,12 +436,14 @@ end
 
 function Death:OnEnable()
 	self:RegisterEvent( "UNIT_HEALTH", DeathUpdateUnit )
+	self:RegisterEvent( "UNIT_MAXHEALTH", DeathUpdateUnit )
 	self:RegisterMessage("Grid_UnitUpdated")
 	self:RegisterMessage("Grid_UnitLeft")
 end
 
 function Death:OnDisable()
 	self:UnregisterEvent( "UNIT_HEALTH" )
+	self:UnregisterEvent( "UNIT_MAXHEALTH" )
 	self:UnregisterMessage("Grid_UnitUpdated")
 	self:UnregisterMessage("Grid_UnitLeft")
 	wipe(dead_cache)

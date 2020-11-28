@@ -30,29 +30,6 @@ function Grid2:GetUnitFrames(unit)
 end
 --}}}
 
---{{{ Dropdown menu management
-local ToggleUnitMenu
-do
-	local frame, unit = CreateFrame("Frame","Grid2_UnitFrame_DropDown",UIParent,"UIDropDownMenuTemplate")
-	UIDropDownMenu_Initialize(frame, function()
-		if unit then
-			local menu,raid
-			if     UnitIsUnit(unit, "player") then menu = "SELF"
-			elseif UnitIsUnit(unit, "pet")    then menu = "PET"
-			elseif Grid2:UnitIsPet(unit)      then menu = "RAID_TARGET_ICON"
-			elseif Grid2:UnitIsParty(unit) 	  then menu = "PARTY"
-			elseif Grid2:UnitIsRaid(unit) 	  then menu,raid = "RAID_PLAYER", UnitInRaid(unit)
-			else return end
-			UnitPopup_ShowMenu(frame, menu, unit, nil, raid)
-		end
-	end, "MENU")
-	ToggleUnitMenu = function(self)
-		unit = self.unit
-		ToggleDropDownMenu(1, nil, frame, "cursor")
-	end
-end
---}}}
-
 -- {{ Precalculated backdrop table, shared by all frames
 local frameBackdrop
 -- }}
@@ -226,7 +203,6 @@ function Grid2Frame:OnModuleEnable()
 	end
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", "UpdateFrameUnits")
 	self:RegisterMessage("Grid_UnitUpdate")
-	self:UpdateMenu()
 	self:CreateIndicators()
 	self:RefreshIndicators()
 	self:LayoutFrames()
@@ -244,7 +220,6 @@ function Grid2Frame:OnModuleDisable()
 end
 
 function Grid2Frame:OnModuleUpdate()
-	self:UpdateMenu()
 	self:CreateIndicators()
 	self:RefreshTheme()
 end
@@ -339,15 +314,6 @@ do
 	end
 	function Grid2Frame:WithAllFrames( param , ... )
 		with[type(param)](self, param, ...)
-	end
-end
-
--- Right Click Menu & Click Options
-function Grid2Frame:UpdateMenu()
-	local menu = not self.db.profile.menuDisabled and ToggleUnitMenu or nil
-	if menu~=self.RightClickUnitMenu then
-		self.RightClickUnitMenu = menu
-		self:WithAllFrames( function(f) f.menu = menu end )
 	end
 end
 

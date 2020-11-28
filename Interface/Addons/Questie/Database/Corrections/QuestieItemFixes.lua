@@ -78,6 +78,9 @@ function QuestieItemFixes:Load()
             [itemKeys.name] = "Flagon of Dwarven Honeymead",
             [itemKeys.npcDrops] = {1464},
         },
+        [2633] = {
+            [itemKeys.npcDrops] = {940,941,942}, -- #2433
+        },
         [2676] = {
             [itemKeys.objectDrops] = {276,},
         },
@@ -437,6 +440,12 @@ function QuestieItemFixes:Load()
             [itemKeys.npcDrops] = {},
             [itemKeys.objectDrops] = {},
         },
+        [6358] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [6359] = {
+            [itemKeys.objectDrops] = {},
+        },
         [6435] = {
             [itemKeys.name] = "Infused Burning Gem",
             [itemKeys.relatedQuests] = {1435},
@@ -447,6 +456,18 @@ function QuestieItemFixes:Load()
             [itemKeys.name] = "Secure Crate",
             [itemKeys.relatedQuests] = {1492},
             [itemKeys.npcDrops] = {},
+            [itemKeys.objectDrops] = {},
+        },
+        [6522] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [7070] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [7079] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [7080] = {
             [itemKeys.objectDrops] = {},
         },
         [7083] = {
@@ -845,6 +866,9 @@ function QuestieItemFixes:Load()
             [itemKeys.npcDrops] = {},
             [itemKeys.objectDrops] = {},
         },
+        [12562] = {
+            [itemKeys.npcDrops] = {},
+        },
         [12567] = {
             [itemKeys.name] = "Filled Flasket",
             [itemKeys.relatedQuests] = {4505},
@@ -889,6 +913,9 @@ function QuestieItemFixes:Load()
             [itemKeys.name] = "Empty Canteen",
             [itemKeys.relatedQuests] = {5157},
             [itemKeys.npcDrops] = {},
+            [itemKeys.objectDrops] = {},
+        },
+        [13422] = {
             [itemKeys.objectDrops] = {},
         },
         [13546] = {
@@ -1076,10 +1103,25 @@ function QuestieItemFixes:Load()
         [19034] = {
             [itemKeys.objectDrops] = {179910},
         },
-        [19061]= {
+        [19061] = {
             [itemKeys.name] = "Vessel of Rebirth",
             [itemKeys.relatedQuests] = {7785,},
             [itemKeys.npcDrops] = {14347},
+            [itemKeys.objectDrops] = {},
+        },
+        [19803] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [19805] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [19806] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [19807] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [19808] = {
             [itemKeys.objectDrops] = {},
         },
         [19850] = {
@@ -1087,6 +1129,9 @@ function QuestieItemFixes:Load()
         },
         [19851] = {
             [itemKeys.objectDrops] = {180205},
+        },
+        [19975] = {
+            [itemKeys.objectDrops] = {},
         },
         [20023] = {
             [itemKeys.npcDrops] = {8766},
@@ -1113,6 +1158,15 @@ function QuestieItemFixes:Load()
             [itemKeys.objectDrops] = {180453,},
             [itemKeys.npcDrops] = {},
         },
+        [20708] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [20709] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [21071] = {
+            [itemKeys.objectDrops] = {},
+        },
         [21106] = {
             [itemKeys.objectDrops] = {180666},
         },
@@ -1121,6 +1175,21 @@ function QuestieItemFixes:Load()
         },
         [21109] = {
             [itemKeys.objectDrops] = {180667},
+        },
+        [21113] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [21114] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [21150] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [21151] = {
+            [itemKeys.objectDrops] = {},
+        },
+        [21153] = {
+            [itemKeys.objectDrops] = {},
         },
         [21158] = {
             [itemKeys.name] = "Hive'Zora Scout Report",
@@ -1138,6 +1207,9 @@ function QuestieItemFixes:Load()
             [itemKeys.name] = "Hive'Ashi Scout Report",
             [itemKeys.relatedQuests] = {8739},
             [itemKeys.npcDrops] = {15611},
+            [itemKeys.objectDrops] = {},
+        },
+        [21228] = {
             [itemKeys.objectDrops] = {},
         },
         [21557] = {

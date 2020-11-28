@@ -8,7 +8,12 @@
 ## X-Repple: 辅助
 ## SavedVariables: ItemRackSettings, ItemRackItems, ItemRackEvents
 ## SavedVariablesPerCharacter: ItemRackUser
+## OptionalDeps: Masque
 ## X-Curse-Project-ID: 340903
+
+# Libraries
+Libs\Libs.xml
+
 ItemRack.lua
 ItemRack.xml
 ItemRackButtons.lua

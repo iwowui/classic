@@ -229,14 +229,14 @@ function QuestieDB:GetItem(itemId)
     return item
 end
 
-local function _GetColoredQuestName(self, blizzLike)
+local function _GetColoredQuestName(self, showState, blizzLike)
     local questName = (self.LocalizedName or self.name)
-    return QuestieLib:GetColoredQuestName(self.Id, questName, self.level, Questie.db.global.enableTooltipsQuestLevel, false, blizzLike)
+    return QuestieLib:GetColoredQuestName(self.Id, questName, self.level, Questie.db.global.enableTooltipsQuestLevel, showState, blizzLike)
 end
 
 function QuestieDB:GetColoredQuestName(id, blizzLike)
     local questName, level = unpack(QuestieDB.QueryQuest(id, "name", "questLevel"))
-    return QuestieLib:GetColoredQuestName(id, questName, level, Questie.db.global.enableTooltipsQuestLevel, false, blizzLike)
+    return QuestieLib:GetColoredQuestName(id, questName, level, Questie.db.global.enableTooltipsQuestLevel, true, blizzLike)
 end
 
 
@@ -329,6 +329,10 @@ end
 ---@param exclusiveTo table<number, number>
 ---@return boolean
 function QuestieDB:IsExclusiveQuestInQuestLogOrComplete(exclusiveTo)
+    if (not exclusiveTo) then
+        return false
+    end
+
     for _, exId in pairs(exclusiveTo) do
         if Questie.db.char.complete[exId] then
             return true

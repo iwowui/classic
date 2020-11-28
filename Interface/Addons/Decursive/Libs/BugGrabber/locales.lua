@@ -128,6 +128,7 @@ L["NEW_VERSION_ALERT"] = [=[已檢測到新版本的 Decursive：|cFFEE7722%q|r 
 --------]=]
 L["NORMAL"] = "一般"
 L["NOSPELL"] = "沒有可用法術"
+L["NOTICE_FRAME_TEMPLATE"] = "|cFFFF0000Decursive - 注意|r %s "
 L["OPT_ABOLISHCHECK_DESC"] = "檢查玩家身上是否有淨化法術在運作。"
 L["OPT_ABOUT"] = "關於"
 L["OPT_ADD_A_CUSTOM_SPELL"] = "添加一個自訂法術"

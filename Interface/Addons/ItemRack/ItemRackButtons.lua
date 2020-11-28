@@ -51,6 +51,10 @@ function ItemRack.InitButtons()
 --		button:SetAttribute("alt-slot*",ATTRIBUTE_NOOP)
 --		button:SetAttribute("shift-slot*",ATTRIBUTE_NOOP)
 		ItemRack.MenuMouseoverFrames["ItemRackButton"..i]=1
+
+		if ItemRack.MasqueGroups and ItemRack.MasqueGroups[1] then
+			ItemRack.MasqueGroups[1]:AddButton(button)
+		end
 	end
 
 	ItemRack.CreateTimer("ButtonsDocking",ItemRack.ButtonsDocking,.2,1) -- (repeat) on while buttons docking
@@ -497,7 +501,7 @@ function ItemRack.ButtonPostClick(self,button)
 			ItemRackMenuFrame:Hide()
 		else
 			ItemRack.DockMenuToButton(id)
-			ItemRack.BuildMenu(id)
+			ItemRack.BuildMenu(id, nil, 2)
 		end
 	elseif IsShiftKeyDown() then
 		if id<20 then

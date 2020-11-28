@@ -8,6 +8,7 @@
 ## Title-zhTW: |CFF80FF80團隊|R 全能傷害統計 仇恨模組
 ## X-Repple: 团队
 ## DefaultState: Disabled
+## SavedVariables: Details_TinyThreatDB
 
 enUS.lua
 zhCN.lua

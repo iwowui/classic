@@ -57,7 +57,7 @@ end
 
 local function Icon_OnUpdate(self, parent, unit, status)
 	local Frame = parent[self.name]
-	if not status then Frame:Hide(); return Frame end
+	if not status then Frame:Hide(); return; end
 
 	local Icon = Frame.Icon
 	local r,g,b,a = status:GetColor(unit)

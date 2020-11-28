@@ -188,7 +188,7 @@ local textureFrameLevels = {
 function addon:SetLSMBorders(castbar, cast, db)
     -- Create new frame to contain our LSM backdrop
     if not castbar.BorderFrameLSM then
-        castbar.BorderFrameLSM = CreateFrame("Frame", nil, castbar)
+        castbar.BorderFrameLSM = CreateFrame("Frame", nil, castbar, _G.BackdropTemplateMixin and "BackdropTemplate")
         castbar.BorderFrameLSM:SetPoint("TOPLEFT", castbar, -2, 2)
         castbar.BorderFrameLSM:SetPoint("BOTTOMRIGHT", castbar, 2, -2)
     end
@@ -356,9 +356,29 @@ end
 -- Player & Focus Castbar Stuff
 --------------------------------------------------------------
 
+local function ColorPlayerCastbar(db)
+    db = db or addon.db.player
+    if not db.enabled then return end
+
+    CastingBarFrame_SetStartCastColor(CastingBarFrame, unpack(db.statusColor))
+	CastingBarFrame_SetStartChannelColor(CastingBarFrame, unpack(db.statusColorChannel))
+	CastingBarFrame_SetNonInterruptibleCastColor(CastingBarFrame, unpack(db.statusColorUninterruptible))
+    CastingBarFrame_SetFailedCastColor(CastingBarFrame, unpack(db.statusColorFailed))
+    --if CastingBarFrame.isTesting then
+        CastingBarFrame:SetStatusBarColor(unpack(db.statusColor))
+    --end
+
+    CastingBarFrame.Background = CastingBarFrame.Background or GetStatusBarBackgroundTexture(CastingBarFrame)
+    CastingBarFrame.Background:SetColorTexture(unpack(db.statusBackgroundColor))
+end
+
 function addon:SkinPlayerCastbar()
     local db = self.db.player
     if not db.enabled then return end
+
+    if not CastingBarFrame:IsEventRegistered("UNIT_SPELLCAST_START") then
+        print("|cFFFF0000[ClassicCastbars] Incompatibility detected for player castbar. You most likely have another addon disabling the Blizzard castbar.|r")
+    end
 
     if not CastingBarFrame.Timer then
         CastingBarFrame.Timer = CastingBarFrame:CreateFontString(nil, "OVERLAY")
@@ -366,11 +386,6 @@ function addon:SkinPlayerCastbar()
         CastingBarFrame.Timer:SetFontObject("SystemFont_Shadow_Small")
         CastingBarFrame:HookScript("OnUpdate", function(frame)
             if db.enabled and db.showTimer then
-                local spellText = frame.Text and frame.Text:GetText()
-                if spellText then
-                    frame.Timer:SetPoint("RIGHT", CastingBarFrame, (spellText:len() >= 19) and 30 or -6, 0)
-                end
-
                 if frame.fadeOut or (not frame.casting and not frame.channeling) then
                     -- just show no text at zero, the numbers looks kinda weird when Flash animation is playing
                     return frame.Timer:SetText("")
@@ -383,6 +398,12 @@ function addon:SkinPlayerCastbar()
                 end
             end
         end)
+
+        hooksecurefunc(CastingBarFrame.Text, "SetText", function(_, text)
+            if text then
+                CastingBarFrame.Timer:SetPoint("RIGHT", CastingBarFrame, (text:len() >= 19) and 30 or -6, 0)
+            end
+        end)
     end
     CastingBarFrame.Timer:SetShown(db.showTimer)
 
@@ -390,6 +411,13 @@ function addon:SkinPlayerCastbar()
         CastingBarFrame:HookScript("OnShow", function(frame)
             if frame.Icon:GetTexture() == 136235 then
                 frame.Icon:SetTexture(136243)
+            end
+
+            if not addon.playerColorChangesRan then
+                -- Color castbar on first OnShow triggered aswell with a small delay. Hopefully fixes an issue where other addons or scripts
+                -- can cause conflicts by overwriting our color values
+                addon.playerColorChangesRan = true
+                C_Timer.After(0.1, ColorPlayerCastbar)
             end
         end)
 
@@ -411,22 +439,13 @@ function addon:SkinPlayerCastbar()
         CastingBarFrame.Flash:SetTexture(nil) -- Hide it by removing texture. SetAlpha() or Hide() wont work without messing with blizz code
     end
 
-    CastingBarFrame_SetStartCastColor(CastingBarFrame, unpack(db.statusColor))
-	CastingBarFrame_SetStartChannelColor(CastingBarFrame, unpack(db.statusColorChannel))
-	CastingBarFrame_SetNonInterruptibleCastColor(CastingBarFrame, unpack(db.statusColorUninterruptible))
-    CastingBarFrame_SetFailedCastColor(CastingBarFrame, unpack(db.statusColorFailed))
-    if CastingBarFrame.isTesting then
-        CastingBarFrame:SetStatusBarColor(CastingBarFrame.startCastColor:GetRGB())
-    end
+    ColorPlayerCastbar(db)
 
     CastingBarFrame.Text:ClearAllPoints()
     CastingBarFrame.Text:SetPoint(db.textPoint)
     CastingBarFrame.Text:SetJustifyH(db.textPoint)
     CastingBarFrame.Icon:ClearAllPoints()
     CastingBarFrame.Icon:SetShown(db.showIcon)
-
-    CastingBarFrame.Background = CastingBarFrame.Background or GetStatusBarBackgroundTexture(CastingBarFrame)
-    CastingBarFrame.Background:SetColorTexture(unpack(db.statusBackgroundColor))
 
     if not db.autoPosition then
         CastingBarFrame.ignoreFramePositionManager = true
@@ -464,7 +483,6 @@ end
 local NewTimer = _G.C_Timer.NewTimer
 local focusTargetTimer -- time for changing focus
 local focusTargetResetTimer -- timer for clearing focus
-
 
 local function ClearFocusTarget()
     if not InCombatLockdown() then

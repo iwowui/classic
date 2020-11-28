@@ -1861,7 +1861,7 @@ namespace.defaultConfig = {
     usePerCharacterSettings = false,
 
     nameplate = {
-        enabled = true,
+        enabled = false,
         showForFriendly = true,
         showForEnemy = true,
         width = 106,
@@ -1959,7 +1959,7 @@ namespace.defaultConfig = {
     },
 
     party = {
-        enabled = false,
+        enabled = true,
         width = 120,
         height = 12,
         iconSize = 16,
@@ -1973,7 +1973,8 @@ namespace.defaultConfig = {
         castStatusBar = "Interface\\TargetingFrame\\UI-StatusBar",
         castBorder = "Interface\\CastingBar\\UI-CastingBar-Border",
         hideIconBorder = false,
-        position = { "CENTER", 141, 6 },
+        -- position = { "CENTER", 141, 6 },
+        position = { "CENTER", 21, -30 },
         iconPositionX = -5,
         iconPositionY = 0,
         borderColor = { 1, 1, 1, 1 },

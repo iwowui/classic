@@ -54,7 +54,6 @@ local _UnhideQuestIcons, _HideQuestIcons, _UnhideManualIcons, _HideManualIcons
 local _GetObjectiveIdForSpecialQuest
 
 local HBD = LibStub("HereBeDragonsQuestie-2.0")
-local HBDPins = LibStub("HereBeDragonsQuestie-Pins-2.0")
 
 function QuestieQuest:Initialize()
     Questie:Debug(DEBUG_INFO, "[QuestieQuest]: ".. QuestieLocale:GetUIString("DEBUG_GET_QUEST_COMP"))
@@ -218,7 +217,8 @@ function QuestieQuest:Reset()
 
     -- reset quest log and tooltips
     QuestiePlayer.currentQuestlog = {}
-    QuestieTooltips.tooltipLookup = {}
+    QuestieTooltips.lookupByKey = {}
+    QuestieTooltips.lookupKeyByQuestId = {}
 
     -- make sure complete db is correct
     Questie.db.char.complete = GetQuestsCompleted()
@@ -260,7 +260,8 @@ function QuestieQuest:SmoothReset() -- use timers to reset progressively instead
         function()
             -- reset quest log and tooltips
             QuestiePlayer.currentQuestlog = {}
-            QuestieTooltips.tooltipLookup = {}
+            QuestieTooltips.lookupByKey = {}
+            QuestieTooltips.lookupKeyByQuestId = {}
 
             -- make sure complete db is correct
             Questie.db.char.complete = GetQuestsCompleted()
@@ -390,6 +391,7 @@ function QuestieQuest:AcceptQuest(questId)
         QuestieTaskQueue:Queue(
             --Get all the Frames for the quest and unload them, the available quest icon for example.
             function() QuestieMap:UnloadQuestFrames(questId) end,
+            function() QuestieTooltips:RemoveQuest(questId) end,
             function() QuestieHash:AddNewQuestHash(questId) end,
             function() QuestieQuest:PopulateQuestLogInfo(quest) end,
             function() QuestieQuest:PopulateObjectiveNotes(quest) end,
@@ -467,6 +469,7 @@ function QuestieQuest:AbandonedQuest(questId)
         end
 
         QuestieTracker:RemoveQuest(questId)
+        QuestieTooltips:RemoveQuest(questId)
         QuestieCombatQueue:Queue(function()
             QuestieTracker:ResetLinesForChange()
             QuestieTracker:Update()
@@ -490,10 +493,12 @@ function QuestieQuest:UpdateQuest(questId)
         if isComplete == 1 then -- Quest is complete
             Questie:Debug(DEBUG_DEVELOP, "[QuestieQuest:UpdateQuest] Quest is complete")
             QuestieMap:UnloadQuestFrames(questId)
+            QuestieTooltips:RemoveQuest(questId)
             QuestieQuest:AddFinisher(quest)
         elseif isComplete == -1 then -- Failed quests should be shown as available again
             Questie:Debug(DEBUG_DEVELOP, "[QuestieQuest:UpdateQuest] Quest failed")
             QuestieMap:UnloadQuestFrames(questId)
+            QuestieTooltips:RemoveQuest(questId)
             _QuestieQuest:DrawAvailableQuest(quest)
         else
             --DEFAULT_CHAT_FRAME:AddMessage("Still not finished " .. QuestId);
@@ -601,6 +606,8 @@ function QuestieQuest:AddFinisher(quest)
             Questie:Debug(DEBUG_CRITICAL, "[QuestieQuest]: ".. QuestieLocale:GetUIString("DEBUG_NO_FINISH", questId, quest.name))
         end
         if(finisher ~= nil and finisher.spawns ~= nil) then
+            QuestieTooltips:RegisterQuestStartTooltip(questId, finisher)
+
             local finisherIcons = {}
             local finisherLocs = {}
             for finisherZone, spawns in pairs(finisher.spawns) do
@@ -736,7 +743,7 @@ function QuestieQuest:PopulateObjective(quest, ObjectiveIndex, Objective, BlockI
     if (not Objective.registeredItemTooltips) and Objective.Type == "item" and (not BlockItemTooltips) and Objective.Id then -- register item tooltip (special case)
         local item = QuestieDB.QueryItemSingle(Objective.Id, "name")--QuestieDB:GetItem(Objective.Id);
         if item then
-            QuestieTooltips:RegisterTooltip(quest.Id, "i_" .. Objective.Id, Objective);
+            QuestieTooltips:RegisterObjectiveTooltip(quest.Id, "i_" .. Objective.Id, Objective);
         end
         Objective.registeredItemTooltips = true
     end
@@ -785,7 +792,7 @@ function QuestieQuest:PopulateObjective(quest, ObjectiveIndex, Objective, BlockI
             end
             if (not Objective.AlreadySpawned[id]) and (not quest.AlreadySpawned[Objective.Type .. tostring(ObjectiveIndex)][spawnData.Id]) then
                 if not Objective.registeredTooltips and spawnData.TooltipKey and (not tooltipRegisterHack[spawnData.TooltipKey]) then -- register mob / item / object tooltips
-                    QuestieTooltips:RegisterTooltip(quest.Id, spawnData.TooltipKey, Objective);
+                    QuestieTooltips:RegisterObjectiveTooltip(quest.Id, spawnData.TooltipKey, Objective);
                     tooltipRegisterHack[spawnData.TooltipKey] = true
                     hasTooltipHack = true
                 end
@@ -999,7 +1006,7 @@ local function _AddSourceItemObjective(quest)
                 Description = item
             }
 
-            QuestieTooltips:RegisterTooltip(quest.Id, "i_" .. quest.sourceItemId, fakeObjective);
+            QuestieTooltips:RegisterObjectiveTooltip(quest.Id, "i_" .. quest.sourceItemId, fakeObjective);
         end
     end
 end
@@ -1381,8 +1388,8 @@ function _QuestieQuest:DrawAvailableQuest(quest) -- prevent recursion
 
     --TODO More logic here, currently only shows NPC quest givers.
     if quest.Starts["GameObject"] ~= nil then
-        for _, ObjectID in ipairs(quest.Starts["GameObject"]) do
-            local obj = QuestieDB:GetObject(ObjectID)
+        for _, objectId in ipairs(quest.Starts["GameObject"]) do
+            local obj = QuestieDB:GetObject(objectId)
             if(obj ~= nil and obj.spawns ~= nil) then
                 for zone, spawns in pairs(obj.spawns) do
                     if(zone ~= nil and spawns ~= nil) then
@@ -1413,16 +1420,19 @@ function _QuestieQuest:DrawAvailableQuest(quest) -- prevent recursion
             end
         end
     elseif(quest.Starts["NPC"] ~= nil)then
-        for _, NPCID in ipairs(quest.Starts["NPC"]) do
-            local NPC = QuestieDB:GetNPC(NPCID)
-            if (NPC ~= nil and NPC.spawns ~= nil) then
+        for _, npcId in ipairs(quest.Starts["NPC"]) do
+            local npc = QuestieDB:GetNPC(npcId)
+
+            QuestieTooltips:RegisterQuestStartTooltip(quest.Id, npc)
+
+            if (npc ~= nil and npc.spawns ~= nil) then
                 --Questie:Debug(DEBUG_DEVELOP,"Adding Quest:", questObject.Id, "StarterNPC:", NPC.Id)
                 local starterIcons = {}
                 local starterLocs = {}
-                for npcZone, Spawns in pairs(NPC.spawns) do
-                    if(npcZone ~= nil and Spawns ~= nil) then
+                for npcZone, spawns in pairs(npc.spawns) do
+                    if(npcZone ~= nil and spawns ~= nil) then
 
-                        for _, coords in ipairs(Spawns) do
+                        for _, coords in ipairs(spawns) do
                             local data = {}
                             data.Id = quest.Id;
                             data.Icon = _QuestieQuest:GetQuestIcon(quest)
@@ -1430,7 +1440,7 @@ function _QuestieQuest:DrawAvailableQuest(quest) -- prevent recursion
                             data.IconScale = data.GetIconScale();
                             data.Type = "available";
                             data.QuestData = quest;
-                            data.Name = NPC.name
+                            data.Name = npc.name
                             data.IsObjectiveNote = false
                             if(coords[1] == -1 or coords[2] == -1) then
                                 local dungeonLocation = ZoneDB:GetDungeonLocation(npcZone)
@@ -1455,8 +1465,8 @@ function _QuestieQuest:DrawAvailableQuest(quest) -- prevent recursion
                     end
                 end
 
-                if NPC.waypoints then
-                    for zone, waypoints in pairs(NPC.waypoints) do
+                if npc.waypoints then
+                    for zone, waypoints in pairs(npc.waypoints) do
                         if not ZoneDB.private.dungeons[zone] and waypoints[1] and waypoints[1][1] and waypoints[1][1][1] then
                             if not starterIcons[zone] then
                                 local data = {}
@@ -1466,7 +1476,7 @@ function _QuestieQuest:DrawAvailableQuest(quest) -- prevent recursion
                                 data.IconScale = data.GetIconScale();
                                 data.Type = "available";
                                 data.QuestData = quest;
-                                data.Name = NPC.name
+                                data.Name = npc.name
                                 data.IsObjectiveNote = false
                                 starterIcons[zone] = QuestieMap:DrawWorldIcon(data, zone, waypoints[1][1][1], waypoints[1][1][2])
                                 starterLocs[zone] = {waypoints[1][1][1], waypoints[1][1][2]}
@@ -1567,7 +1577,8 @@ function QuestieQuest:CalculateAndDrawAvailableQuestsIterative(callback)
                     else
                         --If the quests are not within level range we want to unload them
                         --(This is for when people level up or change settings etc)
-                        QuestieMap:UnloadQuestFrames(questId);
+                        QuestieMap:UnloadQuestFrames(questId)
+                        QuestieTooltips:RemoveQuest(questId)
                     end
                 end
             else
@@ -1582,115 +1593,3 @@ function QuestieQuest:CalculateAndDrawAvailableQuestsIterative(callback)
     end)
 end
 
----------------------------------------------------------------------------------------------------
--- These must be loaded in order together and loaded before the hook for custom quest links
--- The Hyperlink hook is located in QuestieTooltips.lua
----------------------------------------------------------------------------------------------------
--- Message Event Filter which intercepts incoming linked quests and replaces them with Hyperlinks
-local function QuestsFilter(chatFrame, event, msg, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, unused, lineID, senderGUID, bnSenderID, ...)
-    if string.find(msg, "%[(..-) %((%d+)%)%]") then
-        if chatFrame and chatFrame.historyBuffer and #(chatFrame.historyBuffer.elements) > 0 and chatFrame ~= _G.ChatFrame2 then
-            for k in string.gmatch(msg, "%[%[?%d?..?%]?..-%]") do
-                local complete, sqid, questId, questLevel, questName, realQuestName, realQuestLevel
-                _, _, questName, sqid = string.find(k, "%[(..-) %((%d+)%)%]")
-
-                if questName and sqid then
-                    questId = tonumber(sqid)
-
-                    if string.find(questName, "(%[%d+.-%]) ") ~= nil then
-                        _, _, questLevel, questName = string.find(questName, "%[(..-)%] (.+)")
-                    end
-
-                    if QuestieDB.QueryQuest then
-                        realQuestName, realQuestLevel = unpack(QuestieDB.QueryQuest(questId, "name", "questLevel"))
-
-                        if questName and questId then
-                            complete = QuestieDB:IsComplete(questId)
-                        end
-                    end
-                end
-
-                if realQuestName and realQuestName == questName and questId then
-                    local coloredQuestName = QuestieLib:GetColoredQuestName(questId, questName, realQuestLevel, Questie.db.global.trackerShowQuestLevel, complete, false)
-
-                    if senderGUID == nil then
-                        playerName = BNGetFriendInfoByID(bnSenderID)
-                        senderGUID = bnSenderID
-                    end
-
-                    local questLink = "|Hquestie:"..sqid..":"..senderGUID.."|h"..QuestieLib:PrintDifficultyColor(realQuestLevel, "[")..coloredQuestName..QuestieLib:PrintDifficultyColor(realQuestLevel, "]").."|h"
-
-                    -- Escape the magic characters
-                    local function escapeMagic(toEsc)
-                        return (toEsc
-                            :gsub("%%", "%%%%")
-                            :gsub("^%^", "%%^")
-                            :gsub("%$$", "%%$")
-                            :gsub("%(", "%%(")
-                            :gsub("%)", "%%)")
-                            :gsub("%.", "%%.")
-                            :gsub("%[", "%%[")
-                            :gsub("%]", "%%]")
-                            :gsub("%*", "%%*")
-                            :gsub("%+", "%%+")
-                            :gsub("%-", "%%-")
-                            :gsub("%?", "%%?")
-                            :gsub("%|", "%%|")
-                        )
-                    end
-
-                    if questName then
-                        questName = escapeMagic(questName)
-                    end
-
-                    if questLevel then
-                        questLevel = escapeMagic(questLevel)
-                    end
-
-                    if questLevel then
-                        msg = string.gsub(msg, "%[%["..questLevel.."%] "..questName.." %("..sqid.."%)%]", questLink)
-                    else
-                        msg = string.gsub(msg, "%["..questName.." %("..sqid.."%)%]", questLink)
-                    end
-                end
-            end
-            return false, msg, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, unused, lineID, senderGUID, bnSenderID, ...
-        end
-    end
-end
-
--- The message filter that triggers the above local function
-
--- Party
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", QuestsFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", QuestsFilter)
-
--- Raid
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", QuestsFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", QuestsFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", QuestsFilter)
-
--- Guild
-ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", QuestsFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_OFFICER", QuestsFilter)
-
--- Battleground
-ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", QuestsFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", QuestsFilter)
-
--- Whisper
-ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", QuestsFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", QuestsFilter)
-
--- Battle Net
-ChatFrame_AddMessageEventFilter("CHAT_MSG_BN", QuestsFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", QuestsFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", QuestsFilter)
-
--- Open world
-ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", QuestsFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", QuestsFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", QuestsFilter)
-
--- Emote
-ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", QuestsFilter)

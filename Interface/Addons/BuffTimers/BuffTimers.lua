@@ -22,13 +22,13 @@ local lWarned;
 local function lSetTimeText(button, time)
 	if( time <= 0 ) then
 		button:SetText("");
-	elseif( time < 60 ) then
+	elseif( time <= 60 ) then
 		local d, h, m, s = ChatFrame_TimeBreakDown(time+1);
 		button:SetFormattedText("|c00FF0000%ds|r", s);
-	elseif( time < 600 ) then
+	elseif( time <= 600 ) then
 		local d, h, m, s = ChatFrame_TimeBreakDown(time+1);
 		button:SetFormattedText("|c00FF9B00%d:%02d|r", m, s);
-	elseif( time < 3600 ) then
+	elseif( time <= 3600 ) then
 		local d, h, m, s = ChatFrame_TimeBreakDown(time+1);
 		button:SetFormattedText("|c0000FF00%dm|r", m);
 	else

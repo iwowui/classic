@@ -46,7 +46,7 @@ local tempGroup = {
 };
 OptionsPrivate.tempGroup = tempGroup;
 
-function OptionsPrivate.DuplicateAura(data, newParent)
+function OptionsPrivate.DuplicateAura(data, newParent, massEdit)
   local base_id = data.id .. " "
   local num = 2
 
@@ -72,7 +72,7 @@ function OptionsPrivate.DuplicateAura(data, newParent)
     newData.controlledChildren = {}
   end
   WeakAuras.Add(newData)
-  WeakAuras.NewDisplayButton(newData)
+  WeakAuras.NewDisplayButton(newData, massEdit)
   if(newParent or data.parent) then
     local parentId = newParent or data.parent
     local parentData = WeakAuras.GetData(parentId)
@@ -94,9 +94,11 @@ function OptionsPrivate.DuplicateAura(data, newParent)
         childButton:SetGroupOrder(index, #parentData.controlledChildren)
       end
 
-      local button = WeakAuras.GetDisplayButton(parentData.id)
-      button.callbacks.UpdateExpandButton()
-      WeakAuras.UpdateDisplayButton(parentData)
+      if not massEdit then
+        local button = WeakAuras.GetDisplayButton(parentData.id)
+        button.callbacks.UpdateExpandButton()
+        WeakAuras.UpdateDisplayButton(parentData)
+      end
       OptionsPrivate.ClearOptions(parentData.id)
     end
   end
@@ -711,8 +713,18 @@ function WeakAuras.ShowOptions(msg)
   if (firstLoad) then
     frame = OptionsPrivate.CreateFrame();
     frame.buttonsScroll.frame:Show();
+
     LayoutDisplayButtons(msg);
   end
+
+  if (frame:GetWidth() > GetScreenWidth()) then
+    frame:SetWidth(GetScreenWidth())
+  end
+
+  if (frame:GetHeight() > GetScreenHeight() - 50) then
+    frame:SetHeight(GetScreenHeight() - 50)
+  end
+
   frame.buttonsScroll.frame:Show();
 
   if (frame.needsSort) then
@@ -829,13 +841,15 @@ function OptionsPrivate.ConvertDisplay(data, newType)
   WeakAuras.SortDisplayButtons()
 end
 
-function WeakAuras.NewDisplayButton(data)
+function WeakAuras.NewDisplayButton(data, massEdit)
   local id = data.id;
   OptionsPrivate.Private.ScanForLoads({[id] = true});
   EnsureDisplayButton(db.displays[id]);
   WeakAuras.UpdateDisplayButton(db.displays[id]);
   frame.buttonsScroll:AddChild(displayButtons[id]);
-  WeakAuras.SortDisplayButtons();
+  if not massEdit then
+    WeakAuras.SortDisplayButtons()
+  end
 end
 
 function WeakAuras.UpdateGroupOrders(data)
@@ -1264,15 +1278,15 @@ function WeakAuras.UpdateThumbnail(data)
   button:UpdateThumbnail()
 end
 
-function OptionsPrivate.OpenTexturePicker(data, parentData, field, textures, stopMotion)
-  frame.texturePicker:Open(data, parentData, field, textures, stopMotion);
+function OptionsPrivate.OpenTexturePicker(baseObject, path, properties, textures, SetTextureFunc)
+  frame.texturePicker:Open(baseObject, path, properties, textures, SetTextureFunc)
 end
 
-function OptionsPrivate.OpenIconPicker(data, field, groupIcon)
-  frame.iconPicker:Open(data, field, groupIcon);
+function OptionsPrivate.OpenIconPicker(baseObject, paths, groupIcon)
+  frame.iconPicker:Open(baseObject, paths, groupIcon)
 end
 
-function OptionsPrivate.OpenModelPicker(data, field, parentData)
+function OptionsPrivate.OpenModelPicker(baseObject, path)
   if not(IsAddOnLoaded("WeakAurasModelPaths")) then
     local loaded, reason = LoadAddOn("WeakAurasModelPaths");
     if not(loaded) then
@@ -1282,7 +1296,7 @@ function OptionsPrivate.OpenModelPicker(data, field, parentData)
     end
     frame.modelPicker.modelTree:SetTree(WeakAuras.ModelPaths);
   end
-  frame.modelPicker:Open(data, field, parentData);
+  frame.modelPicker:Open(baseObject, path);
 end
 
 function WeakAuras.OpenCodeReview(data)

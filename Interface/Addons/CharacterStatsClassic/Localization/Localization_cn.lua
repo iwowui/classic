@@ -27,4 +27,4 @@ CSC_FROST_SPELL_HIT_TXT         = "冰霜法术命中";
 CSC_DESTRUCTION_SPELL_HIT_TXT   = "毁灭法术命中";
 CSC_AFFLICTION_SPELL_HIT_TXT    = "痛苦法术命中";
 
-CSC_LIGHTNING_TXT = "Lightning";
+CSC_LIGHTNING_TXT = "闪电";
