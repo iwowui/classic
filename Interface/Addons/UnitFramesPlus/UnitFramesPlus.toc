@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: UnitFramesPlus
 ## Notes: Enhanced Unit Frames
 ## Title-zhCN: |CFF7FFF7F界面|R 系统头像增强

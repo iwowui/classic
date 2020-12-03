@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: Wide Quest Log
 ## Author: Bloodline
 ## Notes: Doubles the Width of the Quest Log

@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: WeakAuras Options
 ## Title-zhCN: |CFFFF8000辅助|R 综合提示 设置
 ## Title-zhTW: |CFFFF8000輔助|R 综合提示 設定

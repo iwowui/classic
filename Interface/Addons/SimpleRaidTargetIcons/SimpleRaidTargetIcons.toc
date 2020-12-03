@@ -1,4 +1,4 @@
-﻿## Interface: 11305
+﻿## Interface: 11306
 ## X-Compatible: 80205
 ## Title: SimpleRaidTargetIcons
 ## Author: MrFIXlT, Zimzarina

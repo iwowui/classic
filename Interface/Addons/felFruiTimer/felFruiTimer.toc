@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: felFruiTimer
 ## Title-zhCN: |CFFFF8000辅助|R 费伍德水果
 ## Title-zhTW: |CFFFF8000輔助|R 费伍德水果

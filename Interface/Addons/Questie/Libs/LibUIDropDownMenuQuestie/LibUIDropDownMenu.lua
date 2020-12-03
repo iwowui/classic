@@ -257,6 +257,7 @@ local function creatre_UIDropDownList(name, parent)
 	f:SetScript("OnUpdate", function(self, elapsed)
 		LQuestie_UIDropDownMenu_OnUpdate(self, elapsed)
 	end)
+	table.insert(UISpecialFrames, f:GetName())
 	f:SetScript("OnShow", function(self)
 		for i=1, LQuestie_UIDROPDOWNMENU_MAXBUTTONS do
 			if (not self.noResize) then
@@ -849,6 +850,9 @@ function LQuestie_UIDropDownMenu_AddButton(info, level)
 
 	-- If not checkable move everything over to the left to fill in the gap where the check would be
 	local xPos = 5;
+	if info.isSeparator then
+		xPos = -5
+	end
 	local yPos = -((button:GetID() - 1) * LQuestie_UIDROPDOWNMENU_BUTTON_HEIGHT) - LQuestie_UIDROPDOWNMENU_BORDER_HEIGHT;
 	local displayInfo = normalText;
 	if (info.iconOnly) then
@@ -856,11 +860,11 @@ function LQuestie_UIDropDownMenu_AddButton(info, level)
 	end
 
 	displayInfo:ClearAllPoints();
-	if ( info.notCheckable ) then
+	if ( info.notCheckable == nil or info.notCheckable == true ) then
 		if ( info.justifyH and info.justifyH == "CENTER" ) then
-			displayInfo:SetPoint("CENTER", button, "CENTER", -7, 0);
+			displayInfo:SetPoint("CENTER", button, "CENTER", 2, 0);
 		else
-			displayInfo:SetPoint("LEFT", button, "LEFT", 0, 0);
+			displayInfo:SetPoint("LEFT", button, "LEFT", 9, 0);
 		end
 		xPos = xPos + 10;
 
@@ -902,7 +906,7 @@ function LQuestie_UIDropDownMenu_AddButton(info, level)
 		end
 	end
 
-	if not info.notCheckable then 
+	if info.notCheckable == false then
 		local check = _G[listFrameName.."Button"..index.."Check"];
 		local uncheck = _G[listFrameName.."Button"..index.."UnCheck"];
 		if ( info.disabled ) then
@@ -1277,6 +1281,9 @@ end
 function LQuestie_ToggleDropDownMenu(level, value, dropDownFrame, anchorName, xOffset, yOffset, menuList, button, autoHideDelay)
 	if ( not level ) then
 		level = 1;
+	end
+	if menuList and type(menuList) == "function" then -- populate the list on toggle
+		menuList = menuList()
 	end
 	LQuestie_UIDropDownMenuDelegate:SetAttribute("createframes-level", level);
 	LQuestie_UIDropDownMenuDelegate:SetAttribute("createframes-index", 0);

@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: Skillet-Classic |cff7fff7f -Ace3-|r
 ## Notes: A replacement tradeskill window
 ## Title-zhCN: |CFFFF8000专业|R 制作窗口扩展

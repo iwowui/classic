@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: Get Link Classic
 ## Title-zhCN: |CFFFF8000辅助|R 物品搜索
 ## Title-zhTW: |CFFFF8000輔助|R 物品搜索

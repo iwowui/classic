@@ -1,4 +1,4 @@
-﻿## Interface: 11305
+﻿## Interface: 11306
 ## Title: Enigma Auto Equip
 ## Title-zhCN: |CFFFF8000辅助|R 一键换装Ex_AutoEquip
 ## Title-zhTW: |CFFFF8000輔助|R 一鍵換裝Ex_AutoEquip

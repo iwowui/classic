@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Version: 0.1
 ## Author: Gazmik Fizzwidget/datagutten
 ## X-Website: http://fizzwidget.com/feedomatic

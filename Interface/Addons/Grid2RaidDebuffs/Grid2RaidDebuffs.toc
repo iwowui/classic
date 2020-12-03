@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: Grid2 |cd1ff7d0aRaidDebuffs|r
 ## Notes: Adds a Raid Boss debuff status.
 ## Title-zhCN: |CFF80FF80团队|R 团队面板 RaidDebuff

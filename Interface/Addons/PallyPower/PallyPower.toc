@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Author: Aznamir,Dyaxler
 ## Title: PallyPower Classic
 ## Version: v1.2.27-classic

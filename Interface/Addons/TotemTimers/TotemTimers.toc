@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: TotemTimers
 ## Author:  Xianghar
 ## Title-zhCN: |CFF8000FF职业|R 萨满 图腾助手

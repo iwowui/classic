@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: ClassicCastbars
 ## Notes: Adds castbars to various unitframes.
 ## Title-zhCN: |CFFFF8000战斗|R 目标施法条

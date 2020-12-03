@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: tullaRange Config
 ## Notes: GUI based configuration for tullaRange
 ## Title-zhCN: |CFFFF8000辅助|R 距离染色 设置模块

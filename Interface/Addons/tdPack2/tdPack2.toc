@@ -1,10 +1,10 @@
-﻿## Interface: 11305
+﻿## Interface: 11306
 ## Title: tdPack2
 ## Author: Dencer
 ## Title-zhCN: |CFF7FFF7F界面|R |CFFFF0000背包整合|R 整理
 ## Title-zhTW: |CFF7FFF7F介面|R |CFFFF0000背包整合|R 整理
 ## X-Repple: 界面
-## Version: 1.4.2
+## Version: 1.4.3
 ## OptionalDeps: Bagnon, Combuctor, tdBag
 ## SavedVariables: TDDB_PACK2
 

@@ -1,4 +1,4 @@
-﻿## Interface: 11305
+﻿## Interface: 11306
 ## Title: Dennie's Combat Text
 ## Notes: |cffbc8f8fAdds Combat Text above you character.|r
 ## Title-zhCN: |CFFFF8000战斗|R 战斗指示器 (DCT)

@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Version: 1.0.0.23
 ## Title: Recipe Radar Classic
 ## Author: Kernighan

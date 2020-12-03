@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: RightClickSelfCast
 ## Author: Xruptor
 ## Version:  3.5

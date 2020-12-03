@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## X-WoW-Project: classic
 ## Title: Grid2
 ## Author: Pastamancer & Maia, Jerry, Toadkiller

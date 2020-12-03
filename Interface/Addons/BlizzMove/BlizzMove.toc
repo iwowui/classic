@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: BlizzMove
 ## Notes: Makes blizzard frames movable
 ## Title-zhCN: |CFFFF8000辅助|R 移动窗口
@@ -8,7 +8,7 @@
 ## X-Repple: 辅助
 ## Author: the-rebel-Mermaid - github.com/the-rebel-Mermaid/BlizzMove/
 ## X-WoWI-ID: 23875
-## Version: v3.0.3
+## Version: v3.0.4
 ## OptionalDeps: Ace3
 ## X-Embeds: Ace3
 ## SavedVariables: BlizzMoveDB

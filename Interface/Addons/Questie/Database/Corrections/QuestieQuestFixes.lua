@@ -1257,9 +1257,6 @@ function QuestieQuestFixes:Load()
         [4496] = {
             [questKeys.preQuestSingle] = {4493,4494},
         },
-        [4505] = {
-            [questKeys.exclusiveTo] = {6605},
-        },
         [4506] = {
             [questKeys.triggerEnd] = {"Return the corrupted cat to Winna Hazzard", {[zoneIDs.FELWOOD]={{34.26,52.32},},},},
         },
@@ -1708,8 +1705,11 @@ function QuestieQuestFixes:Load()
         [6603] = {
             [questKeys.exclusiveTo] = {5082},
         },
+        [6604] = {
+            [questKeys.exclusiveTo] = {4861},
+        },
         [6605] = {
-            [questKeys.exclusiveTo] = {4505}, -- #1859
+            [questKeys.exclusiveTo] = {4505}, -- #1859 -- #1856
         },
         [6608] = {
             [questKeys.exclusiveTo] = {6607}, -- #1186

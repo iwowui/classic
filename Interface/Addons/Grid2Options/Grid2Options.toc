@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: Grid2 |cd0ff7d0aOptions|r
 ## Notes: Configuration module for Grid2
 ## Title-zhCN: |CFF80FF80团队|R 团队面板 设置

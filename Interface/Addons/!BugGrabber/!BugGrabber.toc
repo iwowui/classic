@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: BugGrabber
 ## Notes: Grabs bugs for the bug sack.
 ## Notes-zhCN: Grabs bugs for the bug sack.
