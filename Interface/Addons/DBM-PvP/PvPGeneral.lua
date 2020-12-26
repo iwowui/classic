@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 local GetPlayerFactionGroup = GetPlayerFactionGroup or UnitFactionGroup -- Classic Compat fix
 local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
-mod:SetRevision("20201021204159")
+mod:SetRevision("20201216203747")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents(
 	"ZONE_CHANGED_NEW_AREA",
@@ -206,6 +206,7 @@ end
 do
 	local tonumber, ipairs = tonumber, ipairs
 	local C_UIWidgetManager, TimerTracker, IsInInstance = C_UIWidgetManager, TimerTracker, IsInInstance
+	local FACTION_ALLIANCE = FACTION_ALLIANCE
 	local flagTimer			= mod:NewTimer(12, "TimerFlag", "132483") -- Interface\\icons\\inv_banner_02.blp
 	local remainingTimer	= mod:NewTimer(0, "TimerRemaining", GetPlayerFactionGroup("player") == "Alliance" and "132486" or "132485") -- Interface\\Icons\\INV_BannerPVP_02.blp || Interface\\Icons\\INV_BannerPVP_01.blp
 	local vulnerableTimer, timerShadow, timerDamp
@@ -246,6 +247,13 @@ do
 	local function updateflagcarrier(_, msg)
 		if msg == L.ExprFlagCaptured or msg:match(L.ExprFlagCaptured) then
 			flagTimer:Start()
+			if msg:find(FACTION_ALLIANCE) then
+				flagTimer:SetColor({r=0, g=0, b=1})
+				flagTimer:UpdateIcon("132486") -- Interface\\Icons\\INV_BannerPVP_02.blp
+			else
+				flagTimer:SetColor({r=1, g=0, b=0})
+				flagTimer:UpdateIcon("132485") -- Interface\\Icons\\INV_BannerPVP_01.blp
+			end
 			if not isClassic then
 				vulnerableTimer:Cancel()
 			end
@@ -262,11 +270,11 @@ do
 
 	function mod:CHAT_MSG_BG_SYSTEM_NEUTRAL(msg)
 		if msg == L.BgStart120 or msg:find(L.BgStart120) then
-			remainingTimer:Update(0, 120)
+			remainingTimer:Update(isClassic and 1.5 or 0, 120)
 		elseif msg == L.BgStart60 or msg:find(L.BgStart60) then
-			remainingTimer:Update(60, 120)
+			remainingTimer:Update(isClassic and 61.5 or 60, 120)
 		elseif msg == L.BgStart30 or msg:find(L.BgStart30) then
-			remainingTimer:Update(90, 120)
+			remainingTimer:Update(isClassic and 91.5 or 90, 120)
 		elseif not isClassic and (msg == L.Vulnerable1 or msg == L.Vulnerable2 or msg:find(L.Vulnerable1) or msg:find(L.Vulnerable2)) then
 			vulnerableTimer:Start()
 		end

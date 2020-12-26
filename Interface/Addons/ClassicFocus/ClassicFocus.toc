@@ -1,0 +1,13 @@
+## Interface: 11306
+## Version: 1.0.2
+## Author: Redbu11
+## Title: ClassicFocus
+## Notes: Classic focus addon
+## Title-zhCN: |CFF7FFF7F界面|R 焦点头像
+## Notes-zhCN: 提供一个简易版的焦点头像
+## Title-zhTW: |CFF7FFF7F介面|R 焦點頭像
+## Notes-zhTW: 提供一個簡易版的焦點頭像
+## X-Repple: 界面
+## DefaultState: enabled
+
+ClassicFocus.lua

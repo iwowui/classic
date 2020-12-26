@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kel'Thuzad", "DBM-Naxx", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201110052453")
+mod:SetRevision("20201225041541")
 mod:SetCreatureID(15990)
 mod:SetEncounterID(1114)
 --mod:SetModelID(15945)--Doesn't work at all, doesn't even render.
@@ -38,7 +38,6 @@ local yellManaBomb			= mod:NewShortYell(27819)
 local timerManaBomb			= mod:NewCDTimer(20, 27819, nil, nil, nil, 3)--20-50 (still true in vanilla, kind of shitty variation too)
 local timerFrostBlastCD		= mod:NewCDTimer(33.5, 27808, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)--33-46
 local timerfrostBlast		= mod:NewBuffActiveTimer(4, 27808, nil, nil, nil, 5, nil, DBM_CORE_L.HEALER_ICON)
-local timerMC				= mod:NewBuffActiveTimer(20, 28410, nil, nil, nil, 3)
 --local timerMCCD			= mod:NewCDTimer(90, 28410, nil, nil, nil, 3)--actually 60 second cdish but its easier to do it this way for the first one.
 local timerPhase2			= mod:NewTimer(305, "TimerPhase2", "136116", nil, nil, 6)
 
@@ -60,6 +59,12 @@ local function AnnounceChainsTargets(self)
 end
 
 local function AnnounceBlastTargets(self)
+	if self.Options.SetIconOnFrostTomb then
+		for i = #frostBlastTargets, 1, -1 do
+			self:SetIcon(frostBlastTargets[i], 8 - i, 4.5)
+			frostBlastTargets[i] = nil
+		end
+	end
 	if self.Options.SpecWarn27808target then
 		specWarnBlast:Show(table.concat(frostBlastTargets, "< >"))
 		specWarnBlast:Play("healall")
@@ -67,12 +72,6 @@ local function AnnounceBlastTargets(self)
 		warnBlastTargets:Show(table.concat(frostBlastTargets, "< >"))
 	end
 	timerfrostBlast:Start(3.5)
-	if self.Options.SetIconOnFrostTomb then
-		for i = #frostBlastTargets, 1, -1 do
-			self:SetIcon(frostBlastTargets[i], 8 - i, 4.5)
-			frostBlastTargets[i] = nil
-		end
-	end
 end
 
 local function RangeToggle(show)
@@ -141,7 +140,6 @@ do
 		elseif args.spellName == ChainsofKT then
 			chainsTargets[#chainsTargets + 1] = args.destName
 			if self:AntiSpam() then
-				timerMC:Start()
 				--timerMCCD:Start(60)--60 seconds?
 			end
 			if self.Options.SetIconOnMC then

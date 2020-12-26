@@ -94,7 +94,7 @@ function TomTom:Initialize(event, addon)
                 otherzone = true,
                 clickcreate = true,
                 menu = true,
-                create_modifier = "C",
+                create_modifier = "A",
                 default_iconsize = 16,
                 default_icon = "Interface\\AddOns\\TomTom\\Images\\GoldGreenDot",
             },
@@ -115,7 +115,7 @@ function TomTom:Initialize(event, addon)
             },
             poi = {
                 enable = true,
-                modifier = "C",
+                modifier = "A",
                 setClosest = false,
                 arrival = 0,
             },
@@ -166,7 +166,6 @@ function TomTom:Initialize(event, addon)
 	end
 
     self:ReloadOptions()
-    self:ReloadWaypoints()
 
     if self.db.profile.feeds.coords then
         -- Create a data feed for coordinates
@@ -197,6 +196,13 @@ function TomTom:Initialize(event, addon)
             end
         end)
     end
+end
+
+function TomTom:Enable(addon)
+    if not TomTom.CLASSIC then
+        self:EnableDisablePOIIntegration()
+    end
+    self:ReloadWaypoints()
 end
 
 -- Some utility functions that can pack/unpack data from a waypoint
@@ -241,9 +247,6 @@ function TomTom:ReloadOptions()
     self:ShowHideWorldCoords()
     self:ShowHideCoordBlock()
     self:ShowHideCrazyArrow()
-    if not TomTom.CLASSIC then
-        self:EnableDisablePOIIntegration()
-    end
 end
 
 function TomTom:ClearAllWaypoints()
@@ -808,6 +811,7 @@ end
 local function noop() end
 
 function TomTom:RemoveWaypoint(uid)
+    if not uid then return end
     if type(uid) ~= "table" then error("TomTom:RemoveWaypoint(uid) UID is not a table."); end
     local data = uid
     self:ClearWaypoint(uid)
@@ -1156,9 +1160,11 @@ local overrides = {
     [579] = {suffix = "1"}, -- Lunarfall Excavation
     [580] = {suffix = "2"}, -- Lunarfall Excavation
     [581] = {suffix = "3"}, -- Lunarfall Excavation
+    [582] = {mapType = Enum.UIMapType.Zone}, -- Lunarfall
     [585] = {suffix = "1"}, -- Frostwall Mine
     [586] = {suffix = "2"}, -- Frostwall Mine
     [587] = {suffix = "3"}, -- Frostwall Mine
+    [590] = {mapType = Enum.UIMapType.Zone}, -- Frostwall
     [625] = {mapType = Enum.UIMapType.Orphan}, -- Dalaran
     [626] = {mapType = Enum.UIMapType.Micro}, -- Dalaran
     [627] = {mapType = Enum.UIMapType.Zone},
@@ -1193,7 +1199,7 @@ function TomTom:GetCZWFromMapID(m)
             zone = m
         elseif mapType == Enum.UIMapType.Continent then
             continent = m
-        elseif mapType == Enum.UIMapType.World then
+        elseif (mapType == Enum.UIMapType.World) or (mapType == Enum.UIMapType.Cosmic) then
             world = m
             continent = continent or m -- Hack for one continent worlds
         end

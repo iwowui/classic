@@ -203,9 +203,12 @@ function Grid2Layout:OnModuleEnable()
 	self:RegisterMessage("Grid_RosterUpdate")
 	self:RegisterMessage("Grid_GroupTypeChanged")
 	self:RegisterMessage("Grid_UpdateLayoutSize")
+	self:RegisterEvent("UI_SCALE_CHANGED")
 	if not Grid2.isClassic then
 		self:RegisterEvent("PET_BATTLE_OPENING_START", "PetBattleTransition")
 		self:RegisterEvent("PET_BATTLE_CLOSE", "PetBattleTransition")
+		self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+		self:RegisterEvent("UNIT_TARGETABLE_CHANGED")
 	end
 end
 
@@ -214,8 +217,10 @@ function Grid2Layout:OnModuleDisable()
 	self:UnregisterMessage("Grid_GroupTypeChanged")
 	self:UnregisterMessage("Grid_UpdateLayoutSize")
 	if not Grid2.isClassic then
-		self:UnegisterEvent("PET_BATTLE_OPENING_START")
-		self:UnegisterEvent("PET_BATTLE_CLOSE")
+		self:UnregisterEvent("PET_BATTLE_OPENING_START")
+		self:UnregisterEvent("PET_BATTLE_CLOSE")
+		self:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
+		self:UnregisterEvent("UNIT_TARGETABLE_CHANGED")
 	end
 	self.frame:Hide()
 end
@@ -234,14 +239,13 @@ function Grid2Layout:UpdateTheme()
 end
 
 function Grid2Layout:RefreshTheme()
-	self:RestorePosition()
 	self:UpdateFrame()
 	self:ReloadLayout(true)
 end
 
 --{{{ Event handlers
 function Grid2Layout:Grid_GroupTypeChanged(_, groupType, instType, maxPlayers)
-	Grid2Layout:Debug("GroupTypeChanged", groupType, instType, maxPlayers)
+	self:Debug("GroupTypeChanged", groupType, instType, maxPlayers)
 	if not Grid2:ReloadTheme() then
 		if not self:ReloadLayout() then
 			self:UpdateVisibility()
@@ -257,10 +261,32 @@ function Grid2Layout:Grid_RosterUpdate(_, unknowns)
 	end
 end
 
+-- Fixing Shadowlands bug when entering Maw Zone, see ticket #901.
+function Grid2Layout:ZONE_CHANGED_NEW_AREA()
+	if C_Map.GetBestMapForUnit("player")==1543 then
+		self.flagEnteringMaw = true
+	end
+end
+
+function Grid2Layout:UNIT_TARGETABLE_CHANGED(_,unit)
+	if unit=="player" and self.flagEnteringMaw then
+		self.flagEnteringMaw = nil
+		if not Grid2:RunSecure(10, self, "UpdateHeaders") then
+			self:UpdateHeaders()
+		end
+	end
+end
+
+-- Maintain Grid2 window on the same position if the screen scale is changed.
+function Grid2Layout:UI_SCALE_CHANGED()
+	self:RestorePosition()
+	self:Debug("UI Scale Change detected: main frame position restored:", GetCVar("uiScale") )
+end
+
 -- We delay UpdateSize() call to avoid calculating the wrong window size, because when "Grid_UpdateLayoutSize"
 -- message is triggered the blizzard code has not yet updated the size of the secure group headers.
 function Grid2Layout:Grid_UpdateLayoutSize()
-	Grid2:RunThrottled(self, "UpdateSize")
+	Grid2:RunThrottled(self, "UpdateSize", 0.01)
 end
 
 function Grid2Layout:PetBattleTransition(event)
@@ -321,6 +347,13 @@ function Grid2Layout:FrameLock(locked)
 		p.FrameLock = locked
 	end
 	self.frame:EnableMouse(not p.FrameLock)
+end
+
+-- display: Never, Always, Grouped, Raid, false|nil = toggle Never/Always
+function Grid2Layout:FrameVisibility(display)
+	local p = self.db.profile
+	p.FrameDisplay = display or (p.FrameDisplay=='Never' and 'Always' or 'Never')
+	self:UpdateVisibility()
 end
 
 --{{{ ConfigMode support
@@ -385,8 +418,8 @@ function Grid2Layout:PlaceHeaders()
 			frame:SetPoint(anchor, prevFrame, relPoint, xMult2, yMult2 )
 		end
 		frame:Show()
-		prevFrame = frame
 		self:Debug("Placing group", groupNumber, frame:GetName(), anchor, prevFrame and prevFrame:GetName(), relPoint)
+		prevFrame = frame
 	end
 end
 
@@ -423,7 +456,7 @@ function Grid2Layout:LoadLayout(layoutName)
 	if layout then
 		self:Debug("LoadLayout", layoutName)
 		self.layoutName = layoutName
-		self:Scale()
+		self:RestorePosition()
 		self:ResetHeaders()
 		if layout[1] then
 			for _, layoutHeader in ipairs(layout) do
@@ -650,12 +683,15 @@ function Grid2Layout:UpdateVisibility()
 	if not Grid2:RunSecure(7, self, "UpdateVisibility") then
 		local fd, pt = self.db.profile.FrameDisplay, Grid2:GetGroupType()
 		self.frame:SetShown(
+			fd~='Never' and
 			( (fd == "Always") or (fd == "Grouped" and pt ~= "solo") or (fd == "Raid" and pt == "raid" ) ) and
 			not (self.db.profile.HideInPetBattle and self.inBattlePet)
 		)
 	end
 end
 
+-- Grid2 uses UI Root coordinates to store the window position (always 768 pixels height) so these coordinates are
+-- independent of the UI Frame Scale Coordinates and monitor physical resolution (assuming the same aspect ratio).
 function Grid2Layout:SavePosition()
 	local f = self.frame
 	if f:GetLeft() and f:GetWidth() then
@@ -674,20 +710,14 @@ function Grid2Layout:SavePosition()
 	end
 end
 
-function Grid2Layout:ResetPosition()
-	local s = UIParent:GetEffectiveScale()
-	self.db.profile.PosX =   UIParent:GetWidth()  / 2 * s
-	self.db.profile.PosY = - UIParent:GetHeight() / 2 * s
-	self.db.profile.anchor = "TOPLEFT"
-	self:RestorePosition()
-	self:SavePosition()
-end
-
+-- Restores the Grid2 window position, the window is always placed in the same exact absolute screen position
+-- even if the WoW UI Scale or Grid2 window Scale was changed (assuming the screen aspect ratio has not changed).
 function Grid2Layout:RestorePosition()
 	local f = self.frame
 	local b = self.frameBack
-	local s = f:GetEffectiveScale()
 	local p = self.db.profile
+	f:SetScale(p.ScaleSize)
+	local s = f:GetEffectiveScale()
 	local x = p.PosX / s
 	local y = p.PosY / s
 	local a = p.anchor
@@ -695,13 +725,16 @@ function Grid2Layout:RestorePosition()
 	f:SetPoint(a, x, y)
 	b:ClearAllPoints()
 	b:SetPoint(p.groupAnchor) -- Using groupAnchor instead of anchor, see ticket #442.
-	self:Debug("Restored Position", a, x, y)
+	self:Debug("Restored Position", a, p.ScaleSize, x, y)
 end
 
-function Grid2Layout:Scale()
-	self:SavePosition()
-	self.frame:SetScale(self.db.profile.ScaleSize)
+function Grid2Layout:ResetPosition()
+	local s = UIParent:GetEffectiveScale()
+	self.db.profile.PosX =   UIParent:GetWidth()  / 2 * s
+	self.db.profile.PosY = - UIParent:GetHeight() / 2 * s
+	self.db.profile.anchor = "TOPLEFT"
 	self:RestorePosition()
+	self:SavePosition()
 end
 
 function Grid2Layout:AddLayout(layoutName, layout)

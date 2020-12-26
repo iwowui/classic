@@ -171,12 +171,12 @@ do
 	end
 end
 
--- Grid2Options.Tooltip generic tooltip to parse hiperlinks
+-- Grid2Options.Tooltip generic tooltip to parse hyperlinks
 do
 	local tip
 	tip = CreateFrame("GameTooltip", "Grid2OptionsTooltip", nil, "GameTooltipTemplate")
-	tip:SetOwner(UIParent, "ANCHOR_NONE")
-	for i = 1, 5 do
+	tip:SetOwner(WorldFrame, "ANCHOR_NONE")
+	for i = 1, 10 do
 		tip[i] = _G["Grid2OptionsTooltipTextLeft"..i]
 		if not tip[i] then
 			tip[i] = tip:CreateFontString()
@@ -198,7 +198,7 @@ do
 		Icon	   = { type = "header", order = 10,  name = L["Icon"] },
 		Shape	   = { type = "header", order = 10,  name = L["Shape"] },
 		Border     = { type = "header", order = 20,  name = L["Border"]     },
-		Shadow     = { type = "header", order = 30,  name = L["Shadow"]     },		
+		Shadow     = { type = "header", order = 30,  name = L["Shadow"]     },
 		Background = { type = "header", order = 60,  name = L["Background"] },
 		Special    = { type = "header", order = 70,  name = L["Special"] },
 		Display    = { type = "header", order = 80,  name = L["Display"]    },
@@ -237,17 +237,14 @@ end
 do
 	local titleCoords = { 0.05, 0.95, 0.05, 0.95 }
 	local titleMask   = NORMAL_FONT_COLOR_CODE .. "%s|r\n%s"
-	local titleSep    = { type = "header",	order = 0.5, width = "full", name = "" }
-	function Grid2Options:MakeTitleOptions(options, title, subtitle, desc, icon, coords)
+	function Grid2Options:MakeTitleOptions(options, title, subtitle, tipText, icon, coords, arg)
 		options.title = {
-			type  = "description", order = 0, width = "full", fontSize = "large",
-			image = icon, imageWidth  = 30, imageHeight = 30, imageCoords = coords or titleCoords,
+			type  = "description", order = 0, width = "full", fontSize = "large", dialogControl = "Grid2Title",
+			image = icon, imageWidth = 34, imageHeight = 34, imageCoords = coords or titleCoords,
 			name  = string.format(titleMask, title, subtitle),
+			desc  = tipText,
+			arg   = arg, -- optional argument to inject action icons configuration, see Grid2Title widget in GridWidget.lua
 		}
-		if desc then
-			options.titleDesc = { type = "description", order = 0.2, fontSize = "small", name = desc }
-		end
-		options.titleSep = titleSep
 	end
 end
 

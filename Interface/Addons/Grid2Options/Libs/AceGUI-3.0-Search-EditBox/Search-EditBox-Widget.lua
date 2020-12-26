@@ -1,7 +1,7 @@
-local AceGUI = LibStub("AceGUI-3.0")
+local Type, Version = "SearchEditBox_Base", 3
+local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
+if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
-local Type = "SearchEditBox_Base"
-local Version = 2
 local PREDICTOR_ROWS = 15
 local predictorBackdrop = {
   bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
@@ -298,7 +298,10 @@ end
 local function EditBox_OnEditFocusLost(self)
 	local predictor = self.obj.predictor
 	if predictor:IsVisible() then
-		predictor:Hide()
+		local frame = GetMouseFocus()
+		if not (frame and frame.parent==predictor) then
+			predictor:Hide()
+		end
 	end
 end
 

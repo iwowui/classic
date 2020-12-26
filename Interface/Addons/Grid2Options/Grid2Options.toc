@@ -7,7 +7,7 @@
 ## DefaultState: Disabled
 ## LoadOnDemand: 1
 ## Dependencies: Grid2
-## Version: r994
+## Version: 1.1.4-beta
 
 # Ace Libraries
 Libs\AceGUI-3.0\AceGUI-3.0.xml
@@ -24,6 +24,7 @@ locales.xml
 # Grid2Options
 GridCore.lua
 GridUtils.lua
+GridWidgets.lua
 GridGeneral.lua
 GridIndicators.lua
 GridStatuses.lua

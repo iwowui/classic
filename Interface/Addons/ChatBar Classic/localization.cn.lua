@@ -38,7 +38,7 @@ CHATBAR_MENU_MAIN_REORDER			= "重新排序频道";
 CHATBAR_MENU_MAIN_REQCHRONOS		= "(需要 Chronos)";
 CHATBAR_MENU_MAIN_LOCK			   = "锁定位置";
 
-CHATBAR_MENU_CHANNEL_BLOCK			= "Block \"%s\" Channel";
+CHATBAR_MENU_CHANNEL_BLOCK			= "屏蔽 \"%s\" 频";
 CHATBAR_MENU_CHANNEL_LEAVE			= "离开频道";
 CHATBAR_MENU_CHANNEL_LIST			= "显示频道内使用者清单";
 CHATBAR_MENU_HIDE_BUTTON			= "隐藏 \"%s\" 按钮";
