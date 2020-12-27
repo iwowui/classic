@@ -1,4 +1,3 @@
-
 ---@type ns
 local ns = select(2, ...)
 
@@ -24,8 +23,6 @@ end
 ---@field private leader string
 ---@field private leaderLower string
 ---@field private leaderClass string
----@field private leaderLocClass string
----@field private leaderLocRace string
 ---@field private guid string
 ---@field private id number
 ---@field private modeId number
@@ -44,6 +41,11 @@ local Activity = ns.Addon:NewClass('Activity')
 function Activity:Constructor(id, modeId, comment)
     if id then
         self:SetActivityId(id)
+
+        local raidId = ns.GetRaidId(ns.GetActivityData(id).instanceName)
+        if raidId and raidId ~= -1 then
+            self.raidId = raidId
+        end
     end
     self.modeId = modeId
     self:SetComment(comment or '')
@@ -59,13 +61,14 @@ end
 
 function Activity:Update(proto, leader, guid, channelName, lineId)
     local version, body = ParseProto(proto)
-    local id, modeId, comment, name, mode, members, leaderLevel
+    local id, modeId, comment, name, mode, members, leaderLevel, raidId
     if version == 1 then
         name, mode, comment = body:match('^([^.]+)%.([^.]+)%.%.%.%.%.%.%.%.(.+)$')
     elseif version == 2 then
         name, comment, mode = body:match('^([^.]+)%.([^.]+)%.%.%.%.%.%.%.%.(.+)$')
     elseif version == 3 then
-        name, comment, members, leaderLevel, mode = body:match('^([^.]+)%.([^.]+)%.([^.]+)%.([^.]+)%.%.%.%.%.%.(.+)$')
+        name, comment, members, leaderLevel, raidId, mode = body:match(
+                                                                '^([^.]+)%.([^.]+)%.([^.]+)%.([^.]+)%.([^.]*)%.%.%.%.%.(.+)$')
     end
 
     if not name then
@@ -80,12 +83,15 @@ function Activity:Update(proto, leader, guid, channelName, lineId)
 
     members = tonumber(members)
     leaderLevel = tonumber(leaderLevel)
+    raidId = tonumber(raidId)
 
     local data = ns.GetActivityData(id)
     if not data.category.channels[channelName] then
         return
     end
 
+    self.raidId = raidId
+    self.sameInstance = raidId and ns.GetRaidId(ns.GetActivityData(id).instanceName) == raidId
     self.modeId = modeId
     self:SetActivityId(id)
     self:SetLeaderGUID(guid)
@@ -99,8 +105,16 @@ function Activity:Update(proto, leader, guid, channelName, lineId)
 end
 
 function Activity:ToProto()
-    return format('%s.%s.%s.%s......%s', self:GetShortName(), self:GetComment(), ns.GetNumGroupMembers(),
-                  UnitLevel('player'), self:GetMode()) .. '@@'
+    return format('%s.%s.%s.%s.%s.....%s', self:GetShortName(), self:GetComment(), ns.GetNumGroupMembers(),
+                  UnitLevel('player'), self.raidId or '', self:GetMode()) .. '@@'
+end
+
+function Activity:HaveProgress()
+    return self.raidId
+end
+
+function Activity:IsSameInstance()
+    return self.sameInstance
 end
 
 function Activity:GetMode()
@@ -121,14 +135,6 @@ end
 
 function Activity:GetLeaderClass()
     return self.leaderClass
-end
-
-function Activity:GetLeaderLocClass()
-    return self.leaderLocClass
-end
-
-function Activity:GetLeaderLocRace()
-    return self.leaderLocRace
 end
 
 function Activity:GetActivityId()
@@ -249,8 +255,6 @@ end
 function Activity:SetLeaderGUID(guid)
     self.guid = guid
     self.leaderClass = guid and select(2, GetPlayerInfoByGUID(guid)) or 'PRIEST'
-    self.leaderLocClass = guid and select(1, GetPlayerInfoByGUID(guid)) or 'PRIEST'
-    self.leaderLocRace = guid and select(3, GetPlayerInfoByGUID(guid)) or 'PRIEST'
 end
 
 function Activity:SetLeader(leader)

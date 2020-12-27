@@ -3,7 +3,8 @@
 ## Title-zhCN: |CFFFF8000辅助|R 集结号
 ## Title-zhTW: |CFFFF8000輔助|R 集結號
 ## X-Repple: 辅助
-## Version: 1.1.9
+## Version: 1.5.1
 ## SavedVariables: MEETINGHORN_DB
+## SavedVariablesPerCharacter: MEETINGHORN_DB_CHARACTER_MEMBERS
 
 Load.xml

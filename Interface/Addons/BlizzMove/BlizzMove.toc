@@ -8,7 +8,7 @@
 ## X-Repple: 辅助
 ## Author: the-rebel-Mermaid - github.com/the-rebel-Mermaid/BlizzMove/
 ## X-WoWI-ID: 23875
-## Version: v3.0.7a
+## Version: v3.0.8
 ## OptionalDeps: Ace3
 ## X-Embeds: Ace3
 ## SavedVariables: BlizzMoveDB

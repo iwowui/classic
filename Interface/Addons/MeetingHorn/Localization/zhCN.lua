@@ -9,7 +9,6 @@ L.ADDON_NAME = '集结号'
 L['Leader'] = '队长'
 L['Comment'] = '说明'
 L['Operation'] = '操作'
-L['Class'] = '职业'
 
 L['Activity'] = '活动类型'
 L['Activity Mode'] = '活动模式'
@@ -24,6 +23,13 @@ L['Close Activity'] = '解散活动'
 L['Update Activity'] = '更新活动'
 L['Members'] = '队伍人数'
 L['Whisper'] = '密语'
+L['Encounter'] = '冒险指南'
+L['Recent members'] = '最近队友'
+L['Instance Name'] = '副本名称'
+L['Invite All'] = '全部邀请'
+L['职责攻略'] = true
+L['技能'] = true
+L['Challenge'] = '挑战活动'
 
 L['Help'] = '帮助'
 L['Manage'] = '管理'
@@ -48,7 +54,7 @@ L.CATEGORY_RECRUIT = '招募'
 L.SUMMARY_NEW_VERSION = [[|cff00ffff%s|r：
 发现新版本：%s，请及时下载更新
 下载链接：%s]]
-L.WELCOME_MESSAGE= [[更新日期|cff00ffff%s|r - 输入 /MeetingHorn或者/LFG打开主面板]]
+
 -- L['Quest'] = '任务'
 -- L['Raid'] = '团队副本'
 -- L['Dungeon'] = '地下城'
@@ -59,17 +65,12 @@ L.WELCOME_MESSAGE= [[更新日期|cff00ffff%s|r - 输入 /MeetingHorn或者/LFG�
 L['Sell'] = '出售'
 L['Buy'] = '购买'
 
-L['Alliance'] = '联盟'
-L['Horde'] = '部落'
-
 L['<Double-Click> Whisper to player'] = '<双击>密语'
 L['<Right-Click> Open activity menu'] = '<右键>打开活动菜单'
 L['(Include channel message)'] = '(包含频道聊天)'
 L['Applicanted'] = '已申请'
 
 L['|cff00ffff%s|r instance already exists, continue to create?'] = '|cff00ffff%s|r进度已存在，继续创建？'
-L['RIVAL_CAMP_WARNING_Alliance'] = '|cff00ffff%s|r是|cffb30000%s|r的领土，继续创建？'
-L['RIVAL_CAMP_WARNING_Horde'] = '|cff00ffff%s|r是|cff0078ff%s|r的领土，继续创建？'
 L['Update activity success.'] = '更新活动成功。'
 L['Create acitivty success.'] = '创建活动成功。'
 L['Activity closed.'] = '活动已解散。'
@@ -83,29 +84,26 @@ L['Activity Count'] = '活动总数'
 
 L['Toggle MeetingHorn'] = '打开/关闭集结号'
 L['Toggle MeetingHorn key binding'] = '打开/关闭集结号快捷键'
-L['Key binding confirmation'] = '按键已绑定到|cffffd100%s|r，你确定要覆盖吗？'
+L['按键已绑定到|cffffd100%s|r，你确定要覆盖吗？'] = true
 
 L['Options'] = '设置'
-L['Enable keyword filtering'] = '启用关键字过滤'
-L['keyword filtering'] = '关键字过滤'
-L['Import'] = '导入'
-L['Export'] = '导出'
-L['Import keywords'] = '倒入关键字'
-L['Export keywords'] = '导出关键字'
-L['Please enter keywords to be blocked'] = '请输出需要屏蔽的关键字'
-L['Match?'] = '匹配'
-L['Add failed, wrong keyword'] = '添加失败，关键字错误'
-L['Add failed, keyword already exists'] = '添加失败，关键字“%s”已存在'
-L['Add success, the keyword has been added'] = '添加成功，关键字“%s”已添加'
-L['Failed to delete, wrong keyword'] = '删除失败，关键字错误'
-L['Failed to delete, the keyword does not exist'] = '删除失败，关键字“%s”不存在'
-L['Deleted successfully, the keyword has been deleted'] = '删除成功，关键字“%s”已删除'
+L['启用关键字过滤'] = true
+L['关键字过滤'] = true
+L['导入'] = true
+L['导出'] = true
+L['导入关键字'] = true
+L['导出关键字'] = true
+L['请输入需要屏蔽的关键字'] = true
+L['匹配?'] = true
+L['添加失败，关键字错误。'] = true
+L['添加失败，关键字“%s”已存在。'] = true
+L['添加成功，关键字“%s”已添加。'] = true
+L['删除失败，关键字错误。'] = true
+L['删除失败，关键字“%s”不存在。'] = true
+L['删除成功，关键字“%s”已删除。'] = true
 
 L['Show data broker'] = '显示悬浮窗'
-L['Show minimap'] = '隐藏小地图图标'
 L['Hide activity in chat frame'] = '隐藏聊天窗口内的集结号活动'
-L['Idle Timer'] = '自动刷新活动列表'
-L['Confirm'] = '修改此项将重新载入插件'
 
 L.HELP_COMMENT = [[|cffffd100使用说明|r
 1. 集结号刚打开的时候是有短暂收集数据的时间，还请您耐心等待。
@@ -116,7 +114,6 @@ L.HELP_COMMENT = [[|cffffd100使用说明|r
 L['CHANNEL: Port'] = '传送频道'
 L['CHANNEL: Trade'] = '交易'
 L['CHANNEL: Group'] = 'MeetingHorn'
-L['CHANNEL: LFG'] = '寻求组队'
 L['CHANNEL: Recruit'] = '公会招募'
 
 L['Wild PvP'] = '野外PvP'
@@ -137,7 +134,7 @@ L['Taerar'] = '泰拉尔' -- 泰拉尔
 L['Emeriss'] = '艾莫莉丝' -- 艾莫莉丝
 L['Lethon'] = '莱索恩' -- 莱索恩
 
-L['SHORT'] = '快速搜索'
+L['Ahn\'Qiraj Temple'] = '安其拉神殿'
 
 L['SHORT: Molten Core'] = 'MC' -- 熔火之心
 L['SHORT: Onyxia\'s Lair'] = '黑龙' -- 奥妮克希亚的巢穴
@@ -181,11 +178,41 @@ L['SHORT: Taerar'] = '' -- 泰拉尔
 L['SHORT: Emeriss'] = '' -- 艾莫莉丝
 L['SHORT: Lethon'] = '' -- 莱索恩
 
-L['MODE:with new player'] = '带新'
-L['MODE:self-improvement'] = '自强'
-L['MODE:Roll'] = 'Roll'
-L['MODE:AA'] = 'AA'
-L['MODE:Melee'] = '菜刀'
-L['MODE:Transfer'] = '传送'
-L['MODE:Others'] = '其他'
-L['MODE:Action'] = '拍卖'
+L['玛丁雷少校'] = true
+L['暴风城的城民和盟友们'] = true
+L['看看强大的联盟吧'] = true
+L['艾法希比元帅'] = true
+L['联盟的人民们'] = true
+L['兴奋起来'] = true
+L['伦萨克'] = true
+L['部落的人民，奥格瑞玛的居民'] = true
+L['在屠龙大军的战斗号角声中精神抖擞地前进吧'] = true
+L['萨鲁法尔大王'] = true
+L['奈法利安被杀掉了'] = true
+L['为他的胜利而狂欢吧'] = true
+L['萨尔'] = true
+L['奈法利安被杀掉了'] = true
+L['为他的胜利而狂欢吧'] = true
+L['为你们的英雄而欢庆'] = true
+L['沐浴在我的力量中吧'] = true
+
+L['二维码尺寸过小'] = true
+L['加载中'] = true
+
+L['欢迎来到%s，打开集结号查看|cff47e53d|Hmeetinghornencounter:%s|h[Boss击杀攻略]|r。'] = true
+L['你在与[%s]的战斗中阵亡，|cff00ffff|Hmeetinghornencounter:%s:%s:%s|h[点击查看Boss攻略]|h|r。'] = true
+L['近战输出者预警'] = true
+L['远程输出者预警'] = true
+
+L['INVALID_GUID'] = '角色ID错误'
+L['NO_ACTIVE_ACTIVITY '] = '当前没有挑战任务'
+L['ACTIVITY_NOT_FINISH'] = '任务尚未完成'
+L['ACTIVITY_REWARD_FETCHED '] = '任务奖励已领取'
+L['ACTIVITY_FETCH_REWARD_FAILED '] = '领取任务奖励失败'
+L['ACTIVITY_REWARD_OUT_OF_DATE'] = '任务奖励领取过期'
+
+L.CHALLENGE_RULES = [[●本次活动所有奖励均在插件上兑换领取，不安装插件的玩家将无法兑换相应的奖励；
+●活动到期后，击杀或经验值将不再被计入本次活动。已完成活动目标的玩家，仍可以在2周内继续领取；
+●同一种虚拟物品奖励，每个角色只能领取一次，不同挑战活动的不同虚拟物品奖励，每个角色达到挑战目标后都可以领取，不同角色可以重复参与活动并在达到挑战目标后领取对应的虚拟物品奖励；
+●若在72小时内奖励并没有发放至游戏角色邮箱，请联系人工客服进行反馈；
+●本次挑战活动由于数量较大，当您击杀Boss后，请点击进度条上的【刷新进度】按钮查看最新进度，刷新后每30分钟更新一次数据结果；]]

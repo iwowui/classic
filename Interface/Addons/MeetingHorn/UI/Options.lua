@@ -42,44 +42,10 @@ function Options:Constructor()
         set = function(item, value)
             return self:SetOption(item[#item], value)
         end,
-        args = {
+        args = { --
             databroker = toggle(L['Show data broker']),
-            minimap = {
-                type= 'toggle',
-                width = 'full',
-                order = orderGen(),
-                name = L['Show minimap'],
-                get = function()
-                    return ns.Addon.db.profile.window.minimap['hide']
-                end,
-                set = function(_, value)
-                    ns.Addon.db.profile.window.minimap['hide']=value
-                    ReloadUI()
-                end,
-                confirm = function(_, value)
-                    return L['Confirm']
-                end
-            },
             chatfilter = toggle(L['Hide activity in chat frame']),
-            activityfilter = toggle(L['Enable keyword filtering']),
-            -- idletimer = toggle(L['Idle Timer']),
-            idletimer = {
-                type= 'toggle',
-                width = 'full',
-                order = orderGen(),
-                name = L['Idle Timer'],
-                get = function()
-                    return Options:GetOption('idleTimer')
-                end,
-                set = function(_, value)
-                    Options:SetOption('idleTimer',value)
-                    ReloadUI()
-                end,
-                confirm = function(_, value)
-                    return L['Confirm']
-                end
-
-            },
+            activityfilter = toggle(L['启用关键字过滤']),
             key = {
                 type = 'keybinding',
                 name = L['Toggle MeetingHorn key binding'],
@@ -98,7 +64,7 @@ function Options:Constructor()
                 confirm = function(info, key)
                     local action = GetBindingAction(key)
                     if action ~= '' and action ~= BINDING_KEY then
-                        return L['Key binding confirmation']:format(
+                        return L['按键已绑定到|cffffd100%s|r，你确定要覆盖吗？']:format(
                                    _G['BINDING_NAME_' .. action] or action)
                     end
                 end,
