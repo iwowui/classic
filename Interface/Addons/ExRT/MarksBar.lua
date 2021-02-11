@@ -770,12 +770,10 @@ function module:Disable()
 end
 
 function module:Lock()
-	VExRT.MarksBar.Fix = true
-	module.frame:SetMovable(true)
+	module.frame:SetMovable(false)
 end
 function module:Unlock()
-	VExRT.MarksBar.Fix = nil
-	module.frame:SetMovable(false)
+	module.frame:SetMovable(true)
 end
 
 function module.options:Load()
@@ -791,8 +789,10 @@ function module.options:Load()
 	
 	self.chkFix = ELib:Check(self,L.messagebutfix,VExRT.MarksBar.Fix):Point(15,-55):OnClick(function(self)
 		if self:GetChecked() then
+			VExRT.MarksBar.Fix = true
 			module:Lock()
 		else
+			VExRT.MarksBar.Fix = nil
 			module:Unlock()
 		end
 	end)
@@ -1023,6 +1023,8 @@ function module.main:ADDON_LOADED()
 
 	if VExRT.MarksBar.Fix then 
 		module:Lock()
+	else
+		module:Unlock()
 	end
 
 	if VExRT.MarksBar.Alpha then module.frame:SetAlpha(VExRT.MarksBar.Alpha/100) end
@@ -1045,7 +1047,12 @@ function module.main:RAID_TARGET_UPDATE()
 	end
 end
 
+local delayTimer
 function module:GroupRosterUpdate()
+	if delayTimer then
+		delayTimer:Cancel()
+		delayTimer = nil
+	end
 	if not VExRT.MarksBar.enabled then
 		return
 	end
@@ -1073,9 +1080,17 @@ function module:GroupRosterUpdate()
 		end
 	end
 	if needShow and not module.frame:IsShown() then
-		module.frame:Show()
+		if InCombatLockdown() then
+			delayTimer = ExRT.F.ScheduleTimer(module.GroupRosterUpdate, 2, module)
+		else
+			module.frame:Show()
+		end
 	elseif not needShow and module.frame:IsShown() then
-		module.frame:Hide()
+		if InCombatLockdown() then
+			delayTimer = ExRT.F.ScheduleTimer(module.GroupRosterUpdate, 2, module)
+		else
+			module.frame:Hide()
+		end
 	end
 end
 function module.main:GROUP_ROSTER_UPDATE()

@@ -87,6 +87,7 @@ module.db.topEnchGems = IS_SL and {
 	[6217]="chest:int:mana",
 	[6214]="chest:str:agi",
 	[6213]="chest:armor:str:agi",
+	[6265]="chest:dmg",
 
 	[6210]="gloves:str",
 	--[6205]="gloves:gather",
@@ -109,6 +110,11 @@ module.db.topEnchGems = IS_SL and {
 	[173127]="Gem:crit:16",
 	[173130]="Gem:mastery:16",
 	[173128]="Gem:haste:16",
+	[168638]="Gem:int:7",
+
+	[3368]="DKWeapon:knight",
+	[3370]="DKWeapon:frost",
+	[3847]="DKWeapon:2h",
 } or {
 	--[5938]="Ring:Crit:27",
 	--[5939]="Ring:Haste:27",
@@ -475,7 +481,7 @@ function module.options:Load()
 		elseif UnitLevel'player' < 50 then
 			contentID = 1
 			extra_list[#extra_list+1] = text_relic
-		elseif UnitLevel'player' < 60 then
+		elseif UnitLevel'player' < 51 then
 			contentID = 2
 			extra_list[#extra_list+1] = text_az
 		else
@@ -1254,11 +1260,16 @@ function module.options:Load()
 						end
 					elseif module.db.page == 7 then
 						local data = VExRT.Inspect and VExRT.Inspect.Soulbinds and VExRT.Inspect.Soulbinds[name]
+						local data2 = VExRT.Inspect and VExRT.Inspect.Soulbinds and VExRT.Inspect.Soulbinds[name.."-"..ExRT.SDB.realmKey]
 						if not data then
-							data = VExRT.Inspect and VExRT.Inspect.Soulbinds and VExRT.Inspect.Soulbinds[name.."-"..ExRT.SDB.realmKey]
+							data = data2
+						elseif data2 and tonumber(strsplit(":",data2),10) > tonumber(strsplit(":",data),10) then
+							data = data2
 						end
 
 						line.refreshSoulbind:Show()
+
+						line.time2:SetText("")
 
 						if data then
 							local it = 2

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gluth", "DBM-Naxx", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201225210458")
+mod:SetRevision("20210102025610")
 mod:SetCreatureID(15932)
 mod:SetEncounterID(1108)
 mod:SetModelID(16064)
@@ -33,7 +33,7 @@ end
 
 do
 	local Roar = DBM:GetSpellInfo(29685)
-	function mod:SPELL_AURA_APPLIED(args)
+	function mod:SPELL_CAST_SUCCESS(args)
 		--if args.spellId == 29685 then
 		if args.spellName == Roar then
 			warnRoar:Show()

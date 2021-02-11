@@ -4,14 +4,14 @@ end
 local mod	= DBM:NewMod("z727", "DBM-PvP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201216201039")
+mod:SetRevision("20201228170103")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents("ZONE_CHANGED_NEW_AREA")
 
 do
 	local bgzone = false
 
-	function mod:OnInitialize()
+	local function Init(self)
 		if DBM:GetCurrentArea() == 727 then
 			bgzone = true
 			self:RegisterShortTermEvents(
@@ -29,8 +29,10 @@ do
 	end
 
 	function mod:ZONE_CHANGED_NEW_AREA()
-		self:ScheduleMethod(1, "OnInitialize")
+		self:Schedule(1, Init, self)
 	end
+	mod.PLAYER_ENTERING_WORLD	= mod.ZONE_CHANGED_NEW_AREA
+	mod.OnInitialize			= mod.ZONE_CHANGED_NEW_AREA
 end
 
 local carts = {}

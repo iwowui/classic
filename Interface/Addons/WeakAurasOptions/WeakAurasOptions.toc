@@ -3,7 +3,7 @@
 ## Title-zhCN: |CFFFF8000辅助|R 综合提示 设置
 ## Title-zhTW: |CFFFF8000輔助|R 综合提示 設定
 ## Author: The WeakAuras Team
-## Version: 3.1.4
+## Version: 3.1.9
 ## Notes: Options for WeakAuras
 ## Notes-zhCN: WeakAuras的设置
 ## Notes-zhTW: WeakAuras的設定

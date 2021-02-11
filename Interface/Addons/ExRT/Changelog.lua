@@ -1,6 +1,52 @@
 local GlobalAddonName, ExRT = ...
 
 ExRT.Options.Changelog = [=[
+v.4460
+* Raid check: consumables on ready check: flask icon is clickable now
+* Note: added "Set as personal note" button
+* Bugfixes
+* Minor updates
+
+v.4460-Classic
+* Note: added "Set as personal note" button
+* Raid Groups: now does not keep exact position in groups to reduce swap events
+* Bugfixes
+* Minor updates
+
+v.4440
+* Note: increased performance for huge notes with timers
+* Visual Note: added pvp battlegrounds
+* Raid Groups: added import from spreadsheet string
+* Saving log: added option for autologging torghast
+* Minor fixes
+
+v.4440-Classic
+* Raid Groups: added import from spreadsheet string
+* Note: added {classunique:mage,priest}message{/classunique} syntax
+* Marks bar: fixed locked/unlocked option
+* Raid check: Blessed Sunfruit and Blessed Sunfruit Juice buffs
+* Minor fixes
+
+v.4420
+* Raid Inspect: fixed query stuck
+* Raid check: consumables on ready check are clickable now
+* Raid check: consumables on ready check: fix for elvui users
+* Raid cooldowns: fixed typhoon
+* Note: added {classunique:monk,priest}message{/classunique} syntax
+* Minor fixes
+
+v.4400
+* Raid check: added new food consumables
+* Raid check: added ap weapon buffs to ready check window
+* Raid check: readded runes to ready check window
+* Raid check: added personal icons for consumable buffs on ready check
+* Raid cooldowns: fixed mw & ww monk talents
+* Raid cooldowns: fixed dh silence cd timer
+* Raid cooldowns: added kick category for demonology warlock kick
+* Marks bar: fixed locked/unlocked option
+* Raid inspect: fixed highlight for dk weapon enchants
+* Loot History: now records only epic quality items
+
 v.4390
 * Raid cooldowns: added avenger's shield reset support
 * Raid cooldowns: added "only visual" option for import

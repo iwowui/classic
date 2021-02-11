@@ -21,6 +21,7 @@ module.db.tableFood = not ExRT.isClassic and {
 	[18192]=true,	[24799]=true,	[18194]=true,	[22730]=true,	[25661]=true,	[18141]=true,	[18125]=true,
 	[22790]=true,	[22789]=true,	[25804]=true,
 	[18222]=true,
+	[18125]=true,	[18141]=true,
 }
 module.db.StaminaFood = {[201638]=true,[259457]=true,[288075]=true,[288074]=true,[297119]=true,[297040]=true,}
 
@@ -171,9 +172,16 @@ module.db.minFoodLevelToActual = {
 if not ExRT.isClassic and UnitLevel'player' > 50 then
 	module.db.tableFood = {
 	--Haste		Mastery		Crit		Versa		Int		Str 		Agi		Stam		Stam		Special
-	[308488]=30,	[308506]=30,	[308434]=30,	[308514]=30,							[308525]=30,			[308637]=30,
+	[308488]=30,	[308506]=30,	[308434]=30,	[308514]=30,	[327708]=20,	[327706]=20,	[327709]=20,	[308525]=30,	[327707]=30,	[308637]=30,
+	[308474]=18,	[308504]=18,	[308430]=18,	[308509]=18,	[327704]=18,	[327701]=18,	[327705]=18,	[327702]=18,	[308525]=18,
+									[341449]=20,
 	}
-	module.db.tableFood_headers = {0,30}
+	module.db.tableFoodIsBest = {
+	--Haste		Mastery		Crit		Versa		Int		Str 		Agi		Stam		Stam		Special
+	[308488]=30,	[308506]=30,	[308434]=30,	[308514]=30,	[327708]=30,	[327706]=30,	[327709]=30,	[308525]=30,	[327707]=30,	[308637]=30,
+									[341449]=30,
+	}
+	module.db.tableFood_headers = {0,18,30}
 
 	module.db.tableFlask = {
 	--Stamina,	Main stat,
@@ -186,14 +194,13 @@ if not ExRT.isClassic and UnitLevel'player' > 50 then
 	end
 
 	module.db.minFoodLevelToActual = {
-		[100] = 20,
+		[100] = 18,
 		[125] = 30,
 	}
 	module.db.tableInt = {[1459]=true,}
 	module.db.tableStamina = {[21562]=true,}
 	module.db.tableAP = {[6673]=true,}
 end
-
 
 module.db.classicBuffs = {
 	{"druid","Druid",136078,{[21850]=7,[21849]=6,[1126]=1,[5232]=2,[5234]=4,[6756]=3,[8907]=5,[9884]=6,[9885]=7,}},	--Gift of the Wild
@@ -228,10 +235,11 @@ module.db.RaidCheckReadyCheckTable = {}
 module.db.RaidCheckReadyPPLNum = 0
 module.db.RaidCheckReadyCheckHideSchedule = nil
 
-module.db.tableRunes = {[224001]=5,[270058]=6,[317065]=6,}
+module.db.tableRunes = {[224001]=5,[270058]=6,[317065]=6,[347901]=18,}
 
 module.db.durability = {}
 module.db.oil = {}
+module.db.oil2 = {}
 module.db.kit = {}
 
 local IsSendFoodByMe,IsSendFlaskByMe,IsSendRunesByMe,IsSendBuffsByMe = nil
@@ -466,6 +474,9 @@ local function GetFood(checkType)
 							stats = ceil( stats / 1.5 )
 						end
 						stats = foodType or stats			---ALERT HERE, stats must be first; replace on future updates
+						if module.db.tableFoodIsBest[spellId] then
+							stats = module.db.tableFoodIsBest[spellId]
+						end
 
 						if spellId == 201641 or spellId == 201640 or spellId == 201639 or spellId == 201638 then 
 							stats = foodType
@@ -707,38 +718,38 @@ module.GetRaidBuffs = GetRaidBuffs
 function module.options:Load()
 	self:CreateTilte()
 
-	self.food = ELib:Button(self,L.raidcheckfood):Size(230,20):Point(15,-30):OnClick(function() GetFood() end)
+	self.food = ELib:Button(self,L.raidcheckfood):Size(230,20):Point(15,-20):OnClick(function() GetFood() end)
 	self.food.txt = ELib:Text(self,"/rt food",10):Size(100,20):Point("LEFT",self.food,"RIGHT",5,0)
 
 	self.foodToChat = ELib:Button(self,L.raidcheckfoodchat):Size(230,20):Point("LEFT",self.food,"RIGHT",71,0):OnClick(function() GetFood(1) end)
 	self.foodToChat.txt = ELib:Text(self,"/rt foodchat",10):Size(100,20):Point("LEFT",self.foodToChat,"RIGHT",5,0)
 
-	self.flask = ELib:Button(self,L.raidcheckflask):Size(230,20):Point(15,-55):OnClick(function() GetFlask() end)
+	self.flask = ELib:Button(self,L.raidcheckflask):Size(230,20):Point(15,-45):OnClick(function() GetFlask() end)
 	self.flask.txt = ELib:Text(self,"/rt flask",10):Size(100,20):Point("LEFT",self.flask,"RIGHT",5,0)
 
 	self.flaskToChat = ELib:Button(self,L.raidcheckflaskchat):Size(230,20):Point("LEFT",self.flask,"RIGHT",71,0):OnClick(function() GetFlask(1) end)
 	self.flaskToChat.txt = ELib:Text(self,"/rt flaskchat",10):Size(100,20):Point("LEFT",self.flaskToChat,"RIGHT",5,0)
 
-	self.runes = ELib:Button(self,L.RaidCheckRunesCheck):Size(230,20):Point(15,-80):OnClick(function() GetRunes() end)
+	self.runes = ELib:Button(self,L.RaidCheckRunesCheck):Size(230,20):Point(15,-70):OnClick(function() GetRunes() end)
 	self.runes.txt = ELib:Text(self,"/rt check r",10):Size(60,22):Point("LEFT",self.runes,"RIGHT",5,0)
 
 	self.runesToChat = ELib:Button(self,L.RaidCheckRunesChat):Size(230,20):Point("LEFT",self.runes,"RIGHT",71,0):OnClick(function() GetRunes(1) end)
 	self.runesToChat.txt = ELib:Text(self,"/rt check rc",10):Size(100,22):Point("LEFT",self.runesToChat,"RIGHT",5,0)
 
-	self.vantusrunes = ELib:Button(self,L.RaidCheckVRunesCheck):Size(230,20):Point(15,-105):OnClick(function() GetVRunes() end)
+	self.vantusrunes = ELib:Button(self,L.RaidCheckVRunesCheck):Size(230,20):Point(15,-95):OnClick(function() GetVRunes() end)
 	self.vantusrunes.txt = ELib:Text(self,"/rt check v",10):Size(60,22):Point("LEFT",self.vantusrunes,"RIGHT",5,0)
 
 	self.vantusrunesToChat = ELib:Button(self,L.RaidCheckVRunesChat):Size(230,20):Point("LEFT",self.vantusrunes,"RIGHT",71,0):OnClick(function() GetVRunes(1) end)
 	self.vantusrunesToChat.txt = ELib:Text(self,"/rt check vc",10):Size(100,22):Point("LEFT",self.vantusrunesToChat,"RIGHT",5,0)
 
-	self.raidbuffs = ELib:Button(self,L.RaidCheckBuffs):Size(230,20):Point(15,-130):OnClick(function() GetRaidBuffs() end)
+	self.raidbuffs = ELib:Button(self,L.RaidCheckBuffs):Size(230,20):Point(15,-120):OnClick(function() GetRaidBuffs() end)
 	self.raidbuffs.txt = ELib:Text(self,"/rt check b",10):Size(60,22):Point("LEFT",self.raidbuffs,"RIGHT",5,0)
 
 	self.raidbuffsToChat = ELib:Button(self,L.RaidCheckBuffsToChat):Size(230,20):Point("LEFT",self.raidbuffs,"RIGHT",71,0):OnClick(function() GetRaidBuffs(1) end)
 	self.raidbuffsToChat.txt = ELib:Text(self,"/rt check bc",10):Size(100,22):Point("LEFT",self.raidbuffsToChat,"RIGHT",5,0)
 
 	self.level2optLine = CreateFrame("Frame",nil,self)
-	self.level2optLine:SetPoint("TOPLEFT",10,-155)
+	self.level2optLine:SetPoint("TOPLEFT",10,-145)
 	self.level2optLine:SetSize(1,1)
 
 	self.chkSlak = ELib:Check(self,L.raidcheckslak,VExRT.RaidCheck.ReadyCheck):Point("TOPLEFT",self.level2optLine,7,0):OnClick(function(self) 
@@ -858,7 +869,7 @@ function module.options:Load()
 		end
 	end)
 
-	self.potion = ELib:Button(self,L.raidcheckPotionLastPull):Size(230,20):Point("TOPLEFT",self.chkPotion,"TOPLEFT",-2,-30):OnClick(function() GetPotion(2) end):Run(function(s,a) if a then s:Disable() end end,not VExRT.RaidCheck.PotionCheck)
+	self.potion = ELib:Button(self,L.raidcheckPotionLastPull):Size(230,20):Point("TOPLEFT",self.chkPotion,"TOPLEFT",-2,-25):OnClick(function() GetPotion(2) end):Run(function(s,a) if a then s:Disable() end end,not VExRT.RaidCheck.PotionCheck)
 	self.potion.txt = ELib:Text(self,"/rt potion",11):Size(100,20):Point("LEFT",self.potion,"RIGHT",5,0)
 
 	self.potionToChat = ELib:Button(self,L.raidcheckPotionLastPullToChat):Size(230,20):Point("LEFT",self.potion,"RIGHT",71,0):OnClick(function() GetPotion(1) end):Run(function(s,a) if a then s:Disable() end end,not VExRT.RaidCheck.PotionCheck)
@@ -870,7 +881,7 @@ function module.options:Load()
 
 	self.optReadyCheckFrame = CreateFrame("Frame",nil,self)
 	self.optReadyCheckFrame:SetSize(688,145)
-	self.optReadyCheckFrame:SetPoint("TOP",0,-480)
+	self.optReadyCheckFrame:SetPoint("TOP",0,-460)
 
 	ELib:DecorationLine(self):Point("BOTTOM",self.optReadyCheckFrame,"TOP",0,0):Point("LEFT",self):Point("RIGHT",self):Size(0,1)
 
@@ -878,7 +889,7 @@ function module.options:Load()
 
 	ELib:Text(self.optReadyCheckFrame,"/rt check",10):Point("BOTTOMLEFT",self.optReadyCheckFrameHeader,"BOTTOMRIGHT",5,0)
 
-	self.chkReadyCheckFrameEnable = ELib:Check(self.optReadyCheckFrame,L.Enable,VExRT.RaidCheck.ReadyCheckFrame):Point(15,-10):AddColorState():OnClick(function(self) 
+	self.chkReadyCheckFrameEnable = ELib:Check(self.optReadyCheckFrame,L.Enable,VExRT.RaidCheck.ReadyCheckFrame):Point(15,-5):AddColorState():OnClick(function(self) 
 		if self:GetChecked() then
 			module:RegisterEvents('READY_CHECK_FINISHED','READY_CHECK_CONFIRM')
 			VExRT.RaidCheck.ReadyCheckFrame = true
@@ -896,7 +907,7 @@ function module.options:Load()
 		end
 	end)
 
-	self.chkReadyCheckFrameSliderScale = ELib:Slider(self.optReadyCheckFrame,L.raidcheckReadyCheckScale):Size(250):Point(25,-50):Range(5,200):SetTo(VExRT.RaidCheck.ReadyCheckFrameScale or 100):OnChange(function(self,event) 
+	self.chkReadyCheckFrameSliderScale = ELib:Slider(self.optReadyCheckFrame,L.raidcheckReadyCheckScale):Size(250):Point(25,-40):Range(5,200):SetTo(VExRT.RaidCheck.ReadyCheckFrameScale or 100):OnChange(function(self,event) 
 		event = event - event%1
 		VExRT.RaidCheck.ReadyCheckFrameScale = event
 		ExRT.F.SetScaleFix(module.frame,event/100)
@@ -904,7 +915,7 @@ function module.options:Load()
 		self:tooltipReload(self)
 	end)
 
-	self.chkReadyCheckFrameButTest = ELib:Button(self.optReadyCheckFrame,L.raidcheckReadyCheckTest):Size(280,22):Point(310,-10):OnClick(function(self) 
+	self.chkReadyCheckFrameButTest = ELib:Button(self.optReadyCheckFrame,L.raidcheckReadyCheckTest):Size(280,22):Point(310,-5):OnClick(function(self) 
 		module.main:READY_CHECK("raid1",35,"TEST")
 		for i=2,30 do
 			local y = math.random(1,30000)
@@ -913,20 +924,40 @@ function module.options:Load()
 		end
 	end)
 
-	self.chkReadyCheckFrameHtmlTimer = ELib:Text(self.optReadyCheckFrame,L.raidcheckReadyCheckTimerTooltip,11):Size(200,24):Point(310,-50)
+	self.chkReadyCheckFrameHtmlTimer = ELib:Text(self.optReadyCheckFrame,L.raidcheckReadyCheckTimerTooltip,11):Size(200,24):Point(310,-40)
 
-	self.chkReadyCheckFrameEditBoxTimer = ELib:Edit(self.optReadyCheckFrame,6,true):Size(50,20):Point(515,-50):Text(VExRT.RaidCheck.ReadyCheckFrameTimerFade or "4"):OnChange(function(self)
+	self.chkReadyCheckFrameEditBoxTimer = ELib:Edit(self.optReadyCheckFrame,6,true):Size(50,20):Point(515,-40):Text(VExRT.RaidCheck.ReadyCheckFrameTimerFade or "4"):OnChange(function(self)
 		VExRT.RaidCheck.ReadyCheckFrameTimerFade = tonumber(self:GetText()) or 4
 		if VExRT.RaidCheck.ReadyCheckFrameTimerFade < 2.5 then VExRT.RaidCheck.ReadyCheckFrameTimerFade = 2.5 end
 	end) 
 
-	self.htmlReadyCheck1 = ELib:Text(self.optReadyCheckFrame,L.RaidCheckReadyCheckHelp,12):Size(583,100):Point(10,-90):Top()
+	self.htmlReadyCheck1 = ELib:Text(self.optReadyCheckFrame,L.RaidCheckReadyCheckHelp,12):Size(583,100):Point(10,-75):Top()
 
-	self.chkReadyCheckFrameEnable = ELib:Check(self.optReadyCheckFrame,L.RaidCheckSortByClass,VExRT.RaidCheck.ReadyCheckSortClass):Point(15,-120):OnClick(function(self) 
+	self.chkReadyCheckFrameEnable = ELib:Check(self.optReadyCheckFrame,L.RaidCheckSortByClass,VExRT.RaidCheck.ReadyCheckSortClass):Point(15,-105):OnClick(function(self) 
 		if self:GetChecked() then
 			VExRT.RaidCheck.ReadyCheckSortClass = true
 		else
 			VExRT.RaidCheck.ReadyCheckSortClass = nil
+		end
+	end)
+
+
+
+	self.consumablesCheckFrame = CreateFrame("Frame",nil,self)
+	self.consumablesCheckFrame:SetSize(688,145)
+	self.consumablesCheckFrame:SetPoint("TOP",0,-607)
+
+	self.consumablesCheckFrame.dl1 = ELib:DecorationLine(self):Point("BOTTOM",self.consumablesCheckFrame,"TOP",0,0):Point("LEFT",self):Point("RIGHT",self):Size(0,1)
+
+	self.consumablesFrameHeader = ELib:Text(self.consumablesCheckFrame,L.RaidCheckConsum):Point("BOTTOMLEFT",self.consumablesCheckFrame,"TOPLEFT",10,3):Bottom():Color()
+
+	self.chkReadyCheckFrameEnable = ELib:Check(self.consumablesCheckFrame,L.Enable,not VExRT.RaidCheck.DisableConsumables):Point(15,-5):AddColorState():OnClick(function(self) 
+		if self:GetChecked() then
+			VExRT.RaidCheck.DisableConsumables = nil
+			module.consumables:Enable()
+		else
+			VExRT.RaidCheck.DisableConsumables = true
+			module.consumables:Disable()
 		end
 	end)
 
@@ -974,6 +1005,8 @@ function module.options:Load()
 		self.potionToChat.txt:Hide()
 		self.hs:Hide()
 		self.hsToChat:Hide()
+		self.consumablesCheckFrame:Hide()
+		self.consumablesCheckFrame.dl1:Hide()
 
 		self.optReadyCheckFrame:SetPoint("TOP",0,-50)
 	end
@@ -1045,14 +1078,20 @@ do
 		--8,	--INVSLOT_FEET
 	}
 	local L_EncName = "^"..L.RaidCheckReinforced
+	local TimeLeftPatt = "%(([^%)]+)%)[^%)]*$"
 	if ExRT.locale == "koKR" then
 		L_EncName = "%([^%)]+%+%d+%) %(%d+"
+	elseif ExRT.locale == "zhCN" then
+		L_EncName = "^加固（%+[0-9]+ "
+		TimeLeftPatt = "（([^）]-)）$"
 	elseif ExRT.locale ~= "ruRU" and ExRT.locale ~= "enGB" and ExRT.locale ~= "enUS" then
 		L_EncName = "%(%+%d+[^%)]+%) %(%d+"
 	end
 
 	function module:KitCheck()
 		local kitNow, kitMax = 0, 1
+		local kitType = 0
+		local timeLeft
 		for _,itemSlotID in pairs(KitSlots) do
 			inspectScantip:SetInventoryItem("player", itemSlotID)
 
@@ -1062,6 +1101,15 @@ do
 				if text and text ~= "" then
 					if text:find(L_EncName) then
 						kitNow = kitNow + 1
+						timeLeft = text:match(TimeLeftPatt)
+						local stats = text:match("%d+")
+						if stats == "32" then
+							kitType = 172347
+						elseif stats == "16" then
+							kitType = 172346
+						elseif stats == "24" then
+							kitType = 180709
+						end
 						break
 					end
 				end
@@ -1069,7 +1117,7 @@ do
 
 			inspectScantip:ClearLines()
 		end
-		return kitNow, kitMax
+		return kitNow, kitMax, timeLeft, kitType
 	end
 end
 
@@ -1088,6 +1136,8 @@ do
 				{GetSpellInfo(322763),322763},
 				{GetSpellInfo(295623),33757},
 				{GetSpellInfo(194084),318038},
+				{L.RaidCheckOilSharpen,322762},
+				{L.RaidCheckOilSharpen2,322763},
 			}
 			for i=#oilTypes,1,-1 do
 				if not oilTypes[i][1] then
@@ -1096,26 +1146,37 @@ do
 			end
 		end
 
+		local oilMH, oilOH = 0, 0
+
 		for _,itemSlotID in pairs(OilSlots) do
 			inspectScantip:SetInventoryItem("player", itemSlotID)
 
 			for j=2, inspectScantip:NumLines() do
 				local tooltipLine = _G["ExRTRaidCheckScanningTooltipTextLeft"..j]
 				local text = tooltipLine:GetText()
+				local isBreak
 				if text and text ~= "" then
 					for i=1,#oilTypes do
 						if text:find("^"..oilTypes[i][1]) then
-							inspectScantip:ClearLines()
-							return oilTypes[i][2]
+							if itemSlotID == 16 then
+								oilMH = oilTypes[i][2]
+							elseif itemSlotID == 17 then
+								oilOH = oilTypes[i][2]
+							end
+							isBreak = true
+							break
 						end
 					end
+				end
+				if isBreak then
+					break
 				end
 			end
 
 			inspectScantip:ClearLines()
 		end
 
-		return 0
+		return oilMH, oilOH
 	end
 end
 
@@ -1223,25 +1284,21 @@ end
 
 local RCW_liveToslDiff = 0
 if not ExRT.isClassic and UnitLevel'player' > 50 then
-	tremove(RCW_iconsList,3)
-	tremove(RCW_iconsListHeaders,3)
-	tremove(RCW_iconsListDebugIcons,3)
+	tinsert(RCW_iconsList,8,'oil')
+	tinsert(RCW_iconsListHeaders,8,WEAPON)
+	tinsert(RCW_iconsListDebugIcons,8,463543)
 
-	tinsert(RCW_iconsList,7,'oil')
-	tinsert(RCW_iconsListHeaders,7,WEAPON)
-	tinsert(RCW_iconsListDebugIcons,7,463543)
+	tinsert(RCW_iconsList,8,'kit')
+	tinsert(RCW_iconsListHeaders,8,BONUS_ARMOR)
+	tinsert(RCW_iconsListDebugIcons,8,3528447)
 
-	tinsert(RCW_iconsList,7,'kit')
-	tinsert(RCW_iconsListHeaders,7,BONUS_ARMOR)
-	tinsert(RCW_iconsListDebugIcons,7,3528447)
-
-	RCW_liveToslDiff = 30
+	RCW_liveToslDiff = 60
 end
 
 module.frame = ELib:Template("ExRTDialogModernTemplate",UIParent)
 module.frame:SetSize(430+(ExRT.isClassic and 30*RCW_liveToClassicDiff or 0)+RCW_liveToslDiff,100)
 module.frame:SetPoint("CENTER",UIParent,"CENTER",0,0)
-module.frame:SetFrameStrata("TOOLTIP")
+module.frame:SetFrameStrata("DIALOG")
 module.frame:EnableMouse(true)
 module.frame:SetMovable(true)
 module.frame:RegisterForDrag("LeftButton")
@@ -1891,6 +1948,8 @@ function module.frame:UpdateData(onlyLine)
 						line.food.texture:SetTexture(136000)
 						if type(val)~="number" then
 							val = ""
+						elseif module.db.tableFoodIsBest[spellId] then
+							line.food.text:SetTextColor(0,1,0)
 						elseif val >= 30 or (UnitLevel'player' < 60 and val >= 10) then
 							line.food.text:SetTextColor(0,1,0)
 						else
@@ -1963,8 +2022,8 @@ function module.frame:UpdateData(onlyLine)
 					elseif module.db.tableRunes[spellId] and line.rune then
 						local val = module.db.tableRunes[spellId]
 
-						line.rune.texture:SetTexture((spellId == 270058 or spellId == 317065) and 840006 or icon)
-						if val >= 6 then
+						line.rune.texture:SetTexture((spellId == 270058 or spellId == 317065) and 840006 or (spellId == 347901 and 134078) or icon)
+						if val >= 18 then
 							line.rune.text:SetTextColor(0,1,0)
 							line.rune.text:SetText("")
 						else
@@ -2018,8 +2077,41 @@ function module.frame:UpdateData(onlyLine)
 						dur = durTab.kit
 					end
 					line.kit.bigText:SetText(dur or "-")
+					line.kit.text:SetTextColor(1,1,1)
 
 					local kNow,kMax = (dur or ""):match("(%d+)/(%d+)")
+
+					if kNow == "1" then
+						line.kit.bigText:SetText("")
+						line.kit.texture:SetTexture(3528447)
+						line.kit.tooltip = "spell:"..324068
+
+						if durTab.types then
+							local itemID = strsplit(":",durTab.types)
+							if itemID and itemID ~= "0" and tonumber(itemID) then
+								local _, _, _, _, icon = GetItemInfoInstant(tonumber(itemID))
+								if icon then
+									line.kit.texture:SetTexture(icon)
+								end
+								line.kit.tooltip = "item:"..itemID
+
+								local stats = ""
+								if itemID == "172347" then
+									stats = 32
+									line.kit.text:SetTextColor(0,1,0)
+								elseif itemID == "172346" then
+									stats = 16
+									line.kit.text:SetTextColor(1,1,0)
+								elseif itemID == "180709" then
+									stats = 24
+									line.kit.text:SetTextColor(1,1,0)
+								end
+								line.kit.text:SetText(stats)
+							end
+						end
+					elseif kNow == "0" then
+						line.kit.bigText:SetText("")
+					end 
 
 					if not kNow or not kMax or kNow == kMax then
 						line.kit.bigText:SetTextColor(1,1,1)
@@ -2030,9 +2122,10 @@ function module.frame:UpdateData(onlyLine)
 					end
 				end
 				if line.oil and not self.isTest then
-					local durTab, oil = module.db.oil[line.unit_name]
+					local durTab, oil, oil2 = module.db.oil[line.unit_name]
 					if durTab and (durTab.time + (line.rc_status ~= 4 and 60 or 600) > currTime) then
 						oil = durTab.oil
+						oil2 = module.db.oil2[line.unit_name]
 					end
 					if not oil then
 						line.oil.bigText:SetText("-")
@@ -2043,9 +2136,31 @@ function module.frame:UpdateData(onlyLine)
 						if oil == "320798" then texture = 463543
 						elseif oil == "321389" then texture = 463544
 						elseif oil == "322762" then texture = 3528422
-						elseif oil == "322763" then texture = 3528423 end
+						elseif oil == "322763" then texture = 3528423 
+						end
 						line.oil.texture:SetTexture(texture)
 						line.oil.tooltip = "spell:"..oil
+
+						if oil2 then
+							oil2 = oil2.oil
+							if oil2 ~= "0" then
+								local texture = select(3,GetSpellInfo(tonumber(oil2)))
+								if oil2 == "320798" then texture = 463543
+								elseif oil2 == "321389" then texture = 463544
+								elseif oil2 == "322762" then texture = 3528422
+								elseif oil2 == "322763" then texture = 3528423 
+								end
+								line.oil2.texture:SetTexture(texture)
+								line.oil2.tooltip = "spell:"..oil2
+								line.oil2:Show()
+	
+								local size = (line.oil.size or 18) - 4
+								line.oil:SetSize(size,size)
+								line.oil2:SetSize(size,size)
+								
+								line.oil:Point("CENTER",line.oilpointer,"CENTER",-size*(1/2),0)
+							end
+						end
 					end
 				end
 
@@ -2220,11 +2335,20 @@ function module.main:ADDON_LOADED()
 	if VExRT.RaidCheck.PotionCheck then
 		--module:RegisterEvents('COMBAT_LOG_EVENT_UNFILTERED')
 	end
+
+	if not VExRT.RaidCheck.WeaponEnch then
+		VExRT.RaidCheck.WeaponEnch = {}
+	end
+
 	module:RegisterEvents('READY_CHECK')
 
 	module:RegisterSlash()
 	module:RegisterTimer()
 	module:RegisterAddonMessage()
+
+	if module.consumables and not VExRT.RaidCheck.DisableConsumables then
+		module.consumables:Enable()
+	end
 end
 
 local function SendDataToChat()
@@ -2281,6 +2405,19 @@ local function PrepareDataToChat(toSelf)
 	end
 end
 
+function module:SendConsumeData()
+	local oilMH, oilOH = module:OilCheck()
+
+	local kitNow, kitMax, kitTimeLeft, kitType = module:KitCheck()
+
+	ExRT.F.SendExMsg("raidcheck","DUR\t"..ExRT.V.."\t"..format("%.2f",module:DurabilityCheck())..
+		(not ExRT.isClassic and "\tKIT\t"..format("%d/%d",kitNow, kitMax) or "")..
+		(not ExRT.isClassic and "\tOIL\t"..format("%d",oilMH) or "")..
+		(not ExRT.isClassic and "\tOIL2\t"..format("%d",oilOH) or "")..
+		(not ExRT.isClassic and "\tKITT\t"..format("%d",kitType or 0) or "")
+	)
+end
+
 do
 	local function ScheduledReadyCheckFinish()
 		module.main:READY_CHECK_FINISHED()
@@ -2303,10 +2440,7 @@ do
 			module.main:READY_CHECK_CONFIRM(ExRT.F.delUnitNameServer(starter),true,isTest)
 		end
 		if not isTest then
-			ExRT.F.SendExMsg("raidcheck","DUR\t"..ExRT.V.."\t"..format("%.2f",module:DurabilityCheck())..
-				(not ExRT.isClassic and "\tKIT\t"..format("%d/%d",module:KitCheck()) or "")..
-				(not ExRT.isClassic and "\tOIL\t"..format("%d",module:OilCheck()) or "")
-			)
+			module:SendConsumeData()
 		end
 	end
 end
@@ -2366,12 +2500,23 @@ function module:addonMessage(sender, prefix, type, ver, ...)
 							kit = val,
 						}
 						module.db.kit[shortName] = module.db.kit[sender]
+					elseif key == "KITT" then
+						local data = module.db.kit[sender]
+						if data then
+							data.types = val
+						end
 					elseif key == "OIL" then
 						module.db.oil[sender] = {
 							time = time(),
 							oil = val,
 						}
 						module.db.oil[shortName] = module.db.oil[sender]
+					elseif key == "OIL2" then
+						module.db.oil2[sender] = {
+							time = time(),
+							oil = val,
+						}
+						module.db.oil2[shortName] = module.db.oil2[sender]
 					end
 				end
 
@@ -2416,10 +2561,7 @@ function module:addonMessage(sender, prefix, type, ver, ...)
 				end
 				module.db.prevReqAntispam = currTime
 
-				ExRT.F.SendExMsg("raidcheck","DUR\t"..ExRT.V.."\t"..format("%.2f",module:DurabilityCheck())..
-					(not ExRT.isClassic and "\tKIT\t"..format("%d/%d",module:KitCheck()) or "")..
-					(not ExRT.isClassic and "\tOIL\t"..format("%d",module:OilCheck()) or "")
-				)
+				module:SendConsumeData()
 			end
 		end
 	end
@@ -2442,3 +2584,389 @@ addonMsgFrame:SetScript("OnEvent",function (self, event, ...)
 	end
 end)
 addonMsgFrame:RegisterEvent("CHAT_MSG_ADDON")
+
+
+if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
+	local consumables_size = 44
+
+	local lastWeaponEnchantItem
+	
+	module.consumables = CreateFrame("Frame","ExRTConsumables",ReadyCheckListenerFrame)
+	module.consumables:SetPoint("BOTTOM",ReadyCheckListenerFrame,"TOP",0,5)
+	module.consumables:SetSize(consumables_size*5,consumables_size)
+	module.consumables:Hide()
+	module.consumables.buttons = {}
+
+	local function ButtonOnEnter(self)
+		self:GetParent():SetAlpha(.7)
+	end
+	local function ButtonOnLeave(self)
+		self:GetParent():SetAlpha(1)
+	end
+
+	module.consumables.state = CreateFrame('Frame', nil, nil, 'SecureHandlerStateTemplate')
+	module.consumables.state:SetAttribute('_onstate-combat', [=[
+		for i=1,6 do
+			if i == 2 or i == 3 or i == 4 or i == 5 then
+				if self:GetFrameRef("Button"..i) then
+					if newstate == 'hide' then
+						self:GetFrameRef("Button"..i):Hide()
+					elseif newstate == 'show' then
+						if self:GetFrameRef("Button"..i).IsON then
+							self:GetFrameRef("Button"..i):Show()
+						end
+					end
+				end
+			end
+		end
+	]=])
+	RegisterStateDriver(module.consumables.state, 'combat', '[combat] hide; [nocombat] show')
+
+	for i=1,6 do
+		local button = CreateFrame("Frame",nil,module.consumables)
+		module.consumables.buttons[i] = button
+		button:SetSize(consumables_size,consumables_size)
+		button:SetPoint("LEFT",(i-1)*consumables_size,0)
+	
+		button.texture = button:CreateTexture()
+		button.texture:SetAllPoints()
+	
+		button.statustexture = button:CreateTexture(nil,"OVERLAY")
+		button.statustexture:SetPoint("CENTER")
+		button.statustexture:SetSize(consumables_size/2,consumables_size/2)
+	
+		button.timeleft = button:CreateFontString(nil,"ARTWORK","GameFontWhite")
+		button.timeleft:SetPoint("BOTTOM",button,"TOP",0,1)
+		button.timeleft:SetFont(button.timeleft:GetFont(),8,"OUTLINE")
+		--button.timeleft:SetTextColor(0,1,0,1)
+
+		button.count = button:CreateFontString(nil,"ARTWORK","GameFontWhite")
+		button.count:SetPoint("BOTTOMRIGHT",button,"BOTTOMRIGHT",-1,1)
+		button.count:SetFont(button.timeleft:GetFont(),10,"OUTLINE")
+		--button.count:SetTextColor(0,1,0,1)
+
+		if i == 2 or i == 3 or i == 4 or i == 5 then
+			button.click = CreateFrame("Button",nil,button,"SecureActionButtonTemplate")
+			button.click:SetAllPoints()
+			button.click:Hide()
+			button.click:RegisterForClicks("AnyDown")
+			button.click:SetAttribute("type", "macro")
+	
+			button.click:SetScript("OnEnter",ButtonOnEnter)
+			button.click:SetScript("OnLeave",ButtonOnLeave)
+	
+			module.consumables.state:SetFrameRef("Button"..i, button.click)
+		end
+	
+		if i == 1 then
+			button.texture:SetTexture(136000)
+			module.consumables.buttons.food = button
+		elseif i == 2 then
+			button.texture:SetTexture(3566840)
+			module.consumables.buttons.flask = button
+		elseif i == 3 then
+			button.texture:SetTexture(3528447)
+			module.consumables.buttons.kit = button
+		elseif i == 4 then
+			button.texture:SetTexture(463543)
+			module.consumables.buttons.oil = button
+		elseif i == 5 then
+			button.texture:SetTexture(134078)
+			module.consumables.buttons.rune = button
+		elseif i == 6 then
+			button.texture:SetTexture(538745)
+			module.consumables.buttons.hs = button
+		end
+	end
+	
+	function module.consumables:Enable()
+		self:RegisterEvent("READY_CHECK")
+		self:Show()
+	end
+	function module.consumables:Disable()
+		self:UnregisterAllEvents()
+		self:Hide()
+	end
+
+	local isElvUIFix
+
+	function module.consumables:Update()
+		if IsAddOnLoaded("ElvUI") and not isElvUIFix then
+			self:SetParent(ReadyCheckFrame)
+			self:ClearAllPoints()
+			self:SetPoint("BOTTOM",ReadyCheckFrame,"TOP",0,5)
+			isElvUIFix = true
+		end
+
+		local isWarlockInRaid
+		for _, name, subgroup, class, guid, rank, level, online, isDead, combatRole in ExRT.F.IterateRoster, ExRT.F.GetRaidDiffMaxGroup() do
+			if class == "WARLOCK" then
+				isWarlockInRaid = true
+				break
+			end
+		end
+		local totalButtons = 6
+		if isWarlockInRaid then
+			self.buttons.hs:Show()
+		else
+			self.buttons.hs:Hide()
+			totalButtons = totalButtons - 1
+		end
+		if not InCombatLockdown() then
+			self:SetWidth(consumables_size*totalButtons)
+		end
+
+		for i=1,#self.buttons do
+			self.buttons[i].statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-NotReady")
+			self.buttons[i].timeleft:SetText("")
+			self.buttons[i].count:SetText("")
+			self.buttons[i].texture:SetDesaturated(true)
+		end
+
+		local LCG = LibStub("LibCustomGlow-1.0",true)
+
+		local now = GetTime()
+
+		local isFood, isRune, isFlask
+
+		for i=1,60 do
+			local name,icon,count,dispelType,duration,expires,caster,isStealable,_,spellId = UnitAura("player", i, "HELPFUL")
+			if not spellId then
+				break
+			elseif module.db.tableFood[spellId] then
+				self.buttons.food.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+				self.buttons.food.texture:SetDesaturated(false)
+				self.buttons.food.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
+				isFood = true
+			elseif icon == 136000 and not isFood then
+				self.buttons.food.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+				self.buttons.food.texture:SetDesaturated(false)
+				self.buttons.food.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
+			elseif module.db.tableFlask[spellId] then
+				self.buttons.flask.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+				self.buttons.flask.texture:SetDesaturated(false)
+				self.buttons.flask.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
+				isFlask = true
+				if expires - now <= 900 then
+					isFlask = false
+				end
+			elseif module.db.tableRunes[spellId] then
+				self.buttons.rune.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+				self.buttons.rune.texture:SetDesaturated(false)
+				self.buttons.rune.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
+				isRune = true
+			end
+		end
+
+		local hsCount = GetItemCount(5512,false,true)
+		if hsCount and hsCount > 0 then
+			self.buttons.hs.count:SetFormattedText("%d",hsCount)
+			self.buttons.hs.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+			self.buttons.hs.texture:SetDesaturated(false)
+		else
+			self.buttons.hs.count:SetText("0")
+		end
+
+
+
+		local flaskCount = GetItemCount(171276,false,false)
+		local flaskCanCount = GetItemCount(171280,false,false)
+		if not isFlask and ((flaskCount and flaskCount > 0) or (flaskCanCount and flaskCanCount > 0)) then
+			if not InCombatLockdown() then
+				local itemID = (flaskCanCount and flaskCanCount > 0) and 171280 or 171276
+				local itemName = GetItemInfo(itemID)
+				if itemName then
+					self.buttons.flask.click:SetAttribute("macrotext1", format("/stopmacro [combat]\n/use %s", itemName))
+					self.buttons.flask.click:Show()
+					self.buttons.flask.click.IsON = true
+				else
+					self.buttons.flask.click:Hide()
+					self.buttons.flask.click.IsON = false
+				end
+			end
+		else
+			if not InCombatLockdown() then
+				self.buttons.flask.click:Hide()
+				self.buttons.flask.click.IsON = false
+			end
+		end
+		self.buttons.flask.count:SetFormattedText("%d%s",flaskCount,flaskCanCount > 0 and "+|cff00ff00"..flaskCanCount or "")
+		if LCG then
+			if not isFlask and ((flaskCount and flaskCount > 0) or (flaskCanCount and flaskCanCount > 0)) then
+				LCG.PixelGlow_Start(self.buttons.flask)
+			else
+				LCG.PixelGlow_Stop(self.buttons.flask)
+			end
+		end
+
+
+		local kitCount = GetItemCount(172347,false,true)
+		local kitNow, kitMax, kitTimeLeft = module:KitCheck()
+		if kitNow > 0 then
+			self.buttons.kit.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+			self.buttons.kit.texture:SetDesaturated(false)
+			if kitTimeLeft then
+				self.buttons.kit.timeleft:SetText(kitTimeLeft)
+			end
+		end
+		if kitCount and kitCount > 0 then
+			if not InCombatLockdown() then
+				local itemName = GetItemInfo(172347)
+				if itemName then
+					self.buttons.kit.click:SetAttribute("macrotext1", format("/stopmacro [combat]\n/use %s\n/use 5", itemName))
+					self.buttons.kit.click:Show()
+					self.buttons.kit.click.IsON = true
+				else
+					self.buttons.kit.click:Hide()
+					self.buttons.kit.click.IsON = false
+				end
+			end
+		else
+			if not InCombatLockdown() then
+				self.buttons.kit.click:Hide()
+				self.buttons.kit.click.IsON = false
+			end
+		end
+		self.buttons.kit.count:SetFormattedText("%d",kitCount)
+		if LCG then
+			if kitCount and kitCount > 0 and kitNow == 0 then
+				LCG.PixelGlow_Start(self.buttons.kit)
+			else
+				LCG.PixelGlow_Stop(self.buttons.kit)
+			end
+		end
+
+		lastWeaponEnchantItem = lastWeaponEnchantItem or VExRT.RaidCheck.WeaponEnch[ExRT.SDB.charKey]
+
+		local hasMainHandEnchant, mainHandExpiration, mainHandCharges, mainHandEnchantID = GetWeaponEnchantInfo()
+		if hasMainHandEnchant then
+			self.buttons.oil.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+			self.buttons.oil.texture:SetDesaturated(false)
+			self.buttons.oil.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil(mainHandExpiration/1000/60))
+
+			if mainHandEnchantID == 6190 then
+				lastWeaponEnchantItem = 171286
+			elseif mainHandEnchantID == 6188 then
+				lastWeaponEnchantItem = 171285
+			elseif mainHandEnchantID == 6200 then
+				lastWeaponEnchantItem = 171437
+			elseif mainHandEnchantID == 6198 then
+				lastWeaponEnchantItem = 171436
+			elseif mainHandEnchantID == 6201 then
+				lastWeaponEnchantItem = 171439
+			elseif mainHandEnchantID == 6199 then
+				lastWeaponEnchantItem = 171438
+			end
+		end
+		if lastWeaponEnchantItem == 171286 then
+			self.buttons.oil.texture:SetTexture(463544)
+		elseif lastWeaponEnchantItem == 171285 then
+			self.buttons.oil.texture:SetTexture(463543)
+		elseif lastWeaponEnchantItem == 171437 then
+			self.buttons.oil.texture:SetTexture(3528422)
+		elseif lastWeaponEnchantItem == 171436 then
+			self.buttons.oil.texture:SetTexture(3528424)
+		elseif lastWeaponEnchantItem == 171439 then
+			self.buttons.oil.texture:SetTexture(3528423)
+		elseif lastWeaponEnchantItem == 171438 then
+			self.buttons.oil.texture:SetTexture(3528425)
+		end
+
+		VExRT.RaidCheck.WeaponEnch[ExRT.SDB.charKey] = lastWeaponEnchantItem
+
+		if lastWeaponEnchantItem then
+			local oilCount = GetItemCount(lastWeaponEnchantItem,false,true)
+			self.buttons.oil.count:SetText(oilCount)
+			if oilCount and oilCount > 0 then
+				if not InCombatLockdown() then
+					local itemName = GetItemInfo(lastWeaponEnchantItem)
+					if itemName then
+						if mainHandExpiration and mainHandExpiration <= 300000 then
+							self.buttons.oil.click:SetAttribute("macrotext1", format("/stopmacro [combat]\n/use %s", itemName))
+						else
+							self.buttons.oil.click:SetAttribute("macrotext1", format("/stopmacro [combat]\n/use %s", itemName))
+						end
+						self.buttons.oil.click:Show()
+						self.buttons.oil.click.IsON = true
+					else
+						self.buttons.oil.click:Hide()
+						self.buttons.oil.click.IsON = false
+					end
+				end
+			else
+				if not InCombatLockdown() then
+					self.buttons.oil.click:Hide()
+					self.buttons.oil.click.IsON = false
+				end
+			end
+
+			if LCG then
+				if oilCount and oilCount > 0 and (not hasMainHandEnchant or (mainHandExpiration and mainHandExpiration <= 300000)) then
+					LCG.PixelGlow_Start(self.buttons.oil)
+				else
+					LCG.PixelGlow_Stop(self.buttons.oil)
+				end
+			end
+		end
+
+		local runeCount = GetItemCount(181468,false,true)
+		if runeCount and runeCount > 0 then
+			self.buttons.rune.count:SetFormattedText("%d",runeCount)
+			if not InCombatLockdown() then
+				local itemName = GetItemInfo(181468)
+				if itemName then
+					self.buttons.rune.click:SetAttribute("macrotext1", format("/stopmacro [combat]\n/use %s", itemName))
+					self.buttons.rune.click:Show()
+					self.buttons.rune.click.IsON = true
+				else
+					self.buttons.rune.click:Hide()
+					self.buttons.rune.click.IsON = false
+				end
+			end
+		else
+			self.buttons.rune.count:SetText("0")
+			if not InCombatLockdown() then
+				self.buttons.rune.click:Hide()
+				self.buttons.rune.click.IsON = false
+			end
+		end
+
+		if LCG then
+			if runeCount and runeCount > 0 and not isRune then
+				LCG.PixelGlow_Start(self.buttons.rune)
+			else
+				LCG.PixelGlow_Stop(self.buttons.rune)
+			end
+		end
+	end
+
+	module.consumables:SetScript("OnEvent",function(self,event,arg1)
+		if event == "READY_CHECK" then
+			self:Update()
+			self:RegisterEvent("UNIT_AURA")
+			self:RegisterEvent("UNIT_INVENTORY_CHANGED")
+			C_Timer.After(40,function()
+				self:UnregisterEvent("UNIT_AURA")
+				self:UnregisterEvent("UNIT_INVENTORY_CHANGED")
+			end)
+		elseif event == "UNIT_AURA" then
+			if arg1 == "player" then
+				self:Update()
+			end
+		elseif event == "UNIT_INVENTORY_CHANGED" then
+			if arg1 == "player" then
+				C_Timer.After(.2,function()
+					self:Update()
+				end)
+			end
+		end
+	end)
+
+	module.consumables.Test = function()
+		module.consumables:SetParent(UIParent)
+		module.consumables:ClearAllPoints()
+		module.consumables:SetPoint("CENTER")
+		module.consumables:GetScript("OnEvent")(module.consumables,"READY_CHECK")
+	end
+	--/run GExRT.A.RaidCheck.consumables.Test()
+end

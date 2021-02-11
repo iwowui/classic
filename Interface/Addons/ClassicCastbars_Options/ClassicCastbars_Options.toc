@@ -4,6 +4,7 @@
 ## Title-zhCN: |CFFFF8000战斗|R 目标施法条 选项
 ## Title-zhTW: |CFFFF8000戰鬥|R 目標施法條 選項
 ## X-Repple: 战斗
+## Version: v1.3.20
 ## Dependencies: ClassicCastbars
 
 Libs\LibStub\LibStub.lua

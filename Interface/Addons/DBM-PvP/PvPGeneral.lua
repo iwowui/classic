@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod("PvPGeneral", "DBM-PvP")
 local L		= mod:GetLocalizedStrings()
 
+local DBM = DBM
 local GetPlayerFactionGroup = GetPlayerFactionGroup or UnitFactionGroup -- Classic Compat fix
 local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
-mod:SetRevision("20201216203747")
+mod:SetRevision("20210204014426")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents(
 	"ZONE_CHANGED_NEW_AREA",
@@ -14,7 +15,6 @@ mod:RegisterEvents(
 	"AREA_POIS_UPDATED"
 )
 
---mod:AddBoolOption("ColorByClass", true)
 mod:AddBoolOption("HideBossEmoteFrame", false)
 mod:AddBoolOption("AutoSpirit", false)
 mod:AddBoolOption("ShowRelativeGameTime", true)
@@ -23,7 +23,7 @@ do
 	local IsInInstance, C_ChatInfo = IsInInstance, C_ChatInfo
 	local bgzone = false
 
-	function mod:ZONE_CHANGED_NEW_AREA()
+	local function Init(self)
 		local _, instanceType = IsInInstance()
 		if instanceType == "pvp" or instanceType == "arena" then
 			C_ChatInfo.SendAddonMessage(isClassic and "D4C" or "D4", "H", "INSTANCE_CHAT")
@@ -36,10 +36,14 @@ do
 			bgzone = false
 			self:UnsubscribeAssault()
 			self:UnsubscribeFlags()
-			if self.Options.HideBossEmoteFrame then
+			if mod.Options.HideBossEmoteFrame then
 				DBM:HideBlizzardEvents(0, true)
 			end
 		end
+	end
+
+	function mod:ZONE_CHANGED_NEW_AREA()
+		self:Schedule(0.5, Init, self)
 	end
 	mod.PLAYER_ENTERING_WORLD	= mod.ZONE_CHANGED_NEW_AREA
 	mod.OnInitialize			= mod.ZONE_CHANGED_NEW_AREA
@@ -138,7 +142,7 @@ do
 	end
 end
 
-local subscribedMapID, prevAScore, prevHScore, warnAtEnd = 0, 0, 0, {}
+local subscribedMapID, prevAScore, prevHScore, warnAtEnd, hasWarns = 0, 0, 0, {}, false
 local numObjectives, objectivesStore
 
 function mod:SubscribeAssault(mapID, objectsCount)
@@ -173,20 +177,27 @@ function mod:SubscribeAssault(mapID, objectsCount)
 	updateGametime()
 end
 
-function mod:UnsubscribeAssault()
-	HideEstimatedPoints()
-	HideBasesToWin()
-	self:UnregisterShortTermEvents()
-	self:Stop()
-	subscribedMapID = 0
-	prevAScore, prevHScore = 0, 0
-	if #warnAtEnd > 0 then
-		DBM:AddMsg("DBM-PvP missing data, please report to our discord.")
-		for k, _ in warnAtEnd do
-			DBM:AddMsg(k)
+do
+	local pairs = pairs
+
+	function mod:UnsubscribeAssault()
+		if hasWarns then
+			local map = C_Map.GetMapInfo(subscribedMapID)
+			DBM:AddMsg("DBM-PvP missing data, please report to our discord.")
+			DBM:AddMsg("Battleground: " .. (map and map.name or "Unknown"))
+			for k, v in pairs(warnAtEnd) do
+				DBM:AddMsg(v .. "x " .. k)
+			end
+			DBM:AddMsg("Thank you for making DBM-PvP a better addon.")
 		end
-		DBM:AddMsg("Thank you for making DBM-PvP a better addon.")
 		warnAtEnd = {}
+		hasWarns = false
+		HideEstimatedPoints()
+		HideBasesToWin()
+		self:UnregisterShortTermEvents()
+		self:Stop()
+		subscribedMapID = 0
+		prevAScore, prevHScore = 0, 0
 	end
 end
 
@@ -204,11 +215,84 @@ function mod:UnsubscribeFlags()
 end
 
 do
+	local pairs, strsplit, tostring, format, twipe = pairs, strsplit, tostring, string.format, table.wipe
+	local UnitGUID, UnitHealth, UnitHealthMax = UnitGUID, UnitHealth, UnitHealthMax
+	local healthScan, trackedUnits, trackedUnitsCount, syncTrackedUnits = nil, {}, 0, {}
+
+	local function updateInfoFrame()
+		local lines, sortedLines = {}, {}
+		for cid, health in pairs(syncTrackedUnits) do
+			if trackedUnits[cid] then
+				lines[trackedUnits[cid]] = health .. "%"
+				sortedLines[#sortedLines + 1] = trackedUnits[cid]
+			end
+		end
+		return lines, sortedLines
+	end
+
+	local function healthScanFunc()
+		local syncs, syncCount = {}, 0
+		for i = 1, 40 do
+			if syncCount >= trackedUnitsCount then -- We've already scanned all our tracked units, exit out to save CPU
+				break
+			end
+			local target = "raid" .. i .. "target"
+			local guid = UnitGUID(target)
+			if guid then
+				local cid = mod:GetCIDFromGUID(guid)
+				if trackedUnits[cid] and not syncs[cid] then
+					syncs[cid] = true
+					syncCount = syncCount + 1
+					C_ChatInfo.SendAddonMessage("DBM-PvP", format("%s:%.1f", cid, UnitHealth(target) / UnitHealthMax(target) * 100), "INSTANCE_CHAT")
+				end
+			end
+		end
+	end
+
+	function mod:TrackHealth(cid, name)
+		if not healthScan then
+			healthScan = C_Timer.NewTicker(1, healthScanFunc)
+			C_ChatInfo.RegisterAddonMessagePrefix("DBM-PvP")
+			if not C_ChatInfo.IsAddonMessagePrefixRegistered("Capping") then
+				C_ChatInfo.RegisterAddonMessagePrefix("Capping") -- Listen to capping for extra data
+			end
+		end
+		trackedUnits[tostring(cid)] = L[name] or name
+		trackedUnitsCount = trackedUnitsCount + 1
+		self:RegisterShortTermEvents("CHAT_MSG_ADDON")
+		if not DBM.InfoFrame:IsShown() then
+			DBM.InfoFrame:SetHeader(L.InfoFrameHeader)
+			DBM.InfoFrame:Show(42, "function", updateInfoFrame, false, false)
+			DBM.InfoFrame:SetColumns(1)
+		end
+	end
+
+	function mod:StopTrackHealth()
+		if healthScan then
+			healthScan:Cancel()
+			healthScan = nil
+		end
+		twipe(trackedUnits)
+		twipe(syncTrackedUnits)
+		self:UnregisterShortTermEvents()
+		DBM.InfoFrame:Hide()
+	end
+
+	function mod:CHAT_MSG_ADDON(prefix, msg, channel)
+		if channel ~= "INSTANCE_CHAT" or (prefix ~= "DBM-PvP" and prefix ~= "Capping") then -- Lets listen to capping as well, for extra data.
+			return
+		end
+		local cid, hp = strsplit(":", msg)
+		syncTrackedUnits[cid] = hp
+	end
+end
+
+do
 	local tonumber, ipairs = tonumber, ipairs
 	local C_UIWidgetManager, TimerTracker, IsInInstance = C_UIWidgetManager, TimerTracker, IsInInstance
 	local FACTION_ALLIANCE = FACTION_ALLIANCE
 	local flagTimer			= mod:NewTimer(12, "TimerFlag", "132483") -- Interface\\icons\\inv_banner_02.blp
-	local remainingTimer	= mod:NewTimer(0, "TimerRemaining", GetPlayerFactionGroup("player") == "Alliance" and "132486" or "132485") -- Interface\\Icons\\INV_BannerPVP_02.blp || Interface\\Icons\\INV_BannerPVP_01.blp
+	local remainingTimer	= mod:NewTimer(120, "TimerRemaining", GetPlayerFactionGroup("player") == "Alliance" and "132486" or "132485") -- Interface\\Icons\\INV_BannerPVP_02.blp || Interface\\Icons\\INV_BannerPVP_01.blp
 	local vulnerableTimer, timerShadow, timerDamp
 	if not isClassic then
 		vulnerableTimer	= mod:NewNextTimer(60, 46392)
@@ -225,7 +309,12 @@ do
 					bar.bar:Hide()
 				end
 			end
-			remainingTimer:Start(timeSeconds)
+			if not timeSeconds or type(timeSeconds) ~= "number" or timeSeconds < 1 then
+				DBM:Debug("Uh oh, START_TIMER returned an invalid value: " .. (timeSeconds or "nil"))
+			end
+			if not remainingTimer:IsStarted() then
+				remainingTimer:Start(timeSeconds)
+			end
 		end
 		self:Schedule(timeSeconds + 1, function()
 			if not isClassic and instanceType == "arena" then
@@ -236,9 +325,7 @@ do
 			if info and info.state == 1 and self.Options.TimerRemaining then
 				local minutes, seconds = info.text:match("(%d+):(%d+)")
 				if minutes and seconds then
-					local remaining = tonumber(seconds) + (tonumber(minutes) * 60) + 1
-					local elapsed = 120 - remaining
-					remainingTimer:Update(elapsed, 120)
+					remainingTimer:Update(119 - tonumber(seconds) - (tonumber(minutes) * 60), 120)
 				end
 			end
 		end, self)
@@ -282,13 +369,13 @@ do
 end
 
 do
-	local type, string, mfloor, mmin = type, string, math.floor, math.min
-	local GetTime, FACTION_HORDE, FACTION_ALLIANCE = GetTime, FACTION_HORDE, FACTION_ALLIANCE
+	local type, mfloor, mmin, sformat = type, math.floor, math.min, string.format
+	local FACTION_HORDE, FACTION_ALLIANCE = FACTION_HORDE, FACTION_ALLIANCE
 	local winTimer = mod:NewTimer(30, "TimerWin", GetPlayerFactionGroup("player") == "Alliance" and "132486" or "132485") -- Interface\\Icons\\INV_BannerPVP_02.blp || Interface\\Icons\\INV_BannerPVP_01.blp
 	local resourcesPerSec = {
-		[3] = {1e-300, 1, 3, 4}, -- Gilneas
-		[4] = {1e-300, 2, 3, 4, 1000--[[Unknown]]}, -- TempleOfKotmogu/EyeOfTheStorm
-		[5] = {1e-300, 2, 3, 4, 7, 1000--[[Unknown]]} -- Arathi/Deepwind
+		[3] = {1e-300, 0.5, 1.5, 2}, -- Gilneas
+		[4] = {1e-300, 1, 1.5, 2, 6}, -- TempleOfKotmogu/EyeOfTheStorm
+		[5] = {1e-300, 1, 1.5, 2, 3.5, 30--[[Unknown]]} -- Arathi/Deepwind
 	}
 
 	if isClassic then
@@ -301,26 +388,36 @@ do
 		-- Start debug
 		if prevAScore ~= allianceScore then
 			if resPerSec[allianceBases + 1] == 1000 then
-				warnAtEnd[string.format("%d,%d", allianceScore - prevAScore, allianceBases)] = true
+				local key = sformat("%d,%d", allianceScore - prevAScore, allianceBases)
+				local warnCount = warnAtEnd[key] or 0
+				warnAtEnd[key] = warnCount + 1
+				if warnCount > 2 then
+					hasWarns = true
+				end
 			end
 			if allianceScore < maxScore then
-				DBM:Debug(string.format("Alliance: +%d (%d)", allianceScore - prevAScore, allianceBases), 3)
+				DBM:Debug(sformat("Alliance: +%d (%d)", allianceScore - prevAScore, allianceBases), 3)
 			end
 			prevAScore = allianceScore
 		end
 		if prevHScore ~= hordeScore then
 			if resPerSec[hordeBases + 1] == 1000 then
-				warnAtEnd[string.format("%d,%d", hordeScore - prevHScore, hordeBases)] = true
+				local key = sformat("%d,%d", hordeScore - prevHScore, hordeBases)
+				local warnCount = warnAtEnd[key] or 0
+				warnAtEnd[key] = warnCount + 1
+				if warnCount > 2 then
+					hasWarns = true
+				end
 			end
 			if hordeScore < maxScore then
-				DBM:Debug(string.format("Horde: +%d (%d)", hordeScore - prevHScore, hordeBases), 3)
+				DBM:Debug(sformat("Horde: +%d (%d)", hordeScore - prevHScore, hordeBases), 3)
 			end
 			prevHScore = hordeScore
 		end
 		-- End debug
 		local gameTime = getGametime()
-		local allyTime = mmin(maxScore, (maxScore - allianceScore) / resPerSec[allianceBases + 1])
-		local hordeTime = mmin(maxScore, (maxScore - hordeScore) / resPerSec[hordeBases + 1])
+		local allyTime = mfloor(mmin(maxScore, (maxScore - allianceScore) / resPerSec[allianceBases + 1]))
+		local hordeTime = mfloor(mmin(maxScore, (maxScore - hordeScore) / resPerSec[hordeBases + 1]))
 		if allyTime == hordeTime then
 			winTimer:Stop()
 			if scoreFrame1Text then
@@ -363,11 +460,11 @@ do
 			end
 			if (maxScore - friendlyLast) / resPerSec[friendlyBases + 1] > (maxScore - enemyLast) / resPerSec[enemyBases + 1] then
 				local enemyTime, friendlyTime, baseLowest, enemyFinal, friendlyFinal
-				for i = 1, 3 do
-					enemyTime = (maxScore - enemyLast) / resPerSec[3 - i]
+				for i = 1, numObjectives do
+					enemyTime = (maxScore - enemyLast) / resPerSec[numObjectives - i]
 					friendlyTime = (maxScore - friendlyLast) / resPerSec[i]
 					baseLowest = friendlyTime < enemyTime and friendlyTime or enemyTime
-					enemyFinal = mfloor((enemyLast + mfloor(baseLowest * resPerSec[3] + 0.5)) / 10) * 10
+					enemyFinal = mfloor((enemyLast + mfloor(baseLowest * resPerSec[numObjectives - 3] + 0.5)) / 10) * 10
 					friendlyFinal = mfloor((friendlyLast + mfloor(baseLowest * resPerSec[i] + 0.5)) / 10) * 10
 					if friendlyFinal >= maxScore and enemyFinal < maxScore then
 						scoreFrameToWinText:SetText(L.BasesToWin:format(i))
@@ -473,23 +570,11 @@ do
 		[216]                       = State.HORDE_CONTROLLED
 	}
 	local capTimer = mod:NewTimer(isClassic and 64 or 60, "TimerCap", "136002") -- Interface\\icons\\spell_misc_hellifrepvphonorholdfavor.blp
-	capTimer.keep = true
-	local prevTime = 0
 
 	function mod:AREA_POIS_UPDATED(widget)
 		local allyBases, hordeBases = 0, 0
 		local widgetID = widget and widget.widgetID
 		if subscribedMapID ~= 0 then
-			local time = GetTime()
-			if prevTime == 0 then
-				prevTime = time
-				return
-			end
-			local elapsed = time - prevTime
-			prevTime = time
-			if elapsed < 0.5 then
-				return
-			end
 			local isAtlas = false
 			for _, areaPOIID in ipairs(C_AreaPoiInfo.GetAreaPOIForMap(subscribedMapID)) do
 				local areaPOIInfo = C_AreaPoiInfo.GetAreaPOIInfo(subscribedMapID, areaPOIID)
@@ -507,17 +592,8 @@ do
 					if objectivesStore[infoName] ~= (atlasName and atlasName or infoTexture) then
 						capTimer:Stop(infoName)
 						objectivesStore[infoName] = (atlasName and atlasName or infoTexture)
-						DBM:Debug(string.format("pvp objective update: %s,%s,%s", GetServerTime(), infoName, objectivesStore[infoName]), 2)
 						if not ignoredAtlas[subscribedMapID] and (isAllyCapping or isHordeCapping) then
-							local timeLeft = (
-								-- GetAreaPOISecondsLeft doesn't work in retail?
-								-- Classic never got GetAreaPOISecondsLeft, it still uses GetAreaPOITimeLeft which retail deprecated
-								C_AreaPoiInfo.GetAreaPOISecondsLeft and C_AreaPoiInfo.GetAreaPOISecondsLeft(areaPOIID)
-								or C_AreaPoiInfo.GetAreaPOITimeLeft and C_AreaPoiInfo.GetAreaPOITimeLeft(areaPOIID) and C_AreaPoiInfo.GetAreaPOITimeLeft(areaPOIID) * 60
-								or overrideTimers[subscribedMapID]
-								or nil
-							)
-							capTimer:Start(timeLeft, infoName)
+							capTimer:Start(C_AreaPoiInfo.GetAreaPOITimeLeft and C_AreaPoiInfo.GetAreaPOITimeLeft(areaPOIID) and C_AreaPoiInfo.GetAreaPOITimeLeft(areaPOIID) * 60 or overrideTimers[subscribedMapID] or 60, infoName)
 							if isAllyCapping then
 								capTimer:SetColor({r=0, g=0, b=1}, infoName)
 								capTimer:UpdateIcon("132486", infoName) -- Interface\\Icons\\INV_BannerPVP_02.blp
@@ -573,38 +649,3 @@ do
 	end
 	mod.UPDATE_UI_WIDGET = mod.AREA_POIS_UPDATED
 end
-
---[[
-hooksecurefunc("WorldStateScoreFrame_Update", function() --re-color the players in the score frame
-	if not mod.Options.ColorByClass then
-		return
-	end
-	local isArena = IsActiveBattlefieldArena()
-	for i = 1, MAX_WORLDSTATE_SCORE_BUTTONS do
-		local index = (FauxScrollFrame_GetOffset(WorldStateScoreScrollFrame) or 0) + i
-		local name, _, _, _, _, faction, _, _, classToken = GetBattlefieldScore(index)
-		if (name ~= UnitName("player")) and classToken and RAID_CLASS_COLORS[classToken] and _G["WorldStateScoreButton"..i.."NameText"] then
-			_G["WorldStateScoreButton"..i.."NameText"]:SetTextColor(RAID_CLASS_COLORS[classToken].r, RAID_CLASS_COLORS[classToken].g, RAID_CLASS_COLORS[classToken].b)
-			local playerName = _G["WorldStateScoreButton"..i.."NameText"]:GetText()
-			if playerName then
-				local _, _, playerName, playerServer = string.find(playerName, "([^%-]+)%-(.+)")
-				if playerServer and playerName then
-					if faction == 0 then
-						if isArena then --green team
-							_G["WorldStateScoreButton"..i.."NameText"]:SetText(playerName.."|cffffffff-|r|cff19ff19"..playerServer.."|r")
-						else --horde
-							_G["WorldStateScoreButton"..i.."NameText"]:SetText(playerName.."|cffffffff-|r|cffff1919"..playerServer.."|r")
-						end
-					else
-						if isArena then --golden team
-							_G["WorldStateScoreButton"..i.."NameText"]:SetText(playerName.."|cffffffff-|r|cffffd100"..playerServer.."|r")
-						else --alliance
-							_G["WorldStateScoreButton"..i.."NameText"]:SetText(playerName.."|cffffffff-|r|cff00adf0"..playerServer.."|r")
-						end
-					end
-				end
-			end
-		end
-	end
-end)
---]]

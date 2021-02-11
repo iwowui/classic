@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kel'Thuzad", "DBM-Naxx", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201225041541")
+mod:SetRevision("20210115144932")
 mod:SetCreatureID(15990)
 mod:SetEncounterID(1114)
 --mod:SetModelID(15945)--Doesn't work at all, doesn't even render.
@@ -39,37 +39,24 @@ local timerManaBomb			= mod:NewCDTimer(20, 27819, nil, nil, nil, 3)--20-50 (stil
 local timerFrostBlastCD		= mod:NewCDTimer(33.5, 27808, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)--33-46
 local timerfrostBlast		= mod:NewBuffActiveTimer(4, 27808, nil, nil, nil, 5, nil, DBM_CORE_L.HEALER_ICON)
 --local timerMCCD			= mod:NewCDTimer(90, 28410, nil, nil, nil, 3)--actually 60 second cdish but its easier to do it this way for the first one.
-local timerPhase2			= mod:NewTimer(305, "TimerPhase2", "136116", nil, nil, 6)
+local timerPhase2			= mod:NewTimer(330, "TimerPhase2", "136116", nil, nil, 6)
 
-mod:AddSetIconOption("SetIconOnMC", 28410, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnMC2", 28410, false, false, {1, 2, 3})
 mod:AddSetIconOption("SetIconOnManaBomb", 27819, false, false, {8})
-mod:AddSetIconOption("SetIconOnFrostTomb", 27808, true, false, {1, 2, 3, 4, 5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnFrostTomb2", 27808, false, false, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddRangeFrameOption(10, 27819)
 
 mod.vb.phase = 1
 mod.vb.warnedAdds = false
 mod.vb.MCIcon = 1
 local frostBlastTargets = {}
-local chainsTargets = {}
-
-local function AnnounceChainsTargets(self)
-	warnChainsTargets:Show(table.concat(chainsTargets, "< >"))
-	table.wipe(chainsTargets)
-	self.vb.MCIcon = 1
-end
 
 local function AnnounceBlastTargets(self)
-	if self.Options.SetIconOnFrostTomb then
+	if self.Options.SetIconOnFrostTomb2 then
 		for i = #frostBlastTargets, 1, -1 do
 			self:SetIcon(frostBlastTargets[i], 8 - i, 4.5)
 			frostBlastTargets[i] = nil
 		end
-	end
-	if self.Options.SpecWarn27808target then
-		specWarnBlast:Show(table.concat(frostBlastTargets, "< >"))
-		specWarnBlast:Play("healall")
-	else
-		warnBlastTargets:Show(table.concat(frostBlastTargets, "< >"))
 	end
 	timerfrostBlast:Start(3.5)
 end
@@ -84,15 +71,14 @@ end
 
 function mod:OnCombatStart(delay)
 	self.vb.phase = 1
-	table.wipe(chainsTargets)
 	table.wipe(frostBlastTargets)
 	self.vb.warnedAdds = false
 	self.vb.MCIcon = 1
-	specwarnP2Soon:Schedule(295-delay)
+	specwarnP2Soon:Schedule(320-delay)
 	timerPhase2:Start()
-	warnPhase2:Schedule(305)
-	if self.Options.ShowRange then
-		self:Schedule(305-delay, RangeToggle, true)
+	warnPhase2:Schedule(330)
+	if self.Options.RangeFrame then
+		self:Schedule(330-delay, RangeToggle, true)
 	end
 end
 
@@ -124,6 +110,12 @@ do
 			table.insert(frostBlastTargets, args.destName)
 			self:Unschedule(AnnounceBlastTargets)
 			self:Schedule(0.5, AnnounceBlastTargets, self)
+			if self.Options.SpecWarn27808target then
+				specWarnBlast:CombinedShow(0.5, args.destName)
+				specWarnBlast:ScheduleVoice(0.5, "healall")
+			else
+				warnBlastTargets:CombinedShow(0.5, args.destName)
+			end
 		--elseif args.spellId == 27819 then -- Mana Bomb
 		elseif args.spellName == ManaBomb then
 			if self.Options.SetIconOnManaBomb then
@@ -138,27 +130,22 @@ do
 			end
 		--elseif args.spellId == 28410 then -- Chains of Kel'Thuzad
 		elseif args.spellName == ChainsofKT then
-			chainsTargets[#chainsTargets + 1] = args.destName
 			if self:AntiSpam() then
+				self.vb.MCIcon = 1
 				--timerMCCD:Start(60)--60 seconds?
 			end
-			if self.Options.SetIconOnMC then
+			if self.Options.SetIconOnMC2 then
 				self:SetIcon(args.destName, self.vb.MCIcon)
 			end
 			self.vb.MCIcon = self.vb.MCIcon + 1
-			self:Unschedule(AnnounceChainsTargets)
-			if #chainsTargets >= 5 then--Not sure max targets on 40 man but def more than 3, looked like 5
-				AnnounceChainsTargets(self)
-			else
-				self:Schedule(1.0, AnnounceChainsTargets, self)
-			end
+			warnChainsTargets:CombinedShow(1, args.destName)
 		end
 	end
 
 	function mod:SPELL_AURA_REMOVED(args)
 		--if args.spellId == 28410 then
 		if args.spellName == ChainsofKT then
-			if self.Options.SetIconOnMC then
+			if self.Options.SetIconOnMC2 then
 				self:SetIcon(args.destName, 0)
 			end
 		end

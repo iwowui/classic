@@ -294,14 +294,16 @@ L:SetGeneralLocalization({
 
 L:SetOptionLocalization({
 	WarningMarkSoon				= "Show pre-warning for Mark",
-	SpecialWarningMarkOnPlayer	= "Show special warning when you are affected by more than 4 marks"
+	SpecialWarningMarkOnPlayer	= "Show special warning when you are affected by more than 4 marks",
+	timerMark					= "Show timer for next horseman's Mark (with count)",
 })
 
 L:SetTimerLocalization({
+	timerMark	= "Mark %d",
 })
 
 L:SetWarningLocalization({
-	WarningMarkSoon				= "Mark soon",
+	WarningMarkSoon				= "Mark %d in 3 seconds",
 	SpecialWarningMarkOnPlayer	= "%s: %s"
 })
 

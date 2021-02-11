@@ -2,7 +2,7 @@
 -- @Author : Dencer (tdaddon@163.com)
 -- @Link   : https://dengsir.github.io
 -- @Date   : 2/10/2020, 12:02:10 AM
-
+--
 ---- LUA
 local _G = _G
 local select = select
@@ -10,6 +10,7 @@ local next = next
 local time = time
 local floor = math.floor
 local format = string.format
+local securecall = securecall
 
 ---- WOW
 local BankButtonIDToInvSlotID = BankButtonIDToInvSlotID
@@ -96,6 +97,12 @@ function ItemBase:Constructor()
     self:SetScript('OnEnter', self.OnEnter)
     self:SetScript('OnLeave', self.OnLeave)
     self:SetScript('OnEvent', nil)
+
+    for _, opts in Addon:IterateItemPlugins() do
+        if opts.init then
+            securecall(opts.init, self)
+        end
+    end
 end
 
 function ItemBase:Alloc()
@@ -219,6 +226,7 @@ function ItemBase:Update()
     self:UpdateBorder()
     self:UpdateFocus()
     self:UpdateRemain()
+    self:UpdatePlugin()
 end
 
 function ItemBase:GetItem()
@@ -300,6 +308,25 @@ function ItemBase:UpdateRemain()
 
     self.Timeout:SetText(text)
     self.Timeout:Show()
+end
+
+function ItemBase:UpdatePlugin()
+    if not Addon:HasAnyItemPlugin() then
+        return
+    end
+
+    C_Timer.After(0.01, function()
+        return self:OnUpdatePlugin()
+    end)
+end
+
+function ItemBase:OnUpdatePlugin()
+    if not self:IsVisible() then
+        return
+    end
+    for i, opts in Addon:IterateItemPlugins() do
+        securecall(opts.update, self)
+    end
 end
 
 function ItemBase:GetBagFamily()

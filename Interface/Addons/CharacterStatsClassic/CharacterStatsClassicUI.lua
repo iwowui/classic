@@ -4,13 +4,14 @@ local addonName, core = ...;
 core.UIConfig = {};
 
 -- Defaults
-local UISettingsGlobal = {
+UISettingsGlobal = {
     useBlizzardBlockValue = false;
 }
 
-local UISettingsCharacter = {
+UISettingsCharacter = {
     selectedLeftStatsCategory = 1;
     selectedRightStatsCategory = 2;
+    showStatsFromArgentDawnItems = true;
 }
 
 -- for easier referencing the core config
@@ -80,6 +81,9 @@ function UIConfig:SetCharacterStats(statsTable, category)
         CSC_PaperDollFrame_SetParry(statsTable[4], "player");
         CSC_PaperDollFrame_SetBlock(statsTable[5], "player");
     elseif category == PLAYERSTAT_MELEE_COMBAT then
+        if (UISettingsCharacter.showStatsFromArgentDawnItems) then
+            CSC_CacheAPFromADItems("player");
+        end
         -- damage, Att Power, speed, hit raiting, crit chance
         CSC_PaperDollFrame_SetDamage(statsTable[1], "player", category);
         CSC_PaperDollFrame_SetMeleeAttackPower(statsTable[2], "player");
@@ -87,6 +91,10 @@ function UIConfig:SetCharacterStats(statsTable, category)
         CSC_PaperDollFrame_SetCritChance(statsTable[4], "player");
         CSC_PaperDollFrame_SetHitChance(statsTable[5], "player");
     elseif category == PLAYERSTAT_RANGED_COMBAT then
+        if (UISettingsCharacter.showStatsFromArgentDawnItems) then
+            CSC_CacheAPFromADItems("player");
+        end
+        
         CSC_PaperDollFrame_SetDamage(statsTable[1], "player", category);
         CSC_PaperDollFrame_SetRangedAttackPower(statsTable[2], "player");
         CSC_PaperDollFrame_SetRangedAttackSpeed(statsTable[3], "player");
@@ -198,6 +206,15 @@ function UIConfig:SetupConfigInterface()
     function()
         UISettingsGlobal.useBlizzardBlockValue = not UISettingsGlobal.useBlizzardBlockValue;
     end);
+
+    CSC_ConfigFrame.chkBtnShowADStats = CreateFrame("CheckButton", "default", CSC_ConfigFrame, "UICheckButtonTemplate");
+    CSC_ConfigFrame.chkBtnShowADStats:SetPoint("TOPLEFT", 20, -55);
+    CSC_ConfigFrame.chkBtnShowADStats.text:SetText("Show AP and SP stats from Argent Dawn items.");
+    CSC_ConfigFrame.chkBtnShowADStats:SetChecked(UISettingsCharacter.showStatsFromArgentDawnItems);
+    CSC_ConfigFrame.chkBtnShowADStats:SetScript("OnClick", 
+    function()
+        UISettingsCharacter.showStatsFromArgentDawnItems = not UISettingsCharacter.showStatsFromArgentDawnItems;
+    end);
 end
 
 -- Hook a custom function in order to extend the functionality of the default ToggleCharacter function
@@ -212,6 +229,45 @@ end
 hooksecurefunc("ToggleCharacter", CSC_ToggleCharacterPostHook);
 
 -- Serializing the DB
+local function SerializeGlobalDatabase()
+    if (CharacterStatsClassicDB == nil) then
+        CharacterStatsClassicDB = UISettingsGlobal;
+    end
+
+    if (CharacterStatsClassicDB.useBlizzardBlockValue == nil) then
+        CharacterStatsClassicDB.useBlizzardBlockValue = UISettingsGlobal.useBlizzardBlockValue;
+    else
+        UISettingsGlobal.useBlizzardBlockValue = CharacterStatsClassicDB.useBlizzardBlockValue;
+    end
+end
+
+local function SerializeCharacterDatabase()
+    if (CharacterStatsClassicCharacterDB == nil) then
+        CharacterStatsClassicCharacterDB = UISettingsCharacter;
+    end
+
+    -- Left dropdown category
+    if (CharacterStatsClassicCharacterDB.selectedLeftStatsCategory == nil) then
+        CharacterStatsClassicCharacterDB.selectedLeftStatsCategory = UISettingsCharacter.selectedLeftStatsCategory;
+    else
+        UISettingsCharacter.selectedLeftStatsCategory = CharacterStatsClassicCharacterDB.selectedLeftStatsCategory;
+    end
+
+    -- Right dropdown category
+    if (CharacterStatsClassicCharacterDB.selectedRightStatsCategory == nil) then
+        CharacterStatsClassicCharacterDB.selectedRightStatsCategory = UISettingsCharacter.selectedRightStatsCategory;
+    else
+        UISettingsCharacter.selectedRightStatsCategory = CharacterStatsClassicCharacterDB.selectedRightStatsCategory;
+    end
+
+    -- Stats from AD items checkbox
+    if (CharacterStatsClassicCharacterDB.showStatsFromArgentDawnItems == nil) then
+        CharacterStatsClassicCharacterDB.showStatsFromArgentDawnItems = UISettingsCharacter.showStatsFromArgentDawnItems;
+    else
+        UISettingsCharacter.showStatsFromArgentDawnItems = CharacterStatsClassicCharacterDB.showStatsFromArgentDawnItems;
+    end
+end
+
 local dbLoader = CreateFrame("Frame");
 dbLoader:RegisterEvent("ADDON_LOADED");
 dbLoader:RegisterEvent("PLAYER_LOGOUT");
@@ -220,20 +276,8 @@ dbLoader:RegisterEvent("PLAYER_LOGOUT");
 -- Therefore I have to call any setup-functions dependent on the DB after the event (UIConfig:SetupDropdown())
 function dbLoader:OnEvent(event, arg1)
     if (event == "ADDON_LOADED" and arg1 == "CharacterStatsClassic") then
-        -- Global DB
-        if (CharacterStatsClassicDB == nil) then
-            CharacterStatsClassicDB = UISettingsGlobal;
-        else
-            UISettingsGlobal = CharacterStatsClassicDB;
-        end
-        
-        -- Character DB
-        if (CharacterStatsClassicCharacterDB == nil) then
-            CharacterStatsClassicCharacterDB = UISettingsCharacter;
-        else
-            UISettingsCharacter = CharacterStatsClassicCharacterDB;
-        end
-
+        SerializeGlobalDatabase();
+        SerializeCharacterDatabase();
         UIConfig:CreateMenu();
     elseif (event == "PLAYER_LOGOUT") then
         CharacterStatsClassicDB = UISettingsGlobal;
@@ -242,3 +286,4 @@ function dbLoader:OnEvent(event, arg1)
 end
 
 dbLoader:SetScript("OnEvent", dbLoader.OnEvent);
+-- Serializing the DB

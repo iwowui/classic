@@ -348,6 +348,7 @@ module.db.spell_isTalent = {
 	[207029]=true,[205604]=true,[205630]=true,	--PvP
 
 	[115008]=true,[121536]=true,
+	[132409]=true,
 
 	--Other & items
 	[67826]=true,
@@ -362,6 +363,7 @@ module.db.spell_autoTalent = {		--Для маркировки базовых з�
 	[88] = 104,
 	[22842] = 104,
 	[273048] = 104,
+	[109248] = 254,
 }
 
 module.db.spell_talentProvideAnotherTalents = {
@@ -488,7 +490,7 @@ module.db.spell_durationByTalent_fix = {	--Изменение длительно
 	[207684] = {209281,-1},
 	[202137] = {209281,-1},
 	[5217] = {202021,5},
-	[47536] = {337790,2},
+	[47536] = {337790,1},
 	[109964] = {337790,2},
 	[47788] = {337811,2,329693,5},
 	[324724] = {337979,2},
@@ -1270,6 +1272,9 @@ module.db.itemsToSpells = {	-- Тринкеты вида [item ID] = spellID
 	[64402] = 90633,
 	[64401] = 90632,
 	[64400] = 90631,
+	[64399] = 90628,
+	[64398] = 90626,
+	[63359] = 89479,
 
 	[133642] = 215956,
 	[137541] = 215648,
@@ -1612,7 +1617,7 @@ local function BarUpdateText(self)
 
 	local longtime,shorttime = nil
 
-	if time >= 3600 then
+	if time > 3600 then
 		longtime = "1+hour"
 		shorttime = "1+hour"
 	elseif time < 1 then
@@ -2664,6 +2669,9 @@ do
 		local currTime = GetTime()
 		if ((currTime - lastSaving) < 20 and not overwrite) or module.db.testMode then 
 			return 
+		end
+		if not VExRT or not VExRT.ExCD2 then
+			return
 		end
 		local VExRT_ExCD2_Save = VExRT.ExCD2.Save
 		wipe(VExRT_ExCD2_Save)
@@ -4076,7 +4084,7 @@ do
 			UpdateAllData()
 			SortAllData()
 		end
-		if not scheduledUpdateRoster then
+		if not scheduledVisibility then
 			scheduledVisibility = ScheduleTimer(funcScheduledVisibility,2)
 		end
 		if not scheduledUpdateRoster then
@@ -4757,6 +4765,9 @@ do
 			handOfHind_var[destGUID] = sourceName
 		elseif spellID == 79140 then
 			roguepvptal_var[sourceName] = nil
+		elseif spellID == 196099 then
+			session_gGUIDs[sourceName] = -132409
+			forceUpdateAllData = true
 		end
 
 		if forceUpdateAllData then
@@ -4774,6 +4785,8 @@ do
 			end
 		end
 	end
+
+	local isSpellDuplicateDisabled = false
 	function module.main:SPELL_CAST_SUCCESS(sourceGUID,sourceName,sourceFlags,destGUID,destName,destFlags,spellID)
 		if not sourceName then
 			return
@@ -4917,14 +4930,19 @@ do
 		end
 
 		local modifData = spell_runningSameSpell[spellID]
-		if modifData then
+		if modifData and not isSpellDuplicateDisabled then
 			for i=1,#modifData do
 				local sameSpellID = modifData[i]
 				if sameSpellID ~= spellID then
+					--[[
 					local line = CDList[sourceName][ sameSpellID ]
 					if line then
 						CLEUstartCD(line)
 					end
+					]]
+					isSpellDuplicateDisabled = true
+					module.main:SPELL_CAST_SUCCESS(sourceGUID,sourceName,sourceFlags,destGUID,destName,destFlags,sameSpellID)
+					isSpellDuplicateDisabled = false
 				end
 			end
 		end
@@ -5053,6 +5071,7 @@ do
 	local spell339272_var = {}
 	local spell338741_var = {}
 	local spell335229_var = {}
+	local spell155148_var1,spell155148_var2 = nil
 	function module.main:SPELL_DAMAGE(sourceGUID,sourceName,sourceFlags,destGUID,destName,destFlags,spellID,critical,amount,overkill)
 		if destGUID and isWarlock[destGUID] and destName and session_gGUIDs[destName][339272] then
 			local maxHP = UnitHealthMax(destName)
@@ -5111,8 +5130,8 @@ do
 			if line then
 				line:ReduceCD(4)
 			end
-		elseif (spellID == 11366 or spellID == 133 or spellID == 108853 or spellID == 257542 or spellID == 2948 or spellID == 133) and critical then
-			if (spellID == 11366 or spellID == 133 or spellID == 108853 or spellID == 257542) and session_gGUIDs[sourceName][155148] then
+		elseif (spellID == 11366 or spellID == 133 or spellID == 108853 or spellID == 2948 or spellID == 133) and critical then
+			if (spellID == 11366 or spellID == 133 or spellID == 108853) and session_gGUIDs[sourceName][155148] then
 				local line = CDList[sourceName][190319]
 				if line then
 					line:ReduceCD(1.5)
@@ -5124,6 +5143,20 @@ do
 					line:ReduceCD(1)
 				end
 			end
+		elseif spellID == 257542 and session_gGUIDs[sourceName][155148] then
+			if not spell155148_var1 then
+				spell155148_var1 = C_Timer.NewTimer(0.3,function()
+					spell155148_var1 = nil
+					if spell155148_var2 then
+						local line = CDList[sourceName][190319]
+						if line then
+							line:ReduceCD(1.5)
+						end
+					end
+					spell155148_var2 = nil
+				end)
+			end
+			spell155148_var2 = critical
 		elseif spellID == 320752 and critical then
 			local line = CDList[sourceName][320674]
 			if line then
@@ -6025,11 +6058,19 @@ function module.options:Load()
 		module.options.list:Update()
 		module:UpdateSpellDB()
 	end
+
+	local priorChangeDelay
 	local function SpellsListPrioritySetValue(self,value)
 	  	self.text:SetText(L.cd2Priority.." |cffffffff"..(100-value).."%")
 		if self.lock then return end
 		VExRT.ExCD2.Priority[ self:GetParent().data[1] ] = value
-		module:UpdateSpellDB()
+		if not priorChangeDelay then
+			priorChangeDelay = C_Timer.NewTimer(.5,function()
+				priorChangeDelay = nil
+				UpdateRoster()
+				module:UpdateSpellDB()
+			end)
+		end
 	end
 
 	local function SpellsListButtonModifyOnClick(self)
@@ -10256,7 +10297,7 @@ module.db.AllSpells = {
 	{152262,"PALADIN,DPS,HEAL",	3,	{152262,45,	15},	nil,			nil,			nil,			},	--Seraphim
 	{210256,"PALADIN,PVP",		3,	nil,			nil,			nil,			{210256,45,	5},	},	--Blessing of Sanctuary
 	{236186,"PALADIN,PVP",		3,	nil,			nil,			{236186,4,	0},	{236186,4,	0},	},	--Cleansing Light
-	{210294,"PALADIN,PVP",		3,	nil,			{210294,25,	0},	nil,			nil,			},	--Divine Favor
+	{210294,"PALADIN,PVP",		3,	nil,			{210294,30,	0},	nil,			nil,			},	--Divine Favor
 	{228049,"PALADIN,PVP",		3,	nil,			nil,			{228049,180,	10},	nil,			},	--Guardian of the Forgotten Queen
 	{207028,"PALADIN,PVP",		3,	nil,			nil,			{207028,20,	0},	nil,			},	--Inquisition
 	{215652,"PALADIN,PVP",		3,	nil,			nil,			{215652,45,	0},	nil,			},	--Shield of Virtue
@@ -10565,8 +10606,8 @@ module.db.AllSpells = {
 	{30283,	"WARLOCK,AOECC",	1,	{30283,	60,	3},	nil,			nil,			nil,			},	--Shadowfury
 	{20707,	"WARLOCK,RES",		3,	{20707,	600,	0},	nil,			nil,			nil,			},	--Soulstone
 	{205180,"WARLOCK,DPS",		3,	nil,			{205180,180,	20},	nil,			nil,			},	--Summon Darkglare
-	{265187,"WARLOCK,DPS",		3,	nil,			nil,			{265187,90,	0},	nil,			},	--Summon Demonic Tyrant
-	{1122,	"WARLOCK,DPS",		3,	nil,			nil,			nil,			{1122,	180,	0},	},	--Summon Infernal
+	{265187,"WARLOCK,DPS",		3,	nil,			nil,			{265187,90,	15},	nil,			},	--Summon Demonic Tyrant
+	{1122,	"WARLOCK,DPS",		3,	nil,			nil,			nil,			{1122,	180,	30},	},	--Summon Infernal
 	{104773,"WARLOCK,DEF",		4,	{104773,180,	8},	nil,			nil,			nil,			},	--Unending Resolve
 	{267211,"WARLOCK",		3,	nil,			nil,			{267211,30,	0},	nil,			},	--Bilescourge Bombers
 	{152108,"WARLOCK",		3,	nil,			nil,			nil,			{152108,30,	0},	},	--Cataclysm
@@ -10587,6 +10628,8 @@ module.db.AllSpells = {
 	{264057,"WARLOCK",		3,	nil,			nil,			{264057,10,	0},	nil,			},	--Soul Strike
 	{264119,"WARLOCK",		3,	nil,			nil,			{264119,45,	0},	nil,			},	--Summon Vilefiend
 	{278350,"WARLOCK",		3,	nil,			{278350,20,	0},	nil,			nil,			},	--Vile Taint
+	{132409,"WARLOCK,KICK",		3,	nil,			{132409,24,	0},	nil,			{132409,24,	0},	},	--Kick with Grimoire
+	
 	{328774,"WARLOCK,PVP",		3,	{328774,45,	0},	nil,			nil,			nil,			},	--Amplify Curse
 	{199954,"WARLOCK,PVP",		3,	{199954,45,	10},	nil,			nil,			nil,			},	--Bane of Fragility
 	{200546,"WARLOCK,PVP",		3,	nil,			nil,			nil,			{200546,45,	12},	},	--Bane of Havoc
@@ -10609,7 +10652,7 @@ module.db.AllSpells = {
 	{322101,"MONK",			3,	{322101,15,	0},	nil,			nil,			nil,			},	--Expel Harm
 	{113656,"MONK",			3,	nil,			nil,			{113656,24,	0},	nil,			},	--Fists of Fury
 	{101545,"MONK,MOVE",		3,	nil,			nil,			{101545,20,	0},	nil,			},	--Flying Serpent Kick
-	{115203,"MONK,DEFTANK,DEF",	4,	nil,			{115203,420,	15},	{115203,180,	15},	{115203,180,	15},	},	--Fortifying Brew
+	{115203,"MONK,DEFTANK,DEF",	4,	nil,			{115203,360,	15},	{115203,180,	15},	{115203,180,	15},	},	--Fortifying Brew
 	{122281,"MONK",			3,	nil,			nil,			nil,			{122281,30,	0},	},	--Healing Elixir
 	{132578,"MONK",			3,	nil,			{132578,180,	0},	nil,			nil,			},	--Invoke Niuzao, the Black Ox
 	{123904,"MONK,DPS",		3,	nil,			nil,			{123904,120,	24},	nil,			},	--Invoke Xuen, the White Tiger
@@ -10636,18 +10679,18 @@ module.db.AllSpells = {
 	{115098,"MONK",			3,	{115098,15,	0},	nil,			nil,			nil,			},	--Chi Wave
 	{122278,"MONK,DEF",		3,	{122278,120,	10},	nil,			nil,			nil,			},	--Dampen Harm
 	{122783,"MONK,DEF",		4,	nil,			nil,			{122783,90,	6},	{122783,90,	6},	},	--Diffuse Magic
-	{115288,"MONK",			3,	nil,			nil,			nil,			{115288,60,	5},	},	--Energizing Elixir
+	{115288,"MONK",			3,	nil,			nil,			{115288,60,	5},	nil,			},	--Energizing Elixir
 	{325153,"MONK",			3,	nil,			{325153,60,	0},	nil,			nil,			},	--Exploding Keg
-	{261947,"MONK",			3,	nil,			nil,			nil,			{261947,30,	0},	},	--Fist of the White Tiger
-	{325197,"MONK,HEAL",		3,	nil,			nil,			{325197,180,	0},	nil,			},	--Invoke Chi-Ji, the Red Crane
-	{197908,"MONK,HEAL",		3,	nil,			nil,			{197908,90,	10},	nil,			},	--Mana Tea
+	{261947,"MONK",			3,	nil,			nil,			{261947,30,	0},	nil,			},	--Fist of the White Tiger
+	{325197,"MONK,HEAL",		3,	nil,			nil,			nil,			{325197,180,	0},	},	--Invoke Chi-Ji, the Red Crane
+	{197908,"MONK,HEAL",		3,	nil,			nil,			nil,			{197908,90,	10},	},	--Mana Tea
 	{116844,"MONK,UTIL",		1,	{116844,45,	5},	nil,			nil,			nil,			},	--Ring of Peace
-	{152173,"MONK,DPS",		3,	nil,			nil,			nil,			{152173,90,	12},	},	--Serenity
-	{198898,"MONK",			3,	nil,			nil,			{198898,30,	0},	nil,			},	--Song of Chi-Ji
+	{152173,"MONK,DPS",		3,	nil,			nil,			{152173,90,	12},	nil,			},	--Serenity
+	{198898,"MONK",			3,	nil,			nil,			nil,			{198898,30,	0},	},	--Song of Chi-Ji
 	{115315,"MONK",			3,	nil,			{115315,10,	0},	nil,			nil,			},	--Summon Black Ox Statue
-	{115313,"MONK",			3,	nil,			nil,			{115313,10,	0},	{115313,10,	0},	},	--Summon Jade Serpent Statue
+	{115313,"MONK",			3,	nil,			nil,			nil,			{115313,10,	0},	},	--Summon Jade Serpent Statue
 	{116841,"MONK,UTIL,RAIDSPEED",	2,	{116841,30,	6},	nil,			nil,			nil,			},	--Tiger's Lust
-	{152175,"MONK",			3,	nil,			nil,			nil,			{152175,24,	0},	},	--Whirling Dragon Punch
+	{152175,"MONK",			3,	nil,			nil,			{152175,24,	0},	nil,			},	--Whirling Dragon Punch
 	{207025,"MONK,PVP",		3,	nil,			{207025,20,	0},	nil,			nil,			},	--Admonishment
 	{202162,"MONK,PVP",		3,	nil,			{202162,45,	15},	nil,			nil,			},	--Avert Harm
 	{202335,"MONK,PVP",		3,	nil,			{202335,45,	0},	nil,			nil,			},	--Double Barrel
@@ -10679,7 +10722,7 @@ module.db.AllSpells = {
 	{18562,	"DRUID",		3,	nil,			nil,			nil,			nil,			{18562,	15,	0},	},	--Swiftmend
 	{5217,	"DRUID,DPS",		3,	nil,			nil,			{5217,	30,	10},	nil,			nil,			},	--Tiger's Fury
 	{740,	"DRUID,RAID",		1,	nil,			nil,			nil,			nil,			{740,	180,	8},	},	--Tranquility
-	{132469,"DRUID,UTIL",		3,	{132469,30,	0},	nil,			nil,			nil,			nil,			},	--Typhoon
+	{132469,"DRUID,UTIL",		3,	{61391,	30,	0},	nil,			nil,			nil,			nil,			},	--Typhoon
 	{102793,"DRUID,UTIL",		3,	{102793,60,	10},	nil,			nil,			nil,			nil,			},	--Ursol's Vortex
 	{48438,	"DRUID",		3,	nil,			nil,			nil,			nil,			{48438,	10,	0},	},	--Wild Growth
 	{155835,"DRUID,DEFTANK",	3,	nil,			nil,			nil,			{155835,40,	0},	nil,			},	--Bristling Fur
@@ -10720,12 +10763,12 @@ module.db.AllSpells = {
 	{212084,"DEMONHUNTER",		3,	nil,			nil,			{212084,60,	0},	},	--Fel Devastation
 	{195072,"DEMONHUNTER,MOVE",	3,	nil,			{195072,10,	0},	nil,			},	--Fel Rush
 	{204021,"DEMONHUNTER",		3,	nil,			nil,			{204021,60,	10},	},	--Fiery Brand
-	{258920,"DEMONHUNTER",		3,	{258920,30,	0},	nil,			nil,			},	--Immolation Aura
+	{258920,"DEMONHUNTER",		3,	{258920,15,	0},	nil,			nil,			},	--Immolation Aura
 	{217832,"DEMONHUNTER,CC",	3,	{217832,45,	0},	nil,			nil,			},	--Imprison
 	{191427,"DEMONHUNTER,DPS,DEFTANK",3,	nil,			{191427,240,	30},	{187827,180,	15},	},	--Metamorphosis
 	{204596,"DEMONHUNTER",		3,	nil,			nil,			{204596,30,	2},	},	--Sigil of Flame
 	{207684,"DEMONHUNTER,AOECC",	1,	nil,			nil,			{207684,180,	2},	},	--Sigil of Misery
-	{202137,"DEMONHUNTER,UTIL",	1,	nil,			nil,			{202137,120,	2},	},	--Sigil of Silence
+	{202137,"DEMONHUNTER,UTIL",	1,	nil,			nil,			{202137,60,	2},	},	--Sigil of Silence
 	{188501,"DEMONHUNTER",		3,	{188501,60,	10},	nil,			nil,			},	--Spectral Sight
 	{185123,"DEMONHUNTER",		3,	{185123,9,	0},	nil,			nil,			},	--Throw Glaive
 	{185245,"DEMONHUNTER,TAUNT",	5,	{185245,8,	0},	nil,			nil,			},	--Torment
@@ -10758,7 +10801,7 @@ module.db.AllSpells = {
 	{91802,	"PET,DEATHKNIGHT",	5,	{91802,30,0}	},
 	{91797,	"PET,DEATHKNIGHT",	3,	{91797,90,0}	},
 	{89751,	"PET,WARLOCK",		3,	{89751,45,6}	},
-	{89766,	"PET,WARLOCK,CC",	5,	{89766,30,0}	},
+	{89766,	"PET,WARLOCK,CC,KICK",	5,	{89766,30,0}	},
 	{115276,"PET,WARLOCK,DISPEL",	5,	{115276,10,0}	},
 	{17767,	"PET,WARLOCK",		3,	{17767,120,20}	},
 	{89808,	"PET,WARLOCK,DISPEL",	5,	{89808,10,0}	},
